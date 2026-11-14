@@ -1,0 +1,1 @@
+Pure white RGB255 background prompt.

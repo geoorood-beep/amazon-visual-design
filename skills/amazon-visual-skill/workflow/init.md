@@ -1,0 +1,1 @@
+Collect listing, product images, competitor references, specs.

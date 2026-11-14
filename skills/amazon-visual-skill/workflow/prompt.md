@@ -1,0 +1,1 @@
+Compose professional English prompts with negative prompts.

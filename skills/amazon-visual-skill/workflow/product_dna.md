@@ -1,0 +1,1 @@
+Lock Product DNA before any generation.

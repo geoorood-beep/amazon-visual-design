@@ -1,0 +1,1 @@
+Check Amazon compliance and consistency.
