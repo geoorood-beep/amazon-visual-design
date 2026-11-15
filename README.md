@@ -1,6 +1,6 @@
 # 亚马逊美工设计
 
-当前规则版本：**v2.7**。本仓库保存 Amazon 主图、副图与 A+ 的作图规则、配套技能、卖点可视化方法和局部图片处理工具。
+当前规则版本：**v2.11**。本仓库保存 Amazon 主图、副图与 A+ 的作图规则、配套技能、卖点可视化方法和局部图片处理工具。
 
 ## 从这里开始
 
@@ -18,6 +18,7 @@
 | 已确认事实到可见动作/结构的卖点映射 | [FEATURE_VISUAL_EXPRESSION.md](docs/FEATURE_VISUAL_EXPRESSION.md) |
 | 宠物用品卖点可视化标准 | [PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md](docs/PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md) |
 | 固定风格说明与三张参考图 | [STYLE_WAPSI_01.md](docs/STYLE_WAPSI_01.md)、[style_references](docs/style_references/) |
+| POKPET A+ 视觉标准 v02（配图草案） | [POKPET_APLUS_VISUAL_STANDARD_v02.md](docs/POKPET_APLUS_VISUAL_STANDARD_v02.md) |
 | 规划、模板、提示词和验收技能 | [skills/amazon-visual-skill](skills/amazon-visual-skill/) |
 | 水体局部合成及实际改动计数 | [composite_water_clarity.c](tools/composite_water_clarity.c) |
 | 2×尺寸导出示例 | [upscale_2x.swift](tools/upscale_2x.swift) |

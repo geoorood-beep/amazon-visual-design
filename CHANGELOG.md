@@ -1,5 +1,11 @@
 # 版本记录
 
+## v2.11 — 2026-11-15 POKPET A+ 视觉标准 v02 配图
+
+- 新增 `docs/POKPET_APLUS_VISUAL_STANDARD_v02.md`。正文规则与 235 行草案相同，只加入图片标题和说明。
+- 8 个模块示例和整页预览压缩为约 1200 px 宽的 JPG，放在 `docs/assets/visual_standard_v02/modules/`。标注为 v02 案例：原生约 1280×720，1464×600 为放大裁切。
+- 文中点名的 22 张 oneisall 参考图链接到 `research/oneisall/` 中的对应文件。
+
 ## v2.7 — 2026-11-15 GitHub首次同步
 
 本次发布现有v2.7规则快照，不将同步日期冒充规则首次制定日期。
