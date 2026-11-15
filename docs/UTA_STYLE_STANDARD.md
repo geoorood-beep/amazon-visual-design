@@ -1721,7 +1721,244 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 
 **禁止：** 出现真实粮食品牌的商标，写“助消化、更健康、BPA-free”等功效词（XHS_027 的反例），或者编造容量和份数。
 
+### 14.10 案例功能分类表（2026-11-15 锦浩确认）
 
+> 按功能选图：要一种功能画法时，在本表按类别找案例。一张图只定一个主类别（用于检索），必要时加一个次类别。「可学/禁学」列优先于画法：禁学内容一律不进 POKPET 的图。文件名和目录不动，只在本表打标签。共 156 张（`docs/uta_style_v3/assets/key/` 全部），待确认 0 张；141 张依据标准正文，15 张结合目测原图（依据栏已注明）。
+
+#### 14.10.1 类别定义（12 个功能类 + 2 个特殊类）
+
+| 类别 | 定义（一句话） |
+|---|---|
+| 参数展示 | 巨型数字、参数格、柱状图或换算卡片，把一个可量化卖点做成画面主体。 |
+| 对比 | 左右分屏、前后对照、条形图，或我方高亮、对方变灰 / 加 Others 插图；对比项不超过 3 条，对方不得出现品牌或可识别外观。 |
+| 场景融合 | 卖点由生活场景和宠物（或人）的动作演出来，文字只做补充；出行、多日无人、多宠同框也归入此类。 |
+| 结构/爆炸图 | 分层飞散、剖面透视、引线标注或内部机构示意；必须基于真实结构，不虚构。 |
+| 材质微距 | 不锈钢拉丝、颗粒、筛网等材质或耗材特写，高光清楚；含适配猫砂 / 粮食的颗粒网格。 |
+| 静音/夜间 | 暗场或夜景，宠物安睡或闭眼，可配 dB 数字或单条声波曲线。 |
+| 情绪/表情 | 以宠物或人宠的表情、动作为画面主体，用于首帧停驻力或情绪模块。 |
+| 尺寸/空间 | 尺寸线、三视图、占地、开顶转身空间，或碗距 / 托盘深度等空间标注。 |
+| 清洁/拆洗 | 手部拆装、水槽或洗碗机、编号步骤图、可换垫或内胆。 |
+| 开场海报/A+整页 | 超大标题叠产品或超大脸海报，用于首屏；以及 A+ 长图的整页模块节奏（只学版式，不搬商标、认证和参数）。 |
+| 认证/检测 | 实验室、证书、奖项、拟人持证。只作版式参考或反面教材，不可照搬认证、徽章和功效数字。 |
+| 功能演示 | 模式卡片、按键操作、指示灯 / 水位窗、锁扣与安全传感、图标行；含 App / 远程 / 摄像头界面（相关宣称按家规禁学）。 |
+
+| 特殊类 | 定义（一句话） |
+|---|---|
+| 产品外观锚点 | 只锚定产品造型、304 拉丝高光、比例和机身颜色，不锚定调色和宠物处理。仅 ANCHOR_G1 / G2。 |
+| 过程稿总览 | 我方过程稿，用于检查机位和套图节奏，不是第三方参考案例。仅 V04_S1-S9_overview。 |
+
+#### 14.10.2 选用说明
+
+- **场景融合**和**情绪/表情**经常同时出现。主类别看标准「学什么」更强调哪一边：强调表情、动作、停驻力的归情绪；强调光影、场景、人宠与产品关系、卖点演出来的归场景融合。
+- **静音/夜间**优先于情绪：暗场或夜景、闭眼安睡、dB 曲线是这张图的主任务时，主类别走静音，情绪放次类别。
+- **参数展示**和**静音/夜间**也可能重叠（暗场大数字 dB）。主任务是「安静」时归静音，数字只是手段。
+- **开场海报/A+整页**用于 AP_001–007、IMG_0540–0542，以及少数巨字海报（XHS_019、EXP_016/017）。这些是整页或多模块，次类别标出最值得单拆的那一层（参数格、对比、微距等）。
+- **功能演示**偏宽，次类别或「可学/禁学」里会写明是模式、按键、指示灯、锁扣、安全传感，还是 App / 摄像头。
+- F / D 前缀按标准 §14.1 / §14.2 分别对应饮水器、喂食器，这次没有改这个判断，只是分类不依赖它。
+
+#### 14.10.3 各类张数
+
+| 主类别 | 张数 |
+|---|---:|
+| 参数展示 | 16 |
+| 对比 | 4 |
+| 场景融合 | 18 |
+| 结构/爆炸图 | 9 |
+| 材质微距 | 7 |
+| 静音/夜间 | 7 |
+| 情绪/表情 | 38 |
+| 尺寸/空间 | 8 |
+| 清洁/拆洗 | 8 |
+| 开场海报/A+整页 | 11 |
+| 认证/检测 | 2 |
+| 功能演示 | 25 |
+| 产品外观锚点 | 2 |
+| 过程稿总览 | 1 |
+| **合计** | **156** |
+
+有次类别的 88 张。
+
+#### 14.10.4 禁学汇总
+
+下面这些不是「这类图都不能看」，而是**画面里哪些东西不能搬进 POKPET 的图**。分类表的「可学/禁学」列已逐张写了。汇总如下。
+
+| 家规 / 标准禁项 | 主要落在哪些类别 | 典型案例 | 怎么用 |
+|---|---|---|---|
+| 认证、徽章、证书、专利标、排行榜 | 认证/检测；部分开场海报/A+整页、参数展示 | `F_anthro_cert_FJX69D2R.jpg`、`F_pump_tech_dark_FJX69D2R.jpg` 的 US Patented、`D_hero_heronum_GFDCYGFM.jpg` 的 Top 1、`L_neakasa_m9_hero_HC6Y2MS3.jpg` 的 2 Year Warranty、AP_001/004/005/006 中的认证模块 | 只可偶尔学版式位置；证书、徽章、奖项、质保标一律不进画 |
+| 实验室、除菌、健康 / 化学功效 | 认证/检测；个别功能演示 | `F_lab_D5B6RLYY.jpg`（标准定为反例）、`L_petlibro_aiwaste_GTM9P94B.jpg`、`L_petlibro_woman_FKT2J6PV.jpg` 的尿液习惯、`XHS_015.jpg` / `XHS_027.jpg` 的功效文案 | 整张或整段不学；不可写除菌、助消化、BPA-free、健康监测 |
+| 竞品对比（商标或可识别外观） | 对比 | `F_vs_hero_GYZQ79CY.jpg`、`F_clean_vs_FJX69D2R.jpg`、`F_vs_plastic_C89MMFW1.jpg`、`F_deep_tray_DS2N3T3X.jpg` 的 Others 小图、AP_002 的变灰竞品卡 | 可学左暖右灰、分屏、条形图；对方必须去品牌、去可识别外形，对比项不超过 3 条 |
+| 电池、无线、续航天数 | 参数展示；部分场景融合、静音/夜间 | `F_battery30_FJWV49LP.jpg`、`D_battery100_DZCLG3SP.jpg`、`F_vacation_C89MMFW1.jpg`、`F_bento_FJX69D2R.jpg` 的 45-day Runtime、`D_night_blue_G4DX3QR8.jpg` | 可学巨型数字或出行场景的排法；不可宣称电池、无线或未确认的续航天数 |
+| 容量（L / Cups / 天数换算） | 参数展示 | `D_20cups_C5X4N132.jpg`、`D_hero_heronum_GFDCYGFM.jpg`、`F_capacity_chart_D5B6RLYY.jpg`、`L_neakasa_717L_DCFY8SB4.jpg` 等 | 可学大数字压在产品或柱状图上的排法；不可照搬或虚构我方容量。喂食器容量目前标准也写明待确认 |
+| App / Wi-Fi / 远程 / 摄像头 | 功能演示 | `D_human_phone_GFDH3WD5.jpg`、`D_plan_DF2RPGDW.jpg`、`D_nightvision_GFDH3WD5.jpg`、`L_*_app_*.jpg`、`XHS_012.jpg` 右下角 App | 可学「人在远处、家里有宠物」的构图；不可写 App、Wi-Fi、远程、夜视。屏幕必须后期合成 |
+| 别家商标、参数数字、品牌口号 | 各类都可能沾 | XHS 水印、oneisall / Neakasa / PETLIBRO 品牌字、对方 dB / 15000PA / 97% 等 | 只学画法；数字只用我方已确认事实（例如 <25 dB、1 m、10–15 s） |
+
+特别重的两张：
+
+- `F_lab_D5B6RLYY.jpg`：标准 §4.4 已定为反例。
+- `L_petlibro_aiwaste_GTM9P94B.jpg`：AI 粪便分析 + 健康监测，几乎整张禁学。
+
+#### 14.10.5 全表（156 张）
+
+路径前缀均为 `docs/uta_style_v3/assets/key/`。按文件名排序，与目录一致。
+
+| 路径 | 类别 | 次类别 | 依据 | 可学/禁学 |
+|---|---|---|---|---|
+| `docs/uta_style_v3/assets/key/ANCHOR_G1.jpg` | 产品外观锚点 |  | 标准 §14.6：G1/G2 是产品外观与质感锚点 | 只锚造型、304 拉丝、比例和机身颜色；调色偏橙、宠物偏小偏侧面、傍晚暖光均不作为锚点，须按 §9.1、§14.5 修正 |
+| `docs/uta_style_v3/assets/key/ANCHOR_G2.jpg` | 产品外观锚点 |  | 标准 §14.6：同上 | 同 ANCHOR_G1 |
+| `docs/uta_style_v3/assets/key/AP_001.jpg` | 开场海报/A+整页 | 参数展示 | 标准 §6D.1：巨字开场叠产品 → 三数字一行 → 芯片示意 | 只学版式结构、字体层级和产品展示；禁学别家商标、认证标志和参数（§6D）；可学巨字叠产品和一行三数字 |
+| `docs/uta_style_v3/assets/key/AP_002.jpg` | 开场海报/A+整页 | 对比 | 标准 §6D.1：生活场景开场、对比卡（我方高亮其余变灰）、超大字收尾 | 只学版式结构、字体层级和产品展示；禁学别家商标、认证标志和参数（§6D）；禁学点名或变灰别家产品的对比卡 |
+| `docs/uta_style_v3/assets/key/AP_003.jpg` | 开场海报/A+整页 | 参数展示 | 标准 §6D.1：左右两页，含 2×4 参数格、大数字盾牌、微距与人像交替 | 只学版式结构、字体层级和产品展示；禁学别家商标、认证标志和参数（§6D）；可学 2×4 参数格和大数字配图形，不搬盾牌认证含义 |
+| `docs/uta_style_v3/assets/key/AP_004.jpg` | 开场海报/A+整页 | 结构/爆炸图 | 标准 §6D.1：舞台开场、爆炸引线图、对比条、图标行、包装清单 | 只学版式结构、字体层级和产品展示；禁学别家商标、认证标志和参数（§6D）；可学爆炸引线和图标行；禁学认证证书 |
+| `docs/uta_style_v3/assets/key/AP_005.jpg` | 开场海报/A+整页 | 场景融合 | 标准 §6D.1、§6D.4：户外女孩与金毛开场，大卡加小卡拼贴（同 IMG_0542） | 只学版式结构、字体层级和产品展示；禁学别家商标、认证标志和参数（§6D）；可学人宠户外开场和底部方卡；禁学认证竖卡 |
+| `docs/uta_style_v3/assets/key/AP_006.jpg` | 开场海报/A+整页 | 功能演示 | 标准 §6D.1、§6D.4：行李箱俯拍开场、2×2 功能格、中段撞色、认证收尾（同 IMG_0541） | 只学版式结构、字体层级和产品展示；禁学别家商标、认证标志和参数（§6D）；可学白底加一块深色模块的节奏；禁学质保和认证收尾 |
+| `docs/uta_style_v3/assets/key/AP_007.jpg` | 开场海报/A+整页 | 材质微距 | 标准 §6D.1、§6D.4：暖光微距开场、四格细节、问题→解决对照卡（同 IMG_0540） | 只学版式结构、字体层级和产品展示；禁学别家商标、认证标志和参数（§6D）；可学引线标卖点、一模块一点、全家福收尾 |
+| `docs/uta_style_v3/assets/key/D_20cups_C5X4N132.jpg` | 参数展示 |  | 标准 §4.2：粮桶上直接压「20 Cups」巨型数字 | 可学巨型数字压在产品上的排法；禁学照搬容量，也不可虚构我方容量 |
+| `docs/uta_style_v3/assets/key/D_balance_overhead_D4DL67CV.jpg` | 参数展示 | 尺寸/空间 | 标准 §4.10、§14.9：双碗俯拍，中间天平图形「Balanced」 | 可学俯拍分量均等的图形说法；不写未确认的份数 |
+| `docs/uta_style_v3/assets/key/D_battery100_DZCLG3SP.jpg` | 参数展示 |  | 标准 §4.9：「100」电池续航巨型数字 | 可学巨型数字排法；禁学电池 / 续航宣称 |
+| `docs/uta_style_v3/assets/key/D_child_DPZV3S7T.jpg` | 功能演示 | 场景融合 | 标准 §4.20：小男孩操作「Setup is easy」 | 可学按键操作的生活场景；若用儿童须为欧美儿童且有成人在场 |
+| `docs/uta_style_v3/assets/key/D_chip_dark_D4DL67CV.jpg` | 功能演示 | 结构/爆炸图 | 标准 §4.10：芯片暗场「Feeding Plan Never Lost」 | 可学暗场芯片示意的调性；不虚构内部结构，不写未确认的记忆 / 断电功能 |
+| `docs/uta_style_v3/assets/key/D_cute_cat_GFDH3WD5.jpg` | 情绪/表情 |  | 标准 §4.21：猫翻肚「Let cameras catch the cutest purrs」 | 可学翻肚等情绪特写；不顺带宣传摄像头 |
+| `docs/uta_style_v3/assets/key/D_floor_labels_G4DX3QR8.jpg` | 场景融合 | 尺寸/空间 | 标准 §14.2 写到该 ASIN「地面 Water / Food 大字」；目测原图为两猫分区进食，地面半透明 Water / Food Area 标签 | 可学把分区卖点写在地面上的场景融合；不搬品牌 |
+| `docs/uta_style_v3/assets/key/D_hero_heronum_GFDCYGFM.jpg` | 参数展示 | 场景融合 | 标准 §14.2 写到该 ASIN 顶部压 hero number；目测原图为墙面「32 Cups」大字 + 生活场景，并有 Top 1 徽章和 5G WiFi 标题 | 可学场景里压巨型数字的排法；禁学容量数字、5G / Wi-Fi 宣称、排行榜徽章和品牌 |
+| `docs/uta_style_v3/assets/key/D_human_phone_GFDH3WD5.jpg` | 功能演示 | 场景融合 | 标准 §4.3、§14.9：女性视频通话 / 看手机 | 可学「人在远处看手机、家里有宠物」的构图；禁学 App / Wi-Fi / 远程宣称，屏幕须后期合成、不得由模型生成乱码 |
+| `docs/uta_style_v3/assets/key/D_kibble_chart_DPZV3S7T.jpg` | 参数展示 | 材质微距 | 标准 §4.10、§4.19：四袋兼容 / 喂量表 | 可学颗粒或粮袋并排的兼容画法；须换成无牌包装，不出现真实粮食品牌 |
+| `docs/uta_style_v3/assets/key/D_lock_D4DL67CV.jpg` | 功能演示 | 场景融合 | 标准 §4.17、§14.9：黑猫掏食，「Security Pet-Proof Lock」 | 可学「偷看、得逞失败」的动作抓拍；锁具功能须以我方实物为准 |
+| `docs/uta_style_v3/assets/key/D_multipet_C5X2G933.jpg` | 场景融合 | 尺寸/空间 | 标准 §4.15：双碗俯拍，多宠同时进食并标注间距 | 可学多宠同框与间距标注；间距数字须以我方实物为准 |
+| `docs/uta_style_v3/assets/key/D_night_blue_G4DX3QR8.jpg` | 静音/夜间 | 参数展示 | 标准 §4.9：夜间暗蓝、产品微亮，断电备份 | 可学夜间暗蓝气氛；禁学电池 / 断电备份等未确认宣称 |
+| `docs/uta_style_v3/assets/key/D_nightvision_GFDH3WD5.jpg` | 功能演示 |  | 标准 §14.2 写到该 ASIN「黑白夜视」；目测原图为黑白画面叠加摄像头 UI（Night Vision、实时时间戳、Video/Photo/Feed 图标） | 几乎整张是摄像头 / App 功能演示；我方无此功能则整张不学，不可宣称夜视或 App |
+| `docs/uta_style_v3/assets/key/D_overhead_17in_DZCLG3SP.jpg` | 尺寸/空间 | 场景融合 | 标准 §4.15：「17 inches」俯拍双猫 | 可学俯拍加间距尺寸线；不搬对方 17 in 数字 |
+| `docs/uta_style_v3/assets/key/D_plan_DF2RPGDW.jpg` | 功能演示 | 场景融合 | 标准 §4.3：通勤女性看手机 / 喂食计划 | 可学通勤场景构图；禁学 App / Wi-Fi 宣称，App 界面不可过多（标准已注明该款过量、不学） |
+| `docs/uta_style_v3/assets/key/D_posture_2x_GFDCYGFM.jpg` | 尺寸/空间 | 场景融合 | 标准 §4.16：侧面平视，碗高或倾角用弧线标注，「2X Higher」 | 可学侧面姿势加角度标注；不搬 2X 等未证实数字 |
+| `docs/uta_style_v3/assets/key/D_rotor_explode_GFDCYGFM.jpg` | 结构/爆炸图 |  | 标准 §4.10：出粮转子悬浮爆炸图 | 可学浅底或暗场的机构爆炸；必须基于我方真实结构，不虚构齿轮 |
+| `docs/uta_style_v3/assets/key/D_sinkclean_DZCHN51D.jpg` | 清洁/拆洗 |  | 标准 §4.5：厨房水槽清洗 | 可学 45° 俯拍水槽手部操作 |
+| `docs/uta_style_v3/assets/key/D_steel_304_G4DX3QR8.jpg` | 材质微距 |  | 标准 §4.6、§14.7：304 碗加大字 | 可学材质特写加大号材质字；不写抑菌 / 更健康等功效 |
+| `docs/uta_style_v3/assets/key/D_table_GFDH3WD5.jpg` | 参数展示 |  | 标准 §4.10：推荐喂量表（表格卡片） | 可学表格卡片排版；不编造份数和容量 |
+| `docs/uta_style_v3/assets/key/D_travel_human_G4DX3QR8.jpg` | 场景融合 |  | 标准 §4.18、§14.9：人拖行李箱出门，宠物在家进食 | 可学「主人离开、宠物安心吃」的场景；天数数字须以我方确认事实为准，不可虚构 |
+| `docs/uta_style_v3/assets/key/D_wider_GFDCYGFM.jpg` | 尺寸/空间 |  | 标准 §4.15：「15% Wider」俯拍 | 可学更宽俯拍的空间表达；不搬 15% 等对方数字 |
+| `docs/uta_style_v3/assets/key/EXP_001.jpg` | 情绪/表情 | 功能演示 | 标准 §6C.1：拟人道具侦探（猎鹿帽、放大镜） | 可学用道具讲卖点；道具不得遮住眼睛或产品 |
+| `docs/uta_style_v3/assets/key/EXP_002.jpg` | 情绪/表情 |  | 标准 §6C.1：变装搞笑 / 斗鸡眼惊喜，超近广角 | 可学眼睛占画面 1/3 的超近广角 |
+| `docs/uta_style_v3/assets/key/EXP_003.jpg` | 情绪/表情 | 场景融合 | 标准 §6C.1：变装搞笑 / 斜眼憨笑，户外草地 | 可学户外冷暖对比；适用户外 A+ 情绪模块 |
+| `docs/uta_style_v3/assets/key/EXP_004.jpg` | 情绪/表情 |  | 标准 §6C.1：翻白眼向上看（头顶榴莲） | 可学低头仰拍、眼白要露出 |
+| `docs/uta_style_v3/assets/key/EXP_005.jpg` | 情绪/表情 |  | 标准 §6C.1：酷 / 墨镜下滑，棚拍深蓝底 | 可学「硬核」气质；衣服道具不遮表情；纯色棚拍底只用于 A+ 情绪模块 |
+| `docs/uta_style_v3/assets/key/EXP_006.jpg` | 情绪/表情 | 开场海报/A+整页 | 标准 §6C.1：酷 / 墨镜推上额头，正视镜头，可作品牌态度图、A+ 开场 | 同 EXP_005；可作 A+ 开场情绪 |
+| `docs/uta_style_v3/assets/key/EXP_007.jpg` | 情绪/表情 |  | 标准 §6C.1：偷笑捂嘴、伸爪碰镜头（黑底） | 可学爪子贴近镜头的前后景深；对应喂食器偷吃或感应伸爪 |
+| `docs/uta_style_v3/assets/key/EXP_008.jpg` | 情绪/表情 |  | 标准 §6C.1：吐舌比耶（黑底） | 可学收尾情绪图的拟人感 |
+| `docs/uta_style_v3/assets/key/EXP_009.jpg` | 情绪/表情 |  | 标准 §6C.1：张大嘴长舌、仰头喘气 | 可学仰拍、舌头作视觉焦点；接 E06 |
+| `docs/uta_style_v3/assets/key/EXP_010.jpg` | 情绪/表情 |  | 标准 §6C.1：闭眼 chill，拟人双手端咖啡（街景） | 拟人化程度高，只用在品牌情绪图，不用在功能图 |
+| `docs/uta_style_v3/assets/key/EXP_011.jpg` | 情绪/表情 |  | 标准 §6C.1：门边探头、鼻子贴镜头（鱼眼），接 E08 | 可学鱼眼超近；可作拆洗时好奇探头或等粮 |
+| `docs/uta_style_v3/assets/key/EXP_012.jpg` | 情绪/表情 | 场景融合 | 标准 §6C.1：鱼眼冲向镜头、伸爪吐舌，接 E01；注明 S1、S3 可直接参考 | 可学感应 1 m「冲过来」的首帧；停驻力为强 |
+| `docs/uta_style_v3/assets/key/EXP_013.jpg` | 情绪/表情 |  | 标准 §6C.1：斜眼怀疑、鼻子超近（鱼眼） | 可学鱼眼加斜眼，表达「怎么还没开饭」 |
+| `docs/uta_style_v3/assets/key/EXP_014.jpg` | 情绪/表情 | 静音/夜间 | 标准 §6C.1：慵懒厌世趴沙发，接 E10，适用于静音「躺平不受打扰」 | 可学静音情绪，不用作功能图 |
+| `docs/uta_style_v3/assets/key/EXP_015.jpg` | 情绪/表情 | 功能演示 | 标准 §6C.1：尖叫惊吓，接 E03，可用于缺水提醒 | 可学表情管理失败；缺水模块不要做成过度惊吓 |
+| `docs/uta_style_v3/assets/key/EXP_016.jpg` | 情绪/表情 | 开场海报/A+整页 | 标准 §6C.1：超大脸不爽眯眼，巨字压在头顶后面，同 AP_001 巨字叠物 | 可学首屏海报的巨字叠大脸；停驻力为强 |
+| `docs/uta_style_v3/assets/key/EXP_017.jpg` | 情绪/表情 | 开场海报/A+整页 | 标准 §6C.1：同 EXP_016，换银虎斑做系列 | 可学同一构图换品种做系列 |
+| `docs/uta_style_v3/assets/key/F_anthro_cert_FJX69D2R.jpg` | 认证/检测 | 情绪/表情 | 标准 §4.6：猫戴帽持证书（拟人）；目测原图为猫和狗戴品牌帽、手持带框证书，标题写 Food Safety Certified | 禁学证书、认证字样和品牌帽；拟人持物的幽默气质如要用，也不得配任何认证 |
+| `docs/uta_style_v3/assets/key/F_bars60_DS2N3T3X.jpg` | 参数展示 | 对比 | 标准 §4.2：柱状图「60%」+ 狗剪影 | 可学柱状图加剪影的容量 / 对比排法；不搬 60% 和对方容量 |
+| `docs/uta_style_v3/assets/key/F_battery30_FJWV49LP.jpg` | 参数展示 |  | 标准 §4.9：「30 days」电池续航 | 可学巨型数字排法；禁学电池 / 无线 / 续航宣称 |
+| `docs/uta_style_v3/assets/key/F_bento_FJX69D2R.jpg` | 功能演示 | 参数展示 | 标准未写该帧画面；目测原图为圆角卡片拼盘：45-day Runtime、三模式图标、20dB vs 30dB Others、水位窗、易清洗、指示灯 | 可学多卖点圆角卡拼盘（便当式）排版；禁学 45 天电池续航、竞品 dB 对比数字和品牌名 |
+| `docs/uta_style_v3/assets/key/F_capacity_chart_D5B6RLYY.jpg` | 参数展示 |  | 标准 §4.2：容量柱状图 | 可学柱状图换算排法；禁学照搬或虚构容量 |
+| `docs/uta_style_v3/assets/key/F_clean_vs_FJX69D2R.jpg` | 对比 | 清洁/拆洗 | 标准 §4.5：「Crafted for Easier Cleaning」VS 分屏 | 可学「部件少 vs 部件多」的清洗对比；对方不得出现品牌或可识别外观，部件数量须与我方实物一致 |
+| `docs/uta_style_v3/assets/key/F_dark_product_icons_GYZQ79CY.jpg` | 功能演示 |  | 标准 §14.1 写该 ASIN「深色产品 + 图标条」；目测原图为深色产品俯拍 + 2/4/6/8 Hr 补水间隔图标卡 | 可学深色产品配一行时间图标卡；间隔数字须以我方模式为准，不搬对方 2–8 小时 |
+| `docs/uta_style_v3/assets/key/F_deep_tray_DS2N3T3X.jpg` | 对比 | 尺寸/空间 | 标准 §14.1 写该 ASIN「宽深托盘用绿色描边」；目测原图为我方托盘绿描边 + Deepen 尺寸线，左下 Others 灰阶小图 | 可学描边强调结构 + 尺寸线；Others 小图里的对方产品属于可识别外观，须换成不可识别的示意，或不用这张对比 |
+| `docs/uta_style_v3/assets/key/F_dishwasher_FJX69D2R.jpg` | 清洁/拆洗 |  | 标准 §4.5、§14.8：洗碗机 / 手洗 | 可学洗碗机俯拍或手部冲洗 |
+| `docs/uta_style_v3/assets/key/F_emotion_lick_DPMNQJ2N.jpg` | 情绪/表情 |  | 标准 §4.21：「CAT'S LOVE IN IT」舔嘴大特写 + 3 小图 | 可学近景舔嘴加 2–3 张连续动作小图 |
+| `docs/uta_style_v3/assets/key/F_filter_layers_FJX69D2R.jpg` | 结构/爆炸图 |  | 标准 §4.4、§14.7：滤芯层片斜向飞散，每层短标签 | 可学分层爆炸短标签；禁写除氯 / 软化 / 除菌等功效数字 |
+| `docs/uta_style_v3/assets/key/F_lab_D5B6RLYY.jpg` | 认证/检测 |  | 标准 §4.4 明确把该 ASIN a06 实验室画面列为反例，不学 | 反面教材：禁学显微镜、实验室、细菌或除菌 % 等健康化学暗示 |
+| `docs/uta_style_v3/assets/key/F_level_light_DS2N3T3X.jpg` | 功能演示 |  | 标准 §4.7：蓝 / 红灯「不用掀盖」 | 可学指示灯近景或双状态分屏；灯态须与我方实物一致 |
+| `docs/uta_style_v3/assets/key/F_level_window_BN2Z5CDC.jpg` | 功能演示 |  | 标准 §4.7：水位窗特写 | 可学水位窗近景；是已确认卖点的可用画法 |
+| `docs/uta_style_v3/assets/key/F_lifestyle_relax_FJX69D2R.jpg` | 情绪/表情 | 场景融合 | 标准 §4.21：「Sip Where Cats Relax」等 5 机位情绪系列中的生活场景 | 可学同一情绪主题换机位；不写健康功效 |
+| `docs/uta_style_v3/assets/key/F_lowwater_shutoff_D5B6RLYY.jpg` | 功能演示 |  | 标准 §4.7：「Alert and Auto Shut-Off」红灯 | 可学缺水红灯 + 自动断电的近景表达；我方已确认有此功能 |
+| `docs/uta_style_v3/assets/key/F_modes_3card_FJX69D2R.jpg` | 功能演示 |  | 标准 §4.8：3 张卡片并排，每种模式一张 | 可学三模式三卡（允许用卡片的典型情况）；模式须为我方已确认的三种：感应、连续、定时 |
+| `docs/uta_style_v3/assets/key/F_modes_split_D5B6RLYY.jpg` | 功能演示 | 对比 | 标准 §4.8：两模式左右分屏，中间不加卡片框 | 可学分屏模式对比；模式名称以我方为准 |
+| `docs/uta_style_v3/assets/key/F_places_3panel_GYZQ79CY.jpg` | 场景融合 |  | 标准 §4.18：「Places Your Cats Prefer」三联场景 | 可学三联生活场景（允许用卡片的第二种情况）；该款是无线产品，不可顺带写无线 / 摆哪都能用的电池宣称 |
+| `docs/uta_style_v3/assets/key/F_pump_tech_dark_FJX69D2R.jpg` | 结构/爆炸图 | 静音/夜间 | 标准 §14.5 点到此文件作暗调水泵特写；目测原图为暗蓝底透明泵剖面，并有 US Patented 徽章和三枚功能图标 | 可学暗场透明剖面画法，且须基于我方可拆泵的真实结构；禁学专利 / 认证徽章和未证实的内部芯片 |
+| `docs/uta_style_v3/assets/key/F_quiet_curve_DPMNQJ2N.jpg` | 静音/夜间 | 参数展示 | 标准 §4.1、§14.7：声波曲线表达静音 | 可学单条曲线 + dB 数字；数字只用我方已确认的 <25 dB，不搬对方 20 dB |
+| `docs/uta_style_v3/assets/key/F_quiet_heronum_FJX69D2R.jpg` | 静音/夜间 | 参数展示 | 标准 §4.1、§14.7：暗场「20dB」hero number | 可学暗场局部光 + 琥珀色大数字；数字改用我方 <25 dB |
+| `docs/uta_style_v3/assets/key/F_silent_night_GYZQ79CY.jpg` | 静音/夜间 | 情绪/表情 | 标准 §4.1：「Silent for Sensitive Pets」暗场里猫躺平 | 可学暗场宠物熟睡；该款文案有兽医 / 健康暗示，须避开 |
+| `docs/uta_style_v3/assets/key/F_snaplid_C89MMFW1.jpg` | 功能演示 | 场景融合 | 标准 §4.17：暹罗猫推盖演示安全扣 | 可学宠物推盖而产品纹丝不动；锁扣须以我方实物为准 |
+| `docs/uta_style_v3/assets/key/F_steel_bowl_DPMNQJ2N.jpg` | 材质微距 |  | 标准 §4.6：碗体 + 304 字样 | 可学碗体材质特写加大号 304 字；不写功效 |
+| `docs/uta_style_v3/assets/key/F_steel_macro_FJX69D2R.jpg` | 材质微距 |  | 标准 §4.6：「SUS 304」水面微距 | 可学拉丝高光加水珠的微距；材质字后期排版 |
+| `docs/uta_style_v3/assets/key/F_vacation_C89MMFW1.jpg` | 场景融合 | 参数展示 | 标准 §4.18：海滩度假「24hrs running 7 days」 | 可学多日无人的出行场景；禁学无线 / 电池续航和未确认的天数 |
+| `docs/uta_style_v3/assets/key/F_vs_hero_GYZQ79CY.jpg` | 对比 |  | 标准 §4.22：「0 pump & parts vs 1 pump & 4 parts」 | 可学左暖右灰的对比规则；对方不得出现品牌、Logo 或可识别外观，对比项不超过 3 条；部件数量须与我方实物一致 |
+| `docs/uta_style_v3/assets/key/F_vs_plastic_C89MMFW1.jpg` | 对比 | 材质微距 | 标准 §4.6：304 vs plastic 分屏 | 可学材质对比分屏；对方不放品牌，不写抑菌等功效 |
+| `docs/uta_style_v3/assets/key/IMG_0540.png` | 开场海报/A+整页 | 材质微距 | 标准 §6D.4：锦浩精选，同 AP_007；低机位斜向上、引线标卖点 | 同 AP_007；不抄参考图上的商标、英文标题和参数 |
+| `docs/uta_style_v3/assets/key/IMG_0541.png` | 开场海报/A+整页 | 场景融合 | 标准 §6D.4：锦浩精选，同 AP_006；产品前景低机位、人在后景、中段草绿撞色 | 同 AP_006；撞色仍须落在小红书日光调里；不抄商标和参数 |
+| `docs/uta_style_v3/assets/key/IMG_0542.png` | 开场海报/A+整页 | 场景融合 | 标准 §6D.4：锦浩精选，同 AP_005；人宠户外蓝绿开场 + 底部整齐方卡 | 同 AP_005；不抄参考图上的品牌字 |
+| `docs/uta_style_v3/assets/key/L_neakasa_14days_DCFY8SB4.jpg` | 参数展示 |  | 标准 §4.2：「7–14 Days 11.2L」抽屉拉出 | 可学天数 / 容量巨型数字配抽屉的排法；不搬对方数字，我方无确认容量则不写 |
+| `docs/uta_style_v3/assets/key/L_neakasa_717L_DCFY8SB4.jpg` | 参数展示 | 场景融合 | 标准 §4.2：「7.17L」俯拍倾倒猫砂 | 可学俯拍倾倒 + 大数字；猫砂须干净，不出现脏污 |
+| `docs/uta_style_v3/assets/key/L_neakasa_app_DCFY8SB4.jpg` | 功能演示 |  | 标准 §4.3：App 界面平铺（标准评偏冷） | 禁学 App / Wi-Fi 宣称；该帧本身偏冷、界面平铺，不是优先参考 |
+| `docs/uta_style_v3/assets/key/L_neakasa_buttons_DCFY8SB4.jpg` | 功能演示 |  | 标准 §4.20：手指按键微距，「Clear Functions, No Guesswork」 | 可学按键微距、图标印刷清楚 |
+| `docs/uta_style_v3/assets/key/L_neakasa_litter_DCFY8SB4.jpg` | 材质微距 |  | 标准 §4.19：「Recommended litter」颗粒网格 + ✔/✕ | 可学 3–4 种颗粒方格适配；标签以我方实测为准 |
+| `docs/uta_style_v3/assets/key/L_neakasa_m9_hero_HC6Y2MS3.jpg` | 场景融合 | 开场海报/A+整页 | 标准未写该帧画面；§8.1 仅概括 M9。目测原图为日光客厅三只猫与球形舱，标题 Safe by Design，左上 2 Year Warranty 徽章 | 可学开顶舱 + 多猫生活场景的 hero；禁学保修徽章、NEW 标签和品牌名。注：§8.1 所说「暗金戏剧光」在 m9_safe_g02，不在本帧 |
+| `docs/uta_style_v3/assets/key/L_neakasa_m9_safe_g02.jpg` | 功能演示 | 静音/夜间 | 标准 §4.12：M9 g02 暗场戏剧光「Safe by Design」 | 可学暗金轮廓光表现安全；不夸大传感器数量，不画猫被夹 |
+| `docs/uta_style_v3/assets/key/L_neakasa_m9_steps_HC6Y2MS3.jpg` | 清洁/拆洗 |  | 标准 §4.5：M9「Easy to Detach」3 步 | 可学 2–3 步编号拆装图；步骤须与我方实物一致 |
+| `docs/uta_style_v3/assets/key/L_neakasa_m9_tower_HC6Y2MS3.jpg` | 结构/爆炸图 | 功能演示 | 标准 §4.11：PureTower 耗材横放展示 | 可学耗材结构平铺；不写未证实的除臭数字 |
+| `docs/uta_style_v3/assets/key/L_neakasa_measure_DCFY8SB4.jpg` | 尺寸/空间 |  | 标准 §4.14：「Will it fit? Measure before you buy」三视图 | 可学三视图加房间尺寸；尺寸须以我方实物为准 |
+| `docs/uta_style_v3/assets/key/L_neakasa_multicat_DCFY8SB4.jpg` | 场景融合 | 尺寸/空间 | 标准 §4.15：3 只不同体型的猫站成梯度，配体重范围 | 可学多宠体型梯度；体重范围须以我方说明为准，不可照搬 |
+| `docs/uta_style_v3/assets/key/L_neakasa_quiet_DCFY8SB4.jpg` | 静音/夜间 | 情绪/表情 | 标准 §4.1：「Ultra-Quiet ≤50dB」猫在旁边睡 | 可学猫睡在旁边证静音；不搬 50dB，改用我方事实 |
+| `docs/uta_style_v3/assets/key/L_neakasa_rotation_DCFY8SB4.jpg` | 结构/爆炸图 | 功能演示 | 标准 §4.12：旋转角度画成刻度盘「Controlled Rotation」 | 可学刻度盘式结构示意；须基于真实旋转结构 |
+| `docs/uta_style_v3/assets/key/L_neakasa_seal_DCFY8SB4.jpg` | 结构/爆炸图 |  | 标准 §4.11：「Upgraded Seal」剖面蓝线标密封圈 | 可学剖面 + 结构线条标密封；不画臭味波纹，不写除臭百分比 |
+| `docs/uta_style_v3/assets/key/L_neakasa_sensors_DCFY8SB4.jpg` | 结构/爆炸图 | 功能演示 | 标准 §4.12：半透视，传感器位置用红框标出，猫正在进入 | 可学透视加红框标传感器，配猫进入；不夸大传感器数量 |
+| `docs/uta_style_v3/assets/key/L_neakasa_washbed_DCFY8SB4.jpg` | 清洁/拆洗 |  | 标准 §4.5：草地上冲洗猫砂床 | 可学户外 / 草地冲洗部件；不出现脏污 |
+| `docs/uta_style_v3/assets/key/L_oneisall_14days_EaseS1.jpg` | 参数展示 |  | 标准 §4.2：「14 Days 11L」 | 可学天数 + 容量大数字排法；不搬对方数字 |
+| `docs/uta_style_v3/assets/key/L_oneisall_30pct_EaseS1.jpg` | 参数展示 | 材质微距 | 标准 §4.13：「30% Litter Saving」颗粒宏观 | 可学颗粒宏观 + hero number；不搬 30%，不出现脏污或结团排泄物 |
+| `docs/uta_style_v3/assets/key/L_oneisall_32pct_EaseS1.jpg` | 尺寸/空间 |  | 标准 §4.14：「32% Open-Top Larger」 | 可学开顶空间的面积表达；不搬 32% |
+| `docs/uta_style_v3/assets/key/L_oneisall_app_EaseS1.jpg` | 功能演示 | 场景融合 | 标准 §4.3、§8.3：女性在笔记本旁看手机 | 可学「人在生活场景看手机」的构图；禁学 App / Wi-Fi 宣称 |
+| `docs/uta_style_v3/assets/key/L_oneisall_comfort_EaseS1.jpg` | 场景融合 | 尺寸/空间 | 标准 §4.16：猫在舱内，加 2 张小图，「Comfort for All Cats」 | 可学舱内舒适 + 小图补充；不写未确认尺寸 |
+| `docs/uta_style_v3/assets/key/L_oneisall_deepclean_EaseS1.jpg` | 清洁/拆洗 |  | 标准 §4.5：「Deep Cleaning Made Easy」手提内胆 | 可学手提内胆的手部操作 |
+| `docs/uta_style_v3/assets/key/L_oneisall_dims_EaseS1.jpg` | 尺寸/空间 |  | 标准 §4.14：g31 尺寸 | 可学正交或 3/4 视图加尺寸线；尺寸以我方实物为准 |
+| `docs/uta_style_v3/assets/key/L_oneisall_easeclean_EaseS1.jpg` | 功能演示 | 清洁/拆洗 | 标准 §4.13：时间胶囊「EaseClean 10s / 20s」或自定义清洁周期 | 可学时间胶囊图标 + 猫离开的场景；时间以我方事实为准 |
+| `docs/uta_style_v3/assets/key/L_oneisall_guard_EaseS1.jpg` | 材质微距 | 对比 | 标准 §4.6 列此文件为不锈钢筛网对比；目测原图为 S/M 两种不锈钢护栏 + 四种猫砂宏观方块 | 可学材质规格并排 + 耗材网格；规格数字以我方实物为准 |
+| `docs/uta_style_v3/assets/key/L_oneisall_mat_EaseS1.jpg` | 清洁/拆洗 |  | 标准 §8.3 点到 g10 硅胶垫；目测原图为手掀可复用硅胶垫，配擦拭 / 冲洗 / 更换三枚图标 | 可学手部揭垫的清洁演示 |
+| `docs/uta_style_v3/assets/key/L_oneisall_noapp_EaseS1.jpg` | 功能演示 | 场景融合 | 标准 §8.3 列此文件但未写画面；目测原图为两人在客厅按实体键，标题「No App. Just Clean.」 | 可学「只按实体键、生活场景里演示操作」；不搬品牌。若我方也是实体键产品，这是正向参考，不是 App 案例 |
+| `docs/uta_style_v3/assets/key/L_oneisall_quiet_EaseS1.jpg` | 静音/夜间 |  | 标准 §4.1：「Quiet Sweep. Peaceful Sleep. 45dB」暗室 | 可学暗室静音；不搬 45dB |
+| `docs/uta_style_v3/assets/key/L_oneisall_safety_EaseS1.jpg` | 功能演示 | 静音/夜间 | 标准 §4.12、§8.3：夜间蓝光、猫低位走近，配 4 项安全图标 | 可学夜间蓝光 + 低位走近 + 图标行；图标项须与我方真实保护功能一致，不夸大 |
+| `docs/uta_style_v3/assets/key/L_oneisall_space_EaseS1.jpg` | 尺寸/空间 |  | 标准 §4.14：「More Usable Space」顶视俯拍，猫在里面转身 | 可学开顶俯拍表现内部空间 |
+| `docs/uta_style_v3/assets/key/L_petlibro_aiwaste_GTM9P94B.jpg` | 功能演示 | 场景融合 | 标准 §8.2 列出此文件，并写明不学 AI 健康分析；目测原图为「AI waste analysis」+ 粪便判断浮层 +「Spot early signs of potential issues」 | 几乎整张禁学：AI 健康分析、排泄判断、健康暗示、App / 摄像头宣称、品牌。标准 §8.2、§8.5、§13 均禁止此类内容 |
+| `docs/uta_style_v3/assets/key/L_petlibro_app_GTM9P94B.jpg` | 功能演示 |  | 标准 §4.3：「Wi-Fi enabled control」手机特写 | 禁学 App / Wi-Fi 宣称 |
+| `docs/uta_style_v3/assets/key/L_petlibro_bin_GTM9P94B.jpg` | 参数展示 |  | 标准 §4.2：「2.9-gallon / 14 days」 | 可学容量 / 天数大数字配集便仓；不搬对方数字 |
+| `docs/uta_style_v3/assets/key/L_petlibro_chin_FKT2J6PV.jpg` | 情绪/表情 |  | 标准 §8.2：手挠猫下巴特写；目测原图为双手托下巴、猫闭眼享受 | 可学人只出双手的亲昵特写；不学「Live better together」一类品牌口号 |
+| `docs/uta_style_v3/assets/key/L_petlibro_darkcat_FKT2J6PV.jpg` | 场景融合 | 情绪/表情 | 标准 §8.2：编辑感生活摄影，木桌 + 猫 | 可学杂志感留白与暖木桌场景；不学偏黄调色，色调仍以小红书为准 |
+| `docs/uta_style_v3/assets/key/L_petlibro_drawer_FKT2J6PV.jpg` | 清洁/拆洗 |  | 标准 §4.5、§8.2：抽屉特写，只出手 | 可学「人物只出局部」的抽屉手部操作 |
+| `docs/uta_style_v3/assets/key/L_petlibro_hands_FKT2J6PV.jpg` | 场景融合 | 情绪/表情 | 标准 §8.2 概括为编辑感生活摄影、人物只出局部；目测原图为木桌上手在画画、旁边有猫和金属碗，产品几乎不在画面中心 | 可学杂志感、人手局部和宠物同框；这张几乎没有产品功能信息，只适合情绪 / 生活氛围，不适合当功能案例 |
+| `docs/uta_style_v3/assets/key/L_petlibro_leak_GTM9P94B.jpg` | 结构/爆炸图 | 功能演示 | 标准 §4.11：「Complete leak protection」3 分区 | 可学分区小图讲防漏结构；须基于真实结构 |
+| `docs/uta_style_v3/assets/key/L_petlibro_legs_FKT2J6PV.jpg` | 清洁/拆洗 | 场景融合 | 标准 §4.13、§8.2：换袋只拍腿 + 垃圾袋 | 可学「不露脸、只拍腿和手」的换袋场景；不出现脏污 |
+| `docs/uta_style_v3/assets/key/L_petlibro_litters_GTM9P94B.jpg` | 材质微距 |  | 标准 §4.19：「Works with most litter types」网格 | 可学颗粒网格 + 适配标签 |
+| `docs/uta_style_v3/assets/key/L_petlibro_multicat_GTM9P94B.jpg` | 场景融合 | 功能演示 | 标准 §4.15：「Multi-pet recognition」 | 可学多猫同框；多宠识别若依赖 App，不可写成我方功能 |
+| `docs/uta_style_v3/assets/key/L_petlibro_odor_GTM9P94B.jpg` | 参数展示 | 结构/爆炸图 | 标准 §4.11：「Always-on odor control 97%」（数字型，谨慎） | 禁学 97% 除臭和任何化学 / 健康功效；若学，只学结构性描述（密封），不用数字 |
+| `docs/uta_style_v3/assets/key/L_petlibro_opentop_GTM9P94B.jpg` | 尺寸/空间 | 场景融合 | 标准 §4.14：「Large, open-top design」顶视猫 | 可学开顶俯拍猫在里面转身 |
+| `docs/uta_style_v3/assets/key/L_petlibro_safety_GTM9P94B.jpg` | 功能演示 |  | 标准 §4.12：「Multi-layer safety」猫进入 | 可学猫进入 + 安全层级示意；不夸大、不画夹伤 |
+| `docs/uta_style_v3/assets/key/L_petlibro_woman_FKT2J6PV.jpg` | 功能演示 | 场景融合 | 标准 §4.3：女性在餐桌看「Monitor urinary habits」柱状图 | 可学「人在生活场景看数据」的留白排版；禁学尿液习惯 / 健康监测和 App 宣称 |
+| `docs/uta_style_v3/assets/key/V04_S1-S9_overview.png` | 过程稿总览 |  | 标准 §6G：我方 GPT v04 的 S1–S9 总览，用于机位检查 | 只作我方过程对照，不是第三方案例，不当风格依据 |
+| `docs/uta_style_v3/assets/key/XHS_001.jpg` | 场景融合 |  | 标准 §14.4：两狗 + 绿床在下 1/3，学生活场景留白 | 可学留白排版 |
+| `docs/uta_style_v3/assets/key/XHS_002.jpg` | 情绪/表情 | 静音/夜间 | 标准 §14.4、§6C E05/E10、§14.8：低机位半闭眼吐舌，也作静音映射 | 可学慵懒低机位；傍晚暖灯只用于静音模块 |
+| `docs/uta_style_v3/assets/key/XHS_003.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§6C E06、§14.8：近景舌头卷水 | 可学喝水瞬间抓拍；可作户外色调参考 |
+| `docs/uta_style_v3/assets/key/XHS_004.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§14.8/§14.9：专注嗅探、厨房生活感 | 可学专注情绪与厨房生活感 |
+| `docs/uta_style_v3/assets/key/XHS_005.jpg` | 情绪/表情 |  | 标准 §14.4：比格奔跑、耳朵飞起、广角低位 | 可学夸张动态与广角 |
+| `docs/uta_style_v3/assets/key/XHS_006.jpg` | 情绪/表情 |  | 标准 §14.4、§6C E11：女性大笑、狗舔脸 | 只学人宠亲昵情绪；原图模特为亚洲面孔，人物须换成欧美 |
+| `docs/uta_style_v3/assets/key/XHS_007.jpg` | 情绪/表情 |  | 标准 §14.4、§6C E01：法斗歪嘴躺在骨科床上 | 可学拟人表情与舒适感 |
+| `docs/uta_style_v3/assets/key/XHS_008.jpg` | 情绪/表情 | 开场海报/A+整页 | 标准 §14.4、§6C E11：两狗扑向女性，情感收尾、杂志感 | 可学杂志感收尾；人物须为欧美 |
+| `docs/uta_style_v3/assets/key/XHS_009.jpg` | 情绪/表情 | 参数展示 | 标准 §14.4、§6C E06、§14.8：舌尖碰水特写，底部半透明大数字 | 可学超近舔水与半透明大数字排法；不搬对方数字 |
+| `docs/uta_style_v3/assets/key/XHS_010.jpg` | 场景融合 |  | 标准 §14.4：落地窗逆光、猫背影、半透明 UI 浮层 | 可学侧窗日光、长投影、背影故事；UI 浮层勿生成乱码 |
+| `docs/uta_style_v3/assets/key/XHS_011.jpg` | 场景融合 |  | 标准 §14.4：树叶光影、猫从右侧走入只露半身 | 可学 dappled light 与局部入画 |
+| `docs/uta_style_v3/assets/key/XHS_012.jpg` | 场景融合 | 功能演示 | 标准 §14.4：窗台喝水、前景虚化，右下角手机 App | 可学三层空间与清新日光；禁学 App 界面与远程宣称 |
+| `docs/uta_style_v3/assets/key/XHS_013.jpg` | 材质微距 |  | 标准 §14.4、§4.6：大理石台面、盖子斜靠、3D 金属 304 字 | 可学材质台面与立体金属数字排法；不搬品牌字样 |
+| `docs/uta_style_v3/assets/key/XHS_014.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§6C E07、§14.8：猫凝视出水 | 可学专注神情与白墙日光；不搬品牌 |
+| `docs/uta_style_v3/assets/key/XHS_015.jpg` | 结构/爆炸图 |  | 标准 §14.4、§4.4、§14.7：滤芯分层悬浮爆炸 | 只学分层悬浮画法；禁学「抑菌、防生物膜」等功效文案 |
+| `docs/uta_style_v3/assets/key/XHS_016.jpg` | 参数展示 | 材质微距 | 标准 §14.4：暗调戏剧、材质特写、橙色大数字 15000PA | 可学暗调戏剧与渐变大数字排法；禁学对方参数 |
+| `docs/uta_style_v3/assets/key/XHS_017.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§6C E11：女主人给哈士奇梳毛，户外日光 | 可学户外人宠互动与闭眼享受 |
+| `docs/uta_style_v3/assets/key/XHS_018.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§6C E08/E13、§14.5：扑向玩具、功能气泡 | 可学低机位广角，以及把功能讲成故事的气泡；不搬对方功能文案 |
+| `docs/uta_style_v3/assets/key/XHS_019.jpg` | 开场海报/A+整页 |  | 标准 §14.4：撞色沙发、硬闪光、巨大无衬线字 | 只学杂志气质与巨字，不用于饮水器主调 |
+| `docs/uta_style_v3/assets/key/XHS_020.jpg` | 静音/夜间 | 情绪/表情 | 标准 §14.4、§4.1、§6C E05：闭眼享受 + 49dB 曲线 | 可学「闭眼 = 安静」和暗背景单条曲线；不搬 49dB 数字 |
+| `docs/uta_style_v3/assets/key/XHS_021.jpg` | 情绪/表情 | 参数展示 | 标准 §14.4、§6C E02：腾空飞跃 + 巨大数字「2」+ 半透明对比表 | 可学腾空抓拍与超大数字；对比表只学排版，不搬参数 |
+| `docs/uta_style_v3/assets/key/XHS_022.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§14.5：咬数据线证明结实 | 可学搞怪表情与「破坏」证结实的演法 |
+| `docs/uta_style_v3/assets/key/XHS_023.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§6C E09：表情狰狞抓猫抓板，产品在前景低位 | 可学「表情管理失败」与产品占下三分之一 |
+| `docs/uta_style_v3/assets/key/XHS_024.jpg` | 场景融合 | 情绪/表情 | 标准 §14.4：标准写明「最接近我们的 hero 图」，低机位、猫走向镜头 | 可学为喂水器感应出水 hero 的首选参考 |
+| `docs/uta_style_v3/assets/key/XHS_025.jpg` | 场景融合 | 情绪/表情 | 标准 §14.4、§14.9：金毛冲向喂食器，粮食掉落 | 可学运动瞬间，产品立在右侧占半幅 |
+| `docs/uta_style_v3/assets/key/XHS_026.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§6C E02：四肢腾空扑向产品，低机位仰拍 | 可学腾空夸张表情与产品在最前景 |
+| `docs/uta_style_v3/assets/key/XHS_027.jpg` | 情绪/表情 |  | 标准 §14.4、§6C E03：鱼眼超广角，鼻子贴近镜头，标题下图标行 | 可学超广角近拍与图标行排版；禁学「健康、消化、BPA-free」 |
+| `docs/uta_style_v3/assets/key/XHS_028.jpg` | 场景融合 | 情绪/表情 | 标准 §14.4、§6C E07：猫在隧道里互动，产品形成画框 | 可学宠物在产品内部互动的构图 |
+| `docs/uta_style_v3/assets/key/XHS_029.jpg` | 情绪/表情 | 场景融合 | 标准 §14.4、§6C E04：拳师犬叼飞盘冲向镜头，公园草地 | 可学户外浅景深与树荫上的粗体白字 |
 
 ## 15. 文件索引
 
@@ -1750,6 +1987,7 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 | 2026-11-15 | 图片路径提示 | 每处案例图引用旁加从仓库根目录起的完整路径，内容不变。 |
 | 2026-11-15 | 三件输入 | 新增 §6H.9：案例图、B-Brief、UTA 标准三件同时提供；GPT 必须按相对路径读取 key/ 与 sheets/ 案例，打不开须先报告再停，路径读取为首选。 |
 | 2026-11-15 | raw 读图 | 重写 §6H.9：仓库已公开，案例按 raw 链接读取且必须成功（失败改上传）；新增先读案例、Brief 驱动筛选、案例匹配表、卖点提示词文档和完整闭环。 |
+| 2026-11-15 | 案例功能分类 | 新增 §14.10 案例功能分类表：12 个功能类 + 2 个特殊类，key/ 全部 156 张按主类别、次类别、依据、可学/禁学打标签；文件名和目录不动。 |
 
 
 ### 锦浩对当前版本（GPT v04 · S1–S9）的整体评价（2026-11-15）
