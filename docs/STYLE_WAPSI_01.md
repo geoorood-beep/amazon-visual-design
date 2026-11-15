@@ -1,5 +1,7 @@
 # STYLE-WAPSI-01｜暖琥珀产品叙事信息图
 
+> 状态：部分有效，2026-11-15 起降级。POKPET 默认不使用本预设；只在非 POKPET 项目或用户明确指定时可选。历史参数保留。字体不再使用 Avenir Next 与 Arial，POKPET 全套 Poppins（D1）。色调不作为 POKPET 现行标准，见 UTA §9.1。
+
 固定日期：2026-09-14  
 参考页面：https://www.amazon.com/oneisall-Automatic-Feeder-Dispenser-Indoor/dp/B0C5X2G933  
 参考对象：oneisall 自动喂食器 Amazon Premium A+，ASIN B0C5X2G933。
@@ -16,7 +18,7 @@
 
 ## 生产参数
 
-执行参数、三种子模式、双端规则和QA见根目录AGENTS.md第7.8节。当前项目字体继续使用Avenir Next Bold / Demi Bold与Arial Regular；精确文字后期排版。橙色强调面积控制在3%–8%，主体比背景亮约0.5–1EV作为起点，不能把这些建议冒充参考图实测值。
+执行参数、三种子模式、双端规则和QA见根目录AGENTS.md第7.8节。2026-09-14 当时的字体是 Avenir Next Bold / Demi Bold 与 Arial Regular；该句自 2026-11-15 起只作为历史记录。POKPET 现行字体是 Poppins。精确文字后期排版。橙色强调面积控制在3%–8%，主体比背景亮约0.5–1EV作为起点，不能把这些建议冒充参考图实测值。
 
 ## 案例卡
 

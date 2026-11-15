@@ -1,12 +1,12 @@
 # 亚马逊美工设计
 
-当前规则版本：**v2.11**。本仓库保存 Amazon 主图、副图与 A+ 的作图规则、配套技能、卖点可视化方法和局部图片处理工具。
+当前规则版本：**v2.12**。本仓库保存 Amazon 主图、副图与 A+ 的作图规则、配套技能、卖点可视化方法和局部图片处理工具。
 
-当前视觉标准：[UTA_STYLE_STANDARD.md](docs/UTA_STYLE_STANDARD.md)（Uta Style v3，2026-11-15）。
+当前视觉标准：[UTA_STYLE_STANDARD.md](docs/UTA_STYLE_STANDARD.md)（Uta Style v3，2026-11-15）。新建任务先读 [UTA_QUICKSTART.md](docs/UTA_QUICKSTART.md)，再按卖点查 [CASE_INDEX.md](docs/uta_style_v3/CASE_INDEX.md)。
 
 ## 从这里开始
 
-1. 在 Codex 中打开本仓库，先读取 [AGENTS.md](AGENTS.md)。这是项目规则的主入口。
+1. 在 Codex 中打开本仓库，先读取 [AGENTS.md](AGENTS.md)。这是项目规则的主入口。各工具是否会自己读到它，见下面「入口核实」。
 2. 新建视觉任务时，参考 [作图需求填写表](docs/作图需求填写表.md)，提供产品参考图、规格、图片用途和明确尺寸。
 3. 规划、提示词与视觉验收需要配套流程时，读取 [amazon-visual-skill](skills/amazon-visual-skill/SKILL.md)。技能随仓库保存，不依赖原电脑的全局技能目录；这里没有自动安装或覆盖全局技能的脚本。
 4. 处理清晰度、反复重绘或指定像素问题时，读取 [高清图片工作流](docs/HD_IMAGE_WORKFLOW.md)。
@@ -36,6 +36,22 @@
 - 两个`tools/`示例依赖macOS系统图像框架。水体合成工具的遮罩坐标针对旧V02构图，使用前需按当前产品图重新核对；它不是适用于任意图片的一键修复器。
 - `upscale_2x.swift`是传统Lanczos缩放与轻度亮度锐化，不是AI超分，也不会恢复原图缺失的真实细节。交付时如实注明来源和尺寸处理。
 - 模型、账号权限、字体及运行系统需要在使用环境单独确认。同步规则不保证不同环境生成相同像素结果。
+
+## 入口核实（2026-11-15）
+
+| 工具 | 入口 | 本次核实 |
+|---|---|---|
+| Cursor Cloud Agent | 仓库根目录 `AGENTS.md`，另有 `.cursor/rules/agents-entry.mdc` 一行指向 | 本会话的系统规则注入了 `AGENTS.md`。注入文本在约 100KB 处截断，磁盘文件更长，不能把截断注入说成已经全文执行。 |
+| Claude Code | `CLAUDE.md` 里只有 `@AGENTS.md` | 按 Claude Code 的 `@` 导入约定写入。本环境没有启动 Claude Code，未做运行实测。 |
+| Gemini CLI | `GEMINI.md` 一行，指向 `AGENTS.md` | 只按公开约定放了入口文件。本环境没有运行 Gemini CLI，未实测。 |
+| Codex | 官方说明会在启动时读取仓库 `AGENTS.md` | 核对了 OpenAI 文档 [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) 和 [codex-rs/agents_md.rs](https://github.com/openai/codex/blob/main/codex-rs/core/src/agents_md.rs)。默认合并上限 32 KiB。本仓库 `AGENTS.md` 远大于 32 KiB，Codex 可能截断，所以文首指向速查。本环境没有安装或运行 Codex，这是文档核实，不是本机实测。 |
+| 独立 Grok 产品 | 不确定 | 本会话是 Cursor 里的 Grok，不是单独的 Grok 应用。独立产品会不会自己读 `AGENTS.md`，未核实。 |
+
+Poppins 字体在 `fonts/poppins/`。`OFL.txt` 写明 SIL Open Font License 1.1，版权行为 Copyright 2020 The Poppins Project Authors。文件来自 Google Fonts 仓库的 `ofl/poppins`，本次核对了授权文本开头和字体名表。
+
+`product_reference.png` 不在仓库。POKPET 外形对照保持阻塞，等用户提供。
+
+GitHub 仓库简介仍是 v2.7。按本次要求不改简介，也不改可见性。
 
 ## 本地检查
 

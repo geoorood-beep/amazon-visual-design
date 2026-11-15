@@ -1,0 +1,72 @@
+$ sed -n 1,15p AGENTS.md | grep -c "UTA_STYLE_STANDARD"
+1
+----- stderr -----
+(empty)
+EXIT:0
+
+$ grep -n "Avenir" AGENTS.md docs/*.md
+AGENTS.md:584:- 本项目1464×600排版起点：主标题 Poppins Bold 52px、行距63px；副标题 Poppins Regular 24px、行距33px。主标题左120px、字顶115px，按10.2向内或居中调整。卡片可从宽约320px、内边距32–36px、小圆角8px起步，细分隔线约1px。内容数量服从事实，不强制三行。历史字体曾为 Avenir Next Bold 与 Arial Regular，自 2026-11-15 起由 Poppins 取代（D1），字号不改。
+AGENTS.md:600:- 本项目1464×600主标题仍从 Poppins Bold 52px起步，副标题 Poppins Regular可从28–30px、行距35–39px起步；位置遵循10.2。卡片内次级标题用 Poppins SemiBold / 600。历史字体曾为 Avenir Next Bold、Arial Regular 与 Demi Bold，自 2026-11-15 起由 Poppins 对应字重取代（D1），原有字号不新增、不改写。
+AGENTS.md:668:- 主标题使用 Poppins Bold / 700，电脑端46–52px、行距56–63px；正文 Poppins Regular / 400，25–29px、行距36–41px；卡片标题 Poppins SemiBold / 600，26–30px；关键数字 Poppins Bold / 700，54–72px。历史字体曾为 Avenir Next Bold / Demi Bold 与 Arial Regular，自 2026-11-15 起由 Poppins 取代（D1）。这些像素是本节原有值，本次不新增。
+AGENTS.md:923:- 状态：`FIXED_DEFAULT`。2026-11-15 确认 D1：POKPET 标题、卡片和正文全套使用 Poppins。主标题 **Poppins Bold / 700**，卡片和次级标题 **Poppins SemiBold / 600**，正文 **Poppins Regular / 400**。历史锁定是 Avenir Next Bold / Demi Bold 加 Arial Regular 正文，自本日起由 Poppins 对应字重取代，不静默换成第三套字体。
+AGENTS.md:926:- 正文不再为了“更换标题”而单独留在 Arial。D1 要求正文也用 Poppins Regular。非 POKPET 且用户明确要求恢复 2026-09-09 字体时，才使用历史组合：Avenir Next 标题加 Arial 正文。
+AGENTS.md:932:- 参考样式：`concept_pet_fountain_20260909/title_font_options/index.html` 中 **01 · Avenir Next Demi Bold**。这是 2026-09-09 的历史样式名，该目录未随仓库提供；现行字体是 Poppins，不按这个文件名回退。
+AGENTS.md:963:- 主标题、独立支持信息卡和卖点卡外缘共用左对齐轴。1464×600参考起点左144px、字顶115px，允许按实际照片向内调整；主标题 Poppins Bold 约52px、行距63px，通常1–2行，保持自然语义断行。历史字体曾为 Avenir Next Bold，2026-11-15 起改为 Poppins（D1），52px 仍是原有起点。
+AGENTS.md:966:- 参考卡宽约393–440px，圆角约12–16px，内边距约24px；图标约22–24px、线宽约2px，图标与文字间隔约18–22px；标签 Poppins SemiBold 约22–24px，说明 Poppins Regular 约18–24px。高度按实际行数和说明量决定，不机械锁死120px。历史标签字体曾为 Avenir Next Demi Bold，说明曾为 Arial，2026-11-15 起改为 Poppins（D1）。
+AGENTS.md:990:2026-09-18 至 2026-11-14 的历史字体是 Avenir Next Bold、Avenir Next Demi Bold 和 Arial Regular。上表自 2026-11-15 起改为 Poppins，字重层级不改。
+AGENTS.md:1022:- 输出文件必须嵌入或正确解析 `Poppins Bold`、`Poppins SemiBold` 与 `Poppins Regular`。缺失字体时不得静默替换后判定通过。2026-09-18 原要求解析 Avenir Next Bold、Avenir Next Demi Bold 与 Arial Regular；该要求自 2026-11-15 起由上述 Poppins 字重取代。
+AGENTS.md:1072:- POKPET 的场景风格执行 UTA，不继续默认 `STYLE-HCEL-01`。非 POKPET 或用户指定启用 §7.4 时，才执行 `STYLE-HCEL-01`。主标题使用 Poppins Bold / 700，卡片标题使用 Poppins SemiBold / 600，正文使用 Poppins Regular / 400。历史字体曾为 Avenir Next Bold / Demi Bold 与 Arial Regular，2026-11-15 起取代。技术示意服从本品事实，不能为了借鉴而换成无关科技风或复制竞品资产。
+docs/FEATURE_VISUAL_EXPRESSION.md:3:> 状态：部分有效，2026-11-15。映射写法仍可参考。文中的 5L、电池供电、仅顶盘不锈钢、Avenir / Arial，属于 2026-09-10 的概念喂水器，不是 POKPET。POKPET 的事实以 UTA §6E.2 第 6 条和 §14.8 为准；字体以 Poppins 为准。不要把本文的容量和电池写成 POKPET 卖点。
+docs/FEATURE_VISUAL_EXPRESSION.md:32:沿用暖木、奶油色、深绿和暖中性真实光影。2026-09-10 的标题是 Avenir Next Demi Bold，正文和图标标签是 Arial；这是历史字体，POKPET 自 2026-11-15 起用 Poppins。睡眠场景按 `benefit_context` 排列人物关系，摄影底图仍需保持产品真实尺度、透视与环境光影。
+docs/FEATURE_VISUAL_EXPRESSION.md:93:布局采纳依据见 [9款 Amazon 案例对照](../icon_typography_study_20260910/amazon_brands/index.html)。借鉴简洁层级、具体场景和结构说明。2026-09-10 写的是保持 Avenir/Arial；该句自 2026-11-15 起只作历史。POKPET 用 Poppins，A+ 标题起点仍不新增未经测量的竞品字号、手机行为或功能事实。
+docs/POKPET_APLUS_VISUAL_STANDARD_v02.md:361:字体沿用 v01：Avenir Next Bold 700（标题、数字、字标），Avenir Next Demi Bold 600（标签、卡片标题、单位），Arial Regular 400（副句）。
+docs/STYLE_WAPSI_01.md:3:> 状态：部分有效，2026-11-15 起降级。POKPET 默认不使用本预设；只在非 POKPET 项目或用户明确指定时可选。历史参数保留。字体不再使用 Avenir Next 与 Arial，POKPET 全套 Poppins（D1）。色调不作为 POKPET 现行标准，见 UTA §9.1。
+docs/STYLE_WAPSI_01.md:21:执行参数、三种子模式、双端规则和QA见根目录AGENTS.md第7.8节。2026-09-14 当时的字体是 Avenir Next Bold / Demi Bold 与 Arial Regular；该句自 2026-11-15 起只作为历史记录。POKPET 现行字体是 Poppins。精确文字后期排版。橙色强调面积控制在3%–8%，主体比背景亮约0.5–1EV作为起点，不能把这些建议冒充参考图实测值。
+docs/UTA_STYLE_STANDARD.md:16:6. **尺寸：主图 1:1（2000×2000），副图一律 4:5 竖长图（1600×2000），A+ 1464×600，详见第 5A 节。字体以第 6A 节为准（2026-11-15 更新）。** 标题和正文都用 Poppins（D1）。1600×2000 的标题为 92px（D2，来源 AGENTS §10.1.4，2026-11-15）。此前写的“约 96–128 px”和 §5A 的“52–58 px”都是被取代的历史数字，不再执行。副标题与标题的比例仍约 2.5:1 / 0.4 倍；不把这个比例换算成新的绝对像素写进规范。hero 数字仍是标题的 2–3.5 倍，用琥珀色 #F47A21；浅底正文颜色 #0F2438 或深棕 #3B2A20。原定的 Avenir Next 在本机没有安装，所以改用开源的 Poppins。字体文件和 SIL OFL 1.1 文本在 `fonts/poppins/`（2026-11-15 已核对授权文本和字体名）。
+docs/UTA_STYLE_STANDARD.md:392:- 标题：Poppins Bold（原 Avenir Next，已被第 6A 节取代），在 1600 px 宽画布上为 92px（D2，2026-11-15）。旧文“约 96–128 px”保留为已取代的历史数字，不再执行。最多 2 行，句首大写；口号类标题可以全大写。正文也用 Poppins，不另留一套正文字体（D1）。
+----- stderr -----
+(empty)
+EXIT:0
+
+$ wc -l docs/UTA_QUICKSTART.md
+77 docs/UTA_QUICKSTART.md
+----- stderr -----
+(empty)
+EXIT:0
+
+$ python3 - <<'EOF'
+import re,os
+t=open("docs/uta_style_v3/CASE_INDEX.md",encoding="utf-8").read()
+miss=[p for p in re.findall(r'docs/uta_style_v3/assets/[\w\-/\.]+\.(?:jpg|png)',t) if not os.path.exists(p)]
+print("missing:",miss)
+EOF
+missing: []
+----- stderr -----
+(empty)
+EXIT:0
+
+$ python3 tools/grade_check.py --contrast --json $(ls docs/uta_style_v3/tests/v05_gpt/S*.png)
+{"mode": "contrast", "slot": null, "sample": "400x400", "sample_note": "UTA §6F.1 与 §9 写 200×200；本脚本保持改前的 400×400。", "cannot_judge": ["字体", "错字", "产品外形", "表情", "能联想到"], "pass": false, "results": [{"file": "docs/uta_style_v3/tests/v05_gpt/S1.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.69403, "L_std": 0.183134, "p5": 0.346826, "p95": 0.919173, "sat": 0.232553, "warm_RminusB": 0.15586, "span_p95_minus_p5": 0.572347, "dark_fraction_L_lt_0_2": 0.021175}, "flags": ["L_mean", "L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S1.png L_mean=0.694(!§6F) L_std=0.183(!§6F) p5=0.347(!§6F) p95=0.919 span_p95_minus_p5=0.572(!§6F) dark_fraction_L_lt_0_2=0.021(!§6F)"}, {"file": "docs/uta_style_v3/tests/v05_gpt/S2.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.635571, "L_std": 0.217944, "p5": 0.235225, "p95": 0.921933, "sat": 0.202277, "warm_RminusB": 0.120108, "span_p95_minus_p5": 0.686708, "dark_fraction_L_lt_0_2": 0.039569}, "flags": ["L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S2.png L_mean=0.636 L_std=0.218(!§6F) p5=0.235(!§6F) p95=0.922 span_p95_minus_p5=0.687(!§6F) dark_fraction_L_lt_0_2=0.040(!§6F)"}, {"file": "docs/uta_style_v3/tests/v05_gpt/S3.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.585847, "L_std": 0.217088, "p5": 0.224774, "p95": 0.87803, "sat": 0.239513, "warm_RminusB": 0.135752, "span_p95_minus_p5": 0.653256, "dark_fraction_L_lt_0_2": 0.032594}, "flags": ["L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S3.png L_mean=0.586 L_std=0.217(!§6F) p5=0.225(!§6F) p95=0.878 span_p95_minus_p5=0.653(!§6F) dark_fraction_L_lt_0_2=0.033(!§6F)"}, {"file": "docs/uta_style_v3/tests/v05_gpt/S4.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.557361, "L_std": 0.201094, "p5": 0.189635, "p95": 0.826246, "sat": 0.189086, "warm_RminusB": 0.091306, "span_p95_minus_p5": 0.636612, "dark_fraction_L_lt_0_2": 0.056938}, "flags": ["L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S4.png L_mean=0.557 L_std=0.201(!§6F) p5=0.190(!§6F) p95=0.826 span_p95_minus_p5=0.637(!§6F) dark_fraction_L_lt_0_2=0.057(!§6F)"}, {"file": "docs/uta_style_v3/tests/v05_gpt/S5.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.747665, "L_std": 0.198012, "p5": 0.339772, "p95": 0.964958, "sat": 0.134283, "warm_RminusB": 0.083579, "span_p95_minus_p5": 0.625186, "dark_fraction_L_lt_0_2": 0.021462}, "flags": ["L_mean", "L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S5.png L_mean=0.748(!§6F) L_std=0.198(!§6F) p5=0.340(!§6F) p95=0.965 span_p95_minus_p5=0.625(!§6F) dark_fraction_L_lt_0_2=0.021(!§6F)"}, {"file": "docs/uta_style_v3/tests/v05_gpt/S6.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.676774, "L_std": 0.198531, "p5": 0.307014, "p95": 0.942227, "sat": 0.176209, "warm_RminusB": 0.102803, "span_p95_minus_p5": 0.635213, "dark_fraction_L_lt_0_2": 0.030537}, "flags": ["L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S6.png L_mean=0.677 L_std=0.199(!§6F) p5=0.307(!§6F) p95=0.942 span_p95_minus_p5=0.635(!§6F) dark_fraction_L_lt_0_2=0.031(!§6F)"}, {"file": "docs/uta_style_v3/tests/v05_gpt/S7.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.6681, "L_std": 0.204054, "p5": 0.315876, "p95": 0.919247, "sat": 0.189857, "warm_RminusB": 0.114307, "span_p95_minus_p5": 0.603371, "dark_fraction_L_lt_0_2": 0.020275}, "flags": ["L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S7.png L_mean=0.668 L_std=0.204(!§6F) p5=0.316(!§6F) p95=0.919 span_p95_minus_p5=0.603(!§6F) dark_fraction_L_lt_0_2=0.020(!§6F)"}, {"file": "docs/uta_style_v3/tests/v05_gpt/S8.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.654781, "L_std": 0.200504, "p5": 0.224095, "p95": 0.837489, "sat": 0.27075, "warm_RminusB": 0.20441, "span_p95_minus_p5": 0.613395, "dark_fraction_L_lt_0_2": 0.044362}, "flags": ["L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S8.png L_mean=0.655 L_std=0.201(!§6F) p5=0.224(!§6F) p95=0.837 span_p95_minus_p5=0.613(!§6F) dark_fraction_L_lt_0_2=0.044(!§6F)"}, {"file": "docs/uta_style_v3/tests/v05_gpt/S9.png", "width": 1122, "height": 1402, "metrics": {"L_mean": 0.700812, "L_std": 0.185168, "p5": 0.300556, "p95": 0.904678, "sat": 0.148967, "warm_RminusB": 0.093631, "span_p95_minus_p5": 0.604122, "dark_fraction_L_lt_0_2": 0.030081}, "flags": ["L_mean", "L_std", "p5", "span_p95_minus_p5", "dark_fraction_L_lt_0_2"], "size_ok": null, "white_edge_ok": null, "pass": false, "tone_skipped": false, "text": "docs/uta_style_v3/tests/v05_gpt/S9.png L_mean=0.701(!§6F) L_std=0.185(!§6F) p5=0.301(!§6F) p95=0.905 span_p95_minus_p5=0.604(!§6F) dark_fraction_L_lt_0_2=0.030(!§6F)"}]}
+----- stderr -----
+(empty)
+EXIT:1
+$ echo $?
+1
+ECHO_EXIT:0
+
+===== 补充：尺寸 / 白边 / dark / outdoor / JSON 退出码 / 原型正负例 =====
+$ python3 tools/test_uta_checks.py -v
+test_contrast_exit_code_and_mutual_exclusion (__main__.GradeCheckTests.test_contrast_exit_code_and_mutual_exclusion) ... ok
+test_dark_and_outdoor_still_run (__main__.GradeCheckTests.test_dark_and_outdoor_still_run) ... ok
+test_missing_file_exit_2 (__main__.GradeCheckTests.test_missing_file_exit_2) ... ok
+test_slot_size_and_white_edge (__main__.GradeCheckTests.test_slot_size_and_white_edge) ... ok
+test_positive_poppins_and_negative_cases (__main__.LayoutPrototypeTests.test_positive_poppins_and_negative_cases) ... /usr/lib/python3.12/unittest/case.py:589: ResourceWarning: unclosed file <_io.BufferedReader name='/tmp/tmp_m31_2z_/ok/ok_master.png'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.584s
+
+OK
+EXIT:0
