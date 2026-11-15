@@ -2,7 +2,7 @@
 
 对应 AGENTS v2.1，2026-09-10。第10.4节的布局方法已由用户确认固定；本文是当前喂水器的落地示例，不代表既有图片已修改或通过新验收。
 
-本文的 5L、25 dB、顶盘不锈钢和电池供电只属于这一套概念喂水器。POKPET 10L 的 Listing 图库映射见 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md` 第13节，不得借用本组数字。自 v2.8 起，宠物电器副图的画面容器以 `STYLE-GALLERY-OIA-01` 为准；本文继续说明卖点如何变成可见动作。
+本文的 5L、顶盘不锈钢和电池供电只属于这一套概念喂水器。POKPET 10L 的成套主张见 `docs/APLUS_STANDARD_ONEISALL.md` 第13节，副图映射见 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md` 第13节；不要从本文把 5L 或电池供电套到那套计划。自 v2.8 起，宠物电器副图的画面容器以 `STYLE-GALLERY-OIA-01` 为准，A+ 整页以 `STYLE-APLUS-OIA-01` 为准。本文继续说明卖点如何变成可见动作。
 
 ## 1. 先确定沟通任务
 

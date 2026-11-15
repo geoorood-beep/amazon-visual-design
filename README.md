@@ -19,6 +19,7 @@
 | 宠物用品卖点可视化标准 | [PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md](docs/PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md) |
 | 固定风格说明与三张参考图 | [STYLE_WAPSI_01.md](docs/STYLE_WAPSI_01.md)、[style_references](docs/style_references/) |
 | 宠物电器 Listing 副图图库构图（STYLE-GALLERY-OIA-01） | [LISTING_GALLERY_STANDARD_ONEISALL.md](docs/LISTING_GALLERY_STANDARD_ONEISALL.md) |
+| 宠物电器 A+ 页面（STYLE-APLUS-OIA-01） | [APLUS_STANDARD_ONEISALL.md](docs/APLUS_STANDARD_ONEISALL.md) |
 | 规划、模板、提示词和验收技能 | [skills/amazon-visual-skill](skills/amazon-visual-skill/) |
 | 水体局部合成及实际改动计数 | [composite_water_clarity.c](tools/composite_water_clarity.c) |
 | 2×尺寸导出示例 | [upscale_2x.swift](tools/upscale_2x.swift) |

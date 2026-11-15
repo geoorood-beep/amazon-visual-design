@@ -279,4 +279,4 @@ feature_visual_map:
 
 本标准是品类级框架，不是对具体型号功能的默认承诺。每次项目必须重新核对规格、变体、测试和包装清单。
 
-自 AGENTS v2.8 起，宠物电器 Listing 副图的构图、光位和排序默认执行 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md`（`STYLE-GALLERY-OIA-01`）。本文件第4.1节和第6.3节仍用来选择「要证明哪件事实」；图库标准决定这些事实落在哪一种画面容器里，以及喂水器的默认顺序。没有证据的图位跳过。本文件中的 10L 只是容量示例，不是所有喂水器的规格。
+自 AGENTS v2.8 起，宠物电器 Listing 副图的构图、光位和排序默认执行 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md`（`STYLE-GALLERY-OIA-01`）。A+ 整页默认执行 `docs/APLUS_STANDARD_ONEISALL.md`（`STYLE-APLUS-OIA-01`）。本文件第4.1节和第6.3节仍用来选择「要证明哪件事实」；图库标准和 A+ 标准决定这些事实落在哪一种画面容器里。没有证据的图位跳过。本文件中的 10L 只是容量示例，不是所有喂水器的规格。
