@@ -1,6 +1,6 @@
 # 亚马逊主图与 A+ 图片架构设计 AGENTS
 
-版本：2.9
+版本：2.10
 适用范围：本目录及全部子目录  
 主要市场：Amazon；用户未指定站点时默认 Amazon US，但必须明确标注这一假设。
 
@@ -915,7 +915,7 @@ SKU_APLUS01_brand-hero_US_mobile_600x450_v01.png
 
 ### 9.3.2 宠物电器 A+ 默认页面
 
-状态：`FIXED_DEFAULT`，2026-11-15。喂水器、喂食器、猫砂盆的 A+，在用户未指定其他结构时按 `STYLE-APLUS-OIA-01` 编排。执行前阅读 `docs/APLUS_STANDARD_ONEISALL.md` 第5.1节的实测配方，以及 `research/oneisall/VISUAL_CASE_STUDY.md`。
+状态：`FIXED_DEFAULT`，2026-11-15。喂水器、喂食器、猫砂盆的 A+，在用户未指定其他结构时按 `STYLE-APLUS-OIA-01` 编排。执行前阅读 `docs/APLUS_STANDARD_ONEISALL.md` 第5.1节的实测配方，以及 `research/oneisall/VISUAL_CASE_STUDY.md`。模块与条款的对照见 `research/oneisall/STRUCTURE.md`。小红书第三方参考索引见 `research/references/xiaohongshu/README.md`，不改变本节规则。
 
 - 默认电脑端仍是第9.3.1节的 `1464 × 600`，手机端仍是独立构图的 `600 × 450`。Premium 英雄可以更高，例如 `1464 × 1175`；账户没有 Premium A+ 时改为标准 A+ `970 × 600`。两种覆盖都要重新构图，并在 brief 标明 `Amazon US / module assumption` 或覆盖原因。
 - 页面顺序是：Hero（两行标题加 3–6 个已确认芯片）、一个带参照曲线或标尺的大数字、按房间分的场景标签、2–3 个深潜、深色示意剖视、已确认才做的耗材/视频/App、自有型号对比表、品牌收束。一页 7–9 个模块。轮播第一张必须单独成立。

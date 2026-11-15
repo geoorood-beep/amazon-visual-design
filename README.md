@@ -1,6 +1,6 @@
 # 亚马逊美工设计
 
-当前规则版本：**v2.9**。本仓库保存 Amazon 主图、副图与 A+ 的作图规则、配套技能、卖点可视化方法和局部图片处理工具。
+当前规则版本：**v2.10**。本仓库保存 Amazon 主图、副图与 A+ 的作图规则、配套技能、卖点可视化方法和局部图片处理工具。
 
 ## 从这里开始
 
@@ -20,7 +20,8 @@
 | 固定风格说明与三张参考图 | [STYLE_WAPSI_01.md](docs/STYLE_WAPSI_01.md)、[style_references](docs/style_references/) |
 | 宠物电器 Listing 副图图库构图（STYLE-GALLERY-OIA-01） | [LISTING_GALLERY_STANDARD_ONEISALL.md](docs/LISTING_GALLERY_STANDARD_ONEISALL.md) |
 | 宠物电器 A+ 页面（STYLE-APLUS-OIA-01） | [APLUS_STANDARD_ONEISALL.md](docs/APLUS_STANDARD_ONEISALL.md) |
-| oneisall 研究截图、索引和视觉尺寸案例 | [research/oneisall](research/oneisall/README.md)、[VISUAL_CASE_STUDY.md](research/oneisall/VISUAL_CASE_STUDY.md) |
+| oneisall 研究截图、索引和视觉尺寸案例 | [research/oneisall](research/oneisall/README.md)、[VISUAL_CASE_STUDY.md](research/oneisall/VISUAL_CASE_STUDY.md)、[STRUCTURE.md](research/oneisall/STRUCTURE.md) |
+| 小红书第三方参考（内部研究） | [research/references/xiaohongshu](research/references/xiaohongshu/README.md) |
 | 规划、模板、提示词和验收技能 | [skills/amazon-visual-skill](skills/amazon-visual-skill/) |
 | 水体局部合成及实际改动计数 | [composite_water_clarity.c](tools/composite_water_clarity.c) |
 | 2×尺寸导出示例 | [upscale_2x.swift](tools/upscale_2x.swift) |

@@ -1,5 +1,11 @@
 # 版本记录
 
+## v2.10 — 2026-11-15 模块对照与小红书参考索引
+
+- 新增 `research/oneisall/STRUCTURE.md`。30 个 A+ 模块各有文件链接、尺寸、构图、文字档、光线，以及对应的 `docs/APLUS_STANDARD_ONEISALL.md` 条款。标准正文未改。
+- 新增 `research/references/xiaohongshu/`。八张参考按发送顺序命名为 `XHS_001.jpg` 至 `XHS_008.jpg`，笔记同名。原始编号 IMG_0493、0494、0495、0496、0497、0499、0498、0501 留在索引表。IMG_0500 仍无文件，笔记为 `XHS_pending_IMG_0500.md`。
+- 这些截图只供内部研究，不授权使用其画面或商标。
+
 ## v2.9 — 2026-11-15 oneisall 视觉尺寸案例
 
 - 把 2026-11-15 的竞品截图放入 `research/oneisall/`：四款图库、A+ 模块裁切、联系表和 `aplus_study.md`。索引为 `research/oneisall/README.md`。

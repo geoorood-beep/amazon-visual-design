@@ -2,7 +2,7 @@
 
 这些是 2026-11-15 从 Amazon US 页面截下来的竞品截图，只供内部设计研究。它们不是本品素材，不能当作 POKPET 的规格、检测或授权资产，也不能把画面里的商标、原句、徽章和健康承诺写进成品。
 
-视觉尺寸的逐项测量见 [VISUAL_CASE_STUDY.md](VISUAL_CASE_STUDY.md)。页面模块的文字拆解见 [aplus_study.md](aplus_study.md)。可执行的生产规则在 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md` 与 `docs/APLUS_STANDARD_ONEISALL.md`。
+视觉尺寸的逐项测量见 [VISUAL_CASE_STUDY.md](VISUAL_CASE_STUDY.md)。三十个 A+ 模块与标准条款的逐条对照见 [STRUCTURE.md](STRUCTURE.md)。页面模块的文字拆解见 [aplus_study.md](aplus_study.md)。可执行的生产规则在 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md` 与 `docs/APLUS_STANDARD_ONEISALL.md`。
 
 ## 采集限制
 
@@ -15,6 +15,7 @@
 | 路径 | 内容 |
 |---|---|
 | `aplus_study.md` | 四页 A+ 的模块表、共同骨架和当时的 POKPET 方案笔记 |
+| `STRUCTURE.md` | 30 个 A+ 模块与 `docs/APLUS_STANDARD_ONEISALL.md` 条款的逐条对照 |
 | `sheets/` | 每个 ASIN 的图库联系表和 A+ 联系表 |
 | `gallery/<ASIN>/01.jpg`–`09.jpg` | Listing 图库单张。`01` 是主图，其余是副图 |
 | `aplus_modules/<ASIN>/` | 按页面顺序裁出的 A+ 模块 |
