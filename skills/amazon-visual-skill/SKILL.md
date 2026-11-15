@@ -28,4 +28,4 @@ Use these files in this skill folder when relevant:
 - `templates/aplus.md`: A+ template
 - `prompts/white_background.md`: pure white background prompt
 - `qa/checklist.md`: compliance checklist
-- `knowledge/README.md`: placeholder for Amazon visual rules and SOPs
+- `knowledge/README.md`: index of AGENTS.md and the listing-gallery, style, and QA docs

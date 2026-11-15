@@ -18,6 +18,8 @@
 
 执行参数、三种子模式、双端规则和QA见根目录AGENTS.md第7.8节。当前项目字体继续使用Avenir Next Bold / Demi Bold与Arial Regular；精确文字后期排版。橙色强调面积控制在3%–8%，主体比背景亮约0.5–1EV作为起点，不能把这些建议冒充参考图实测值。
 
+宠物电器的 Listing 副图不使用本文件的左文右图或三卡片，而使用 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md`（`STYLE-GALLERY-OIA-01`）。两套标准可以共用 `#F47A21`、`#25170F`、`#F1EAE0`。本文件继续只约束 A+ 与品牌叙事模块。
+
 ## 案例卡
 
 案例名：oneisall暖琥珀产品叙事信息图  

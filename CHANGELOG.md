@@ -1,5 +1,12 @@
 # 版本记录
 
+## v2.8 — 2026-11-15 oneisall Listing 图库构图
+
+- 新增 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md`，风格代码 `STYLE-GALLERY-OIA-01`。所有者批准 oneisall 的 Amazon Listing 主图/副图方法作为宠物电器副图默认构图。
+- 参考 ASIN：B0BN2Z5CDC、B0FN7FQ7RJ、B0C5X2G933、B0C5X4N132（amazon.com，方法核对日期 2026-11-15）。含 POKPET 10L 图位映射示例；有线与无线不得合并，概念 5L 的 25 dB 等参数不得套用。
+- `AGENTS.md` 第7.11节与第9.2.2节将该标准设为喂水器、喂食器、猫砂盆副图的默认。纯白无字主图、Product DNA、示意弧线、排版工具出字、禁止编造声明、原生与放大的如实标注，以及 `STYLE-WAPSI-01` 色板均保持有效；细化处在标准第8节和 AGENTS 第7.11.3节写明。
+- A+ 模块不改用这套副图底栏。人物协作场景仍用 `STYLE-HCEL-01`。
+
 ## v2.7 — 2026-11-15 GitHub首次同步
 
 本次发布现有v2.7规则快照，不将同步日期冒充规则首次制定日期。
