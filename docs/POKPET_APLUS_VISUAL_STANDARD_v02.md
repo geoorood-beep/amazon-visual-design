@@ -1,3 +1,5 @@
+> ⚠️ 已被取代：请使用 [UTA_STYLE_STANDARD.md](UTA_STYLE_STANDARD.md)（Uta Style v3，2026-11-15）。本文件仅作历史存档。
+
 # POKPET A+ 视觉标准 v02（Uta Style）
 
 版本：v02 草案，2026-11-15 13:10（UTC+8）。状态：**待用户确认**。确认前不出图。  

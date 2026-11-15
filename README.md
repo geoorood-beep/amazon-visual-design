@@ -2,6 +2,8 @@
 
 当前规则版本：**v2.11**。本仓库保存 Amazon 主图、副图与 A+ 的作图规则、配套技能、卖点可视化方法和局部图片处理工具。
 
+当前视觉标准：[UTA_STYLE_STANDARD.md](docs/UTA_STYLE_STANDARD.md)（Uta Style v3，2026-11-15）。
+
 ## 从这里开始
 
 1. 在 Codex 中打开本仓库，先读取 [AGENTS.md](AGENTS.md)。这是项目规则的主入口。

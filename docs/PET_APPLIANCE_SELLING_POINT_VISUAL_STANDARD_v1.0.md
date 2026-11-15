@@ -1,3 +1,5 @@
+> ⚠️ 已被取代：请使用 [UTA_STYLE_STANDARD.md](UTA_STYLE_STANDARD.md)（Uta Style v3，2026-11-15）。本文件仅作历史存档。
+
 # 宠物喂食器、喂水器、猫厕所卖点可视化标准 v1.0
 
 适用市场：Amazon US（默认假设；实际站点和模块另行覆盖）  
