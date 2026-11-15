@@ -1,5 +1,33 @@
 # 版本记录
 
+## v2.11 — 2026-11-15 POKPET A+ 视觉标准 v02 配图
+
+- 新增 `docs/POKPET_APLUS_VISUAL_STANDARD_v02.md`。正文规则与 235 行草案相同，只加入图片标题和说明。
+- 8 个模块示例和整页预览压缩为约 1200 px 宽的 JPG，放在 `docs/assets/visual_standard_v02/modules/`。标注为 v02 案例：原生约 1280×720，1464×600 为放大裁切。
+- 文中点名的 22 张 oneisall 参考图链接到已有的 `research/oneisall/`，不另存副本。
+
+## v2.10 — 2026-11-15 模块对照与小红书参考索引
+
+- 新增 `research/oneisall/STRUCTURE.md`。30 个 A+ 模块各有文件链接、尺寸、构图、文字档、光线，以及对应的 `docs/APLUS_STANDARD_ONEISALL.md` 条款。标准正文未改。
+- 新增 `research/references/xiaohongshu/`。八张参考按发送顺序命名为 `XHS_001.jpg` 至 `XHS_008.jpg`，笔记同名。原始编号 IMG_0493、0494、0495、0496、0497、0499、0498、0501 留在索引表。IMG_0500 仍无文件，笔记为 `XHS_pending_IMG_0500.md`。
+- 这些截图只供内部研究，不授权使用其画面或商标。
+
+## v2.9 — 2026-11-15 oneisall 视觉尺寸案例
+
+- 把 2026-11-15 的竞品截图放入 `research/oneisall/`：四款图库、A+ 模块裁切、联系表和 `aplus_study.md`。索引为 `research/oneisall/README.md`。
+- 新增 `research/oneisall/VISUAL_CASE_STUDY.md`。不锈钢饮水机和无线饮水机按全分辨率逐张记录光线、字号、镜头、色彩抽样和组件；两款喂食器用于对照俯拍标尺和 App 场景。
+- `docs/LISTING_GALLERY_STANDARD_ONEISALL.md` 第6.1节和 `docs/APLUS_STANDARD_ONEISALL.md` 第5.1节写入可执行配方：窗光与夜灯、1464 网格、字号、芯片和禁止项。生产色板仍是 `STYLE-WAPSI-01`，文字仍在无字底图上排版。健康句、徽章和 SilentFlow™ 等商标不进入配方。
+- 副图标题改为亮墙一侧对齐，对称画面和夜景再居中。这是对「一律顶部居中」的细化。
+
+## v2.8 — 2026-11-15 oneisall Listing 图库与 A+ 页面
+
+- 新增 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md`，风格代码 `STYLE-GALLERY-OIA-01`。所有者批准 oneisall 的 Amazon Listing 主图/副图方法作为宠物电器副图默认构图。
+- 新增 `docs/APLUS_STANDARD_ONEISALL.md`，风格代码 `STYLE-APLUS-OIA-01`。同一批准扩展到 A+ 页面顺序、模块节奏和 1464 宽字号。`AGENTS.md` 第9.3.2节设为宠物电器 A+ 的默认。
+- 参考 ASIN：B0FN7FQ7RJ（Premium A+ 主要参考）、B0BN2Z5CDC、B0C5X2G933、B0C5X4N132。amazon.com，方法核对日期 2026-11-15；A+ 按原生 1464 宽的页面截图核对。
+- 默认模块仍是电脑端 `1464 × 600` 加独立手机端 `600 × 450`。Premium 英雄可以更高；没有 Premium A+ 时回退到 `970 × 600` 并重新构图。色板与 `STYLE-WAPSI-01` 共用。副句不小于 36 px，不照搬参考页约 28 px 的正文。
+- 含 POKPET 10L 的副图映射和 A+ 模块计划。成套计划里的指定数字在副图与 A+ 之间复用。概念 5L 文档的容量、顶盘限定和电池供电不套用。有线与无线不得合并。
+- 纯白无字主图、Product DNA、示意剖视、排版工具出字、禁止编造声明，以及原生与放大的如实标注保持有效。人物协作场景仍用 `STYLE-HCEL-01`。A+ 不改用副图底栏。
+
 ## v2.7 — 2026-11-15 GitHub首次同步
 
 本次发布现有v2.7规则快照，不将同步日期冒充规则首次制定日期。
