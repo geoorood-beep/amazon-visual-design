@@ -113,6 +113,11 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** fountain B0FJX69D2R a12「Feel the True Silence 20dB」暗场；B0FN7FQ7RJ g05、B0FJWV49LP g05「20dB」产品顶光暗场；B0DPMNQJ2N a03 曲线；B0GYZQ79CY a07「Silent for Sensitive Pets」暗场里猫躺平；B0C89MMFW1 g05 深蓝夜景；litter Neakasa B0DCFY8SB4 a46「Ultra-Quiet ≤50dB」猫在旁边睡；oneisall Ease S1 g16「Quiet Sweep. Peaceful Sleep. 45dB」暗室；Neakasa M9 用暗金戏剧光表现安全（同类手法）。
 
 <img src="uta_style_v3/assets/key/F_quiet_heronum_FJX69D2R.jpg" width="250"> <img src="uta_style_v3/assets/key/F_silent_night_GYZQ79CY.jpg" width="250"> <img src="uta_style_v3/assets/key/F_quiet_curve_DPMNQJ2N.jpg" width="250"> <img src="uta_style_v3/assets/key/L_neakasa_quiet_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_oneisall_quiet_EaseS1.jpg" width="160">
+路径：`docs/uta_style_v3/assets/key/F_quiet_heronum_FJX69D2R.jpg`
+路径：`docs/uta_style_v3/assets/key/F_silent_night_GYZQ79CY.jpg`
+路径：`docs/uta_style_v3/assets/key/F_quiet_curve_DPMNQJ2N.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_quiet_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_quiet_EaseS1.jpg`
 
 ### 4.2 容量 / 续航天数
 - **主推：** 巨型数字（20 Cups、7L、7.17L、14 days）直接压在产品或画面上。产品取正面或顶视，配一句换算文字（“2 只猫可用 10 天”）。
@@ -121,6 +126,13 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** feeder B0C5X4N132 g06「20 Cups」压在透明粮桶上；B0GFDCYGFM g04「40% Bigger 32 Cups」；B0DZCHN51D g05「15 Days」；fountain B0D5B6RLYY g01「7L」大字 + a11 柱状图；B0DS2N3T3X a02 柱状图「60%」+ 狗剪影；B0BN2Z5CDC g02 用 3 个小卡片列「5 / 10 / 15 lbs → 天数」；litter Neakasa g05「7.17L」俯拍倾倒猫砂、a43「7–14 Days 11.2L」抽屉拉出；PETLIBRO B0GTM9P94B g09「2.9-gallon / 14 days」；oneisall Ease S1 g11「14 Days 11L」。
 
 <img src="uta_style_v3/assets/key/D_20cups_C5X4N132.jpg" width="170"> <img src="uta_style_v3/assets/key/F_capacity_chart_D5B6RLYY.jpg" width="250"> <img src="uta_style_v3/assets/key/F_bars60_DS2N3T3X.jpg" width="250"> <img src="uta_style_v3/assets/key/L_neakasa_717L_DCFY8SB4.jpg" width="170"> <img src="uta_style_v3/assets/key/L_neakasa_14days_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_petlibro_bin_GTM9P94B.jpg" width="170"> <img src="uta_style_v3/assets/key/L_oneisall_14days_EaseS1.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/D_20cups_C5X4N132.jpg`
+路径：`docs/uta_style_v3/assets/key/F_capacity_chart_D5B6RLYY.jpg`
+路径：`docs/uta_style_v3/assets/key/F_bars60_DS2N3T3X.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_717L_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_14days_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_bin_GTM9P94B.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_14days_EaseS1.jpg`
 
 ### 4.3 感应 / 智能 App / 远程
 - **主推：** 欧美女性（或男性）在沙发、办公桌或通勤途中看手机，露出放松的微笑，背景虚化里有家和猫。手机界面后期合成，UI 用浮层卡片。
@@ -129,6 +141,12 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** feeder B0GFDCYGFM a02 女性看手机 + 参数小卡；B0DF2RPGDW g02 通勤女性；B0GFDH3WD5 a04 视频通话；B0DZCLG3SP a06 实时警报；litter PETLIBRO g06「Wi-Fi enabled control」手机特写，a23 女性在餐桌看「Monitor urinary habits」柱状图；oneisall Ease S1 g13 女性在笔记本旁看手机；Neakasa a38 只放 App 界面平铺（偏冷）。
 
 <img src="uta_style_v3/assets/key/D_human_phone_GFDH3WD5.jpg" width="250"> <img src="uta_style_v3/assets/key/D_plan_DF2RPGDW.jpg" width="250"> <img src="uta_style_v3/assets/key/L_petlibro_app_GTM9P94B.jpg" width="170"> <img src="uta_style_v3/assets/key/L_petlibro_woman_FKT2J6PV.jpg" width="250"> <img src="uta_style_v3/assets/key/L_oneisall_app_EaseS1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_neakasa_app_DCFY8SB4.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/D_human_phone_GFDH3WD5.jpg`
+路径：`docs/uta_style_v3/assets/key/D_plan_DF2RPGDW.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_app_GTM9P94B.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_woman_FKT2J6PV.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_app_EaseS1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_app_DCFY8SB4.jpg`
 
 ### 4.4 过滤 / 净水
 - **主推：** 滤芯分层爆炸图，层片斜向飞散，每层配一个短标签，背景是浅暖色或浅灰纯底。
@@ -137,6 +155,8 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** fountain B0FJX69D2R a13「Ultra Fresh」毛刷层飞散；B0DPMNQJ2N a05、B0C89MMFW1 a05 层片爆炸；B0BN2Z5CDC a09「3-layer filter system」；B0GYZQ79CY 主打无滤芯，用「Purely Fresh」分屏表现。
 
 <img src="uta_style_v3/assets/key/F_filter_layers_FJX69D2R.jpg" width="250"> <img src="uta_style_v3/assets/key/F_lab_D5B6RLYY.jpg" width="250">（右图为反例：实验室暗示）
+路径：`docs/uta_style_v3/assets/key/F_filter_layers_FJX69D2R.jpg`
+路径：`docs/uta_style_v3/assets/key/F_lab_D5B6RLYY.jpg`
 
 ### 4.5 易清洗 / 可拆部件
 - **主推：** 手部操作特写：提起泵、拉出抽屉、在水槽冲洗。机位为 45° 俯拍，场景是厨房台面。或者用洗碗机内部俯拍。
@@ -145,6 +165,13 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** fountain B0FJX69D2R a10/a14 洗碗机 + 手洗，a15「Crafted for Easier Cleaning」VS 分屏；B0BN2Z5CDC a04 洗碗机；B0FH691TR6 g07 女性在水槽清洗；feeder B0DZCHN51D a08 厨房水槽；B0GFDCYGFM g08 拆解平铺；litter oneisall Ease S1 g07「Deep Cleaning Made Easy」手提内胆、g10 硅胶垫；Neakasa a41 草地上冲洗猫砂床、M9 g07「Easy to Detach」3 步；PETLIBRO B0FKT2J6PV 抽屉特写，只出手。
 
 <img src="uta_style_v3/assets/key/F_dishwasher_FJX69D2R.jpg" width="250"> <img src="uta_style_v3/assets/key/F_clean_vs_FJX69D2R.jpg" width="250"> <img src="uta_style_v3/assets/key/D_sinkclean_DZCHN51D.jpg" width="250"> <img src="uta_style_v3/assets/key/L_oneisall_deepclean_EaseS1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_neakasa_washbed_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_petlibro_drawer_FKT2J6PV.jpg" width="250"> <img src="uta_style_v3/assets/key/L_neakasa_m9_steps_HC6Y2MS3.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/F_dishwasher_FJX69D2R.jpg`
+路径：`docs/uta_style_v3/assets/key/F_clean_vs_FJX69D2R.jpg`
+路径：`docs/uta_style_v3/assets/key/D_sinkclean_DZCHN51D.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_deepclean_EaseS1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_washbed_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_drawer_FKT2J6PV.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_m9_steps_HC6Y2MS3.jpg`
 
 ### 4.6 材质（304 不锈钢等）
 - **主推：** 金属微距特写：拉丝纹理清楚，加受控高光，表面可带水珠。「304」等材质字样做成大号字体后期排版（字体或浮雕效果）。猫舔水做辅助。
@@ -153,6 +180,11 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** fountain B0FJX69D2R a11「SUS 304」水面微距；B0DPMNQJ2N a06 碗体 + 304 字样；B0C89MMFW1 g04 304 vs plastic；B0FJX69D2R a08 猫戴帽持证书（拟人）；feeder B0G4DX3QR8 a11「Cleaner Chin」304 碗加大字；litter oneisall Ease S1 g19 不锈钢筛网对比。
 
 <img src="uta_style_v3/assets/key/F_steel_macro_FJX69D2R.jpg" width="250"> <img src="uta_style_v3/assets/key/F_steel_bowl_DPMNQJ2N.jpg" width="250"> <img src="uta_style_v3/assets/key/D_steel_304_G4DX3QR8.jpg" width="250"> <img src="uta_style_v3/assets/key/F_vs_plastic_C89MMFW1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_oneisall_guard_EaseS1.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/F_steel_macro_FJX69D2R.jpg`
+路径：`docs/uta_style_v3/assets/key/F_steel_bowl_DPMNQJ2N.jpg`
+路径：`docs/uta_style_v3/assets/key/D_steel_304_G4DX3QR8.jpg`
+路径：`docs/uta_style_v3/assets/key/F_vs_plastic_C89MMFW1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_guard_EaseS1.jpg`
 
 ### 4.7 水位 / 缺水提醒 / 自动断电
 - **主推：** 产品近景，水位窗或指示灯发光（蓝 = 正常，红 = 缺水），背景浅色或暗场。可放一个红灯局部放大圈。
@@ -160,6 +192,9 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** fountain B0BN2Z5CDC a07/g08 水位窗；B0DS2N3T3X a03「No need to lift the lid」蓝/红灯；B0D5B6RLYY a10「Alert and Auto Shut-Off」红灯。
 
 <img src="uta_style_v3/assets/key/F_level_window_BN2Z5CDC.jpg" width="170"> <img src="uta_style_v3/assets/key/F_level_light_DS2N3T3X.jpg" width="250"> <img src="uta_style_v3/assets/key/F_lowwater_shutoff_D5B6RLYY.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/F_level_window_BN2Z5CDC.jpg`
+路径：`docs/uta_style_v3/assets/key/F_level_light_DS2N3T3X.jpg`
+路径：`docs/uta_style_v3/assets/key/F_lowwater_shutoff_D5B6RLYY.jpg`
 
 ### 4.8 模式切换（水流 / 出粮模式）
 - **主推：** **3 张卡片并排**（每种模式一张卡，卡里是同一机位的小场景，下方放图标和短标签）。这是允许使用卡片的典型情况。
@@ -167,12 +202,17 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** fountain B0FJX69D2R a08「Explore the Favorite Flow」3 卡；B0D5B6RLYY a09 两模式分屏；B0BN2Z5CDC a08。
 
 <img src="uta_style_v3/assets/key/F_modes_3card_FJX69D2R.jpg" width="250"> <img src="uta_style_v3/assets/key/F_modes_split_D5B6RLYY.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/F_modes_3card_FJX69D2R.jpg`
+路径：`docs/uta_style_v3/assets/key/F_modes_split_D5B6RLYY.jpg`
 
 ### 4.9 电源 / 电池续航 / 断电备份
 - **主推：** 电池续航用巨型数字（30 days、100 days）加产品，场景是“插座够不到的地方”（窗台、走廊）。断电备份用夜间暗蓝场景，产品微亮，配电池图标。
 - **证据：** fountain B0FJWV49LP g06「30 days」；B0FJX69D2R g04「Peace of Mind, No More Charging Hassles」；feeder B0DZCLG3SP a02「100」电池；B0GGZZJ3RV a04「100 Days」；B0G4DX3QR8 a10「Never Miss A Meal」夜间蓝；B0C5X2G933 g06 断电。
 
 <img src="uta_style_v3/assets/key/F_battery30_FJWV49LP.jpg" width="170"> <img src="uta_style_v3/assets/key/D_battery100_DZCLG3SP.jpg" width="250"> <img src="uta_style_v3/assets/key/D_night_blue_G4DX3QR8.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/F_battery30_FJWV49LP.jpg`
+路径：`docs/uta_style_v3/assets/key/D_battery100_DZCLG3SP.jpg`
+路径：`docs/uta_style_v3/assets/key/D_night_blue_G4DX3QR8.jpg`
 
 ### 4.10 防卡粮 / 出粮精准 / 颗粒兼容
 - **主推：** 出粮转子或机构的悬浮爆炸图（浅暖色纯底或暗场），配粒径标注（0.2–0.7 in）。兼容性用 3–4 种粮袋或颗粒并排的图标行。
@@ -181,6 +221,11 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** feeder B0GFDCYGFM a10「Meals On Time」转子爆炸；B0C5X2G933 a06「Every Kibble Hits the Bowl」；B0DPZV3S7T a03 四袋兼容；B0D4DL67CV a03「Fair Feeding」天平俯拍；B0GFDH3WD5 a12 推荐喂量表；B0C5X2G933 a10 芯片暗场「Feeding Plan Never Lost」。
 
 <img src="uta_style_v3/assets/key/D_rotor_explode_GFDCYGFM.jpg" width="250"> <img src="uta_style_v3/assets/key/D_kibble_chart_DPZV3S7T.jpg" width="250"> <img src="uta_style_v3/assets/key/D_balance_overhead_D4DL67CV.jpg" width="250"> <img src="uta_style_v3/assets/key/D_table_GFDH3WD5.jpg" width="250"> <img src="uta_style_v3/assets/key/D_chip_dark_D4DL67CV.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/D_rotor_explode_GFDCYGFM.jpg`
+路径：`docs/uta_style_v3/assets/key/D_kibble_chart_DPZV3S7T.jpg`
+路径：`docs/uta_style_v3/assets/key/D_balance_overhead_D4DL67CV.jpg`
+路径：`docs/uta_style_v3/assets/key/D_table_GFDH3WD5.jpg`
+路径：`docs/uta_style_v3/assets/key/D_chip_dark_D4DL67CV.jpg`
 
 ### 4.11 防臭 / 密封（猫砂盆）
 - **主推：** 产品剖面或局部透视，用蓝色线条标出密封圈、封闭集便仓的位置，配 “Sealed” 类结构性描述。也可以用生活场景：猫在旁边放松，人在近处做家务，暗示“家里闻不到”。
@@ -189,6 +234,10 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** Neakasa B0DCFY8SB4 a40「Upgraded Seal」剖面蓝线、a39「Enhanced Odor Isolation」；PETLIBRO B0GTM9P94B g03「Always-on odor control 97%」（数字型，谨慎）、g08「Complete leak protection」分区；Neakasa M9 g05「PureTower」把耗材横放展示。
 
 <img src="uta_style_v3/assets/key/L_neakasa_seal_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_petlibro_odor_GTM9P94B.jpg" width="170"> <img src="uta_style_v3/assets/key/L_petlibro_leak_GTM9P94B.jpg" width="170"> <img src="uta_style_v3/assets/key/L_neakasa_m9_tower_HC6Y2MS3.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/L_neakasa_seal_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_odor_GTM9P94B.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_leak_GTM9P94B.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_m9_tower_HC6Y2MS3.jpg`
 
 ### 4.12 安全传感（猫砂盆 / 防夹）
 - **主推：** 产品半透视，传感器位置用发光点或红框标出，同时有一只猫正在进入或站在边缘，机位是低位 3/4。
@@ -197,6 +246,11 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** Neakasa B0DCFY8SB4 a37「High-Precision Detection」红框传感器，a36 旋转刻度；M9 g02 暗场；PETLIBRO g02「Multi-layer safety」猫进入；oneisall Ease S1 g04「Pet Safety First」夜间蓝光，猫低位走近，配 4 项图标。
 
 <img src="uta_style_v3/assets/key/L_neakasa_sensors_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_neakasa_rotation_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_neakasa_m9_safe_g02.jpg" width="170"> <img src="uta_style_v3/assets/key/L_petlibro_safety_GTM9P94B.jpg" width="170"> <img src="uta_style_v3/assets/key/L_oneisall_safety_EaseS1.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/L_neakasa_sensors_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_rotation_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_m9_safe_g02.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_safety_GTM9P94B.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_safety_EaseS1.jpg`
 
 ### 4.13 自清洁周期 / 省猫砂
 - **主推：** 猫砂颗粒宏观特写（筛网把结团和干净砂分开）加 hero number（「30% Litter Saving」）。时间设定用 3–4 个时间胶囊图标（5 / 10 / 15 分钟）配一只猫离开的场景。
@@ -205,6 +259,9 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** oneisall Ease S1 g17「The Highest Litter Efficiency 30%」宏观颗粒，g12「Custom Cleaning, On Your Schedule」时间胶囊，g08「EaseClean™ 10s / 20s」；PETLIBRO B0FKT2J6PV 换袋：只拍腿 + 垃圾袋。
 
 <img src="uta_style_v3/assets/key/L_oneisall_30pct_EaseS1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_oneisall_easeclean_EaseS1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_petlibro_legs_FKT2J6PV.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/L_oneisall_30pct_EaseS1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_easeclean_EaseS1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_legs_FKT2J6PV.jpg`
 
 ### 4.14 尺寸 / 是否放得下 / 开放空间
 - **主推：** 正交或 3/4 视图加尺寸线（in + cm），白底或浅灰底；猫砂盆再加一张“开顶俯拍，猫在里面转身”，配面积 hero number。
@@ -212,6 +269,11 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** Neakasa B0DCFY8SB4 a44、B0DK6RSFG2 g05/a07 三视图；M9 g06 洗衣机旁；oneisall Ease S1 g05「More Usable Space」顶视俯拍，g24「32% Open-Top Larger」，g31 尺寸；PETLIBRO g10「Large, open-top design」顶视猫；feeder B0GFDCYGFM g09、fountain B0FJX69D2R g07 参数图。
 
 <img src="uta_style_v3/assets/key/L_neakasa_measure_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_oneisall_space_EaseS1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_oneisall_32pct_EaseS1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_oneisall_dims_EaseS1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_petlibro_opentop_GTM9P94B.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/L_neakasa_measure_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_space_EaseS1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_32pct_EaseS1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_dims_EaseS1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_opentop_GTM9P94B.jpg`
 
 ### 4.15 多宠
 - **主推：** 俯拍双碗或双猫同时进食，间距标注（16–17 in）和「Balanced / 2X」；猫砂盆用 3 只不同体型的猫站成梯度，配体重范围。
@@ -219,48 +281,68 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - **证据：** feeder B0C5X2G933 a01「Dual Bowls Mealtime in Harmony」，B0DZCLG3SP a11「17 inches」俯拍，B0GFDCYGFM a09「15% Wider」；fountain B0D5B6RLYY g01 两只狗；litter Neakasa a42「Up to 3 cats 3.3–33 lbs」；PETLIBRO g05「Multi-pet recognition」。
 
 <img src="uta_style_v3/assets/key/D_multipet_C5X2G933.jpg" width="250"> <img src="uta_style_v3/assets/key/D_overhead_17in_DZCLG3SP.jpg" width="250"> <img src="uta_style_v3/assets/key/D_wider_GFDCYGFM.jpg" width="250"> <img src="uta_style_v3/assets/key/L_neakasa_multicat_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_petlibro_multicat_GTM9P94B.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/D_multipet_C5X2G933.jpg`
+路径：`docs/uta_style_v3/assets/key/D_overhead_17in_DZCLG3SP.jpg`
+路径：`docs/uta_style_v3/assets/key/D_wider_GFDCYGFM.jpg`
+路径：`docs/uta_style_v3/assets/key/L_neakasa_multicat_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_multicat_GTM9P94B.jpg`
 
 ### 4.16 进食姿势 / 舒适
 - **主推：** 侧面平视，猫低头进食，碗高或倾角用弧线和角度标注；「2X Higher」类数字。
 - **证据：** feeder B0GFDCYGFM a08「Comfortable Eating Posture 2X」；B0GFD9YWF2 a03；litter oneisall Ease S1 g29「Comfort for All Cats」猫在舱内，加 2 张小图。
 
 <img src="uta_style_v3/assets/key/D_posture_2x_GFDCYGFM.jpg" width="250"> <img src="uta_style_v3/assets/key/L_oneisall_comfort_EaseS1.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/D_posture_2x_GFDCYGFM.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_comfort_EaseS1.jpg`
 
 ### 4.17 稳固 / 防偷吃 / 防打翻
 - **主推：** 用动作抓拍：猫扒机身、站到机器上、伸爪掏粮口，产品纹丝不动。猫的表情要“偷看、得逞失败”。
 - **证据：** feeder B0D4DL67CV a09「Security Pet-Proof Lock」黑猫掏食；B0DPZV3S7T g05「Superbly Stable」猫站上去；fountain B0C89MMFW1 g02「Safety Snap Lid」暹罗猫推盖。
 
 <img src="uta_style_v3/assets/key/D_lock_D4DL67CV.jpg" width="250"> <img src="uta_style_v3/assets/key/F_snaplid_C89MMFW1.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/D_lock_D4DL67CV.jpg`
+路径：`docs/uta_style_v3/assets/key/F_snaplid_C89MMFW1.jpg`
 
 ### 4.18 出行 / 多日无人 / 摆放灵活
 - **主推：** 人拖着行李箱出门，猫在后面安心进食，配天数 hero number；无线产品用三联场景（客厅 / 卧室 / 厨房），这是允许用卡片的第二种情况。
 - **证据：** feeder B0G4DX3QR8 a05「14-Day Hassle-Free Feeding」；fountain B0C89MMFW1 g03 海滩度假「24hrs running 7 days」；B0GYZQ79CY a10「Places Your Cats Prefer」三联。
 
 <img src="uta_style_v3/assets/key/D_travel_human_G4DX3QR8.jpg" width="250"> <img src="uta_style_v3/assets/key/F_vacation_C89MMFW1.jpg" width="170"> <img src="uta_style_v3/assets/key/F_places_3panel_GYZQ79CY.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/D_travel_human_G4DX3QR8.jpg`
+路径：`docs/uta_style_v3/assets/key/F_vacation_C89MMFW1.jpg`
+路径：`docs/uta_style_v3/assets/key/F_places_3panel_GYZQ79CY.jpg`
 
 ### 4.19 适配猫砂 / 粮食类型
 - **主推：** 3–4 种颗粒宏观小方块排成网格，下方 ✔/✕ 标签，背景浅色纯底，旁边放产品。
 - **证据：** Neakasa a47「Recommended litter」网格；PETLIBRO a30「Works with most litter types」；oneisall Ease S1 g18；feeder B0DPZV3S7T a03。
 
 <img src="uta_style_v3/assets/key/L_neakasa_litter_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/L_petlibro_litters_GTM9P94B.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/L_neakasa_litter_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_litters_GTM9P94B.jpg`
 
 ### 4.20 操作简单 / 按键
 - **主推：** 手指按键微距，浅灰底，图标印刷要清楚。
 - **证据：** Neakasa a45「Clear Functions, No Guesswork」；feeder B0DZCHN51D g07「Simple Setting」；B0DPZV3S7T a05 小男孩操作（POKPET 若用儿童，须为欧美儿童且有成人在场）。
 
 <img src="uta_style_v3/assets/key/L_neakasa_buttons_DCFY8SB4.jpg" width="250"> <img src="uta_style_v3/assets/key/D_child_DPZV3S7T.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/L_neakasa_buttons_DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/key/D_child_DPZV3S7T.jpg`
 
 ### 4.21 宠物爱用（情绪型卖点）
 - **主推：** 近景或特写，宠物舔嘴、舌头卷水、眯眼，可加 2–3 张小图拼成连续动作。
 - **证据：** fountain B0DPMNQJ2N a02「CAT'S LOVE IN IT」舔嘴大特写 + 3 小图；B0FJX69D2R a02–a06「Sip Where Cats Relax / Joyful / Secure / Unbothered / Sleep Soundly」用 5 个不同机位讲同一个情绪主题；feeder B0GFDH3WD5 a08 翻肚。
 
 <img src="uta_style_v3/assets/key/F_emotion_lick_DPMNQJ2N.jpg" width="250"> <img src="uta_style_v3/assets/key/F_lifestyle_relax_FJX69D2R.jpg" width="250"> <img src="uta_style_v3/assets/key/D_cute_cat_GFDH3WD5.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/F_emotion_lick_DPMNQJ2N.jpg`
+路径：`docs/uta_style_v3/assets/key/F_lifestyle_relax_FJX69D2R.jpg`
+路径：`docs/uta_style_v3/assets/key/D_cute_cat_GFDH3WD5.jpg`
 
 ### 4.22 VS 对比（通用）
 - **规则：** 左边是我方，用暖光、色彩和清晰画面；右边是“Others”，去饱和、偏灰，绝不放品牌、Logo 或可识别外观。对比项不超过 3 条。
 - **证据：** fountain B0GYZQ79CY a01、a05「0 pump & parts vs 1 pump & 4 parts」；B0FJX69D2R g08「How We Stand Out」。
 
 <img src="uta_style_v3/assets/key/F_vs_hero_GYZQ79CY.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/F_vs_hero_GYZQ79CY.jpg`
 
 ---
 
@@ -500,28 +582,31 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 **共同点（锦浩精选）**：斜向上的低机位突出产品；卖点直接标在产品上，或者放进整齐的小方块里；画面要有一个色彩亮点（撞色或者蓝绿主色）；版面简洁，一块只讲一个点。
 
 ![IMG_0540](uta_style_v3/assets/key/IMG_0540.png)
+路径：`docs/uta_style_v3/assets/key/IMG_0540.png`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/IMG_0540.png" width="360" alt="IMG_0540"></td>
+<td><img src="uta_style_v3/assets/key/IMG_0540.png" width="360" alt="IMG_0540"><br><code>docs/uta_style_v3/assets/key/IMG_0540.png</code></td>
 <td>同 AP_007。开场是低机位斜向上。产品放在木台面上，暖的侧光，一只手把线拉出来，卖点是当场做出来的，引线从产品延伸出去。参考图底部的弧边上有英文标题，那是参考图自己的字，不抄进我们的画面。后面是四格细节拼贴、人在场景里的问题与解决、左边大数字右边场景、暗调微距，最后全家福收尾。给我们的规则：首帧用低机位仰拍；卖点用引线直接指到水位窗、顶部控制台和 304 机身。后面每个模块只讲一个点，一张图配一句话。</td>
 </tr>
 </table>
 
 ![IMG_0541](uta_style_v3/assets/key/IMG_0541.png)
+路径：`docs/uta_style_v3/assets/key/IMG_0541.png`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/IMG_0541.png" width="360" alt="IMG_0541"></td>
+<td><img src="uta_style_v3/assets/key/IMG_0541.png" width="360" alt="IMG_0541"><br><code>docs/uta_style_v3/assets/key/IMG_0541.png</code></td>
 <td>同 AP_006。人坐在产品后面和周围，产品在前景。页面中段突然出现一整条鲜绿的草坪，人躺在草地上拿着产品，用来打断白页。整页以白为主，只有一块深色规格。给我们的规则：人和产品同框时，产品在前景，低机位仰拍，关系要清楚。中段可以有一条撞色带，例如草绿，用来换节奏，但仍然要落在第 9.1 节的小红书日光调里。不抄参考图上的商标和参数。</td>
 </tr>
 </table>
 
 ![IMG_0542](uta_style_v3/assets/key/IMG_0542.png)
+路径：`docs/uta_style_v3/assets/key/IMG_0542.png`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/IMG_0542.png" width="360" alt="IMG_0542"></td>
+<td><img src="uta_style_v3/assets/key/IMG_0542.png" width="360" alt="IMG_0542"><br><code>docs/uta_style_v3/assets/key/IMG_0542.png</code></td>
 <td>同 AP_005。开场是女人和金毛在户外靠得很近，蓝绿色调。标题做了设计过的字体处理，产品被举到镜头前。下面是一排整齐的方卡或圆角小卡，每张一个细卖点，同一个色系。给我们的规则：A+ 首屏是暖的人宠场景，蓝绿或日光统一；标题按第 6A 节处理；场景下面一排等大的方卡，每张一个点。喂水器写 1 m 感应、10–15 秒延时、低于 25 dB、304、水泵和水盘可拆、缺水断电。喂食器待补充。不抄参考图上的品牌字。</td>
 </tr>
 </table>
@@ -616,280 +701,311 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 
 
 ![IMG_0540](uta_style_v3/assets/key/IMG_0540.png)
+路径：`docs/uta_style_v3/assets/key/IMG_0540.png`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/IMG_0540.png" width="360" alt="IMG_0540"></td>
+<td><img src="uta_style_v3/assets/key/IMG_0540.png" width="360" alt="IMG_0540"><br><code>docs/uta_style_v3/assets/key/IMG_0540.png</code></td>
 <td>同 AP_007。低机位斜向上，木台面暖侧光，手把零件拉出来，引线从产品走出。接到第 1、2、7、10 拍：首帧仰拍，卖点指到水位窗、控制台和 304 机身。不抄英文标题。</td>
 </tr>
 </table>
 
 ![IMG_0541](uta_style_v3/assets/key/IMG_0541.png)
+路径：`docs/uta_style_v3/assets/key/IMG_0541.png`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/IMG_0541.png" width="360" alt="IMG_0541"></td>
+<td><img src="uta_style_v3/assets/key/IMG_0541.png" width="360" alt="IMG_0541"><br><code>docs/uta_style_v3/assets/key/IMG_0541.png</code></td>
 <td>同 AP_006。产品在前景，人在后面。中段一整条草绿打断白页。接到第 10 拍的窗外绿色，以及人和产品同框时的前后关系。不抄商标和参数。</td>
 </tr>
 </table>
 
 ![IMG_0542](uta_style_v3/assets/key/IMG_0542.png)
+路径：`docs/uta_style_v3/assets/key/IMG_0542.png`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/IMG_0542.png" width="360" alt="IMG_0542"></td>
+<td><img src="uta_style_v3/assets/key/IMG_0542.png" width="360" alt="IMG_0542"><br><code>docs/uta_style_v3/assets/key/IMG_0542.png</code></td>
 <td>同 AP_005。人宠靠得很近，蓝绿日光，标题有设计，下面一排等大方卡。接到第 1 拍的开场和第 6 拍的方卡。喂水器方卡只写已确认的六项；喂食器待补充。不抄品牌字。</td>
 </tr>
 </table>
 
 ![AP_001](uta_style_v3/assets/key/AP_001.jpg)
+路径：`docs/uta_style_v3/assets/key/AP_001.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/AP_001.jpg" width="360" alt="AP_001"></td>
+<td><img src="uta_style_v3/assets/key/AP_001.jpg" width="360" alt="AP_001"><br><code>docs/uta_style_v3/assets/key/AP_001.jpg</code></td>
 <td>只学三个数字排成一行、以及巨字和产品的层级。不学认证、芯片示意和品牌字。喷水器用在第 6 拍的数字层级。</td>
 </tr>
 </table>
 
 ![AP_002](uta_style_v3/assets/key/AP_002.jpg)
+路径：`docs/uta_style_v3/assets/key/AP_002.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/AP_002.jpg" width="360" alt="AP_002"></td>
+<td><img src="uta_style_v3/assets/key/AP_002.jpg" width="360" alt="AP_002"><br><code>docs/uta_style_v3/assets/key/AP_002.jpg</code></td>
 <td>只学胶囊短标签和收尾一个大词的节奏。不学把别家产品变灰的对比卡。</td>
 </tr>
 </table>
 
 ![AP_003](uta_style_v3/assets/key/AP_003.jpg)
+路径：`docs/uta_style_v3/assets/key/AP_003.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/AP_003.jpg" width="360" alt="AP_003"></td>
+<td><img src="uta_style_v3/assets/key/AP_003.jpg" width="360" alt="AP_003"><br><code>docs/uta_style_v3/assets/key/AP_003.jpg</code></td>
 <td>只学一格一个点和整页一个主色相。不学运动耳机的参数。滤芯拍用「一格一个点」。</td>
 </tr>
 </table>
 
 ![AP_004](uta_style_v3/assets/key/AP_004.jpg)
+路径：`docs/uta_style_v3/assets/key/AP_004.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/AP_004.jpg" width="360" alt="AP_004"></td>
+<td><img src="uta_style_v3/assets/key/AP_004.jpg" width="360" alt="AP_004"><br><code>docs/uta_style_v3/assets/key/AP_004.jpg</code></td>
 <td>只学引线指向零件、以及图标行。不学夜色舞台当整页主调，不学认证。</td>
 </tr>
 </table>
 
 ![AP_005](uta_style_v3/assets/key/AP_005.jpg)
+路径：`docs/uta_style_v3/assets/key/AP_005.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/AP_005.jpg" width="360" alt="AP_005"></td>
+<td><img src="uta_style_v3/assets/key/AP_005.jpg" width="360" alt="AP_005"><br><code>docs/uta_style_v3/assets/key/AP_005.jpg</code></td>
 <td>同 IMG_0542。人宠开场加下方小卡。不抄标题原文和品牌。</td>
 </tr>
 </table>
 
 ![AP_006](uta_style_v3/assets/key/AP_006.jpg)
+路径：`docs/uta_style_v3/assets/key/AP_006.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/AP_006.jpg" width="360" alt="AP_006"></td>
+<td><img src="uta_style_v3/assets/key/AP_006.jpg" width="360" alt="AP_006"><br><code>docs/uta_style_v3/assets/key/AP_006.jpg</code></td>
 <td>同 IMG_0541。白页里一块深色、一块草坪。深色不铺满整页。</td>
 </tr>
 </table>
 
 ![AP_007](uta_style_v3/assets/key/AP_007.jpg)
+路径：`docs/uta_style_v3/assets/key/AP_007.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/AP_007.jpg" width="360" alt="AP_007"></td>
+<td><img src="uta_style_v3/assets/key/AP_007.jpg" width="360" alt="AP_007"><br><code>docs/uta_style_v3/assets/key/AP_007.jpg</code></td>
 <td>同 IMG_0540。手把零件拉出、四格细节、问题后接做法、最后收束。不抄线缆文案。</td>
 </tr>
 </table>
 
 ![EXP_012](uta_style_v3/assets/key/EXP_012.jpg)
+路径：`docs/uta_style_v3/assets/key/EXP_012.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/EXP_012.jpg" width="360" alt="EXP_012"></td>
+<td><img src="uta_style_v3/assets/key/EXP_012.jpg" width="360" alt="EXP_012"><br><code>docs/uta_style_v3/assets/key/EXP_012.jpg</code></td>
 <td>鱼眼冲向镜头、伸爪。第 1 拍的首帧停驻力直接参考这张。背景改成这套客厅的窗光，不留草地棚拍。</td>
 </tr>
 </table>
 
 ![EXP_011](uta_style_v3/assets/key/EXP_011.jpg)
+路径：`docs/uta_style_v3/assets/key/EXP_011.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/EXP_011.jpg" width="360" alt="EXP_011"></td>
+<td><img src="uta_style_v3/assets/key/EXP_011.jpg" width="360" alt="EXP_011"><br><code>docs/uta_style_v3/assets/key/EXP_011.jpg</code></td>
 <td>门边探头、鼻子贴镜头。第 8 拍拆洗时猫看着手。只学距离，不学门的身份。</td>
 </tr>
 </table>
 
 ![EXP_007](uta_style_v3/assets/key/EXP_007.jpg)
+路径：`docs/uta_style_v3/assets/key/EXP_007.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/EXP_007.jpg" width="360" alt="EXP_007"></td>
+<td><img src="uta_style_v3/assets/key/EXP_007.jpg" width="360" alt="EXP_007"><br><code>docs/uta_style_v3/assets/key/EXP_007.jpg</code></td>
 <td>伸爪靠近镜头。第 8 拍和第 7 拍可借这个爪。黑底不用，改到窗边木台面。</td>
 </tr>
 </table>
 
 ![EXP_016](uta_style_v3/assets/key/EXP_016.jpg)
+路径：`docs/uta_style_v3/assets/key/EXP_016.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/EXP_016.jpg" width="360" alt="EXP_016"></td>
+<td><img src="uta_style_v3/assets/key/EXP_016.jpg" width="360" alt="EXP_016"><br><code>docs/uta_style_v3/assets/key/EXP_016.jpg</code></td>
 <td>超大脸、粗标题压在头后。可作第 1 拍的海报力度。不把参考图上的英文写进来。</td>
 </tr>
 </table>
 
 ![XHS_024](uta_style_v3/assets/key/XHS_024.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_024.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_024.jpg" width="360" alt="XHS_024"></td>
+<td><img src="uta_style_v3/assets/key/XHS_024.jpg" width="360" alt="XHS_024"><br><code>docs/uta_style_v3/assets/key/XHS_024.jpg</code></td>
 <td>低机位、正对走来、抬爪、奶白客厅。第 1 拍的场景和机位。</td>
 </tr>
 </table>
 
 ![XHS_025](uta_style_v3/assets/key/XHS_025.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_025.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_025.jpg" width="360" alt="XHS_025"></td>
+<td><img src="uta_style_v3/assets/key/XHS_025.jpg" width="360" alt="XHS_025"><br><code>docs/uta_style_v3/assets/key/XHS_025.jpg</code></td>
 <td>宠物和产品同时有分量，运动瞬间。喂食器第 1 拍的金毛冲刺。</td>
 </tr>
 </table>
 
 ![XHS_014](uta_style_v3/assets/key/XHS_014.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_014.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_014.jpg" width="360" alt="XHS_014"></td>
+<td><img src="uta_style_v3/assets/key/XHS_014.jpg" width="360" alt="XHS_014"><br><code>docs/uta_style_v3/assets/key/XHS_014.jpg</code></td>
 <td>凝视出水。第 2 拍。</td>
 </tr>
 </table>
 
 ![XHS_009](uta_style_v3/assets/key/XHS_009.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_009.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_009.jpg" width="360" alt="XHS_009"></td>
+<td><img src="uta_style_v3/assets/key/XHS_009.jpg" width="360" alt="XHS_009"><br><code>docs/uta_style_v3/assets/key/XHS_009.jpg</code></td>
 <td>舌尖碰到水的超近。第 3 拍。</td>
 </tr>
 </table>
 
 ![XHS_003](uta_style_v3/assets/key/XHS_003.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_003.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_003.jpg" width="360" alt="XHS_003"></td>
+<td><img src="uta_style_v3/assets/key/XHS_003.jpg" width="360" alt="XHS_003"><br><code>docs/uta_style_v3/assets/key/XHS_003.jpg</code></td>
 <td>舔水、满足。第 3 拍和第 4 拍的嘴边水光。</td>
 </tr>
 </table>
 
 ![XHS_011](uta_style_v3/assets/key/XHS_011.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_011.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_011.jpg" width="360" alt="XHS_011"></td>
+<td><img src="uta_style_v3/assets/key/XHS_011.jpg" width="360" alt="XHS_011"><br><code>docs/uta_style_v3/assets/key/XHS_011.jpg</code></td>
 <td>从画面一侧离开，墙上有树影。第 4 拍的离开。</td>
 </tr>
 </table>
 
 ![XHS_020](uta_style_v3/assets/key/XHS_020.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_020.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_020.jpg" width="360" alt="XHS_020"></td>
+<td><img src="uta_style_v3/assets/key/XHS_020.jpg" width="360" alt="XHS_020"><br><code>docs/uta_style_v3/assets/key/XHS_020.jpg</code></td>
 <td>闭眼享受。第 5 拍。不把整页做成这张的暗调。</td>
 </tr>
 </table>
 
 ![XHS_002](uta_style_v3/assets/key/XHS_002.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_002.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_002.jpg" width="360" alt="XHS_002"></td>
+<td><img src="uta_style_v3/assets/key/XHS_002.jpg" width="360" alt="XHS_002"><br><code>docs/uta_style_v3/assets/key/XHS_002.jpg</code></td>
 <td>半闭眼的睡相。第 5 拍的表情，房间仍是同一扇窗。</td>
 </tr>
 </table>
 
 ![XHS_021](uta_style_v3/assets/key/XHS_021.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_021.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_021.jpg" width="360" alt="XHS_021"></td>
+<td><img src="uta_style_v3/assets/key/XHS_021.jpg" width="360" alt="XHS_021"><br><code>docs/uta_style_v3/assets/key/XHS_021.jpg</code></td>
 <td>大数字加腾空。第 6 拍只学数字的重量，主画面不换宠物。</td>
 </tr>
 </table>
 
 ![XHS_013](uta_style_v3/assets/key/XHS_013.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_013.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_013.jpg" width="360" alt="XHS_013"></td>
+<td><img src="uta_style_v3/assets/key/XHS_013.jpg" width="360" alt="XHS_013"><br><code>docs/uta_style_v3/assets/key/XHS_013.jpg</code></td>
 <td>厨房里的金属和拆件。第 7、8 拍。不学功效文案。</td>
 </tr>
 </table>
 
 ![XHS_022](uta_style_v3/assets/key/XHS_022.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_022.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_022.jpg" width="360" alt="XHS_022"></td>
+<td><img src="uta_style_v3/assets/key/XHS_022.jpg" width="360" alt="XHS_022"><br><code>docs/uta_style_v3/assets/key/XHS_022.jpg</code></td>
 <td>用扒和推证明结实。第 7 拍。</td>
 </tr>
 </table>
 
 ![XHS_004](uta_style_v3/assets/key/XHS_004.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_004.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_004.jpg" width="360" alt="XHS_004"></td>
+<td><img src="uta_style_v3/assets/key/XHS_004.jpg" width="360" alt="XHS_004"><br><code>docs/uta_style_v3/assets/key/XHS_004.jpg</code></td>
 <td>专注嗅探。第 9 拍。</td>
 </tr>
 </table>
 
 ![XHS_015](uta_style_v3/assets/key/XHS_015.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_015.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_015.jpg" width="360" alt="XHS_015"></td>
+<td><img src="uta_style_v3/assets/key/XHS_015.jpg" width="360" alt="XHS_015"><br><code>docs/uta_style_v3/assets/key/XHS_015.jpg</code></td>
 <td>只学更换动作的清楚，不学分层名称和功效。第 9 拍。</td>
 </tr>
 </table>
 
 ![XHS_012](uta_style_v3/assets/key/XHS_012.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_012.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_012.jpg" width="360" alt="XHS_012"></td>
+<td><img src="uta_style_v3/assets/key/XHS_012.jpg" width="360" alt="XHS_012"><br><code>docs/uta_style_v3/assets/key/XHS_012.jpg</code></td>
 <td>室内看向窗外的天。第 10 拍的窗。</td>
 </tr>
 </table>
 
 ![XHS_010](uta_style_v3/assets/key/XHS_010.jpg)
+路径：`docs/uta_style_v3/assets/key/XHS_010.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/XHS_010.jpg" width="360" alt="XHS_010"></td>
+<td><img src="uta_style_v3/assets/key/XHS_010.jpg" width="360" alt="XHS_010"><br><code>docs/uta_style_v3/assets/key/XHS_010.jpg</code></td>
 <td>窗边的光和投影。第 10 拍只学光，不学界面。</td>
 </tr>
 </table>
 
 ![ANCHOR_G1](uta_style_v3/assets/key/ANCHOR_G1.jpg)
+路径：`docs/uta_style_v3/assets/key/ANCHOR_G1.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/ANCHOR_G1.jpg" width="360" alt="ANCHOR_G1"></td>
+<td><img src="uta_style_v3/assets/key/ANCHOR_G1.jpg" width="360" alt="ANCHOR_G1"><br><code>docs/uta_style_v3/assets/key/ANCHOR_G1.jpg</code></td>
 <td>产品外观和 304 质感的锚点。调色偏暖、宠物偏侧，不作为色调和表情的锚。几何以 product_reference.png 为准。</td>
 </tr>
 </table>
 
 ![ANCHOR_G2](uta_style_v3/assets/key/ANCHOR_G2.jpg)
+路径：`docs/uta_style_v3/assets/key/ANCHOR_G2.jpg`
 
 <table>
 <tr>
-<td><img src="uta_style_v3/assets/key/ANCHOR_G2.jpg" width="360" alt="ANCHOR_G2"></td>
+<td><img src="uta_style_v3/assets/key/ANCHOR_G2.jpg" width="360" alt="ANCHOR_G2"><br><code>docs/uta_style_v3/assets/key/ANCHOR_G2.jpg</code></td>
 <td>同 G1，第二张外观锚点。叙事页的猫、窗光和低机位按第 6E 节，不照这张的傍晚暖调。</td>
 </tr>
 </table>
@@ -905,15 +1021,15 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 
 ## 6F. 渲染明暗对比（锦浩要求，2026-11-15）
 
-> 来源：锦浩对 GPT v04（S1–S9）的反馈：文字、标题、场景、光线已经达到他 80% 的需求，但还不够高级，渲染的明暗对比不够。参考 A 家精选 [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) / [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) / [IMG_0542](uta_style_v3/assets/key/IMG_0542.png) 的光影处理。
+> 来源：锦浩对 GPT v04（S1–S9）的反馈：文字、标题、场景、光线已经达到他 80% 的需求，但还不够高级，渲染的明暗对比不够。参考 A 家精选 [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 路径：`docs/uta_style_v3/assets/key/IMG_0540.png` / [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 路径：`docs/uta_style_v3/assets/key/IMG_0541.png` / [IMG_0542](uta_style_v3/assets/key/IMG_0542.png) 路径：`docs/uta_style_v3/assets/key/IMG_0542.png` 的光影处理。
 
 ### 6F.1 实测对比（200×200 下采样，亮度 L = 0.2126R + 0.7152G + 0.0722B）
 
 | 图 | 平均亮度 | 亮度标准差 | 暗部 p5 | 亮部 p95 | p95−p5 跨度 | 暗像素占比（L<0.2） |
 |---|---|---|---|---|---|---|
-| [IMG_0540](uta_style_v3/assets/key/IMG_0540.png)（同 AP_007）首图 | 0.45 | 0.251 | 0.06 | 0.87 | 0.81 | 21% |
-| [IMG_0541](uta_style_v3/assets/key/IMG_0541.png)（同 AP_006）首图 | 0.57 | 0.316 | 0.05 | 0.94 | 0.89 | 19% |
-| [IMG_0542](uta_style_v3/assets/key/IMG_0542.png)（同 AP_005）首图 | 0.51 | 0.284 | 0.10 | 0.93 | 0.83 | 14% |
+| [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 路径：docs/uta_style_v3/assets/key/IMG_0540.png（同 AP_007）首图 | 0.45 | 0.251 | 0.06 | 0.87 | 0.81 | 21% |
+| [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 路径：docs/uta_style_v3/assets/key/IMG_0541.png（同 AP_006）首图 | 0.57 | 0.316 | 0.05 | 0.94 | 0.89 | 19% |
+| [IMG_0542](uta_style_v3/assets/key/IMG_0542.png) 路径：docs/uta_style_v3/assets/key/IMG_0542.png（同 AP_005）首图 | 0.51 | 0.284 | 0.10 | 0.93 | 0.83 | 14% |
 | 我们 S1–S9（S4 夜景除外） | 0.57–0.79 | 0.195–0.271 | 0.15–0.37 | 0.89–1.00 | 0.57–0.78 | 1–9% |
 
 说明：A 家三张是从手机截图里裁出的首图区域，有压缩，数值是近似值。结论很清楚：我们的问题不是亮部不够亮，而是**暗部不够暗、暗部面积太少**，所以画面发灰发平，不够高级。
@@ -922,10 +1038,10 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 
 1. **暗部要压下去**：生活场景图暗部 p5 ≤ 0.12，暗像素（L<0.2）占 10–20%。暗部放在产品背光面、桌面投影、家具阴影、画面边角。
 2. **明暗跨度**：p95−p5 ≥ 0.80，亮度标准差 ≥ 0.25。
-3. **单一主光源、方向明确**：窗边侧光或侧逆光，产品一侧亮、一侧暗。304 拉丝面要有一条清晰高光带，加上渐暗过渡（参考 [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 机身的侧光和木桌反光）。
+3. **单一主光源、方向明确**：窗边侧光或侧逆光，产品一侧亮、一侧暗。304 拉丝面要有一条清晰高光带，加上渐暗过渡（参考 [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 路径：`docs/uta_style_v3/assets/key/IMG_0540.png` 机身的侧光和木桌反光）。
 4. **投影要实**：产品和宠物落在桌面或地面上的投影要清晰、有方向，不能是平均的灰雾。
 5. **视觉中心最亮**：最亮的位置留给产品和宠物的脸，背景和边角自然压暗（暗角），引导视线（配合 §6E 的叙事主线）。
-6. **整页节奏**：可以有一块饱和、偏暗的撞色区打断白页（参考 [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 的草坪绿），但全页不做暗黑科技风。
+6. **整页节奏**：可以有一块饱和、偏暗的撞色区打断白页（参考 [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 路径：`docs/uta_style_v3/assets/key/IMG_0541.png` 的草坪绿），但全页不做暗黑科技风。
 7. **和 §9.1 调色的关系**：平均亮度仍然按 XHS 区间 0.55–0.69，饱和度 0.22–0.30，R−B +0.07~+0.15。也就是说，在平均亮度不变的前提下拉大明暗跨度，靠更暗的阴影加更亮的高光，不是整体压暗。
 8. **不做**：整张过曝发白、无影平光、HDR 光晕、产品自发光（产品永远不发光，这条硬规则不变）。
 
@@ -939,9 +1055,10 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 
 > 来源：锦浩口述。"详情案例里光影明暗对比拉得很开，对比度特别好；视觉冲击靠机位，机位很重要。"视觉要突出，靠三件事：机位、颜色对比、明暗色调。三条缺一不可，每张副图和每个 A+ 模块出图前都要逐条检查。
 >
-> 案例编号：[IMG_0540](uta_style_v3/assets/key/IMG_0540.png)（同 AP_007）、[IMG_0541](uta_style_v3/assets/key/IMG_0541.png)（同 AP_006）、[IMG_0542](uta_style_v3/assets/key/IMG_0542.png)（同 AP_005），以及锦浩发来的 image.png。image.png 是我们自己的 GPT v04 S1–S9 总览，入库为 [V04_S1-S9_overview.png](uta_style_v3/assets/key/V04_S1-S9_overview.png)。
+> 案例编号：[IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 路径：`docs/uta_style_v3/assets/key/IMG_0540.png`（同 AP_007）、[IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 路径：`docs/uta_style_v3/assets/key/IMG_0541.png`（同 AP_006）、[IMG_0542](uta_style_v3/assets/key/IMG_0542.png) 路径：`docs/uta_style_v3/assets/key/IMG_0542.png`（同 AP_005），以及锦浩发来的 image.png。image.png 是我们自己的 GPT v04 S1–S9 总览，入库为 [V04_S1-S9_overview.png](uta_style_v3/assets/key/V04_S1-S9_overview.png) 路径：`docs/uta_style_v3/assets/key/V04_S1-S9_overview.png`。
 
 <img src="uta_style_v3/assets/key/V04_S1-S9_overview.png" width="720">
+路径：`docs/uta_style_v3/assets/key/V04_S1-S9_overview.png`
 
 ### 6G.1 机位是视觉冲击的关键【锦浩本人要求，独立硬性要求】
 
@@ -949,10 +1066,10 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 
 | 机位 | 具体做法 | 参考 |
 |---|---|---|
-| 低视角仰拍 | 相机贴近桌面或地面，略微往上看产品，让产品显得高大有分量；地平线放低，前景带一点虚化的桌面或地板 | [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 首图（低机位仰看机身，手往外拉线）；v04 的 S1（猫走近，低机位）、S6（304 机身） |
-| 俯角 | 从正上方或 45° 往下拍，看清水面、托盘、拆洗结构，或者宠物和人躺着、趴着的全身 | [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 草坪那一屏（俯拍人躺在草地上举着产品）和首图（俯拍行李箱）；v04 的 S8（俯拍换滤芯） |
+| 低视角仰拍 | 相机贴近桌面或地面，略微往上看产品，让产品显得高大有分量；地平线放低，前景带一点虚化的桌面或地板 | [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 路径：docs/uta_style_v3/assets/key/IMG_0540.png 首图（低机位仰看机身，手往外拉线）；v04 的 S1（猫走近，低机位）、S6（304 机身） |
+| 俯角 | 从正上方或 45° 往下拍，看清水面、托盘、拆洗结构，或者宠物和人躺着、趴着的全身 | [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 路径：docs/uta_style_v3/assets/key/IMG_0541.png 草坪那一屏（俯拍人躺在草地上举着产品）和首图（俯拍行李箱）；v04 的 S8（俯拍换滤芯） |
 | 贴脸特写 / 鱼眼 | 宠物脸或舌头几乎碰到镜头，产品在旁边清晰入画，用来做首帧停驻力（§6B.1） | v04 的 S2（舌尖碰水）；EXP_011、EXP_012、EXP_013 |
-| 前景产品、后景人宠 | 产品在前景，低机位，人和宠物在后景，讲清两者的关系 | [IMG_0541](uta_style_v3/assets/key/IMG_0541.png)、[IMG_0542](uta_style_v3/assets/key/IMG_0542.png) |
+| 前景产品、后景人宠 | 产品在前景，低机位，人和宠物在后景，讲清两者的关系 | [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 路径：docs/uta_style_v3/assets/key/IMG_0541.png、[IMG_0542](uta_style_v3/assets/key/IMG_0542.png) 路径：docs/uta_style_v3/assets/key/IMG_0542.png |
 
 不做：每张都同一高度、同一角度；广角把 304 方形机身拉变形（产品比例必须和 product_reference.png 一致）。
 
@@ -960,8 +1077,8 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 
 | 做法 | 具体要求 | 参考 |
 |---|---|---|
-| 主体对背景的色相对比 | 银色 304 机身配暖木色或暖白墙；宠物毛色和背景拉开色相（橘猫配蓝绿背景，银渐层配暖木色） | [IMG_0540](uta_style_v3/assets/key/IMG_0540.png)（暖木桌配深色产品）；[IMG_0542](uta_style_v3/assets/key/IMG_0542.png)（金毛和红发对蓝天绿草） |
-| 一块撞色区 | 每页或每套图允许出现 1 块饱和撞色（草坪绿、蓝绿天空），用来打断白页的节奏 | [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 草坪绿 |
+| 主体对背景的色相对比 | 银色 304 机身配暖木色或暖白墙；宠物毛色和背景拉开色相（橘猫配蓝绿背景，银渐层配暖木色） | [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 路径：docs/uta_style_v3/assets/key/IMG_0540.png（暖木桌配深色产品）；[IMG_0542](uta_style_v3/assets/key/IMG_0542.png) 路径：docs/uta_style_v3/assets/key/IMG_0542.png（金毛和红发对蓝天绿草） |
+| 一块撞色区 | 每页或每套图允许出现 1 块饱和撞色（草坪绿、蓝绿天空），用来打断白页的节奏 | [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 路径：docs/uta_style_v3/assets/key/IMG_0541.png 草坪绿 |
 | 强调色 | 数字和关键词统一用琥珀色 #F47A21（§6），一张图最多一个强调色 | v04 的 S1「1 m」、S3「10–15 s」、S4「<25 dB」 |
 | 仍然遵守调色区间 | 饱和度 0.22–0.30，R−B +0.07~+0.15（§9.1）；撞色靠局部，不靠整体加饱和 | XHS_001–029 |
 
@@ -971,9 +1088,9 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 
 | 参考 | 明暗做法 |
 |---|---|
-| [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) | 暖色侧光打在机身一侧，另一侧压暗，桌面有反光和投影 |
-| [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) | 白页里放一块偏暗的草坪区，人物脸部最亮 |
-| [IMG_0542](uta_style_v3/assets/key/IMG_0542.png) | 户外逆光、侧光，人和狗的轮廓有亮边 |
+| [IMG_0540](uta_style_v3/assets/key/IMG_0540.png) 路径：docs/uta_style_v3/assets/key/IMG_0540.png | 暖色侧光打在机身一侧，另一侧压暗，桌面有反光和投影 |
+| [IMG_0541](uta_style_v3/assets/key/IMG_0541.png) 路径：docs/uta_style_v3/assets/key/IMG_0541.png | 白页里放一块偏暗的草坪区，人物脸部最亮 |
+| [IMG_0542](uta_style_v3/assets/key/IMG_0542.png) 路径：docs/uta_style_v3/assets/key/IMG_0542.png | 户外逆光、侧光，人和狗的轮廓有亮边 |
 | image.png（v04）| 实测对比最好的是 S2（跨度 0.78）和 S4 夜景；S1、S5、S6 跨度只有 0.57–0.63，偏平偏白，下一版要按 6F 压暗部 |
 
 ### 6G.4 出图前检查表
@@ -1140,6 +1257,9 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - 不学：每张图都加蓝色标题条；品牌模块（展会、达人墙、客服女性）太长；德语和英语混用。
 
 <img src="uta_style_v3/assets/sheets/B0DCFY8SB4.jpg" width="330"> <img src="uta_style_v3/assets/sheets/B0DK6RSFG2.jpg" width="330"> <img src="uta_style_v3/assets/sheets/B0HC6Y2MS3.jpg" width="330">
+路径：`docs/uta_style_v3/assets/sheets/B0DCFY8SB4.jpg`
+路径：`docs/uta_style_v3/assets/sheets/B0DK6RSFG2.jpg`
+路径：`docs/uta_style_v3/assets/sheets/B0HC6Y2MS3.jpg`
 
 ### 8.2 PETLIBRO（拼写确认：PETLIBRO）
 
@@ -1155,8 +1275,14 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - 不学：AI 健康分析、尿液习惯这类健康暗示（我们不能做健康声明）；没有实测支撑的 97% 除臭数字。
 
 <img src="uta_style_v3/assets/sheets/B0FKT2J6PV.jpg" width="330"> <img src="uta_style_v3/assets/sheets/B0GTM9P94B.jpg" width="330">
+路径：`docs/uta_style_v3/assets/sheets/B0FKT2J6PV.jpg`
+路径：`docs/uta_style_v3/assets/sheets/B0GTM9P94B.jpg`
 
 <img src="uta_style_v3/assets/key/L_petlibro_chin_FKT2J6PV.jpg" width="170"> <img src="uta_style_v3/assets/key/L_petlibro_hands_FKT2J6PV.jpg" width="250"> <img src="uta_style_v3/assets/key/L_petlibro_darkcat_FKT2J6PV.jpg" width="170"> <img src="uta_style_v3/assets/key/L_petlibro_aiwaste_GTM9P94B.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/L_petlibro_chin_FKT2J6PV.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_hands_FKT2J6PV.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_darkcat_FKT2J6PV.jpg`
+路径：`docs/uta_style_v3/assets/key/L_petlibro_aiwaste_GTM9P94B.jpg`
 
 ### 8.3 oneisall 猫砂盆（Ease S1 / Ease S1 Pro）
 
@@ -1174,8 +1300,11 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - 不学：奖项和排行榜的蓝紫色海报（风格跳出）；空气净化器套装模块。
 
 <img src="uta_style_v3/assets/sheets/oneisall_EaseS1_gallery.jpg" width="420">
+路径：`docs/uta_style_v3/assets/sheets/oneisall_EaseS1_gallery.jpg`
 
 <img src="uta_style_v3/assets/key/L_oneisall_noapp_EaseS1.jpg" width="170"> <img src="uta_style_v3/assets/key/L_oneisall_mat_EaseS1.jpg" width="170">
+路径：`docs/uta_style_v3/assets/key/L_oneisall_noapp_EaseS1.jpg`
+路径：`docs/uta_style_v3/assets/key/L_oneisall_mat_EaseS1.jpg`
 
 ### 8.4 三品牌调色对比与 POKPET 取向
 
@@ -1253,6 +1382,13 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 - 毛发标准按 `AGENTS.md` §0.4/§0.5：毛束、胡须、眼睛高光清楚，不蜡化。
 
 <img src="uta_style_v3/assets/key/XHS_002.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_003.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_004.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_005.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_007.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_008.jpg" width="160"> <img src="uta_style_v3/assets/key/F_anthro_cert_FJX69D2R.jpg" width="250">
+路径：`docs/uta_style_v3/assets/key/XHS_002.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_003.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_004.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_005.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_007.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_008.jpg`
+路径：`docs/uta_style_v3/assets/key/F_anthro_cert_FJX69D2R.jpg`
 
 ## 11. 人物情绪
 
@@ -1318,6 +1454,10 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 现有 29 张里，户外图只有 4 张（XHS_003、005、017、029），没有一张是饮水器或喂食器的户外实例，也没有庭院或后院。上面的户外区间属于小样本的初版。建议再补 5–10 张户外或阳台场景的宠物用品案例，补齐后重新测量。
 
 <img src="uta_style_v3/assets/key/XHS_003.jpg" width="150"> <img src="uta_style_v3/assets/key/XHS_005.jpg" width="150"> <img src="uta_style_v3/assets/key/XHS_017.jpg" width="150"> <img src="uta_style_v3/assets/key/XHS_029.jpg" width="150">
+路径：`docs/uta_style_v3/assets/key/XHS_003.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_005.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_017.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_029.jpg`
 
 ## 13. 硬规则（不可违反）
 
@@ -1441,10 +1581,33 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 | XHS_008 | 两只狗扑向优雅女性，编辑感排版 | 情感收尾、杂志感 |
 
 <img src="uta_style_v3/assets/key/XHS_001.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_006.jpg" width="160">
+路径：`docs/uta_style_v3/assets/key/XHS_001.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_006.jpg`
 
 <img src="uta_style_v3/assets/key/XHS_009.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_010.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_011.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_012.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_013.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_014.jpg" width="160"> <img src="uta_style_v3/assets/key/XHS_015.jpg" width="160">
+路径：`docs/uta_style_v3/assets/key/XHS_009.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_010.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_011.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_012.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_013.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_014.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_015.jpg`
 
 <img src="uta_style_v3/assets/key/XHS_016.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_017.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_018.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_019.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_020.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_021.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_022.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_023.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_024.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_025.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_026.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_027.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_028.jpg" width="120"> <img src="uta_style_v3/assets/key/XHS_029.jpg" width="120">
+路径：`docs/uta_style_v3/assets/key/XHS_016.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_017.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_018.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_019.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_020.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_021.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_022.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_023.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_024.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_025.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_026.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_027.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_028.jpg`
+路径：`docs/uta_style_v3/assets/key/XHS_029.jpg`
 
 ---
 
@@ -1471,6 +1634,8 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 但这两张的**调色和宠物处理不作为锚点**。它们的暖度约 +0.20–0.28，偏橙；宠物偏小、偏侧面；用的是傍晚暖光。这三点按 9.1 节 A 档和 14.5 节的规则修正，依据是 XHS_024、025、014。
 
 <img src="uta_style_v3/assets/key/ANCHOR_G1.jpg" width="240"> <img src="uta_style_v3/assets/key/ANCHOR_G2.jpg" width="240">
+路径：`docs/uta_style_v3/assets/key/ANCHOR_G1.jpg`
+路径：`docs/uta_style_v3/assets/key/ANCHOR_G2.jpg`
 
 ### 14.7 视觉要求 → 案例依据对照表
 
@@ -1572,6 +1737,7 @@ oneisall 喂食器的共同顺序：主图（产品 + 手机 App 界面）→ �
 | 2026-11-15 | 风格命名 | 风格名统一为 Youta style（UTA style），「美屏」仅指其中的设计语言。 |
 | 2026-11-15 | 双层标题 | §6H.4 加长标题 + 副标题强制条款，§6H.6 第 3 项同步；明确副标题不属于禁止的英文小字。 |
 | 2026-11-15 | 出图流程 | 新增 §6H.8：先出缩略图总览，锦浩审过后逐张修改，逐张时照样 17 项自审。 |
+| 2026-11-15 | 图片路径提示 | 每处案例图引用旁加从仓库根目录起的完整路径，内容不变。 |
 
 
 ### 锦浩对当前版本（GPT v04 · S1–S9）的整体评价（2026-11-15）
