@@ -21,7 +21,7 @@
 | 自动喂食器 | B0C5X2G933 | https://www.amazon.com/dp/B0C5X2G933 | 暖琥珀色板；不迁移其 A+ 文案与奖项 |
 | 自动喂食器 | B0C5X4N132 | https://www.amazon.com/dp/B0C5X4N132 | 同系列的模块节奏；不迁移餐次、容量或媒体标志 |
 
-`30 dB → 20 dB` 的曲线和 `16 in` 的标尺，只说明「一个大数字要靠参照物才看得懂」。本品没有对应证据时，不得写上这些数字。
+`30 dB → 20 dB` 的曲线和 `16 in` 的标尺，只说明「一个大数字要靠参照物才看得懂」。本品没有对应证据时，不得写上这些数字。逐模块的屏幕像素记录在 `research/oneisall/VISUAL_CASE_STUDY.md`，文件索引在 `research/oneisall/README.md`。
 
 ## 2. 何时启用
 
@@ -84,6 +84,46 @@ style_lock:
 强调色只用在关键词和这个英雄数字上。使用本项目暖琥珀色板时，强调色 `#F47A21`，深咖啡 `#25170F`，奶油 `#F1EAE0`，白字 `#FFFFFF`。面积仍约 3%–8%。钢材、水面和皮肤保持中性，不被橙色染色。
 
 标题位置继续参考第10.2节：1464×600 上字顶 115 px、距左 120 px，允许按产品位置向内或居中。更高的 Premium 模块按同一比例关系重排，不把 600 高的坐标原样照搬。
+
+### 5.1 四款 A+ 的实测配方（v2.9）
+
+2026-11-15 裁切文件的高度：常规模块 1464×600；B0FN7FQ7RJ Hero 为 1464×1175；对比表 701–710；品牌故事 624–626。带顶栏的轮播，黑条约占 66 px，下面约 534 px 是照片。
+
+```yaml
+layout_grid_1464:
+  text_column: 35%-45% when split
+  image_column: remaining, may bleed
+  tab_bar_height: 66 px
+  card_radius: 24-32 px
+  card_gap: about 16-24 px
+  card_shadow: faint, not a product vignette
+  three_cards: equal width, title inside at top left
+  first_carousel_slide: must stand alone
+lighting_recipe:
+  scene: same window key as the gallery standard
+  dark_module: night interior or deep blue field
+  schematic_blue: inside the illustration only
+  alternation: light module then dark module
+  steel_and_skin: neutral, accent orange stays on type
+type_scale_1464:
+  headline: 52-72 px
+  hero_number: 110-160 px
+  subline_minimum: 36 px
+  accent: one word or the hero number, "#F47A21"
+  font: Avenir Next Bold / Demi Bold, Arial for the subline
+camera_presets:
+  scene_module: pet eye level, product and pet together
+  spacing_claim: top-down only when the claim is a measured distance
+  cutaway: orthographic section, labelled Illustration
+do_not:
+  - cyan-lime gradient as a second brand color
+  - health lines, TOP 1, patent seals, BPA seals
+  - SilentFlow or any competitor trademark
+  - sales counts, award logos, media logos
+  - body copy under 36 px on the 1464 canvas
+```
+
+左文右图时，文字不压住宠物的头和出水口。三张卡只服务同一个主题。深色模块的冷蓝留在剖视里，场景本身仍用暖灯。同一数字若已在图库出现，A+ 放大它，不改成另一个数。
 
 ## 6. 手机端
 

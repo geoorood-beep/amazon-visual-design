@@ -21,7 +21,7 @@
 | 自动喂食器 | B0C5X2G933 | https://www.amazon.com/dp/B0C5X2G933 | 与 `STYLE-WAPSI-01` 同源的暖琥珀色板；Listing 图库不沿用其 A+ 左文右图 |
 | 自动喂食器 | B0C5X4N132 | https://www.amazon.com/dp/B0C5X4N132 | 同系列喂食器图库的连续色板与一图一主张；不迁移其餐次、容量或奖项 |
 
-风格参数由批准笔记与页面目测反推，不是原图 EXIF、字体文件识别或实测曝光。
+风格参数由批准笔记与页面目测反推，不是原图 EXIF、字体文件识别或实测曝光。2026-11-15 的屏幕像素抽样和逐张阅读见 `research/oneisall/VISUAL_CASE_STUDY.md`，索引见 `research/oneisall/README.md`。
 
 ## 2. 何时启用
 
@@ -42,11 +42,11 @@ style_lock:
 - 用户说「做副图」「做主图和副图」或同等含义，且商品是宠物电器时，副图默认用本标准。
 - 用户点名其他风格，或该风格与本品事实冲突时，按用户要求或事实改，不因第一次生成失败而自行换掉。
 - 沟通任务是人物演示、教学或多人共同操作时，场景风格仍用 `STYLE-HCEL-01`。本标准只保留一图一主张、排版工具出字、以及不编造声明。偶然出现在房间里的人，不构成把整套喂水器副图改成协作纪实的理由。
-- A+ 继续按卖点选用 `STYLE-WAPSI-01`、`STYLE-NLEC-01`、`STYLE-PDMI-01` 或 `STYLE-HCEL-01`。不要把副图的顶标题加底栏芯片，原样缩进 1464×600 或 600×450。
+- A+ 整页用 `STYLE-APLUS-OIA-01`。不要把副图的顶标题加底栏芯片原样缩进 1464×600 或 600×450。
 
 ## 3. 构图
 
-- 一图只讲一个卖点。标题在顶部居中，1–2 行短句，最多再加一行副句。画面约 70%–85% 是照片与场景。
+- 一图只讲一个卖点。标题在顶部，1–2 行短句，最多再加一行副句。亮墙在一侧时，标题靠那一侧对齐；夜景和对称特写再居中。不要为了居中把字压到宠物脸上。画面约 70%–85% 是照片与场景。
 - 这 70%–85% 指摄影主体场占视觉权重。照片必须满版铺在画布下，标题和底栏叠在照片上。禁止用上下留白、左右色带或信箱条去「凑」出文字区。`AGENTS.md` 第7.4.5.1节的满版规则继续有效。
 - 不使用大面积文字卡片，也不使用 `LAYOUT-EDITORIAL-FEATURE-CARD-01` 那种左栏大白卡作为副图默认。小标签若必须压在照片上，用第6节的圆角半透明芯片，这是对「不要大卡片」的落实，不是取消小字衬底。
 - 产品放在中下部，四分之三视角。
@@ -81,6 +81,47 @@ style_lock:
 - 单一强调色只用于关键词和关键数字。
 - 使用 `STYLE-WAPSI-01` 色板的品牌，强调色为 `#F47A21`，深咖啡 `#25170F`，奶油底 `#F1EAE0`。强调面积仍控制在约 3%–8%。产品本色以 Product DNA 为准，不为贴合色板而改色。
 - 本品品牌规范另有色板时，关键词和数字改用该品牌强调色；暖木、奶油墙和橡木地面可以保留。
+
+### 6.1 四款图库的实测配方（v2.9）
+
+来源是 2026-11-15 对四款图库文件的阅读和抽样。参考图里的青柠渐变、健康句和徽章不进入本配方。
+
+```yaml
+lighting_recipe:
+  day_key: upper side window, 30-45 degrees
+  day_fill: soft, about 2:1 to 3:1
+  day_shadow: short contact shadow, no hard ellipse
+  day_floor: oak catches light in the lower third
+  night_key: one warm practical lamp on the product
+  night_ambient: brown or navy, texture kept, not crushed
+  night_pet: sleeping pet may be softer and behind the product
+  steel: one long highlight following the surface, neutral metal
+  black_plastic: even fine texture, form shading, no coarse noise
+  water: ripples and speculars, no leaves or formulas
+camera_presets:
+  lifestyle: pet eye level, 10-40 cm, 35-50 mm feel, three-quarter
+  detail: slight high angle, product may crop at non-critical edges
+  cutaway: front or section view, labelled Illustration
+type_scale:
+  observed_cap_height_on_1000x1230: 50-63 px
+  production_line_box_on_1600x2000: 100-120 px
+  font: Avenir Next Bold 700
+  accent_words: one per headline
+  accent_hex: "#F47A21"
+spacing_on_1000_wide_observation:
+  title_from_top: about 70 px
+  title_from_left_when_left_aligned: about 60-80 px
+  bottom_bar_inset: about 40-60 px
+  bottom_bar_chips: 3 maximum, active chip larger
+color_samples_observation_only:
+  gallery_headline_orange: "#C06010"
+  hero_field_orange: "#F08028"
+  cream_wall: "#E3D8CB"
+  oak_floor: "#D2C4B4"
+  production_overrides_those_with: "#F47A21 / #25170F / #F1EAE0"
+```
+
+图标用同一套线性圆标。放大镜每图一个，引线回到真实部位。地面环和噪音曲线是排版层：主数字明显大于参照数字，环不画成雷达。人物不进入喂水器副图的主体。
 
 ## 7. 宠物情绪等于声明
 

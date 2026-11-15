@@ -1,5 +1,12 @@
 # 版本记录
 
+## v2.9 — 2026-11-15 oneisall 视觉尺寸案例
+
+- 把 2026-11-15 的竞品截图放入 `research/oneisall/`：四款图库、A+ 模块裁切、联系表和 `aplus_study.md`。索引为 `research/oneisall/README.md`。
+- 新增 `research/oneisall/VISUAL_CASE_STUDY.md`。不锈钢饮水机和无线饮水机按全分辨率逐张记录光线、字号、镜头、色彩抽样和组件；两款喂食器用于对照俯拍标尺和 App 场景。
+- `docs/LISTING_GALLERY_STANDARD_ONEISALL.md` 第6.1节和 `docs/APLUS_STANDARD_ONEISALL.md` 第5.1节写入可执行配方：窗光与夜灯、1464 网格、字号、芯片和禁止项。生产色板仍是 `STYLE-WAPSI-01`，文字仍在无字底图上排版。健康句、徽章和 SilentFlow™ 等商标不进入配方。
+- 副图标题改为亮墙一侧对齐，对称画面和夜景再居中。这是对「一律顶部居中」的细化。
+
 ## v2.8 — 2026-11-15 oneisall Listing 图库与 A+ 页面
 
 - 新增 `docs/LISTING_GALLERY_STANDARD_ONEISALL.md`，风格代码 `STYLE-GALLERY-OIA-01`。所有者批准 oneisall 的 Amazon Listing 主图/副图方法作为宠物电器副图默认构图。
