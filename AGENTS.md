@@ -11,6 +11,13 @@
 
 不要读 `docs/` 和 `archive/`。那里是旧规则和案例库，与本文件冲突的一律无效。不要浏览 `references/` 和 `docs/uta_style_v3/assets/` 去找图：用哪几张图由图位卡决定。
 
+## 用户说「UTA style」时
+
+「UTA style」「Uta Style」「Youta style」「有它风格」指的是 `standard/CORE.md`，不是 `docs/UTA_STYLE_STANDARD.md`。不要因为这个名字去读 `docs/`。
+
+- 用户说「按 UTA style 出这张卡」：照下面的固定步骤做。
+- 用户只说「按 UTA style 做一张某某图」而没有给图位卡：不要自己构思画面直接出图。回复「需要一张图位卡」，并给出 `cards/_TEMPLATE.md` 的路径和 `cards/` 里最接近的一张现成卡，让用户确认用哪张或补一张新卡。
+
 ## 每张图的固定步骤
 
 1. **存卡。** 把用户给的图位卡原样存成 `cards/<product>/<slot>_<短名>.md`。不改内容。
