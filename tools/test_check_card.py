@@ -5,6 +5,7 @@ Run from the repo root:
 """
 import contextlib
 import io
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -125,7 +126,7 @@ class CheckCardTest(unittest.TestCase):
         self.assert_rejected(
             "layout: none",
             "layout: docs/uta_style_v3/assets/key/AP_005.jpg | module structure only",
-            "layout references are for P slots only",
+            "ref layout must be none for this card",
         )
 
     def test_m1_with_text_is_rejected(self):
@@ -135,6 +136,137 @@ class CheckCardTest(unittest.TestCase):
 
     def test_missing_field_is_rejected(self):
         self.assert_rejected("camera: down_45\n", "", "missing field 'camera'")
+
+
+class APlusTest(unittest.TestCase):
+    """A+ cards: scene, panels and the grid / steps / specs module cards."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.index = check_card.load_index()
+
+    def errors_after(self, card_name, edits=(), remove=()):
+        """Copy the sample cards to a temp folder, edit some, validate one."""
+        with tempfile.TemporaryDirectory() as folder:
+            folder = Path(folder)
+            for source in (ROOT / "cards" / "round10l").glob("*.md"):
+                if source.name not in remove:
+                    shutil.copy(source, folder / source.name)
+            for name, old, new in edits:
+                text = (folder / name).read_text(encoding="utf-8")
+                self.assertIn(old, text, f"test fixture out of date: {name}")
+                (folder / name).write_text(text.replace(old, new), encoding="utf-8")
+            errors, _warnings, _context = check_card.validate(folder / card_name, self.index)
+        return errors
+
+    def assert_error(self, expected, card_name, edits=(), remove=()):
+        errors = self.errors_after(card_name, edits, remove)
+        self.assertTrue(
+            any(expected in error for error in errors),
+            f"expected an error containing {expected!r}, got {errors}",
+        )
+
+    def context_for(self, name):
+        errors, _warnings, context = check_card.validate(ROOT / "cards" / "round10l" / name, self.index)
+        self.assertEqual(errors, [])
+        return context
+
+    def test_module_card_collects_its_panels(self):
+        context = self.context_for("P6_daily_use.md")
+        self.assertEqual(context["type"], "module")
+        self.assertEqual([p["fields"]["slot"] for p in context["panels"]], ["P6a", "P6b", "P6c"])
+
+    def test_specs_lines_are_parsed(self):
+        context = self.context_for("P8_essentials.md")
+        self.assertEqual([fact for fact, _text in context["lines"]], ["F1", "F2", "F3", "F4"])
+
+    def test_scene_and_panel_prompts_ask_for_croppable_frames(self):
+        blocks = check_card.load_prompt_blocks()
+        scene = check_card.build_prompt(self.context_for("P1_cats_and_dogs.md"), blocks)
+        panel = check_card.build_prompt(self.context_for("P6b_quiet.md"), blocks)
+        self.assertIn("horizontal 3:2", scene)
+        self.assertIn("the left third", scene)
+        self.assertIn("central 60%", panel)
+        self.assertNotIn("Under 20 dB", panel, "labels must not reach the image model")
+
+    def test_p_slot_without_module_is_rejected(self):
+        self.assert_error("needs 'module:'", "P1_cats_and_dogs.md", [("P1_cats_and_dogs.md", "module: scene\n", "")])
+
+    def test_scene_text_area_must_be_a_side(self):
+        self.assert_error(
+            "text_area must be one of", "P1_cats_and_dogs.md",
+            [("P1_cats_and_dogs.md", "text_area: left", "text_area: top_left")],
+        )
+
+    def test_panel_with_its_own_headline_is_rejected(self):
+        self.assert_error(
+            "a panel carries no text of its own", "P6a_steel.md",
+            [("P6a_steel.md", "headline: none", "headline: Built to Last")],
+        )
+
+    def test_missing_panel_card_is_rejected(self):
+        self.assert_error("panel P6c: expected exactly one card", "P6_daily_use.md", remove=("P6c_window.md",))
+
+    def test_panel_error_fails_the_module(self):
+        self.assert_error(
+            "panel P6a: number '25'", "P6_daily_use.md",
+            [("P6a_steel.md", "label: 304 Stainless Steel", "label: 25 Year Steel")],
+        )
+
+    def test_grid_panels_need_different_facts(self):
+        self.assert_error(
+            "different fact", "P6_daily_use.md",
+            [("P6b_quiet.md", "selling_point: F3", "selling_point: F2"),
+             ("P6b_quiet.md", "label: Under 20 dB", "label: Brushed Finish")],
+        )
+
+    def test_grid_panel_without_label_is_rejected(self):
+        self.assert_error(
+            "'label' is required", "P6_daily_use.md",
+            [("P6c_window.md", "label: Water Window", "label: none")],
+        )
+
+    def test_steps_panels_must_share_the_fact(self):
+        self.assert_error(
+            "every panel of a steps module must use F5", "P7_clean_steps.md",
+            [("P7b_wipe.md", "selling_point: F5", "selling_point: F2")],
+        )
+
+    def test_panel_list_must_be_in_order(self):
+        self.assert_error(
+            "panels must be listed as", "P7_clean_steps.md",
+            [("P7_clean_steps.md", "panels: P7a, P7b", "panels: P7b, P7a")],
+        )
+
+    def test_too_many_panels_is_rejected(self):
+        self.assert_error(
+            "needs 1 panel(s)", "P8_essentials.md",
+            [("P8_essentials.md", "panels: P8a", "panels: P8a, P8b")],
+        )
+
+    def test_spec_line_number_must_match_its_fact(self):
+        self.assert_error(
+            "number '12'", "P8_essentials.md",
+            [("P8_essentials.md", "F1 | 10 L", "F1 | 12 L")],
+        )
+
+    def test_spec_line_needs_a_real_fact(self):
+        self.assert_error(
+            "'F9' is not a fact id", "P8_essentials.md",
+            [("P8_essentials.md", "F4 | Cats and Dogs", "F9 | Lasts for Weeks")],
+        )
+
+    def test_module_headline_number_must_come_from_its_facts(self):
+        self.assert_error(
+            "number '7'", "P6_daily_use.md",
+            [("P6_daily_use.md", "headline: Made for Daily Use", "headline: Made for 7 Days")],
+        )
+
+    def test_module_card_cannot_carry_scene_fields(self):
+        self.assert_error(
+            "belongs on the panel cards", "P6_daily_use.md",
+            [("P6_daily_use.md", "panels: P6a, P6b, P6c", "panels: P6a, P6b, P6c\ncamera: wide")],
+        )
 
 
 def task_sheet(cards, declared=None, product="round10l", fenced=False):
@@ -192,6 +324,8 @@ class TaskSheetTest(unittest.TestCase):
                 code = check_card.run_task(sheet, check_card.load_index())
         self.assertEqual(code, 0, output.getvalue())
         self.assertIn("NEXT", output.getvalue())
+        self.assertIn("THEN COMPOSE", output.getvalue())
+        self.assertNotIn("check_card.py cards/round10l/P6_daily_use.md\n  python tools/check_card.py cards/round10l/P6a", output.getvalue())
         self.assertNotIn("(updated)", output.getvalue())
         for path, content in before.items():
             self.assertEqual(path.read_bytes().replace(b"\r\n", b"\n"), content, path.name)

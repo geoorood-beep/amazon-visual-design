@@ -23,3 +23,6 @@ refs:
 ---
 
 （这条线下面可以写给人看的中文备注，不进提示词。）
+
+这是 M1、副图和 A+ 单场景用的模板。A+ 单场景在 `canvas` 下面加一行 `module: scene`。
+A+ 组合模块的模块卡和小格卡字段不同，照抄 `cards/round10l/P6_daily_use.md` 和 `cards/round10l/P6a_steel.md`，规则见 `UTA_STYLE.md` 2.4。
