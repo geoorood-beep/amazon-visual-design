@@ -29,8 +29,13 @@ CAMERAS = {
     "close_up": "close-up, product detail fills most of the frame",
     "wide": "wide view showing the whole room and the whole product",
 }
-MODULES = ("scene", "grid", "steps", "specs")
-PANEL_COUNT = {"grid": (2, 4), "steps": (2, 4), "specs": (1, 1)}
+MODULES = ("scene", "grid", "steps", "specs", "number", "contrast")
+PREMIUM_MODULES = {"number", "contrast"}
+ONE_FACT_MODULES = {"steps", "number", "contrast"}
+LABELLED_MODULES = {"grid", "steps", "contrast"}
+PANEL_COUNT = {"grid": (2, 4), "steps": (2, 4), "specs": (1, 1), "number": (1, 1), "contrast": (2, 2)}
+EDITIONS = ("standard", "premium")
+TONES = ("light", "dark")
 FORMAT_TEXT = {
     "M": "square 1:1",
     "S": "vertical 4:5 portrait",
@@ -42,7 +47,12 @@ FORMAT_TEXT = {
     "panel": (
         "square 1:1. Keep the product, the pet and the action inside the central 60% "
         "of the frame. The outer area is plain background, because the image will be "
-        "cropped to different shapes"
+        "cropped to different shapes. Keep the lower-left corner calm and low in detail"
+    ),
+    "panel_wide": (
+        "horizontal 3:2. Keep the product, the pet and the action inside the middle 60% "
+        "of the height. The top 20% and the bottom 20% are plain background, because "
+        "they will be cropped away. Keep the lower-left corner calm and low in detail"
     ),
 }
 TEXT_AREAS = {
@@ -70,7 +80,7 @@ MODULE_KEYS = [
     "card_version", "product", "slot", "canvas", "module", "selling_point",
     "headline", "subtitle", "hero_number", "panels", "lines", "refs",
 ]
-OPTIONAL_KEYS = ["module", "label", "panels", "lines"]
+OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone"]
 ALL_KEYS = set(IMAGE_KEYS) | set(MODULE_KEYS) | set(OPTIONAL_KEYS)
 ENGLISH_FIELDS = [
     "evidence", "human_action", "pet", "pet_action", "scene", "light",
@@ -305,12 +315,27 @@ def validate(path, index):
     elif not is_none(module):
         errors.append("'module' is only for P1-P8 cards (panels and M/S cards leave it out)")
 
+    edition = (fields.get("edition") or "standard").strip().lower()
+    tone = (fields.get("tone") or "light").strip().lower()
+    if kind == "P" and not is_panel:
+        if edition not in EDITIONS:
+            errors.append("edition must be standard or premium")
+        if tone not in TONES:
+            errors.append("tone must be light or dark")
+        if edition == "standard" and tone == "dark":
+            errors.append("tone: dark is only for the premium edition")
+        if edition == "standard" and module in PREMIUM_MODULES:
+            errors.append(f"module: {module} is only for the premium edition")
+    elif not is_none(fields.get("edition")) or not is_none(fields.get("tone")):
+        errors.append("'edition' and 'tone' are only for P1-P8 cards, not for panels, M1 or S cards")
+    look = {"edition": edition, "tone": tone}
+
     if kind == "P" and not is_panel and module != "scene":
-        return validate_module(path, fields, refs, errors, warnings, module, index)
-    return validate_image(path, fields, refs, errors, warnings, kind, is_panel, index)
+        return validate_module(path, fields, refs, errors, warnings, module, look, index)
+    return validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, index)
 
 
-def validate_image(path, fields, refs, errors, warnings, kind, is_panel, index):
+def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, index):
     slot = fields["slot"]
     for key in IMAGE_KEYS:
         if key not in fields:
@@ -326,9 +351,13 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, index):
 
     if fields["card_version"] != "1":
         errors.append("card_version must be 1")
-    canvas = "1:1" if (kind == "M" or is_panel) else {"S": "4:5", "P": "2.44:1"}[kind]
-    if fields["canvas"] != canvas:
-        errors.append(f"canvas for {slot} must be {canvas}")
+    if is_panel:
+        if fields["canvas"] not in ("1:1", "3:2"):
+            errors.append("canvas for a panel must be 1:1, or 3:2 for the lead panel of a premium module")
+    else:
+        canvas = {"M": "1:1", "S": "4:5", "P": "2.44:1"}[kind]
+        if fields["canvas"] != canvas:
+            errors.append(f"canvas for {slot} must be {canvas}")
 
     product = fields["product"]
     facts, identity, product_forbidden = load_product(product, errors)
@@ -407,12 +436,21 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, index):
         return errors, warnings, None
     context = {
         "type": "image", "fields": fields, "kind": kind, "panel": is_panel,
-        "identity": identity, "attach": attach, "path": path,
+        "identity": identity, "attach": attach, "path": path, **look,
     }
     return errors, warnings, context
 
 
-def validate_module(path, fields, refs, errors, warnings, module, index):
+def panel_canvas(module, edition, count, position):
+    """The frame each panel image must be generated in."""
+    if module == "number":
+        return "3:2"
+    if module == "grid" and edition == "premium" and count == 3 and position == 0:
+        return "3:2"
+    return "1:1"
+
+
+def validate_module(path, fields, refs, errors, warnings, module, look, index):
     slot = fields["slot"]
     for key in MODULE_KEYS:
         if key not in fields:
@@ -444,7 +482,10 @@ def validate_module(path, fields, refs, errors, warnings, module, index):
             errors.append(f"'{key}' must be written in English")
 
     # Panels: listed in order, each with its own valid card next to this one.
+    edition = look["edition"]
     low, high = PANEL_COUNT[module]
+    if module == "grid" and edition == "premium":
+        high = 3
     names = [name.strip() for name in fields["panels"].split(",") if name.strip()]
     expected = [slot + letter for letter in "abcd"[: len(names)]]
     if not low <= len(names) <= high:
@@ -453,7 +494,7 @@ def validate_module(path, fields, refs, errors, warnings, module, index):
     elif names != expected:
         errors.append(f"panels must be listed as {', '.join(expected)}")
     panels = []
-    for name in names if names == expected else []:
+    for position, name in enumerate(names if names == expected else []):
         found = sorted(path.parent.glob(f"{name}_*.md")) + sorted(path.parent.glob(f"{name}.md"))
         if len(found) != 1:
             errors.append(f"panel {name}: expected exactly one card named {name}_<name>.md, found {len(found)}")
@@ -466,22 +507,28 @@ def validate_module(path, fields, refs, errors, warnings, module, index):
         panel_fields = panel_context["fields"]
         if panel_fields["product"] != product:
             errors.append(f"panel {name}: product differs from the module's product")
-        if module in ("grid", "steps") and is_none(panel_fields.get("label")):
+        if module in LABELLED_MODULES and is_none(panel_fields.get("label")):
             errors.append(f"panel {name}: 'label' is required in a {module} module")
-        if module == "specs" and not is_none(panel_fields.get("label")):
-            errors.append(f"panel {name}: 'label' must be none in a specs module")
+        if module not in LABELLED_MODULES and not is_none(panel_fields.get("label")):
+            errors.append(f"panel {name}: 'label' must be none in a {module} module")
+        needed = panel_canvas(module, edition, len(names), position)
+        if panel_fields["canvas"] != needed:
+            why = " (the lead panel of this premium module is wide)" if needed == "3:2" else ""
+            errors.append(f"panel {name}: canvas must be {needed}{why}")
         panels.append(panel_context)
 
     # Selling points
     panel_facts = [p["fields"]["selling_point"] for p in panels]
     used_facts = set(panel_facts)
     module_fact = fields["selling_point"]
-    if module == "steps":
+    if module in ONE_FACT_MODULES:
         if is_none(module_fact) or module_fact not in facts:
-            errors.append("a steps module needs selling_point set to one fact id")
+            errors.append(f"a {module} module needs selling_point set to one fact id")
         elif any(f != module_fact for f in panel_facts):
-            errors.append(f"every panel of a steps module must use {module_fact}")
+            errors.append(f"every panel of a {module} module must use {module_fact}")
         used_facts.add(module_fact)
+        if module == "number" and is_none(fields["hero_number"]):
+            errors.append("a number module needs hero_number")
     else:
         if not is_none(module_fact):
             errors.append(f"selling_point must be none on a {module} module card")
@@ -522,14 +569,18 @@ def validate_module(path, fields, refs, errors, warnings, module, index):
         return errors, warnings, None
     context = {
         "type": "module", "fields": fields, "kind": "P", "panel": False, "module": module,
-        "panels": panels, "lines": lines, "attach": attach, "path": path,
+        "panels": panels, "lines": lines, "attach": attach, "path": path, **look,
     }
     return errors, warnings, context
 
 
 def build_prompt(context, blocks):
     fields, kind, is_panel = context["fields"], context["kind"], context["panel"]
-    out = [f"FORMAT: {FORMAT_TEXT['panel' if is_panel else kind]}."]
+    if is_panel:
+        frame = "panel_wide" if fields["canvas"] == "3:2" else "panel"
+    else:
+        frame = kind
+    out = [f"FORMAT: {FORMAT_TEXT[frame]}."]
     if kind == "M":
         out.append(
             "Studio product photograph on a pure white background (RGB 255,255,255). "
@@ -547,7 +598,10 @@ def build_prompt(context, blocks):
         if not is_none(fields["pet"]):
             action.append(f"Pet ({fields['pet']}): " + fields["pet_action"].rstrip(".") + ".")
         out.append(" ".join(action))
-    out.append("CAMERA: " + CAMERAS[fields["camera"]] + ".")
+    if kind == "M":
+        out.append("CAMERA: the same front view from slightly above as the product reference, whole product in frame.")
+    else:
+        out.append("CAMERA: " + CAMERAS[fields["camera"]] + ".")
     if kind != "M":
         out.append("LIGHT: " + fields["light"].rstrip(".") + ". " + blocks["LIGHT"])
         if not is_none(fields["pet"]):
@@ -610,6 +664,7 @@ def print_package(context, blocks):
         print(f"save the image without text as: {stem}_base_v01.png")
         print(f"desktop {stem}_desktop_1464x600_v01.png : crop the middle band, text on the {fields['text_area']}")
         print(f"mobile  {stem}_mobile_600x450_v01.png  : text band on top, image below")
+        print(f"edition: {context['edition']}   tone: {context['tone']}")
         print_copy(fields)
     else:
         print("== TYPESET AFTER GENERATION (UTA_STYLE.md 1.5) ==")
@@ -631,11 +686,14 @@ def print_module(context):
     print(f"   mobile  {stem}_mobile_600x450_v01.png")
     print()
     print("== CONTENT ==")
+    print(f"edition: {context['edition']}   tone: {context['tone']}")
     print_copy(fields)
     for number, panel in enumerate(context["panels"], start=1):
         panel_fields = panel["fields"]
         label = "" if is_none(panel_fields.get("label")) else f"   label: {panel_fields['label']}"
         step = f"step {number}  " if module == "steps" else ""
+        if module == "contrast":
+            step = "before  " if number == 1 else "after  "
         print(f"panel {panel_fields['slot']}: {step}{output_stem(panel)}_v01.png{label}")
     for fact_id, text in context["lines"]:
         print(f"line ({fact_id}): {text}")
@@ -668,6 +726,15 @@ def set_notes(valid):
     for card, context in valid:
         if context["panel"] and context["fields"]["slot"] not in module_panels:
             notes.append(f"panel {context['fields']['slot']} ({card.name}) is not listed by any module card")
+    screens = [c for _card, c in valid if c["kind"] == "P" and not c["panel"]]
+    if len({c["edition"] for c in screens}) > 1:
+        notes.append("the A+ screens mix the standard and the premium edition; use one edition for the whole page")
+    dark = [c["fields"]["slot"] for c in screens if c["tone"] == "dark"]
+    if len(dark) > 2:
+        notes.append(f"more than two dark screens ({', '.join(dark)}); a page takes one or two")
+    for a, b in zip(screens, screens[1:]):
+        if a["tone"] == b["tone"] == "dark":
+            notes.append(f"{a['fields']['slot']} and {b['fields']['slot']} are both dark; do not place dark screens next to each other")
     for kind in "SP":
         group = [c for _card, c in valid if c["kind"] == kind and c["type"] == "image" and not c["panel"]]
         cameras = [c["fields"]["camera"] for c in group]

@@ -269,6 +269,155 @@ class APlusTest(unittest.TestCase):
         )
 
 
+class PremiumEditionTest(APlusTest):
+    """The premium A+ edition: tone, the wide lead panel, number and contrast modules."""
+
+    FOLDER = "examples_premium"
+
+    def errors_after(self, card_name, edits=(), remove=()):
+        with tempfile.TemporaryDirectory() as folder:
+            folder = Path(folder)
+            for source in (ROOT / "cards" / self.FOLDER).glob("*.md"):
+                if source.name not in remove:
+                    shutil.copy(source, folder / source.name)
+            for name, old, new in edits:
+                text = (folder / name).read_text(encoding="utf-8")
+                self.assertIn(old, text, f"test fixture out of date: {name}")
+                (folder / name).write_text(text.replace(old, new), encoding="utf-8")
+            errors, _warnings, _context = check_card.validate(folder / card_name, self.index)
+        return errors
+
+    def context_for(self, name):
+        errors, _warnings, context = check_card.validate(ROOT / "cards" / self.FOLDER / name, self.index)
+        self.assertEqual(errors, [])
+        return context
+
+    # The inherited standard-edition tests point at cards/round10l; they are run by APlusTest.
+    test_module_card_collects_its_panels = None
+    test_specs_lines_are_parsed = None
+    test_scene_and_panel_prompts_ask_for_croppable_frames = None
+    test_p_slot_without_module_is_rejected = None
+    test_scene_text_area_must_be_a_side = None
+    test_panel_with_its_own_headline_is_rejected = None
+    test_missing_panel_card_is_rejected = None
+    test_panel_error_fails_the_module = None
+    test_grid_panels_need_different_facts = None
+    test_grid_panel_without_label_is_rejected = None
+    test_steps_panels_must_share_the_fact = None
+    test_panel_list_must_be_in_order = None
+    test_too_many_panels_is_rejected = None
+    test_spec_line_number_must_match_its_fact = None
+    test_spec_line_needs_a_real_fact = None
+    test_module_headline_number_must_come_from_its_facts = None
+    test_module_card_cannot_carry_scene_fields = None
+
+    def test_edition_and_tone_reach_the_context(self):
+        context = self.context_for("P3_built.md")
+        self.assertEqual((context["edition"], context["tone"]), ("premium", "dark"))
+        self.assertEqual(self.context_for("P1_together.md")["edition"], "premium")
+
+    def test_lead_panel_prompt_is_wide(self):
+        blocks = check_card.load_prompt_blocks()
+        lead = check_card.build_prompt(self.context_for("P3a_steel.md"), blocks)
+        small = check_card.build_prompt(self.context_for("P3b_quiet.md"), blocks)
+        self.assertIn("horizontal 3:2", lead)
+        self.assertIn("square 1:1", small)
+        self.assertIn("lower-left corner calm", small)
+
+    def test_standard_edition_cannot_be_dark(self):
+        self.assert_error(
+            "tone: dark is only for the premium edition", "P3_built.md",
+            [("P3_built.md", "edition: premium", "edition: standard")],
+        )
+
+    def test_standard_edition_has_no_number_module(self):
+        self.assert_error(
+            "module: number is only for the premium edition", "P2_capacity.md",
+            [("P2_capacity.md", "edition: premium\n", "")],
+        )
+
+    def test_unknown_edition_is_rejected(self):
+        self.assert_error(
+            "edition must be standard or premium", "P2_capacity.md",
+            [("P2_capacity.md", "edition: premium", "edition: deluxe")],
+        )
+
+    def test_panel_cannot_set_edition(self):
+        self.assert_error(
+            "only for P1-P8 cards", "P3b_quiet.md",
+            [("P3b_quiet.md", "canvas: 1:1", "canvas: 1:1\nedition: premium")],
+        )
+
+    def test_premium_grid_lead_panel_must_be_wide(self):
+        self.assert_error(
+            "panel P3a: canvas must be 3:2", "P3_built.md",
+            [("P3a_steel.md", "canvas: 3:2", "canvas: 1:1")],
+        )
+
+    def test_premium_grid_small_panel_must_be_square(self):
+        self.assert_error(
+            "panel P3b: canvas must be 1:1", "P3_built.md",
+            [("P3b_quiet.md", "canvas: 1:1", "canvas: 3:2")],
+        )
+
+    def test_premium_grid_takes_at_most_three_panels(self):
+        self.assert_error(
+            "needs 2 to 3 panel(s)", "P3_built.md",
+            [("P3_built.md", "panels: P3a, P3b, P3c", "panels: P3a, P3b, P3c, P3d")],
+        )
+
+    def test_number_module_needs_a_hero_number(self):
+        self.assert_error(
+            "a number module needs hero_number", "P2_capacity.md",
+            [("P2_capacity.md", "hero_number: 10 L", "hero_number: none")],
+        )
+
+    def test_number_module_checks_the_number_against_its_fact(self):
+        self.assert_error(
+            "number '12'", "P2_capacity.md",
+            [("P2_capacity.md", "hero_number: 10 L", "hero_number: 12 L")],
+        )
+
+    def test_number_panel_takes_no_label(self):
+        self.assert_error(
+            "'label' must be none in a number module", "P2_capacity.md",
+            [("P2a_capacity_scene.md", "label: none", "label: Big Basin")],
+        )
+
+    def test_contrast_panels_must_share_the_fact(self):
+        self.assert_error(
+            "every panel of a contrast module must use F5", "P4_rinse.md",
+            [("P4a_before.md", "selling_point: F5", "selling_point: F2")],
+        )
+
+    def test_contrast_takes_exactly_two_panels(self):
+        self.assert_error(
+            "needs 2 panel(s)", "P4_rinse.md",
+            [("P4_rinse.md", "panels: P4a, P4b", "panels: P4a")],
+        )
+
+    def test_set_notes_flag_mixed_editions_and_adjacent_dark_screens(self):
+        dark = self.context_for("P3_built.md")
+        standard = dict(self.context_for("P2_capacity.md"), edition="standard")
+        also_dark = dict(self.context_for("P4_rinse.md"), tone="dark")
+        cards = [(Path("P2.md"), standard), (Path("P3.md"), dark), (Path("P4.md"), also_dark)]
+        notes = " | ".join(check_card.set_notes(cards))
+        self.assertIn("mix the standard and the premium edition", notes)
+        self.assertIn("P3 and P4 are both dark", notes)
+
+
+class MainImageTest(unittest.TestCase):
+    def test_m1_prompt_is_product_only(self):
+        index = check_card.load_index()
+        errors, _warnings, context = check_card.validate(ROOT / "cards" / "round10l" / "M1_white.md", index)
+        self.assertEqual(errors, [])
+        prompt = check_card.build_prompt(context, check_card.load_prompt_blocks())
+        self.assertIn("pure white background", prompt)
+        self.assertIn("same front view", prompt)
+        self.assertNotIn("whole room", prompt)
+        self.assertEqual([slot for slot, _path, _purpose in context["attach"]], ["product"])
+
+
 def task_sheet(cards, declared=None, product="round10l", fenced=False):
     parts = [check_card.TASK_HEADER, f"product: {product}", f"cards: {len(cards) if declared is None else declared}", ""]
     for path, body in cards:
