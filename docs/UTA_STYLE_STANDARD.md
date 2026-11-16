@@ -1,6 +1,6 @@
 # POKPET Uta Style 视觉标准（v3 · 已被 3.0 取代，仅作参考）
 
-> **状态：已被取代（2026-11-16）。** 现行的 UTA Style 是 `standard/CORE.md`（3.0）。出图时不读本文件；本文件与 `standard/`、`AGENTS.md` 冲突的一律无效。保留它是为了查案例拆解、表情库和历史决定，取舍对照见 `docs/README.md`。
+> **状态：已被取代（2026-11-16）。** 现行的 UTA Style 是仓库根目录的 `UTA_STYLE.md`。出图时不读本文件；本文件与 `UTA_STYLE.md` 冲突的一律无效。保留它是为了查案例拆解、表情库和历史决定，取舍对照见 `docs/README.md`。
 >
 > 以下为 v3 原文，未作改动。原文曾写：本文件取代此前所有 Uta / Yota Style 文档，包括 v01、v02（235 行纯文字稿和带图版），以及更早的风格草稿。
 > 合规、尺寸、母版、产品保真和 QA 门槛仍以仓库 `AGENTS.md` 为准。本文件与 `AGENTS.md` 冲突时，以 `AGENTS.md` 为准。

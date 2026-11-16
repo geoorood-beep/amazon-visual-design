@@ -3,6 +3,8 @@
 Run from the repo root:
     python -m unittest discover -s tools -p "test_check_card.py" -v
 """
+import contextlib
+import io
 import tempfile
 import unittest
 from pathlib import Path
@@ -133,6 +135,66 @@ class CheckCardTest(unittest.TestCase):
 
     def test_missing_field_is_rejected(self):
         self.assert_rejected("camera: down_45\n", "", "missing field 'camera'")
+
+
+def task_sheet(cards, declared=None, product="round10l", fenced=False):
+    parts = [check_card.TASK_HEADER, f"product: {product}", f"cards: {len(cards) if declared is None else declared}", ""]
+    for path, body in cards:
+        parts += [f"=== {path} ===", body.rstrip("\n"), ""]
+    text = "\n".join(parts)
+    return "```\n" + text + "\n```\n" if fenced else text
+
+
+class TaskSheetTest(unittest.TestCase):
+    CARD = ("cards/round10l/S5_clean.md", GOOD)
+
+    def test_cards_are_split_out(self):
+        other = ("cards/round10l/S4_quiet.md", GOOD.replace("slot: S5", "slot: S4"))
+        product, cards, errors = check_card.parse_task(task_sheet([self.CARD, other]))
+        self.assertEqual(errors, [])
+        self.assertEqual(product, "round10l")
+        self.assertEqual([path for path, _body in cards], [self.CARD[0], other[0]])
+        self.assertEqual(cards[0][1], GOOD.rstrip("\n") + "\n")
+
+    def test_code_fence_around_the_sheet_is_ignored(self):
+        _product, cards, errors = check_card.parse_task(task_sheet([self.CARD], fenced=True))
+        self.assertEqual(errors, [])
+        self.assertEqual(len(cards), 1)
+
+    def test_truncated_sheet_is_rejected(self):
+        _product, _cards, errors = check_card.parse_task(task_sheet([self.CARD], declared=3))
+        self.assertTrue(any("cut off" in error for error in errors), errors)
+
+    def test_missing_header_is_rejected(self):
+        text = task_sheet([self.CARD]).replace(check_card.TASK_HEADER, "Here is the task:")
+        _product, _cards, errors = check_card.parse_task(text)
+        self.assertTrue(any("first line must be" in error for error in errors), errors)
+
+    def test_card_under_another_product_is_rejected(self):
+        card = ("cards/clover_square/S5_clean.md", GOOD)
+        _product, _cards, errors = check_card.parse_task(task_sheet([card]))
+        self.assertTrue(any("is not under cards/round10l/" in error for error in errors), errors)
+
+    def test_bad_marker_is_rejected(self):
+        text = task_sheet([self.CARD]).replace("=== cards/round10l/S5_clean.md ===", "=== S5 clean ===")
+        _product, _cards, errors = check_card.parse_task(text)
+        self.assertTrue(any("bad card marker" in error for error in errors), errors)
+
+    def test_run_task_on_the_sample_cards(self):
+        """Feeding the repo's own cards back in must leave them unchanged and valid."""
+        samples = sorted((ROOT / "cards" / "round10l").glob("*.md"))
+        cards = [(p.relative_to(ROOT).as_posix(), p.read_text(encoding="utf-8")) for p in samples]
+        before = {p: p.read_bytes().replace(b"\r\n", b"\n") for p in samples}
+        with tempfile.TemporaryDirectory() as folder:
+            sheet = Path(folder) / "task.md"
+            sheet.write_text(task_sheet(cards), encoding="utf-8")
+            with contextlib.redirect_stdout(io.StringIO()) as output:
+                code = check_card.run_task(sheet, check_card.load_index())
+        self.assertEqual(code, 0, output.getvalue())
+        self.assertIn("NEXT", output.getvalue())
+        self.assertNotIn("(updated)", output.getvalue())
+        for path, content in before.items():
+            self.assertEqual(path.read_bytes().replace(b"\r\n", b"\n"), content, path.name)
 
 
 if __name__ == "__main__":

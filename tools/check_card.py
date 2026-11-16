@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Validate a slot card and print the generation package for it.
+"""Validate slot cards and print the generation package for them.
 
 Usage:
-    python tools/check_card.py cards/round10l/S5_clean.md
-    python tools/check_card.py --set cards/round10l
+    python tools/check_card.py --task outputs/task.md     a task sheet from the card writer
+    python tools/check_card.py cards/round10l/S5_clean.md one card: attach list, prompt, typesetting
+    python tools/check_card.py --set cards/round10l       every card in a folder
 
 A card that fails validation must not be used to generate an image.
-Rules are documented in standard/CARD_SPEC.md. Standard library only.
+Rules are documented in UTA_STYLE.md section 2. Standard library only.
 """
 import argparse
 import csv
@@ -160,7 +161,7 @@ def load_index():
 
 def load_prompt_blocks():
     blocks, name = {}, None
-    for line in read(ROOT / "standard" / "prompt_base.txt").splitlines():
+    for line in read(ROOT / "tools" / "prompt_base.txt").splitlines():
         if line.startswith("#"):
             continue
         match = re.match(r"^\[([A-Z_]+)\]\s*$", line)
@@ -276,9 +277,9 @@ def validate(path, index):
         errors.append(f"subtitle has more than {MAX_SUBTITLE_WORDS} words")
     if not is_none(fields["hero_number"]) and not NUMBER.search(fields["hero_number"]):
         errors.append("hero_number must contain a number, or be none")
-    global_forbidden = md_section_bullets(read(ROOT / "standard" / "CORE.md"), "禁用词")
+    global_forbidden = md_section_bullets(read(ROOT / "UTA_STYLE.md"), "禁用词")
     for word in find_forbidden(copy, global_forbidden):
-        errors.append(f"copy contains a word forbidden by standard/CORE.md: '{word}'")
+        errors.append(f"copy contains a word forbidden by UTA_STYLE.md: '{word}'")
     for word in find_forbidden(copy, product_forbidden):
         errors.append(f"copy contains a word forbidden for {product}: '{word}'")
     if fact is not None:
@@ -388,7 +389,7 @@ def print_package(path, context, blocks):
     print("== PROMPT (use as is) ==")
     print(build_prompt(context, blocks))
     print()
-    print("== TYPESET AFTER GENERATION (standard/CORE.md section 5) ==")
+    print("== TYPESET AFTER GENERATION (UTA_STYLE.md 1.5) ==")
     if context["kind"] == "M":
         print("No text on M1.")
     else:
@@ -419,11 +420,23 @@ def check_set(folder, index):
         for warning in warnings:
             print(f"  ! {warning}")
 
-    def order(item):
-        slot = item[1]["fields"]["slot"]
-        return ("MSP".index(slot[0]), int(slot[1:]))
+    notes = set_notes(valid)
+    if notes:
+        print("\nSet notes (fix these when writing cards; they do not block a single image):")
+        for note in notes:
+            print(f"  ! {note}")
+    print(f"\n{len(cards) - failed} of {len(cards)} cards valid")
+    return 1 if failed else 0
 
-    valid.sort(key=order)
+
+def slot_order(item):
+    slot = item[1]["fields"]["slot"]
+    return ("MSP".index(slot[0]), int(slot[1:]))
+
+
+def set_notes(valid):
+    """Whole-set reminders for a list of (card path, context). Sorts the list by slot."""
+    valid.sort(key=slot_order)
     notes, seen_slots, seen_facts = [], {}, {}
     for card, context in valid:
         f = context["fields"]
@@ -452,11 +465,121 @@ def check_set(folder, index):
                 notes.append("S set has no overhead card (top_down or down_45)")
             if cameras.count("low_angle") < 2:
                 notes.append("S set has fewer than two low_angle cards")
+    return notes
+
+
+TASK_HEADER = "UTA-TASK v1"
+TASK_MARKER = re.compile(r"^=== (cards/([a-z0-9_]+)/([A-Za-z0-9][A-Za-z0-9_\-]*\.md)) ===\s*$")
+
+
+def parse_task(text):
+    """Split a task sheet into cards. Return (product, [(path, body)], errors)."""
+    errors = []
+    lines = [line.rstrip() for line in text.splitlines()]
+    lines = [line for line in lines if not line.strip().startswith("```")]
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    if not lines or lines[0].strip() != TASK_HEADER:
+        return None, [], [f"first line must be '{TASK_HEADER}'"]
+
+    header, cards, current = {}, [], None
+    for line in lines[1:]:
+        match = TASK_MARKER.match(line)
+        if match:
+            current = (match.group(1), match.group(2), [])
+            cards.append(current)
+        elif line.startswith("==="):
+            errors.append(f"bad card marker: {line}  (expected '=== cards/<product>/<slot>_<name>.md ===')")
+        elif current is not None:
+            current[2].append(line)
+        elif ":" in line:
+            key, value = line.split(":", 1)
+            header[key.strip()] = value.strip()
+        elif line.strip():
+            errors.append(f"unexpected line before the first card: {line}")
+
+    product = header.get("product")
+    if not product:
+        errors.append("missing 'product:' line under the header")
+    declared = header.get("cards", "")
+    if not declared.isdigit():
+        errors.append("missing 'cards: <number>' line under the header")
+    elif int(declared) != len(cards):
+        errors.append(
+            f"header says cards: {declared} but {len(cards)} card(s) were found "
+            "(the task sheet may be cut off)"
+        )
+    if not cards:
+        errors.append("no cards found")
+
+    result, seen = [], set()
+    for path, path_product, body in cards:
+        if path in seen:
+            errors.append(f"{path} appears twice")
+        seen.add(path)
+        if product and path_product != product:
+            errors.append(f"{path} is not under cards/{product}/")
+        while body and not body[0].strip():
+            body.pop(0)
+        while body and not body[-1].strip():
+            body.pop()
+        result.append((path, "\n".join(body) + "\n"))
+    return product, result, errors
+
+
+def run_task(task_file, index):
+    product, cards, errors = parse_task(read(task_file))
+    if errors:
+        print("TASK ERROR  the task sheet is not usable; nothing was written")
+        for error in errors:
+            print(f"  - {error}")
+        print("\nDo not generate. Send these lines back to the card writer.")
+        return 2
+
+    failed, valid = [], []
+    for rel, body in cards:
+        target = ROOT / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if not target.exists():
+            state = "new"
+        elif read(target).replace("\r\n", "\n") == body:
+            state = "unchanged"
+        else:
+            state = "updated"
+        target.write_text(body, encoding="utf-8", newline="\n")
+        card_errors, warnings, context = validate(target, index)
+        if context is not None:
+            fields = context["fields"]
+            if fields["product"] != product:
+                card_errors.append(f"card product '{fields['product']}' differs from the task product '{product}'")
+            name = Path(rel).name
+            if not (name.startswith(fields["slot"] + "_") or name == fields["slot"] + ".md"):
+                card_errors.append(f"file name must start with the slot: '{fields['slot']}_'")
+        if card_errors:
+            failed.append(rel)
+            print(f"FAIL  {rel}  ({state})")
+            for error in card_errors:
+                print(f"  - {error}")
+        else:
+            print(f"OK    {rel}  ({state})")
+            valid.append((target, context))
+        for warning in warnings:
+            print(f"  ! {warning}")
+
+    notes = set_notes(valid)
     if notes:
-        print("\nSet notes (fix these when writing cards; they do not block a single image):")
+        print("\nSet notes (for the card writer; they do not block these images):")
         for note in notes:
             print(f"  ! {note}")
-    print(f"\n{len(cards) - failed} of {len(cards)} cards valid")
+    print(f"\n{len(valid)} of {len(cards)} cards valid")
+    if valid:
+        print("\nNEXT  generate one image at a time, in this order. For each card run:")
+        for card, _context in valid:
+            print(f"  python tools/check_card.py {card.relative_to(ROOT).as_posix()}")
+    if failed:
+        print("\nRETURN TO THE CARD WRITER  do not generate these; quote the FAIL lines above:")
+        for rel in failed:
+            print(f"  {rel}")
     return 1 if failed else 0
 
 
@@ -464,14 +587,21 @@ def main():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("target", help="a card file, or a folder of cards with --set")
+    parser.add_argument("target", help="a card file, a folder with --set, or a task sheet with --task")
     parser.add_argument("--set", action="store_true", help="check every card in a folder")
+    parser.add_argument("--task", action="store_true", help="split a task sheet into cards and check them")
     args = parser.parse_args()
 
     target = Path(args.target)
     if not target.is_absolute():
         target = (Path.cwd() / target).resolve()
     index = load_index()
+
+    if args.task:
+        if not target.is_file():
+            print(f"not a file: {args.target}")
+            return 2
+        return run_task(target, index)
 
     if args.set:
         if not target.is_dir():

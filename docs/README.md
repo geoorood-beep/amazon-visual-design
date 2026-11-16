@@ -1,6 +1,6 @@
 # docs：参考区
 
-这个目录从 3.0 起是参考区。**出图时不读这里的任何文件。** 现行规则在仓库根目录的 `AGENTS.md` 和 `standard/`，与这里冲突的一律以现行规则为准。
+这个目录从 3.0 起是参考区。**出图时不读这里的任何文件。** 现行规则只有仓库根目录的 `UTA_STYLE.md`，与这里冲突的一律以它为准。
 
 ## 还在用的
 
@@ -15,7 +15,7 @@
 
 | 文件 | 里面有什么 | 提炼到了哪里 |
 |---|---|---|
-| `UTA_STYLE_STANDARD.md` | 卖点画法库、机位库、表情库、案例逐张拆解、v06 方案 | 五条画面规则、光、机位、文字 → `standard/CORE.md`；案例分类表 → `references/INDEX.csv`；方形款事实 → `products/clover_square/PRODUCT.md` |
+| `UTA_STYLE_STANDARD.md` | 卖点画法库、机位库、表情库、案例逐张拆解、v06 方案 | 五条画面规则、光、机位、文字 → `UTA_STYLE.md` 第 1 节；案例分类表 → `references/INDEX.csv`；方形款事实 → `products/clover_square/PRODUCT.md` |
 | `POKPET_10L_ROUND_DESIGN_DIRECTOR.md` | 圆款的事实、几何、18 个图位设想 | 事实和几何 → `products/round10l/PRODUCT.md` |
 | `APLUS_CASE_LAYOUT_RULES.md` | A+ 案例的版式拆解 | 未提炼。写 P 位图位卡时可查 |
 | `POKPET_APLUS_VISUAL_STANDARD_v02.md`、`SECONDARY_STORYBOARD_v1.md`、`PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md`、`FEATURE_VISUAL_EXPRESSION.md`、`STYLE_WAPSI_01.md` | 更早的风格和分镜草案 | 未提炼 |
