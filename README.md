@@ -1,27 +1,24 @@
 # 亚马逊美工设计
 
-规则版本 **3.1**（2026-11-16）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
+规则版本 **3.2**（2026-11-16）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
 
 出图只有一份指引：**[UTA_STYLE.md](UTA_STYLE.md)**。写任务的 Grok 和出图的 Codex 读的是同一份。
 
 ## 怎么用
 
-**第一步：让 Grok 写任务单。** 把下面这段发给它，填上产品：
+**准备一次：给 Grok 装上 Skill。** 把 [grok/SKILL.md](grok/SKILL.md) 的全文放进 Grok 的项目指令或自定义指令。不方便放的话，每次开新对话时发这一句：
 
 ```
-请读取 https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/UTA_STYLE.md
-你是写任务单的一方，按第 2 节执行。
-产品：round10l
+请读取 https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/grok/SKILL.md 并按它执行。
 ```
+
+**第一步：让 Grok 写任务单。** 对它说产品名就可以开始，例如「产品：round10l，开始」。它的第一条回复会先报出读到的版本号、事实编号和参考图数量，对不上说明它没读到文件。
 
 Grok 会用选择题和你确认：这一轮做主图、副图、A+ 还是整套；A+ 用标准版还是高级版；做哪几个卖点；每张图的呈现形式、场景、宠物和标题；A+ 每一屏用哪种模块。选项覆盖不了的个性化信息它会直接问，每轮最多两个问题。你用编号回答，最后回复「确认」，它一次输出整份任务单。
 
 **第二步：把 Grok 输出的任务单交给 Codex。** 在 Codex 里打开本仓库，发：
 
-```
-按 UTA style 执行这份任务单：
-（粘贴 Grok 输出的整个代码块，不改动）
-```
+把 Grok 输出的整个代码块原样粘贴过去。代码块第一行已经写好「按 UTA style 执行下面这份任务单。」，不需要你再加话。
 
 Codex 会校验、逐张出图、排版、拼版、验收，最后给一份回报。
 
@@ -50,7 +47,8 @@ Codex 会校验、逐张出图、排版、拼版、验收，最后给一份回�
 | 路径 | 内容 | 性质 |
 |---|---|---|
 | `UTA_STYLE.md` | 唯一的出图指引：标准、写任务单、出图、验收、校准 | 规则 |
-| `AGENTS.md` | 只有一句话：读 `UTA_STYLE.md` | 入口 |
+| `AGENTS.md` | 只有一句话：读 `UTA_STYLE.md` | Codex 的入口 |
+| `grok/SKILL.md` | Grok 的操作步骤：每一步发什么消息、什么格式 | Grok 的入口 |
 | `products/` | 每款产品一张产品卡和参考图 | 数据 |
 | `references/INDEX.csv` | 全部可用参考图的索引 | 数据 |
 | `references/anchors/` | 认可过的自家成图，作风格锚 | 数据 |

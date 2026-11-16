@@ -5,6 +5,7 @@ Run from the repo root:
 """
 import contextlib
 import io
+import re
 import shutil
 import tempfile
 import unittest
@@ -418,6 +419,33 @@ class MainImageTest(unittest.TestCase):
         self.assertEqual([slot for slot, _path, _purpose in context["attach"]], ["product"])
 
 
+class GrokSkillTest(unittest.TestCase):
+    """grok/SKILL.md must stay in step with UTA_STYLE.md and the repo."""
+
+    SKILL = (ROOT / "grok" / "SKILL.md").read_text(encoding="utf-8")
+    GUIDE = (ROOT / "UTA_STYLE.md").read_text(encoding="utf-8")
+
+    def test_versions_match(self):
+        guide = re.search(r"版本 (\d+\.\d+)", self.GUIDE).group(1)
+        skill = re.search(r"版本 (\d+\.\d+)", self.SKILL).group(1)
+        self.assertEqual(guide, skill)
+
+    def test_files_the_skill_reads_exist(self):
+        for path in re.findall(r"`((?:cards|products|references)/[^`<>]+\.(?:md|csv))`", self.SKILL):
+            if "<" not in path:
+                self.assertTrue((ROOT / path).is_file(), path)
+
+    def test_read_check_line_is_on_line_three(self):
+        third = self.GUIDE.splitlines()[2]
+        self.assertTrue(third.startswith("版本 "), third)
+        self.assertIn("。", third)
+
+    def test_sections_the_skill_cites_exist(self):
+        headings = set(re.findall(r"^#{2,3} (\d+(?:\.\d+)?)", self.GUIDE, re.M))
+        for section in set(re.findall(r"`UTA_STYLE\.md` (\d+\.\d+)", self.SKILL)):
+            self.assertIn(section, headings, section)
+
+
 def task_sheet(cards, declared=None, product="round10l", fenced=False):
     parts = [check_card.TASK_HEADER, f"product: {product}", f"cards: {len(cards) if declared is None else declared}", ""]
     for path, body in cards:
@@ -449,7 +477,13 @@ class TaskSheetTest(unittest.TestCase):
     def test_missing_header_is_rejected(self):
         text = task_sheet([self.CARD]).replace(check_card.TASK_HEADER, "Here is the task:")
         _product, _cards, errors = check_card.parse_task(text)
-        self.assertTrue(any("first line must be" in error for error in errors), errors)
+        self.assertTrue(any("no 'UTA-TASK v1' line found" in error for error in errors), errors)
+
+    def test_instruction_line_before_the_header_is_ignored(self):
+        text = "```\n按 UTA style 执行下面这份任务单。\n" + task_sheet([self.CARD]) + "\n```\n"
+        product, cards, errors = check_card.parse_task(text)
+        self.assertEqual(errors, [])
+        self.assertEqual((product, len(cards)), ("round10l", 1))
 
     def test_card_under_another_product_is_rejected(self):
         card = ("cards/clover_square/S5_clean.md", GOOD)

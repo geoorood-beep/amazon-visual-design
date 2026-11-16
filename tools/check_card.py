@@ -795,10 +795,11 @@ def parse_task(text):
     errors = []
     lines = [line.rstrip() for line in text.splitlines()]
     lines = [line for line in lines if not line.strip().startswith("```")]
-    while lines and not lines[0].strip():
-        lines.pop(0)
-    if not lines or lines[0].strip() != TASK_HEADER:
-        return None, [], [f"first line must be '{TASK_HEADER}'"]
+    # A short instruction line such as "按 UTA style 执行下面这份任务单。" may come first.
+    start = next((i for i, line in enumerate(lines) if line.strip() == TASK_HEADER), None)
+    if start is None:
+        return None, [], [f"no '{TASK_HEADER}' line found"]
+    lines = lines[start:]
 
     header, cards, current = {}, [], None
     for line in lines[1:]:
