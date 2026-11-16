@@ -420,9 +420,9 @@ class MainImageTest(unittest.TestCase):
 
 
 class GrokSkillTest(unittest.TestCase):
-    """grok/SKILL.md must stay in step with UTA_STYLE.md and the repo."""
+    """The grok-UTAstyle skill must stay in step with UTA_STYLE.md and the repo."""
 
-    SKILL = (ROOT / "grok" / "SKILL.md").read_text(encoding="utf-8")
+    SKILL = (ROOT / "grok" / "grok-UTAstyle-skill.md").read_text(encoding="utf-8")
     GUIDE = (ROOT / "UTA_STYLE.md").read_text(encoding="utf-8")
 
     def test_versions_match(self):

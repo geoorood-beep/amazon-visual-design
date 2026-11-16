@@ -1,15 +1,15 @@
 # 亚马逊美工设计
 
-规则版本 **3.2**（2026-11-16）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
+规则版本 **3.1**（2026-11-16）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
 
 出图只有一份指引：**[UTA_STYLE.md](UTA_STYLE.md)**。写任务的 Grok 和出图的 Codex 读的是同一份。
 
 ## 怎么用
 
-**准备一次：给 Grok 装上 Skill。** 把 [grok/SKILL.md](grok/SKILL.md) 的全文放进 Grok 的项目指令或自定义指令。不方便放的话，每次开新对话时发这一句：
+**准备一次：给 Grok 装上 grok-UTAstyle skill 3.1。** 把 [grok/grok-UTAstyle-skill.md](grok/grok-UTAstyle-skill.md) 的全文放进 Grok 的项目指令或自定义指令。不方便放的话，每次开新对话时发这一句：
 
 ```
-请读取 https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/grok/SKILL.md 并按它执行。
+请读取 https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/grok/grok-UTAstyle-skill.md 并按它执行。
 ```
 
 **第一步：让 Grok 写任务单。** 对它说产品名就可以开始，例如「产品：round10l，开始」。它的第一条回复会先报出读到的版本号、事实编号和参考图数量，对不上说明它没读到文件。
@@ -48,7 +48,7 @@ Codex 会校验、逐张出图、排版、拼版、验收，最后给一份回�
 |---|---|---|
 | `UTA_STYLE.md` | 唯一的出图指引：标准、写任务单、出图、验收、校准 | 规则 |
 | `AGENTS.md` | 只有一句话：读 `UTA_STYLE.md` | Codex 的入口 |
-| `grok/SKILL.md` | Grok 的操作步骤：每一步发什么消息、什么格式 | Grok 的入口 |
+| `grok/grok-UTAstyle-skill.md` | grok-UTAstyle skill 3.1：Grok 的操作步骤：每一步发什么消息、什么格式 | Grok 的入口 |
 | `products/` | 每款产品一张产品卡和参考图 | 数据 |
 | `references/INDEX.csv` | 全部可用参考图的索引 | 数据 |
 | `references/anchors/` | 认可过的自家成图，作风格锚 | 数据 |
