@@ -1,5 +1,40 @@
 # 版本记录
 
+## v3.0 — 2026-11-16 核心标准、图位卡和选图机制
+
+### 为什么改
+
+对 2026-11-15 的 168 条出图对话和成图做了复盘。用户认可的是 v06 轮逐张出的清洗、换滤芯、搬运几张；之后的 ROUND 轮按更多规则批量出图，27 张没有一张通过。复盘找到的原因：
+
+- 规则文件合计约 32 万字，互相覆盖。字体、暗部数值、出图顺序在不同文件里说法相反。
+- 17 项验收里的数值项把用户认可的图判成不合格（例如暗部 p5 为 0.1237、超出上限 0.004），重试额度花在这些项上。
+- 通用验收里写死了方形四叶草款的外形，换产品后只能再写一份方案去逐条覆盖。
+- 流程用语漏进了成图文案（"Six confirmed facts."、"User-confirmed. Test report not shown."）。
+- 要求逐张读完 190 张案例，但没有记录表明用户认可的成图被作为参考图传进了生成。
+
+### 改了什么
+
+- 新增 `standard/CORE.md`：核心视觉标准，不含具体产品。字体定为 Poppins，取消明暗数值门槛。
+- 新增 `standard/QA.md`：验收收成 3 项一票否决，其余只记录。
+- 新增 `products/`：每款产品一张产品卡，产品事实和外形只写在这里。已有 `round10l`、`clover_square`。
+- 新增 `references/INDEX.csv`：159 张参考图的索引，其中 151 张来自 UTA 标准 14.10 节的分类表，5 张是用户认可的自家成图。
+- 新增图位卡（`cards/`、`standard/CARD_SPEC.md`）：一张图一张卡，参考图的路径直接写在卡里。
+- 新增 `tools/check_card.py`：校验图位卡，并从卡、产品卡和 `standard/prompt_base.txt` 拼出提示词。附 18 项测试。
+- 新增 `standard/WRITER_GUIDE.md`（给写卡方）和 `standard/WORKFLOW.md`（三方工作流）。
+- 重写 `AGENTS.md`：只剩出图的固定步骤。
+
+### 移动了什么
+
+- `AGENTS.md`（2.11 版）→ `archive/AGENTS_v2.11.md`。
+- `skills/`、`.cursor/skills/pokpet-v06-design-director/` → `archive/skills_old/`，避免被自动加载。
+- `docs/` 原地保留为参考区，说明见 `docs/README.md`。没有删除任何文件。
+
+### 还没做的
+
+- 这套流程没有用写卡方和出图方实际跑过，稳定性未经验证。
+- `round10l` 只有一个角度的产品参考图。
+- P 位（A+ 详情页）的卡片标签和模块结构只有基本规则，没有样卡。
+
 ## v2.11 — 2026-11-15 POKPET A+ 视觉标准 v02 配图
 
 - 新增 `docs/POKPET_APLUS_VISUAL_STANDARD_v02.md`。正文规则与 235 行草案相同，只加入图片标题和说明。

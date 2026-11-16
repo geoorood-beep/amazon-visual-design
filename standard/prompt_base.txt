@@ -1,0 +1,23 @@
+# Fixed prompt blocks. tools/check_card.py inserts these into every generation prompt.
+# Edit the wording here, not in the script. Lines starting with # are ignored.
+
+[STYLE]
+Photorealistic editorial lifestyle photograph for an Amazon listing. Real home, lived-in but tidy. Natural colours, neutral whites, no orange cast.
+
+[LIGHT]
+One directional daylight source from a window. Crisp, directional cast shadows on the surface under the product, the pet and the hands. A clear highlight band on the brushed stainless steel with a natural falloff on the far side. No flat shadowless light, no haze, no HDR glow.
+
+[PRODUCT_RULES]
+The product must match the attached product reference image exactly: same outline, proportions, parts and part positions. Do not add, remove or restyle any part. The product is fully in frame, in sharp focus, and never glows.
+
+[PET_RULES]
+Real fur with visible strands, natural anatomy, natural eyes. The expression comes from the action. No cartoon eyes, no human-like smile.
+
+[TEXT_RULES]
+Do not render any text, letters, numbers, labels, logos, icons or UI in the image. Keep the stated area clear and low in detail for typography that will be added later.
+
+[REFERENCE_RULES]
+Use each attached reference only for the purpose stated next to it. Never copy the product, branding or text from a style, expression or layout reference.
+
+[AVOID]
+wrong product geometry, extra or missing parts, invented buttons or screens, glowing product, glowing water window, text, watermark, logo, badge, certification mark, Wi-Fi icon, duplicate product, floating objects, deformed hands, extra fingers, cartoon pet, waxy fur, flat lighting, orange colour cast, HDR halo, collage, border

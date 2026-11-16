@@ -1,56 +1,63 @@
 # 亚马逊美工设计
 
-当前规则版本：**v2.11**。本仓库保存 Amazon 主图、副图与 A+ 的作图规则、配套技能、卖点可视化方法和局部图片处理工具。
+规则版本 **3.0**（2026-11-16）。这个仓库保存 Amazon 主图、副图和 A+ 的出图标准、产品事实、参考图索引和图位卡。
 
-当前视觉标准：[UTA_STYLE_STANDARD.md](docs/UTA_STYLE_STANDARD.md)（Uta Style v3，2026-11-15）。
+3.0 把出图规则从约 32 万字收成几页，并把「谁读什么、交什么」固定下来。旧规则没有删除，移到了 `archive/`，案例库留在 `docs/`。原因和取舍见 [CHANGELOG.md](CHANGELOG.md)。
 
-## 从这里开始
+## 怎么用
 
-1. 在 Codex 中打开本仓库，先读取 [AGENTS.md](AGENTS.md)。这是项目规则的主入口。
-2. 新建视觉任务时，参考 [作图需求填写表](docs/作图需求填写表.md)，提供产品参考图、规格、图片用途和明确尺寸。
-3. 规划、提示词与视觉验收需要配套流程时，读取 [amazon-visual-skill](skills/amazon-visual-skill/SKILL.md)。技能随仓库保存，不依赖原电脑的全局技能目录；这里没有自动安装或覆盖全局技能的脚本。
-4. 处理清晰度、反复重绘或指定像素问题时，读取 [高清图片工作流](docs/HD_IMAGE_WORKFLOW.md)。
+三方分工：你定事实和取舍，Grok 写图位卡，Codex 出图。完整流程见 [standard/WORKFLOW.md](standard/WORKFLOW.md)。
 
-## 本次同步内容
-
-| 内容 | 入口 |
+| 你要做的事 | 看哪里 |
 |---|---|
-| 产品保真、主副图/A+架构、双端构图、生成与QA规则 | [AGENTS.md](AGENTS.md) |
-| 高清处理与防磨皮流程 | [HD_IMAGE_WORKFLOW.md](docs/HD_IMAGE_WORKFLOW.md) |
-| 已确认事实到可见动作/结构的卖点映射 | [FEATURE_VISUAL_EXPRESSION.md](docs/FEATURE_VISUAL_EXPRESSION.md) |
-| 宠物用品卖点可视化标准 | [PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md](docs/PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md) |
-| 固定风格说明与三张参考图 | [STYLE_WAPSI_01.md](docs/STYLE_WAPSI_01.md)、[style_references](docs/style_references/) |
-| POKPET A+ 视觉标准 v02（配图草案） | [POKPET_APLUS_VISUAL_STANDARD_v02.md](docs/POKPET_APLUS_VISUAL_STANDARD_v02.md) |
-| 圆款总设计师方案与出图流程 | [POKPET_10L_ROUND_DESIGN_DIRECTOR.md](docs/POKPET_10L_ROUND_DESIGN_DIRECTOR.md)、[pokpet-v06-design-director](.cursor/skills/pokpet-v06-design-director/SKILL.md) |
-| 规划、模板、提示词和验收技能 | [skills/amazon-visual-skill](skills/amazon-visual-skill/) |
-| 水体局部合成及实际改动计数 | [composite_water_clarity.c](tools/composite_water_clarity.c) |
-| 2×尺寸导出示例 | [upscale_2x.swift](tools/upscale_2x.swift) |
-| 历史可选API入口及模拟测试 | [IMAGE25_SETUP.md](docs/IMAGE25_SETUP.md)、[image25.py](scripts/image25.py) |
+| 让 Grok 写图位卡 | 把 [standard/WRITER_GUIDE.md](standard/WRITER_GUIDE.md) 的地址发给它，说明产品和要做的图位 |
+| 让 Codex 出图 | 在 Codex 里打开本仓库，把图位卡粘给它。它按 [AGENTS.md](AGENTS.md) 执行 |
+| 新增或修改产品事实 | 改 `products/<产品>/PRODUCT.md` |
+| 补产品参考图 | 放进 `products/<产品>/ref/`，在产品卡和 [references/INDEX.csv](references/INDEX.csv) 各加一行 |
+| 把认可的成图设为锚图 | 对 Codex 说「这张做锚图」 |
+| 调整所有图共用的提示词段落 | 改 [standard/prompt_base.txt](standard/prompt_base.txt) |
 
-参考图用于理解构图和信息层级，不代表本品结构，也不附带第三方品牌素材的商业再利用授权。
+## 目录
 
-## 运行与迁移边界
+| 路径 | 内容 | 出图时读吗 |
+|---|---|---|
+| `AGENTS.md` | Codex 的执行规则 | 读 |
+| `standard/CORE.md` | 核心视觉标准，不含具体产品 | 读 |
+| `standard/QA.md` | 验收：三项一票否决加记录项 | 读 |
+| `standard/CARD_SPEC.md` | 图位卡的字段和规则 | 写卡时读 |
+| `standard/WRITER_GUIDE.md` | 给 Grok 的写卡指南 | 写卡时读 |
+| `standard/WORKFLOW.md` | 三方工作流和问题定位 | 给人看 |
+| `standard/prompt_base.txt` | 提示词的固定段落 | 脚本读 |
+| `products/` | 每款产品一张产品卡和参考图 | 读对应的一张 |
+| `references/INDEX.csv` | 全部可用参考图的索引 | 写卡时读，脚本核对 |
+| `references/anchors/` | 认可过的自家成图，作风格锚 | 按卡取用 |
+| `cards/` | 图位卡。`_TEMPLATE.md` 是空白模板 | 读对应的一张 |
+| `tools/check_card.py` | 图位卡校验和提示词拼装 | 每张图运行一次 |
+| `docs/` | 案例图库和旧版标准 | 不读 |
+| `archive/` | 2.11 版规则和旧技能 | 不读 |
 
-- 默认直接使用当前可用的内置图像工具。历史API脚本并非默认通道；其中固定模型名称、接口能力及历史认证状态未在本次GitHub同步中重新验证。
-- `AGENTS.md`第14.1节及部分历史说明中的`/Users/leo/...`路径是原项目的本机落点，不是其他电脑的有效路径。迁移时由使用者指定新的输入、输出目录；不会自动修改或访问原电脑目录。
-- 高清工作流中的历史交付路径是审计证据引用。对应生成大图未上传，不能在本仓库内直接打开这些历史图片。
-- 两个`tools/`示例依赖macOS系统图像框架。水体合成工具的遮罩坐标针对旧V02构图，使用前需按当前产品图重新核对；它不是适用于任意图片的一键修复器。
-- `upscale_2x.swift`是传统Lanczos缩放与轻度亮度锐化，不是AI超分，也不会恢复原图缺失的真实细节。交付时如实注明来源和尺寸处理。
-- 模型、账号权限、字体及运行系统需要在使用环境单独确认。同步规则不保证不同环境生成相同像素结果。
+## 校验和测试
 
-## 本地检查
-
-在仓库根目录执行：
+需要 Python 3.8 以上，只用标准库。
 
 ```sh
-python3 -m unittest discover -s scripts -p 'test_image25.py' -v
-clang -fsyntax-only -Wall tools/composite_water_clarity.c
+python tools/check_card.py cards/round10l/S5_clean.md
+python tools/check_card.py --set cards/round10l
+python -m unittest discover -s tools -p "test_check_card.py" -v
 ```
 
-Python测试使用模拟响应，不调用真实图像API、不消费生成额度。C语法检查需要macOS与相应开发工具。两项检查均不能代替图片视觉验收。
+第一条校验单张卡，通过时打印要附带的图片、提示词和排版说明。第二条检查整套卡。第三条是脚本自身的测试，改过 `tools/`、`standard/`、产品卡或索引之后运行一次。
 
-## 同步范围
+## 当前状态
 
-仅包含项目规则、必要文档、配套技能、三个风格参考图及选定工具源码。不包含API密钥、账号会话、`.env`、客户数据、缓存、历史生成大图、视频和打包备份。
+- 已有产品卡：`round10l`（10L 圆款）、`clover_square`（方形四叶草款）。
+- 已有锚图 5 张：v06 轮认可的清洗、换滤芯、搬运、安静四张，以及圆款清洗试样一张。
+- 已有样卡 3 张：`cards/round10l/` 下的清洗、安静、材质。
+- **待补：** `round10l` 只有一个角度的产品参考图。俯拍、侧面、空盆等机位出图时产品容易变形。
+- **未验证：** 这套流程还没有用 Grok 和 Codex 实际跑过。建议先用 3 张样卡出图，和 `references/anchors/` 里的旧图对比后再扩展到整套。
 
-后续提交请显式列出要同步的文件，不对本地制作目录执行无差别`git add .`。版本变化见 [CHANGELOG.md](CHANGELOG.md)。
+## 其他工具
+
+`tools/` 里另有 2.x 版留下的 `grade_check.py`、`composite_water_clarity.c`、`upscale_2x.swift`，以及 `scripts/image25.py`。它们不在 3.0 的出图流程里：明暗数值不再作为验收门槛，放大图不作为交付物。保留备用。
+
+参考图用于理解构图和信息层级，不代表本品结构，也不附带第三方品牌素材的商业再利用授权。
