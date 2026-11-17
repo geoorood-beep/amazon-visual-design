@@ -1,0 +1,13 @@
+id,species,name,look_en,size,note
+PT01,cat,布偶猫,ragdoll cat with blue eyes,medium,
+PT02,cat,橘色虎斑短毛猫,orange tabby cat,medium,
+PT03,cat,银色虎斑美短,silver tabby cat,medium,
+PT04,cat,黑猫,black short-haired cat with amber eyes,medium,夜景不用：和暗背景分不开
+PT05,cat,英短蓝猫,British shorthair cat with a blue-grey coat,medium,
+PT06,cat,三花猫,calico cat,small,
+PT07,dog,金毛,golden retriever,large,容量的体型参照
+PT08,dog,柯基,corgi,small,
+PT09,dog,法斗,cream French bulldog,small,
+PT10,dog,边牧,black-and-white border collie,medium,
+PT11,dog,黑色拉布拉多,black labrador,large,夜景不用：和暗背景分不开
+PT12,dog,比格,tricolour beagle,medium,

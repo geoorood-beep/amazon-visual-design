@@ -132,8 +132,8 @@ class CardRules(Base):
 
     def test_pointing_hand_fails(self):
         text = self.mutate(
-            "human_action: One hand of an adult wiping the brushed front panel with a folded white cloth, dark knit sleeve",
-            "human_action: One hand of an adult pointing at the brushed front panel, dark knit sleeve")
+            "human_action: One hand of an adult wiping the brushed front panel with a folded white cloth",
+            "human_action: One hand of an adult pointing at the brushed front panel")
         code, out, _ = self.run_task(self.write("t.md", text))
         self.assertEqual(code, 1, out)
         self.assertIn("FAIL cards/round10l/P6b_wipe.md", out)
@@ -141,8 +141,8 @@ class CardRules(Base):
 
     def test_module_fails_with_its_panels(self):
         text = self.mutate(
-            "human_action: One hand of an adult wiping the brushed front panel with a folded white cloth, dark knit sleeve",
-            "human_action: One hand of an adult pointing at the brushed front panel, dark knit sleeve")
+            "human_action: One hand of an adult wiping the brushed front panel with a folded white cloth",
+            "human_action: One hand of an adult pointing at the brushed front panel")
         code, out, emit = self.run_task(self.write("t.md", text))
         for name in ("P6_clean_steps.md", "P6a_rinse.md", "P6b_wipe.md"):
             self.assertIn("FAIL cards/round10l/" + name, out)
@@ -264,9 +264,82 @@ class TaskFormat(Base):
         self.assertIn("TASK ERROR", out)
 
 
+class PoolRules(Base):
+    """1.13 option pools and the E-1, E-3, K-1, K-2 set rules (2.6)."""
+
+    def run_text(self, text):
+        return self.run_task(self.write("t.md", text))
+
+    def test_missing_pool_field_fails_card(self):
+        code, out, _ = self.run_text(self.mutate("scene_id: SC09\npet_id: PT02", "pet_id: PT02"))
+        self.assertIn("缺少选项池字段：scene_id", out)
+
+    def test_scene_must_fit_light_and_be_named(self):
+        code, out, _ = self.run_text(self.mutate("scene_id: SC07", "scene_id: SC04"))
+        self.assertIn("场景 SC04（卧室床边）只配光型", out)
+        self.assertIn("scene 要写出场景 SC04", out)
+
+    def test_pet_text_must_match_pool(self):
+        code, out, _ = self.run_text(self.mutate("pet_id: PT03", "pet_id: PT04"))
+        self.assertIn("pet 要写出宠物池 PT04 的样子", out)
+
+    def test_expression_must_fit_interaction(self):
+        code, out, _ = self.run_text(self.mutate("expression_id: EX03", "expression_id: EX06"))
+        self.assertIn("表情 EX06（伸爪试探）不配互动 rest", out)
+
+    def test_operating_hands_only(self):
+        code, out, _ = self.run_text(self.mutate("person_id: HP02", "person_id: HP05"))
+        self.assertIn("演示操作只出手和小臂", out)
+
+    def test_evidence_used_twice_fails_set(self):
+        code, out, _ = self.run_text(self.mutate("evidence_id: F6-D", "evidence_id: F6-A"))
+        self.assertEqual(code, 2, out)
+        self.assertIn("SET FAIL [E-1] 证据方案 F6-A 用了不止一次", out)
+
+    def test_evidence_must_match_fact(self):
+        code, out, _ = self.run_text(self.mutate("evidence_id: F2-A", "evidence_id: F3-A"))
+        self.assertIn("evidence_id F3-A 属于 F3", out)
+
+    def test_scene_repeats_fail_set(self):
+        code, out, _ = self.run_text(self.mutate("scene_id: SC01\npet_id: PT03", "scene_id: SC03\npet_id: PT03"))
+        self.assertEqual(code, 2, out)
+        self.assertIn("SET FAIL [E-3] 场景 SC03 在副图里用了 3 次", out)
+        self.assertIn("SET FAIL [E-3] 相邻两张副图 S5 和 S6", out)
+
+    def test_one_pet_everywhere_fails_set(self):
+        text = self.mutate("pet_id: PT02", "pet_id: PT01", count=2)
+        text = self.mutate("pet_id: PT03", "pet_id: PT01", text=text)
+        code, out, _ = self.run_text(text)
+        self.assertEqual(code, 2, out)
+        self.assertIn("SET FAIL [K-1] 宠物 PT01 出现在 8 张图里", out)
+
+    def test_expression_repeats_fail_set(self):
+        code, out, _ = self.run_text(self.mutate("expression_id: EX09", "expression_id: EX01"))
+        self.assertEqual(code, 2, out)
+        self.assertIn("SET FAIL [K-2] 表情 EX01 用了 3 次", out)
+        self.assertIn("SET FAIL [K-2] 相邻两张副图 S1 和 S2", out)
+
+    def test_style_header_required(self):
+        code, out, _ = self.run_text(self.mutate("style: ST02\n", ""))
+        self.assertEqual(code, 2, out)
+        self.assertIn("头部要写 style:", out)
+
+    def test_style_must_fit_light(self):
+        code, out, _ = self.run_text(self.mutate("style: ST02", "style: ST04"))
+        self.assertIn("风格 ST04（萌宠海报风）只配光型", out)
+
+    def test_pools_reach_the_compiled_card(self):
+        code, out, emit = self.run_task(V2)
+        s2 = self.card_block(read(emit), "S2_capacity.md")
+        self.assertIn("Person: a man's hands with a medium skin tone", s2)
+        self.assertIn("Expression: mouth softly open", s2)
+        self.assertIn("Style: Scandinavian home", s2)
+        self.assertIsNone(re.search(r"^(evidence_id|scene_id|pet_id|person_id|expression_id):", read(emit), re.M))
+
+
 class PatchScope(Base):
     def patch_with(self, block):
-        return "UTA-TASK v2\nproduct: round10l\nscope: patch\ncards: 1\n\n" + block + "\n"
+        return "UTA-TASK v2\nproduct: round10l\nstyle: ST02\nscope: patch\ncards: 1\n\n" + block + "\n"
 
     def test_patch_merges_with_saved_full_set(self):
         state = os.path.join(self.tmp, "full.md")

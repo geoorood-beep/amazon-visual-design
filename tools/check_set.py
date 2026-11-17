@@ -27,11 +27,14 @@ import os
 import re
 import sys
 
-VERSION = "3.8"
+VERSION = "3.9"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
-V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat"}
+POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "expression_id"]
+V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat"} | set(POOL_FIELDS)
+POOL_FILES = {"scenes": "scenes.csv", "pets": "pets.csv", "people": "people.csv",
+              "expressions": "expressions.csv", "styles": "styles.csv"}
 
 SHOT_ORDER = ["extreme_close", "close", "medium", "full", "wide"]
 CLOSE_SHOTS = {"extreme_close", "close"}
@@ -269,6 +272,28 @@ def load_views(path):
     return rows
 
 
+def load_pools(root):
+    """pools/*.csv -> {name: {id: row}} (UTA_STYLE.md 1.13)."""
+    pools = {}
+    for name, fname in POOL_FILES.items():
+        path = os.path.join(root, "pools", fname)
+        if not os.path.exists(path):
+            raise TaskError("缺少选项池 pools/%s（UTA_STYLE.md 1.13）" % fname)
+        with open(path, encoding="utf-8", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+        pools[name] = {r["id"].strip(): r for r in rows if r.get("id", "").strip()}
+    return pools
+
+
+def load_evidence(root, product):
+    """products/<product>/evidence_options.csv -> {id: row}, or None when the product has none."""
+    path = os.path.join(root, "products", product, "evidence_options.csv")
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8", newline="") as fh:
+        return {r["id"].strip(): r for r in csv.DictReader(fh) if r.get("id", "").strip()}
+
+
 # ---------------------------------------------------------------- helpers
 def read_text(path):
     with open(path, encoding="utf-8") as fh:
@@ -374,7 +399,7 @@ def check_scene_words(card, errs):
             errs.append("%s 写了参考图看不到的结构或特效（%s）（1.4、2.7）" % (key, ", ".join(sorted(set(hits)))))
 
 
-def check_card_v2(card, views):
+def check_card_v2(card, views, pools=None, evidence=None):
     errs = list(card.parse_errors)
     if card.f("card_version") != "2":
         errs.append("这是 UTA-TASK v2，卡要写 card_version: 2")
@@ -448,7 +473,77 @@ def check_card_v2(card, views):
         errs.append("interaction=product_only 时 pet 和 human_action 都写 none")
     check_scene_words(card, errs)
     check_copy(card, errs)
+    if pools is not None:
+        check_pool_fields(card, pools, evidence, errs)
+        style = pools.get("style_row")
+        if style and card.f("light_setup") not in split_list(style["lights"]):
+            errs.append("风格 %s（%s）只配光型 %s，这张卡是 %s" % (style["id"], style["name"], style["lights"], card.f("light_setup")))
     return errs
+
+
+def split_list(val, sep=";"):
+    return [v.strip() for v in (val or "").split(sep) if v.strip()]
+
+
+def pool_ids(card, key):
+    return [] if card.is_none(key) else split_list(card.f(key), "+")
+
+
+def check_pool_fields(card, pools, evidence, errs):
+    """1.13: the pool ids on an image card exist and agree with the card."""
+    missing = [k for k in POOL_FIELDS if k not in card.fields]
+    if missing:
+        errs.append("缺少选项池字段：%s（1.13）" % ", ".join(missing))
+        return
+    inter = card.f("interaction")
+    ev = card.f("evidence_id").strip()
+    if ev.lower() in ("", "none"):
+        if evidence and not (card.kind == "panel" and inter == "product_only"):
+            errs.append("evidence_id 要写证据方案表里的编号；只有产品单独出镜的小格可以写 none")
+    elif ev != "custom":
+        row = (evidence or {}).get(ev)
+        if row is None:
+            errs.append("evidence_id %s 不在这个产品的 evidence_options.csv 里" % ev)
+        elif row["fact"].strip() != card.f("selling_point"):
+            errs.append("evidence_id %s 属于 %s，不是这张卡的 %s" % (ev, row["fact"].strip(), card.f("selling_point")))
+    sc = card.f("scene_id").strip()
+    row = pools["scenes"].get(sc)
+    if row is None:
+        errs.append("scene_id %s 不在场景池 pools/scenes.csv 里" % sc)
+    else:
+        if card.f("light_setup") not in split_list(row["lights"]):
+            errs.append("场景 %s（%s）只配光型 %s，这张卡是 %s" % (sc, row["name"], row["lights"], card.f("light_setup")))
+        keys = split_list(row["keywords"])
+        if not any(k.lower() in card.f("scene").lower() for k in keys):
+            errs.append("scene 要写出场景 %s（%s）的地点，含 %s 之一" % (sc, row["name"], " / ".join(keys)))
+    pets = pool_ids(card, "pet_id")
+    if card.is_none("pet") != (not pets):
+        errs.append("pet 和 pet_id 要同填或同为 none")
+    for pid in pets:
+        row = pools["pets"].get(pid)
+        if row is None:
+            errs.append("pet_id %s 不在宠物池 pools/pets.csv 里" % pid)
+        elif row["look_en"].strip().lower() not in card.f("pet").lower():
+            errs.append("pet 要写出宠物池 %s 的样子：%s" % (pid, row["look_en"].strip()))
+    exprs = pool_ids(card, "expression_id")
+    if bool(pets) != bool(exprs):
+        errs.append("有宠物就写 expression_id，没有宠物写 none")
+    key = "human" if inter.startswith("human_") else inter
+    for eid in exprs:
+        row = pools["expressions"].get(eid)
+        if row is None:
+            errs.append("expression_id %s 不在表情池 pools/expressions.csv 里" % eid)
+        elif key not in split_list(row["interactions"]):
+            errs.append("表情 %s（%s）不配互动 %s，它配 %s" % (eid, row["name"], inter, row["interactions"]))
+    if card.is_none("human_action") != card.is_none("person_id"):
+        errs.append("human_action 和 person_id 要同填或同为 none")
+    elif not card.is_none("person_id"):
+        hid = card.f("person_id").strip()
+        row = pools["people"].get(hid)
+        if row is None:
+            errs.append("person_id %s 不在人物池 pools/people.csv 里" % hid)
+        elif INTERACTIONS.get(inter) == "human" and row["shown"].strip() != "hands":
+            errs.append("演示操作只出手和小臂（1.7）：%s 是 %s" % (hid, row["shown"].strip()))
 
 
 def check_card_legacy(card):
@@ -517,9 +612,109 @@ def fact_counts(ts):
     return counts
 
 
-def set_rules(ts, views, strict):
+def image_units(ts):
+    """[(tag, name, [image cards])]: each S image, each A+ scene screen, each A+ module with its panels."""
+    units = [("S", c.slot, [c]) for c in ts.subs]
+    for s in ts.screens:
+        if s.module == "scene":
+            units.append(("P", s.slot, [s]))
+        else:
+            cards = [ts.by_slot[n] for n in ts.panels_of(s) if n in ts.by_slot]
+            if cards:
+                units.append(("P", s.slot, cards))
+    return units
+
+
+def pool_rules(ts, evidence):
+    """E-1, E-3, K-1, K-2 (2.6). Return (fails, warns)."""
+    fails, warns = [], []
+    units = [u for u in image_units(ts)
+             if all("scene_id" in c.fields for c in u[2])]
+
+    def ids(cards, key):
+        out = []
+        for c in cards:
+            for v in pool_ids(c, key):
+                if v not in out and v.lower() not in ("custom",):
+                    out.append(v)
+        return out
+
+    used = {}
+    for tag, name, cards in units:
+        for ev in ids(cards, "evidence_id"):
+            used.setdefault(ev, []).append(name)
+        for c in cards:
+            ev = c.f("evidence_id").strip()
+            row = (evidence or {}).get(ev)
+            if row is not None and row["status"].strip() != "ok":
+                warns.append(("2.2", "%s 用的 %s 状态是 %s：要本轮用户确认或点名过" % (c.slot, ev, row["status"].strip())))
+    for ev, names in sorted(used.items()):
+        if len(names) > 1:
+            fails.append(("E-1", "证据方案 %s 用了不止一次：%s" % (ev, ", ".join(names))))
+
+    for tag in ("S", "P"):
+        count = {}
+        for t, name, cards in units:
+            if t == tag:
+                for sc in ids(cards, "scene_id"):
+                    count.setdefault(sc, []).append(name)
+        for sc, names in sorted(count.items()):
+            if len(names) > 2:
+                fails.append(("E-3", "场景 %s 在%s里用了 %d 次：%s，最多两次" %
+                              (sc, "副图" if tag == "S" else " A+ ", len(names), ", ".join(names))))
+    subs = [u for u in units if u[0] == "S"]
+    for a, b in zip(subs, subs[1:]):
+        same = set(ids(a[2], "scene_id")) & set(ids(b[2], "scene_id"))
+        if same:
+            fails.append(("E-3", "相邻两张副图 %s 和 %s 用同一个场景 %s" % (a[1], b[1], ", ".join(sorted(same)))))
+    sub_scene = {}
+    for t, name, cards in subs:
+        for c in cards:
+            sub_scene[c.f("selling_point")] = (name, c.f("scene_id").strip())
+    for t, name, cards in units:
+        if t != "P":
+            continue
+        for c in cards:
+            s = sub_scene.get(c.f("selling_point"))
+            if s and s[1] == c.f("scene_id").strip():
+                warns.append(("E-3", "%s 和副图 %s 讲同一事实 %s，场景都是 %s；能换就换" %
+                              (c.slot, s[0], c.f("selling_point"), s[1])))
+
+    pet_units = [(name, ids(cards, "pet_id")) for t, name, cards in units if ids(cards, "pet_id")]
+    m = len(pet_units)
+    if m >= 4:
+        count = {}
+        for name, pets in pet_units:
+            for pid in pets:
+                count.setdefault(pid, []).append(name)
+        if len(count) < 2:
+            fails.append(("K-1", "%d 张有宠物的图全是同一只宠物 %s" % (m, ", ".join(count))))
+        cap = ceil_half(m)
+        for pid, names in sorted(count.items()):
+            if len(names) > cap:
+                fails.append(("K-1", "宠物 %s 出现在 %d 张图里（%s），最多 %d 张" % (pid, len(names), ", ".join(names), cap)))
+
+    count = {}
+    for t, name, cards in units:
+        for eid in ids(cards, "expression_id"):
+            count.setdefault(eid, []).append(name)
+    for eid, names in sorted(count.items()):
+        if len(names) > 2:
+            fails.append(("K-2", "表情 %s 用了 %d 次：%s，最多两次" % (eid, len(names), ", ".join(names))))
+    for a, b in zip(subs, subs[1:]):
+        same = set(ids(a[2], "expression_id")) & set(ids(b[2], "expression_id"))
+        if same:
+            fails.append(("K-2", "相邻两张副图 %s 和 %s 用同一个表情 %s" % (a[1], b[1], ", ".join(sorted(same)))))
+    return fails, warns
+
+
+def set_rules(ts, views, strict, evidence=None, pools=False):
     """Return (fails, warns). Each item is (rule_id, message)."""
     fails, warns = [], []
+    if strict and pools:
+        f2, w2 = pool_rules(ts, evidence)
+        fails += f2
+        warns += w2
     out = fails if strict else warns
 
     def get(card, key):
@@ -742,7 +937,7 @@ def set_rules(ts, views, strict):
 
 
 # ---------------------------------------------------------------- compile
-def compile_card(card):
+def compile_card(card, pools=None):
     out = []
     image = card.is_image and card.f("card_version") == "2"
     for key, val, extra in card.items:
@@ -761,19 +956,32 @@ def compile_card(card):
                 val = join_sentence(val, " ".join(bits))
             elif key == "light":
                 val = join_sentence(val, LIGHT_TEXT[card.f("light_setup")])
-            elif key == "scene" and not card.is_none("foreground"):
-                val = join_sentence(val, "Foreground: %s, soft and out of focus, framing the subject." % card.f("foreground"))
+            elif key == "scene":
+                if not card.is_none("foreground"):
+                    val = join_sentence(val, "Foreground: %s, soft and out of focus, framing the subject." % card.f("foreground"))
+                style = (pools or {}).get("style_row")
+                if style:
+                    val = join_sentence(val, "Style: %s." % style["look_en"].strip().rstrip("."))
+            elif key == "human_action" and pools and not card.is_none("person_id"):
+                row = pools["people"].get(card.f("person_id").strip())
+                if row:
+                    val = join_sentence(val, "Person: %s." % row["look_en"].strip().rstrip("."))
+            elif key == "pet_action" and pools and not card.is_none("expression_id"):
+                looks = [pools["expressions"][e]["look_en"].strip().rstrip(".")
+                         for e in pool_ids(card, "expression_id") if e in pools["expressions"]]
+                if looks:
+                    val = join_sentence(val, "Expression: %s." % "; ".join(looks))
         out.append("%s: %s" % (key, val) if val else "%s:" % key)
         out.extend(extra)
     return out
 
 
-def emit_task(path, product, cards):
+def emit_task(path, product, cards, pools=None):
     lines = ["UTA-TASK v1", "product: %s" % product, "cards: %d" % len(cards), ""]
     for c in cards:
         lines.append("=== %s ===" % c.path)
         lines.append("---")
-        lines.extend(compile_card(c))
+        lines.extend(compile_card(c, pools))
         lines.append("---")
         lines.append("")
     d = os.path.dirname(path)
@@ -840,10 +1048,21 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
     for r in views:
         if not r["checked"]:
             p("WARN [1.4] %s 的覆盖范围还没有人对照原图确认（checked 不是 yes）" % r["path"])
+    try:
+        pools = load_pools(root)
+    except TaskError as e:
+        p("TASK ERROR: %s" % e)
+        return 2
+    style_id = header.get("style", "").strip()
+    if style_id not in pools["styles"]:
+        p("TASK ERROR: 头部要写 style: 风格池 pools/styles.csv 里的编号（1.13），现在是「%s」" % style_id)
+        return 2
+    pools["style_row"] = pools["styles"][style_id]
+    evidence = load_evidence(root, product)
 
     card_errs = {}
     for c in cards:
-        errs = check_card_v2(c, views)
+        errs = check_card_v2(c, views, pools, evidence)
         if errs:
             card_errs[c.slot] = errs
     # a module and its panels pass or fail together
@@ -884,7 +1103,8 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
             p("WARN [2.8] 没有上一次的整套 %s，跳过 2.6" % state)
             run_set = False
 
-    fails, warns = set_rules(TaskSet(set_cards), views, strict=True) if run_set else ([], [])
+    fails, warns = (set_rules(TaskSet(set_cards), views, strict=True, evidence=evidence, pools=True)
+                    if run_set else ([], []))
     for rid, msg in fails:
         p("SET FAIL [%s] %s" % (rid, msg))
     for rid, msg in warns:
@@ -902,7 +1122,7 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
 
     ok_cards = [c for c in cards if c.slot not in card_errs]
     if emit:
-        emit_task(emit, product, ok_cards)
+        emit_task(emit, product, ok_cards, pools)
         p("EMIT %s（%d 张卡，已换成 card_version 1）  下一步：python tools/check_card.py --task %s"
           % (emit, len(ok_cards), emit))
     p("汇总：%d 张卡，OK %d，FAIL %d，SET FAIL 0" % (len(cards), len(ok_cards), len(card_errs)))

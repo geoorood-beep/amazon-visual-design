@@ -1,0 +1,13 @@
+id,name,place_en,keywords,lights,fits,avoid
+SC01,厨房水槽台面,a kitchen counter next to a stainless sink with a window above it,kitchen counter;kitchen sink;stainless sink,side;side_back,清洁;材质,洗碗机；台面堆满杂物
+SC02,厨房地面角落,a kitchen floor corner in front of the lower cabinets,kitchen floor;kitchen corner;corner of a kitchen,side;side_back;low_sun,容量;多宠;可视,灶台明火；食物残渣
+SC03,客厅窗边地面,a living-room floor by a tall window with a rug and the edge of a sofa,living-room floor;living room,side;side_back;low_sun,容量;多宠;可视,电视屏幕；杂乱玩具
+SC04,卧室床边,a bedroom floor beside the bed and a bedside table,bedroom,night_lamp;side,安静,人躺在床上露脸
+SC05,书房地面,a home office floor beside a desk and a bookshelf,home office;study;desk,side;side_back,安静;可视,电脑屏幕上的文字
+SC06,玄关,an entry hall near the front door with a bench and coat hooks,entry hall;entryway,side;back;low_sun,容量;多宠,鞋子堆在产品旁
+SC07,阳光房,a sunroom with large glass panes and potted plants,sunroom;conservatory,low_sun;back;side_back,材质;多宠,强逆光把产品拍成剪影
+SC08,洗衣房,a laundry room floor beside the washing machine,laundry room,side;side_back,清洁,洗衣液标签
+SC09,餐边柜旁,a dining area beside a sideboard,sideboard;dining,side;low_sun,可视;容量;材质,餐桌上的食物
+SC10,浴室,a bathroom floor on a bath mat near the tub,bathroom,side;side_back,清洁,马桶入画
+SC11,走廊,a hallway with a runner rug and a framed picture,hallway,side;back,安静;可视,楼梯台阶挡住产品
+SC12,夜晚客厅地毯,a living-room rug in the evening with one floor lamp on,living-room rug;evening,night_lamp,安静;多宠,电视亮着

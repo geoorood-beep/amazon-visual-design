@@ -1,0 +1,7 @@
+id,name,look_en,lights,avoid,source
+ST01,纪实电影风,"candid documentary film look, an unposed moment caught in passing, gentle film grain, slightly muted colours with deep soft shadows, shallow depth of field, like a still from a quiet independent film",side;side_back;back;low_sun;night_lamp,摆拍感；过度调色成青橙,用户指定
+ST02,北欧家居风,"Scandinavian home: light oak, white and warm grey walls, linen and wool textures, one or two green plants, uncluttered rooms, soft clean daylight",side;side_back;low_sun;night_lamp,杂乱；浓重色彩,用户指定
+ST03,奶油风,"cream-style interior: warm off-white, beige and soft caramel tones, rounded furniture, boucle and plush textures, low contrast, soft diffused light",side;side_back;low_sun;night_lamp,冷灰；强烈硬阴影,用户指定
+ST04,萌宠海报风,"playful pet poster look: the pet's face close to a wide-angle lens, a big natural expression, bright saturated sunshine, vivid sky and greenery, high energy",low_sun;back;side,产品放在广角变形区（产品要小、靠近画面中部、外形不变）；拟人表情；M1 不用,从 MIAOPOP 宠物海报案例拆出（用户 2026-11-17 提供截图）
+ST05,温暖家庭纪实,"warm family lifestyle: people and pets together on a rug at home, candid interaction caught mid-moment, looking down from a high angle, rich warm wood and deep blue textiles, cosy evening interior light",side;side_back;night_lamp,人物看镜头；屏幕上有字,从 Anker 充电器场景案例第 1 张拆出（用户 2026-11-17 提供截图）
+ST06,明亮通透生活风,"bright airy lifestyle: a high-key white room, sheer curtains diffusing daylight, a white table or floor, genuine smiles, clean minimal props with one or two colour accents",side;side_back;back,画面发灰；过曝把产品高光吃掉,从 Anker 充电器场景案例第 5 张拆出（用户 2026-11-17 提供截图）

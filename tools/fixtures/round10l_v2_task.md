@@ -1,6 +1,7 @@
 样例和测试用：展示 card_version 2 的整套怎么排。真实任务单必须先走 UTA_STYLE.md 2.2 的三轮选择，不要把这份直接交给 Codex。
 UTA-TASK v2
 product: round10l
+style: ST02
 scope: full
 cards: 23
 
@@ -55,6 +56,11 @@ focus: whole
 interaction: share_drink
 light_setup: low_sun
 foreground: the edge of a cream sofa cushion in the bottom-left corner
+evidence_id: F4-A
+scene_id: SC03
+pet_id: PT01+PT07
+person_id: none
+expression_id: EX01
 text_area: top_left
 headline: Shared by Cats and Dogs
 subtitle: Both drink side by side from one basin.
@@ -74,7 +80,7 @@ slot: S2
 canvas: 4:5
 selling_point: F1
 evidence: Two adult hands pour water from a plain glass pitcher into the wide basin while a golden retriever sits right beside it; the dog's head next to the basin gives a sense of scale, the basin keeps exactly the proportions of the product reference
-human_action: Two hands of one adult tilting a plain glass pitcher with no markings, pouring water into the basin, dark knit sleeves
+human_action: Two hands of one adult tilting a plain glass pitcher with no markings, pouring water into the basin
 pet: one golden retriever
 pet_action: Sitting beside the basin, head lowered toward the rising water, eyes on the stream from the pitcher
 camera: down_45
@@ -86,6 +92,11 @@ focus: water_surface
 interaction: human_fill
 light_setup: side
 foreground: none
+evidence_id: F1-B
+scene_id: SC02
+pet_id: PT07
+person_id: HP02
+expression_id: EX09
 text_area: top_right
 headline: Room for Big Drinkers
 subtitle: A wide basin for cats and dogs.
@@ -106,10 +117,10 @@ canvas: 4:5
 selling_point: F2
 evidence: Macro of the brushed steel rim and front panel, the fine brushing lines and one bright highlight band running across the steel, a cat's paw resting on the rim at the edge of the frame for scale
 human_action: none
-pet: ragdoll cat with blue eyes
+pet: orange tabby cat
 pet_action: Only one front paw is in the frame, resting softly on the steel rim, fur detailed and real
 camera: eye_level
-scene: Light oak table top, a plain warm wall far behind and out of focus, no clutter
+scene: Light oak dining sideboard top, a plain warm wall far behind and out of focus, no clutter
 light: Hard side light from a window on the left raking across the steel, the right side of the panel falls into shadow, a sharp contact shadow under the paw
 shot_size: extreme_close
 product_view: front
@@ -117,6 +128,11 @@ focus: rim
 interaction: paw_touch
 light_setup: side
 foreground: the cat's whiskers along the top edge
+evidence_id: F2-A
+scene_id: SC09
+pet_id: PT02
+person_id: none
+expression_id: EX06
 text_area: bottom_left
 headline: Brushed Stainless Steel
 subtitle: Fine grain you can see up close.
@@ -148,6 +164,11 @@ focus: spout
 interaction: rest
 light_setup: night_lamp
 foreground: none
+evidence_id: F3-D
+scene_id: SC04
+pet_id: PT01
+person_id: none
+expression_id: EX03
 text_area: top_left
 headline: Quiet Enough to Nap By
 subtitle: Water keeps running while they rest.
@@ -167,8 +188,8 @@ slot: S5
 canvas: 4:5
 selling_point: F5
 evidence: On a kitchen counter, one hand wipes the inside wall of the empty steel basin with a folded white cloth while a cat leans in to watch the same basin
-human_action: One hand of an adult wiping the inner wall of the empty basin with a folded white cloth, the other hand steadying the rim, dark knit sleeves
-pet: ragdoll cat with blue eyes
+human_action: One hand of an adult wiping the inner wall of the empty basin with a folded white cloth, the other hand steadying the rim
+pet: silver tabby cat
 pet_action: Sitting on the counter beside the basin, leaning in, eyes fixed on the cloth inside the basin
 camera: down_45
 scene: Light oak kitchen counter next to a stainless sink, white tiled wall, a potted plant on the window sill, simple Nordic kitchen
@@ -179,6 +200,11 @@ focus: interior
 interaction: human_wipe
 light_setup: side_back
 foreground: none
+evidence_id: F5-A
+scene_id: SC01
+pet_id: PT03
+person_id: HP01
+expression_id: EX05
 text_area: top_right
 headline: Easy to Clean
 subtitle: Wipe the smooth steel basin.
@@ -210,6 +236,11 @@ focus: water_window
 interaction: inspect
 light_setup: side_back
 foreground: none
+evidence_id: F6-A
+scene_id: SC03
+pet_id: PT01
+person_id: none
+expression_id: EX08
 text_area: bottom_right
 headline: See the Water Level
 subtitle: A clear window on the front.
@@ -238,7 +269,7 @@ human_action: none
 pet: one ragdoll cat with blue eyes and one golden retriever
 pet_action: Both heads lowered to the water at the same time from the left and right of the rim, eyes half closed, relaxed and close to each other, not cartoonish
 camera: eye_level
-scene: Sunny corner of a kitchen by a tall window, pale stone floor, light oak cabinet fronts far behind and out of focus, simple Nordic home
+scene: Sunny sunroom corner by a tall window, pale stone floor, light oak cabinet fronts far behind and out of focus, simple Nordic home
 light: Morning window light from behind and to the left, rim light on the fur and on the ripples, the front of the basin still readable
 shot_size: close
 product_view: front
@@ -246,6 +277,11 @@ focus: water_surface
 interaction: share_drink
 light_setup: side_back
 foreground: none
+evidence_id: F4-B
+scene_id: SC07
+pet_id: PT01+PT07
+person_id: none
+expression_id: EX01
 text_area: left
 headline: Drink Together, Side by Side
 subtitle: Cats and dogs share one wide basin.
@@ -286,7 +322,7 @@ canvas: 3:2
 selling_point: F3
 evidence: At night in a dark bedroom the fountain stands on the floor beside the bed, water falling from the spout, a cat curled asleep on the rug next to it
 human_action: none
-pet: ragdoll cat with blue eyes
+pet: British shorthair cat with a blue-grey coat
 pet_action: Curled up asleep on the rug a hand's width from the fountain, eyes closed, tail wrapped around the body, completely relaxed
 camera: eye_level
 scene: Bedroom at night, light oak floor, a wool rug, the side of a bed with a linen throw, a bedside table with a small lamp
@@ -297,6 +333,11 @@ focus: whole
 interaction: rest
 light_setup: night_lamp
 foreground: none
+evidence_id: F3-A
+scene_id: SC04
+pet_id: PT05
+person_id: none
+expression_id: EX04
 text_area: none
 headline: none
 subtitle: none
@@ -342,7 +383,7 @@ human_action: none
 pet: none
 pet_action: none
 camera: low_angle
-scene: A pale stone floor, a plain warm wall far behind and fully out of focus
+scene: A pale stone hallway floor, a plain warm wall far behind and fully out of focus
 light: Hard side light from a window on the right raking across the steel, the left side of the panel falls into shadow
 shot_size: extreme_close
 product_view: front
@@ -350,6 +391,11 @@ focus: front_panel
 interaction: product_only
 light_setup: side
 foreground: none
+evidence_id: F2-B
+scene_id: SC11
+pet_id: none
+person_id: none
+expression_id: none
 text_area: none
 headline: none
 subtitle: none
@@ -374,7 +420,7 @@ human_action: none
 pet: ragdoll cat with blue eyes
 pet_action: Peering at the water window from very close, only the eye, whiskers and part of the face in the frame
 camera: eye_level
-scene: Living-room floor of light oak, the background a soft blur of a cream wall
+scene: Home office floor of light oak, the background a soft blur of a cream wall
 light: Window light from the left and slightly behind, a thin rim of light on the whiskers, the steel around the window evenly lit
 shot_size: extreme_close
 product_view: front
@@ -382,6 +428,11 @@ focus: water_window
 interaction: inspect
 light_setup: side_back
 foreground: the cat's whiskers
+evidence_id: F6-D
+scene_id: SC05
+pet_id: PT01
+person_id: none
+expression_id: EX02
 text_area: none
 headline: none
 subtitle: none
@@ -403,7 +454,7 @@ canvas: 1:1
 selling_point: F4
 evidence: Close on the front rim of the basin, a cat's paw and a golden retriever's paw rest on the rim side by side, the water surface just behind them
 human_action: none
-pet: one ragdoll cat and one golden retriever
+pet: one ragdoll cat with blue eyes and one golden retriever
 pet_action: Only their front paws and the lower part of their chests in the frame, both paws resting lightly on the rim while they drink just out of frame
 camera: eye_level
 scene: Pale stone kitchen floor, light oak cabinet fronts blurred far behind
@@ -414,6 +465,11 @@ focus: rim
 interaction: paw_touch
 light_setup: side
 foreground: none
+evidence_id: F4-C
+scene_id: SC02
+pet_id: PT01+PT07
+person_id: none
+expression_id: EX06
 text_area: none
 headline: none
 subtitle: none
@@ -450,6 +506,11 @@ focus: whole
 interaction: drink
 light_setup: low_sun
 foreground: none
+evidence_id: F1-A
+scene_id: SC06
+pet_id: PT07
+person_id: none
+expression_id: EX07
 text_area: right
 headline: Room for a Deep Drink
 subtitle: A wide basin, even after a long walk.
@@ -490,7 +551,7 @@ canvas: 1:1
 selling_point: F6
 evidence: The water line sits low in the slim vertical water window on the front of the basin while a cat sits in front of the fountain looking at the window
 human_action: none
-pet: ragdoll cat with blue eyes
+pet: calico cat
 pet_action: Sitting upright in front of the fountain, head tilted, looking at the water window
 camera: down_45
 scene: Kitchen corner with pale stone tiles and light oak cabinet fronts, exactly the same spot and framing as the next panel
@@ -501,6 +562,11 @@ focus: water_window
 interaction: wait
 light_setup: side
 foreground: none
+evidence_id: F6-C
+scene_id: SC02
+pet_id: PT06
+person_id: none
+expression_id: EX02
 text_area: none
 headline: none
 subtitle: none
@@ -522,7 +588,7 @@ canvas: 1:1
 selling_point: F6
 evidence: Same spot and same framing as the previous panel, the water line now sits high in the water window and the cat drinks from the basin
 human_action: none
-pet: ragdoll cat with blue eyes
+pet: calico cat
 pet_action: Head lowered to the water, drinking calmly
 camera: down_45
 scene: Kitchen corner with pale stone tiles and light oak cabinet fronts, exactly the same spot and framing as the previous panel
@@ -533,6 +599,11 @@ focus: water_window
 interaction: drink
 light_setup: side
 foreground: none
+evidence_id: F6-C
+scene_id: SC02
+pet_id: PT06
+person_id: none
+expression_id: EX08
 text_area: none
 headline: none
 subtitle: none
@@ -573,7 +644,7 @@ slot: P6a
 canvas: 1:1
 selling_point: F5
 evidence: The empty steel basin sits in a kitchen sink while tap water runs over its inner surface and one hand steadies the rim
-human_action: One hand of an adult steadying the rim of the basin under the running tap, dark knit sleeve, no cloth
+human_action: One hand of an adult steadying the rim of the basin under the running tap, no cloth
 pet: none
 pet_action: none
 camera: down_45
@@ -585,6 +656,11 @@ focus: interior
 interaction: human_rinse
 light_setup: side
 foreground: none
+evidence_id: F5-B
+scene_id: SC01
+pet_id: none
+person_id: HP03
+expression_id: none
 text_area: none
 headline: none
 subtitle: none
@@ -605,8 +681,8 @@ slot: P6b
 canvas: 1:1
 selling_point: F5
 evidence: A hand wipes the brushed front of the fountain with a soft folded cloth while a cat sitting beside it watches the cloth
-human_action: One hand of an adult wiping the brushed front panel with a folded white cloth, dark knit sleeve
-pet: ragdoll cat with blue eyes
+human_action: One hand of an adult wiping the brushed front panel with a folded white cloth
+pet: orange tabby cat
 pet_action: Sitting beside the fountain, leaning in, eyes following the cloth on the steel
 camera: eye_level
 scene: Living-room floor of light oak by a window, a cream wall behind
@@ -617,6 +693,11 @@ focus: front_panel
 interaction: human_wipe
 light_setup: side_back
 foreground: none
+evidence_id: F5-C
+scene_id: SC03
+pet_id: PT02
+person_id: HP03
+expression_id: EX05
 text_area: none
 headline: none
 subtitle: none
@@ -669,6 +750,11 @@ focus: whole
 interaction: product_only
 light_setup: side
 foreground: none
+evidence_id: none
+scene_id: SC09
+pet_id: none
+person_id: none
+expression_id: none
 text_area: none
 headline: none
 subtitle: none
