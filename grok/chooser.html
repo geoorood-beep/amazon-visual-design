@@ -1,0 +1,223 @@
+<title>UTA 选择卡</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one column of slot cards; each question is a row of tappable option tiles; a sticky answer bar at the bottom. */
+:root{
+  --bg:#f5f6f4; --surface:#ffffff; --fg:#1d2320; --muted:#5f6b65; --line:#dfe3df;
+  --accent:#1f7a5c; --accent-soft:#e3f2ec; --star:#c77d12; --sel-fg:#ffffff;
+  --font:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141816; --surface:#1d2320; --fg:#e7ece9; --muted:#9aa7a0; --line:#2f3833;
+  --accent:#4cc39a; --accent-soft:#1f3a30; --star:#f0b44c; --sel-fg:#0d1512; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141816; --surface:#1d2320; --fg:#e7ece9; --muted:#9aa7a0; --line:#2f3833;
+  --accent:#4cc39a; --accent-soft:#1f3a30; --star:#f0b44c; --sel-fg:#0d1512; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding-block:20px 140px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+h1{font-size:20px;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:0}
+details.paste{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+details.paste summary{cursor:pointer;font-weight:600}
+textarea{width:100%;box-sizing:border-box;min-height:120px;margin-top:10px;font-family:var(--mono);font-size:12px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:8px 14px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--sel-fg);font-weight:600}
+button:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.msg{color:var(--muted);font-size:13px}
+.msg.err{color:#c0392b}
+.slot{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:14px}
+.slot h2{font-size:16px;margin:0}
+.slot h2 span{color:var(--muted);font-weight:400;margin-left:6px}
+.q-name{font-size:13px;color:var(--muted);margin-bottom:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.q-name b{color:var(--fg)}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.opt{text-align:left;display:flex;flex-direction:column;gap:4px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);min-width:0}
+.opt .k{font-weight:700;font-size:13px;display:flex;gap:6px;align-items:center}
+.opt .t{white-space:pre-wrap;word-break:break-word}
+.opt .n{font-size:12px;color:var(--muted);word-break:break-word}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.star{color:var(--star);font-size:12px;font-weight:600}
+.mode{font-size:12px;display:inline-flex;gap:4px}
+.mode button{padding:2px 8px;font-size:12px}
+.mode button.on{background:var(--accent);color:var(--sel-fg);border-color:var(--accent)}
+input.custom{width:100%;box-sizing:border-box;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-block:10px calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar-in{max-width:860px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.answer{flex:1 1 260px;min-width:0;font-family:var(--mono);font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;white-space:pre-wrap;word-break:break-word;max-height:96px;overflow:auto}
+@media (prefers-reduced-motion:no-preference){.opt{transition:border-color .12s,background .12s}}
+</style>
+
+<div class="wrap">
+  <h1>UTA 选择卡</h1>
+  <p class="lead">把 Grok 给的「UTA-CHOICES」那一段粘进来，点卡片选择；推荐项已经选好并标了 ★。选完点「复制回答」，粘回对话。</p>
+
+  <details class="paste" id="pasteBox">
+    <summary>粘贴 Grok 的选择数据</summary>
+    <textarea id="src" spellcheck="false" placeholder="把 Grok 输出的 UTA-CHOICES 代码块整段粘到这里"></textarea>
+    <div class="row">
+      <button class="primary" id="load" type="button">生成卡片</button>
+      <span class="msg" id="msg">现在显示的是示例数据。</span>
+    </div>
+  </details>
+
+  <div id="cards"></div>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="answer" id="answer" aria-live="polite">推荐</div>
+    <button class="primary" id="copy" type="button">复制回答</button>
+  </div>
+</div>
+
+<script>
+const SAMPLE = {"uta_choices":1,"step":"第 2 步","cards":[
+ {"slot":"S1","title":"F1 容量 10 升","questions":[
+  {"no":"0","name":"故事","options":[
+   {"key":"A","rec":true,"text":"回家进门，金毛把整个口鼻探进盆里喝水，盆沿在它头下仍有余量。","note":"学自 F_capacity_chart_D5B6RLYY.jpg，裂变：两只狗冲向饮水机改成玄关里一只金毛低头喝"},
+   {"key":"B","text":"大狗舌头探进宽盆，水波和口鼻旁的空余被看见。","note":"学自 F_deep_tray_DS2N3T3X.jpg，直接用：大狗探入宽盆的体型参照"}]},
+  {"no":"1","name":"证据方案","multi":true,"options":[
+   {"key":"A","rec":true,"text":"F1-A 体型参照","note":"full / low_angle"},
+   {"key":"B","text":"F1-C 小对大","note":"close / down_45"},
+   {"key":"C","text":"F1-B 加水参照","note":"medium / down_45"}]},
+  {"no":"2","name":"场景","options":[
+   {"key":"A","rec":true,"text":"SC06 玄关"},{"key":"B","text":"SC02 厨房地面角落"},{"key":"C","text":"SC03 客厅窗边地面"}]},
+  {"no":"3","name":"宠物","options":[
+   {"key":"A","rec":true,"text":"PT07 金毛"},{"key":"B","text":"PT10 边牧"},{"key":"C","text":"PT08 柯基"}]},
+  {"no":"4","name":"表情","options":[
+   {"key":"A","rec":true,"text":"EX09 放松张嘴"},{"key":"B","text":"EX01 专注喝水"},{"key":"C","text":"EX07 满足舔嘴"}]},
+  {"no":"6","name":"标题","options":[
+   {"key":"A","rec":true,"text":"10 L｜Room for a deep drink｜A wide basin with room to spare"},
+   {"key":"B","text":"10 L｜Space for a large muzzle｜The rim stays clear around a deep drink"}]}],
+  "custom":true}]};
+
+let data = null;          // parsed choices
+let state = {};           // slotIdx -> qIdx -> {sel:[keys], mode:'/'|'+'}
+let custom = {};          // slotIdx -> text
+
+function parse(text){
+  const start = text.indexOf("{"), end = text.lastIndexOf("}");
+  if (start < 0 || end < start) throw new Error("没找到数据。请把 Grok 给的 UTA-CHOICES 代码块整段粘进来。");
+  const obj = JSON.parse(text.slice(start, end + 1));
+  if (!Array.isArray(obj.cards) || !obj.cards.length) throw new Error("数据里没有 cards。请让 Grok 按 UTA-CHOICES 格式重新输出。");
+  obj.cards.forEach((c, i) => {
+    if (!c.slot || !Array.isArray(c.questions)) throw new Error("第 " + (i + 1) + " 张卡缺少 slot 或 questions。");
+  });
+  return obj;
+}
+
+function init(obj){
+  data = obj; state = {}; custom = {};
+  data.cards.forEach((c, si) => {
+    state[si] = {};
+    c.questions.forEach((q, qi) => {
+      const rec = (q.options || []).filter(o => o.rec).map(o => o.key);
+      state[si][qi] = {sel: rec.length ? rec.slice(0, q.multi ? rec.length : 1) : [], mode: "/"};
+    });
+  });
+  render();
+}
+
+function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+function render(){
+  const root = document.getElementById("cards");
+  root.textContent = "";
+  data.cards.forEach((c, si) => {
+    const card = el("section", "slot");
+    const h = el("h2", null, c.slot); if (c.title) h.appendChild(el("span", null, c.title));
+    card.appendChild(h);
+    c.questions.forEach((q, qi) => {
+      const box = el("div");
+      const name = el("div", "q-name");
+      name.appendChild(el("b", null, (q.no != null ? q.no + " " : "") + (q.name || "")));
+      if (q.multi) {
+        name.appendChild(el("span", null, "可多选"));
+        const mode = el("span", "mode");
+        [["/", "备选"], ["+", "同框"]].forEach(([m, label]) => {
+          const b = el("button", state[si][qi].mode === m ? "on" : "", label);
+          b.type = "button";
+          b.onclick = () => { state[si][qi].mode = m; render(); };
+          mode.appendChild(b);
+        });
+        name.appendChild(mode);
+      }
+      box.appendChild(name);
+      const opts = el("div", "opts");
+      (q.options || []).forEach(o => {
+        const st = state[si][qi];
+        const b = el("button", "opt" + (st.sel.includes(o.key) ? " sel" : ""));
+        b.type = "button";
+        b.setAttribute("aria-pressed", st.sel.includes(o.key) ? "true" : "false");
+        const k = el("div", "k", o.key);
+        if (o.rec) k.appendChild(el("span", "star", "★ 推荐"));
+        b.appendChild(k);
+        b.appendChild(el("div", "t", o.text || ""));
+        if (o.note) b.appendChild(el("div", "n", o.note));
+        b.onclick = () => {
+          if (q.multi) {
+            const i = st.sel.indexOf(o.key);
+            if (i >= 0) st.sel.splice(i, 1); else if (st.sel.length < 2) st.sel.push(o.key); else st.sel = [st.sel[1], o.key];
+          } else st.sel = [o.key];
+          render();
+        };
+        opts.appendChild(b);
+      });
+      box.appendChild(opts);
+      card.appendChild(box);
+    });
+    if (c.custom !== false) {
+      const inp = el("input", "custom");
+      inp.id = "custom-" + si;
+      inp.placeholder = "自定义（可空）：想加的具体要求，一句话";
+      inp.value = custom[si] || "";
+      inp.oninput = () => { custom[si] = inp.value; updateAnswer(); };
+      card.appendChild(inp);
+    }
+    root.appendChild(card);
+  });
+  updateAnswer();
+}
+
+function updateAnswer(){
+  const parts = [];
+  data.cards.forEach((c, si) => {
+    const changes = [];
+    c.questions.forEach((q, qi) => {
+      const st = state[si][qi];
+      const rec = (q.options || []).filter(o => o.rec).map(o => o.key);
+      const same = st.sel.length === rec.length && st.sel.every(k => rec.includes(k));
+      if (!same && st.sel.length) changes.push(st.sel.map(k => (q.no != null ? q.no : "") + k).join(st.mode));
+    });
+    const extra = (custom[si] || "").trim();
+    if (changes.length || extra) parts.push(c.slot + " " + changes.join(" ") + (extra ? (changes.length ? "；" : "") + "自定义：" + extra : ""));
+  });
+  document.getElementById("answer").textContent = parts.length ? "改 " + parts.join("；") + "\n其余按推荐" : "推荐";
+}
+
+document.getElementById("load").onclick = () => {
+  const msg = document.getElementById("msg");
+  try {
+    init(parse(document.getElementById("src").value));
+    msg.className = "msg"; msg.textContent = "已生成 " + data.cards.length + " 张选择卡。";
+    document.getElementById("pasteBox").open = false;
+  } catch (e) {
+    msg.className = "msg err"; msg.textContent = "读不出来：" + e.message;
+  }
+};
+
+document.getElementById("copy").onclick = async () => {
+  const box = document.getElementById("answer"), btn = document.getElementById("copy");
+  try { await navigator.clipboard.writeText(box.textContent); btn.textContent = "已复制"; }
+  catch (e) {
+    const r = document.createRange(); r.selectNodeContents(box);
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    btn.textContent = "已选中，按复制";
+  }
+  setTimeout(() => { btn.textContent = "复制回答"; }, 1800);
+};
+
+init(SAMPLE);
+</script>
