@@ -425,10 +425,15 @@ class GrokSkillTest(unittest.TestCase):
     SKILL = (ROOT / "grok" / "grok-UTAstyle-skill.md").read_text(encoding="utf-8")
     GUIDE = (ROOT / "UTA_STYLE.md").read_text(encoding="utf-8")
 
-    def test_versions_match(self):
-        guide = re.search(r"版本 (\d+\.\d+)", self.GUIDE).group(1)
-        skill = re.search(r"版本 (\d+\.\d+)", self.SKILL).group(1)
-        self.assertEqual(guide, skill)
+    def test_skill_reads_the_guide_instead_of_pinning_a_version(self):
+        """The skill follows the UTA_STYLE.md it just read and does not embed a version."""
+        self.assertRegex(self.GUIDE, r"版本 \d+\.\d+")
+        pinned = re.findall(r"\b\d+\.\d+\b", self.SKILL)
+        self.assertEqual(pinned, [], pinned)
+        self.assertIn("UTA_STYLE.md", self.SKILL)
+        self.assertIn("读不到", self.SKILL)
+        self.assertIn("凭记忆", self.SKILL)
+        self.assertIn("以刚读到的规范为准", self.SKILL)
 
     def test_files_the_skill_reads_exist(self):
         for path in re.findall(r"`((?:cards|products|references)/[^`<>]+\.(?:md|csv))`", self.SKILL):
