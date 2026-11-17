@@ -123,6 +123,33 @@ class CheckCardTest(unittest.TestCase):
         self.assertIn("SIZE AND PARTS: exactly one fountain", text)
         self.assertNotIn("detail_7", text, "the 'no clover window' line is not a detail view")
 
+    def baseline_output(self, product):
+        with tempfile.TemporaryDirectory() as folder:
+            (Path(folder) / "a.jpg").write_bytes(b"x")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = check_card.print_baseline(product, photos_dir=folder)
+        return code, out.getvalue()
+
+    def test_flat_product_gets_flat_views(self):
+        code, text = self.baseline_output("filter_pad")
+        self.assertEqual(code, 0, text)
+        self.assertIn("形态 扁平", text)
+        for view in ("top", "bottom", "long_edge", "short_edge", "three_quarter"):
+            self.assertIn(f"=== {view} ===", text)
+        for view in ("front", "back", "side", "top_down"):
+            self.assertNotIn(f"=== {view} ===", text)
+
+    def test_unknown_form_fails(self):
+        original = check_card.baseline_field
+        check_card.baseline_field = lambda product, key: "圆的" if key == "形态" else original(product, key)
+        try:
+            code, text = self.baseline_output("filter_pad")
+        finally:
+            check_card.baseline_field = original
+        self.assertEqual(code, 1)
+        self.assertIn("形态 must be one of", text)
+
     def test_baseline_without_photos_fails(self):
         with tempfile.TemporaryDirectory() as folder:
             out = io.StringIO()
