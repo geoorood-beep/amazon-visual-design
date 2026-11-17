@@ -158,6 +158,20 @@ class CheckCardTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("no real photos", out.getvalue())
 
+    def test_grade_c_reference_is_rejected(self):
+        self.assert_rejected(
+            "references/anchors/v06_S6_clean_sink.png",
+            "docs/uta_style_v3/assets/key/D_night_blue_G4DX3QR8.jpg",
+            "grade C",
+        )
+
+    def test_reference_allowed_by_learn_column(self):
+        text = GOOD.replace("references/anchors/v06_S6_clean_sink.png",
+                            "docs/uta_style_v3/assets/key/XHS_011.jpg")
+        self.assertNotEqual(text, GOOD, "test fixture out of date")
+        errors = self.errors_for(text)
+        self.assertFalse(any("is type" in e for e in errors), errors)
+
     def test_number_outside_the_fact_is_rejected(self):
         self.assert_rejected("hero_number: none", "hero_number: 25 dB", "number '25'")
 
@@ -191,7 +205,7 @@ class CheckCardTest(unittest.TestCase):
     def test_wrong_reference_type_is_rejected(self):
         self.assert_rejected(
             "references/anchors/v06_S6_clean_sink.png",
-            "docs/uta_style_v3/assets/key/EXP_011.jpg",
+            "docs/uta_style_v3/assets/key/EXP_017.jpg",
             "is type 'expression'",
         )
 

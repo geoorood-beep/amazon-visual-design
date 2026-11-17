@@ -376,6 +376,29 @@ class PoolRules(Base):
         code, out, _ = self.run_text(text)
         self.assertIn("WARN [K-4] S1 和 P1 的故事相似度", out)
 
+    def test_case_used_three_times_fails_set(self):
+        old = "  anchor: docs/uta_style_v3/assets/key/D_floor_labels_G4DX3QR8.jpg | two pets side by side at the same product only; not the product, the floor labels, numbers or any text"
+        new = "  anchor: docs/uta_style_v3/assets/key/D_multipet_C5X2G933.jpg | two pets sharing one product only; not the product, the spacing marks, numbers or any text"
+        code, out, _ = self.run_text(self.mutate(old, new))
+        self.assertEqual(code, 2, out)
+        self.assertIn("SET FAIL [K-5] 案例 D_multipet_C5X2G933.jpg 用了 3 次", out)
+
+    def test_index_is_fully_annotated(self):
+        import csv as _csv
+        with open(os.path.join(ROOT, "references", "INDEX.csv"), encoding="utf-8") as fh:
+            rows = list(_csv.DictReader(fh))
+        for col in ("learn", "story", "structure", "light", "style_id", "fits", "avoid", "grade"):
+            self.assertIn(col, rows[0])
+        for r in rows:
+            if r["type"] != "product":
+                self.assertIn(r["grade"], ("A", "B", "C"), r["path"])
+        with open(os.path.join(ROOT, "pools", "styles.csv"), encoding="utf-8") as fh:
+            styles = list(_csv.DictReader(fh))
+        grade = {r["path"]: r["grade"] for r in rows}
+        for s in styles:
+            for p in s["examples"].split(";"):
+                self.assertIn(grade.get(p), ("A", "B"), (s["id"], p))
+
     def test_pools_reach_the_compiled_card(self):
         code, out, emit = self.run_task(V2)
         s2 = self.card_block(read(emit), "S2_capacity.md")

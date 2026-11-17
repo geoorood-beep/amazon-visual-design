@@ -66,6 +66,11 @@ REF_SLOTS = {
     "expression": {"expression"},
     "layout": {"layout"},
 }
+REF_LEARN = {
+    "anchor": {"light", "composition", "scene", "story", "material"},
+    "expression": {"expression", "emotion"},
+    "layout": {"layout"},
+}
 REF_LABEL = {
     "product": "product reference",
     "anchor": "style reference",
@@ -395,7 +400,11 @@ def check_refs(refs, allowed_slots, product, index, errors):
         if not (ROOT / clean).is_file():
             errors.append(f"ref {slot_name}: file '{clean}' does not exist")
             continue
-        if row["type"] not in REF_SLOTS[slot_name]:
+        learn = {v.strip() for v in (row.get("learn") or "").split(";") if v.strip()}
+        if slot_name != "product" and (row.get("grade") or "").strip() == "C":
+            errors.append(f"ref {slot_name}: '{clean}' is grade C in the index (archive only, UTA_STYLE 2.5)")
+            continue
+        if row["type"] not in REF_SLOTS[slot_name] and not (learn & REF_LEARN.get(slot_name, set())):
             needed = " or ".join(sorted(REF_SLOTS[slot_name]))
             errors.append(
                 f"ref {slot_name}: '{clean}' is type '{row['type']}' in the index, needs {needed}"

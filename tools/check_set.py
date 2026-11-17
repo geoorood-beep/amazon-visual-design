@@ -27,7 +27,7 @@ import os
 import re
 import sys
 
-VERSION = "3.11"
+VERSION = "3.12"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -748,6 +748,23 @@ def pool_rules(ts, evidence, pools=None):
             if row and row["shown"].strip() in FACE_SHOWN:
                 return True
         return False
+
+    used_refs = {}
+    for t, name, cards in units:
+        owners = list(cards)
+        screen = ts.by_slot.get(name)
+        if screen is not None and screen not in owners:
+            owners.append(screen)
+        seen = set()
+        for c in owners:
+            for slot in ("anchor", "expression", "layout"):
+                ref = c.refs.get(slot, "").split("|")[0].strip()
+                if ref and ref.lower() != "none" and ref not in seen:
+                    seen.add(ref)
+                    used_refs.setdefault(ref, []).append(name)
+    for ref, names in sorted(used_refs.items()):
+        if len(names) > 2:
+            fails.append(("K-5", "案例 %s 用了 %d 次：%s，最多两次" % (ref.split("/")[-1], len(names), ", ".join(names))))
 
     stories = []
     for t, name, cards in units:
