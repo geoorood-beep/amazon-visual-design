@@ -44,7 +44,7 @@ slot: S1
 canvas: 4:5
 selling_point: F4
 evidence: A ragdoll cat and a golden retriever drink from the same basin at the same time, one on each side, both heads lowered to the water
-human_action: none
+human_action: A woman sits on the edge of the sofa behind the pets, leaning forward with her elbows on her knees, watching them drink
 pet: one ragdoll cat with blue eyes and one golden retriever
 pet_action: Both drinking from opposite sides of the basin, tongues touching the water, bodies relaxed, the dog standing so the front water window and the spout stay visible
 camera: low_angle
@@ -59,7 +59,8 @@ foreground: the edge of a cream sofa cushion in the bottom-left corner
 evidence_id: F4-A
 scene_id: SC03
 pet_id: PT01+PT07
-person_id: none
+person_id: HP05
+person_mood_id: MD01
 expression_id: EX01
 text_area: top_left
 headline: Shared by Cats and Dogs
@@ -96,6 +97,7 @@ evidence_id: F1-B
 scene_id: SC02
 pet_id: PT07
 person_id: HP02
+person_mood_id: none
 expression_id: EX09
 text_area: top_right
 headline: Room for Big Drinkers
@@ -132,6 +134,7 @@ evidence_id: F2-A
 scene_id: SC09
 pet_id: PT02
 person_id: none
+person_mood_id: none
 expression_id: EX06
 text_area: bottom_left
 headline: Brushed Stainless Steel
@@ -168,6 +171,7 @@ evidence_id: F3-D
 scene_id: SC04
 pet_id: PT01
 person_id: none
+person_mood_id: none
 expression_id: EX03
 text_area: top_left
 headline: Quiet Enough to Nap By
@@ -204,6 +208,7 @@ evidence_id: F5-A
 scene_id: SC01
 pet_id: PT03
 person_id: HP01
+person_mood_id: none
 expression_id: EX05
 text_area: top_right
 headline: Easy to Clean
@@ -240,6 +245,7 @@ evidence_id: F6-A
 scene_id: SC03
 pet_id: PT01
 person_id: none
+person_mood_id: none
 expression_id: EX08
 text_area: bottom_right
 headline: See the Water Level
@@ -281,6 +287,7 @@ evidence_id: F4-B
 scene_id: SC07
 pet_id: PT01+PT07
 person_id: none
+person_mood_id: none
 expression_id: EX01
 text_area: left
 headline: Drink Together, Side by Side
@@ -337,6 +344,7 @@ evidence_id: F3-A
 scene_id: SC04
 pet_id: PT05
 person_id: none
+person_mood_id: none
 expression_id: EX04
 text_area: none
 headline: none
@@ -395,6 +403,7 @@ evidence_id: F2-B
 scene_id: SC11
 pet_id: none
 person_id: none
+person_mood_id: none
 expression_id: none
 text_area: none
 headline: none
@@ -432,6 +441,7 @@ evidence_id: F6-D
 scene_id: SC05
 pet_id: PT01
 person_id: none
+person_mood_id: none
 expression_id: EX02
 text_area: none
 headline: none
@@ -469,6 +479,7 @@ evidence_id: F4-C
 scene_id: SC02
 pet_id: PT01+PT07
 person_id: none
+person_mood_id: none
 expression_id: EX06
 text_area: none
 headline: none
@@ -494,7 +505,7 @@ tone: light
 beat: life
 selling_point: F1
 evidence: In a sunlit entry hall a golden retriever drinks from the wide basin after a walk, muzzle in the water, a leash hanging on a hook behind; the basin keeps exactly the proportions of the product reference
-human_action: none
+human_action: A man crouches beside the dog in the entry hall, one hand resting on its back, the leash in his other hand
 pet: one golden retriever
 pet_action: Standing with front legs apart, head lowered into the basin, drinking, tail relaxed, the front water window and the spout stay visible
 camera: eye_level
@@ -509,7 +520,8 @@ foreground: none
 evidence_id: F1-A
 scene_id: SC06
 pet_id: PT07
-person_id: none
+person_id: HP08
+person_mood_id: MD03
 expression_id: EX07
 text_area: right
 headline: Room for a Deep Drink
@@ -566,6 +578,7 @@ evidence_id: F6-C
 scene_id: SC02
 pet_id: PT06
 person_id: none
+person_mood_id: none
 expression_id: EX02
 text_area: none
 headline: none
@@ -603,6 +616,7 @@ evidence_id: F6-C
 scene_id: SC02
 pet_id: PT06
 person_id: none
+person_mood_id: none
 expression_id: EX08
 text_area: none
 headline: none
@@ -660,6 +674,7 @@ evidence_id: F5-B
 scene_id: SC01
 pet_id: none
 person_id: HP03
+person_mood_id: none
 expression_id: none
 text_area: none
 headline: none
@@ -697,6 +712,7 @@ evidence_id: F5-C
 scene_id: SC03
 pet_id: PT02
 person_id: HP03
+person_mood_id: none
 expression_id: EX05
 text_area: none
 headline: none
@@ -754,6 +770,7 @@ evidence_id: none
 scene_id: SC09
 pet_id: none
 person_id: none
+person_mood_id: none
 expression_id: none
 text_area: none
 headline: none
