@@ -56,6 +56,7 @@ focus: whole
 interaction: share_drink
 light_setup: low_sun
 foreground: the edge of a cream sofa cushion in the bottom-left corner
+story: Late afternoon at home: the cat and the dog who never share anything drink side by side from one basin, and the woman on the sofa smiles at the truce.
 evidence_id: F4-A
 scene_id: SC03
 pet_id: PT01+PT07
@@ -93,6 +94,7 @@ focus: water_surface
 interaction: human_fill
 light_setup: side
 foreground: none
+story: Back from a long walk, the big dog waits by the fountain while his owner refills the wide basin in one easy pour, already calm.
 evidence_id: F1-B
 scene_id: SC02
 pet_id: PT07
@@ -130,6 +132,7 @@ focus: rim
 interaction: paw_touch
 light_setup: side
 foreground: the cat's whiskers along the top edge
+story: A curious orange cat taps the rim of the new steel basin with one paw, testing the cool brushed metal before it drinks.
 evidence_id: F2-A
 scene_id: SC09
 pet_id: PT02
@@ -167,6 +170,7 @@ focus: spout
 interaction: rest
 light_setup: night_lamp
 foreground: none
+story: Late at night in the bedroom, the cat sleeps curled against the fountain while the water keeps falling, and nobody in the room wakes.
 evidence_id: F3-D
 scene_id: SC04
 pet_id: PT01
@@ -204,6 +208,7 @@ focus: interior
 interaction: human_wipe
 light_setup: side_back
 foreground: none
+story: Chore time: one wipe of the cloth leaves the empty steel basin clean, and the silver cat watches every stroke as if supervising.
 evidence_id: F5-A
 scene_id: SC01
 pet_id: PT03
@@ -241,6 +246,7 @@ focus: water_window
 interaction: inspect
 light_setup: side_back
 foreground: none
+story: The cat lies in front of the fountain and stares at the slim water window, checking the water level the way its owner does.
 evidence_id: F6-A
 scene_id: SC03
 pet_id: PT01
@@ -283,6 +289,7 @@ focus: water_surface
 interaction: share_drink
 light_setup: side_back
 foreground: none
+story: In the sunroom the cat and the dog lean in from opposite sides and drink together, faces almost touching, a small peace between rivals.
 evidence_id: F4-B
 scene_id: SC07
 pet_id: PT01+PT07
@@ -340,6 +347,7 @@ focus: whole
 interaction: rest
 light_setup: night_lamp
 foreground: none
+story: The house has gone dark; the blue-grey cat dozes beside the fountain and the only sound in the room is the soft fall of water.
 evidence_id: F3-A
 scene_id: SC04
 pet_id: PT05
@@ -437,6 +445,7 @@ focus: water_window
 interaction: inspect
 light_setup: side_back
 foreground: the cat's whiskers
+story: Up close, the cat's eye and the water window line up, as if the cat were reading the water level for itself.
 evidence_id: F6-D
 scene_id: SC05
 pet_id: PT01
@@ -475,6 +484,7 @@ focus: rim
 interaction: paw_touch
 light_setup: side
 foreground: none
+story: A cat paw and a dog paw rest on the same rim side by side, two very different pets sharing one bowl.
 evidence_id: F4-C
 scene_id: SC02
 pet_id: PT01+PT07
@@ -517,6 +527,7 @@ focus: whole
 interaction: drink
 light_setup: low_sun
 foreground: none
+story: Home from a muddy walk, the dog heads straight for the wide basin and drinks deeply while his owner crouches beside him, relaxed.
 evidence_id: F1-A
 scene_id: SC06
 pet_id: PT07
@@ -574,6 +585,7 @@ focus: water_window
 interaction: wait
 light_setup: side
 foreground: none
+story: The calico cat sits in front of the fountain and looks at the low water line in the window, waiting patiently.
 evidence_id: F6-C
 scene_id: SC02
 pet_id: PT06
@@ -612,6 +624,7 @@ focus: water_window
 interaction: drink
 light_setup: side
 foreground: none
+story: Same spot after a refill: the water line sits high in the window and the calico cat drinks happily.
 evidence_id: F6-C
 scene_id: SC02
 pet_id: PT06
@@ -670,6 +683,7 @@ focus: interior
 interaction: human_rinse
 light_setup: side
 foreground: none
+story: A quick rinse under the kitchen tap is all the empty steel basin needs, one hand steadying the rim.
 evidence_id: F5-B
 scene_id: SC01
 pet_id: none
@@ -708,6 +722,7 @@ focus: front_panel
 interaction: human_wipe
 light_setup: side_back
 foreground: none
+story: A hand wipes the brushed front with a soft cloth while the orange cat sits close and follows the cloth with its eyes.
 evidence_id: F5-C
 scene_id: SC03
 pet_id: PT02
