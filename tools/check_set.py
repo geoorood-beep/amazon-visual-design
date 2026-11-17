@@ -27,7 +27,7 @@ import os
 import re
 import sys
 
-VERSION = "3.3"
+VERSION = "3.4"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -359,7 +359,7 @@ def check_copy(card, errs):
         same = [n for n in NUM_RE.findall(hero) if n in NUM_RE.findall(head)]
         if same:
             errs.append("headline 里重复了强调数字 %s：数字只放在 hero_number，主标题写好处（1.5）" % ", ".join(same))
-    for key in ("headline", "subtitle", "hero_number", "label", "lines"):
+    for key in ("eyebrow", "headline", "subtitle", "hero_number", "label", "lines"):
         hits = positive_hits(DURATION_RE, card.f(key))
         if hits:
             errs.append("%s 写了时长说法（%s），不在已确认事实里（2.7）" % (key, ", ".join(sorted(set(hits)))))

@@ -325,6 +325,46 @@ class PremiumEditionTest(APlusTest):
         self.assertIn("square 1:1", small)
         self.assertIn("lower-left corner calm", small)
 
+    def test_premium_screen_takes_an_eyebrow(self):
+        errors = self.errors_after(
+            "P1_together.md", [("P1_together.md", "tone: light\n", "tone: light\neyebrow: CATS AND DOGS\n")]
+        )
+        self.assertEqual(errors, [])
+
+    def test_module_card_takes_an_eyebrow(self):
+        errors = self.errors_after(
+            "P3_built.md", [("P3_built.md", "tone: dark\n", "tone: dark\neyebrow: BUILT TO LAST\n")]
+        )
+        self.assertEqual(errors, [])
+
+    def test_standard_edition_has_no_eyebrow(self):
+        self.assert_error(
+            "only the premium edition has an eyebrow line", "P1_together.md",
+            [("P1_together.md", "edition: premium\ntone: light\n", "edition: standard\ntone: light\neyebrow: CATS AND DOGS\n")],
+        )
+
+    def test_panel_has_no_eyebrow(self):
+        self.assert_error(
+            "'eyebrow' is only for P1-P8 screen cards", "P3b_quiet.md",
+            [("P3b_quiet.md", "canvas: 1:1", "canvas: 1:1\neyebrow: QUIET")],
+        )
+
+    def test_eyebrow_word_limit(self):
+        self.assert_error(
+            "eyebrow has more than 4 words", "P1_together.md",
+            [("P1_together.md", "tone: light\n", "tone: light\neyebrow: ONE BASIN FOR CATS AND DOGS\n")],
+        )
+
+    def test_eyebrow_number_must_come_from_the_fact(self):
+        self.assert_error(
+            "number", "P1_together.md",
+            [("P1_together.md", "tone: light\n", "tone: light\neyebrow: 2 PETS\n")],
+        )
+
+    def test_premium_scene_prompt_keeps_the_lower_text_side_calm(self):
+        prompt = check_card.build_prompt(self.context_for("P1_together.md"), check_card.load_prompt_blocks())
+        self.assertIn("on the phone the text sits there", prompt)
+
     def test_standard_edition_cannot_be_dark(self):
         self.assert_error(
             "tone: dark is only for the premium edition", "P3_built.md",
