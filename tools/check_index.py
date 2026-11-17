@@ -4,6 +4,7 @@
 Usage:
     python tools/check_index.py            validate every row (UTA_STYLE.md 2.5)
     python tools/check_index.py --inbox    list images waiting in references/inbox/ (UTA_STYLE.md 3.6)
+    python tools/check_index.py --digest   rewrite references/CASES.md, the card writer's case digest
 
 Standard library only.
 """
@@ -88,6 +89,44 @@ def validate(root=ROOT, index_path=None):
     return errors
 
 
+FIT_ORDER = ["开场", "多宠", "容量", "材质", "安静", "清洁", "可视", "参数"]
+
+
+def digest_text(root=ROOT):
+    """The card writer's digest: A and B cases grouped by their first selling-point type."""
+    with open(os.path.join(root, "references", "INDEX.csv"), encoding="utf-8-sig", newline="") as fh:
+        rows = [r for r in csv.DictReader(fh) if r["type"] != "product"]
+    keep = [r for r in rows if r["grade"] in ("A", "B")]
+    na = sum(1 for r in keep if r["grade"] == "A")
+    nb = len(keep) - na
+    nc = sum(1 for r in rows if r["grade"] == "C")
+    lines = ["案例摘要：A 级 %d 张、B 级 %d 张（C 级 %d 张只留档，不列出）。" % (na, nb, nc), "",
+             "由 `tools/check_index.py --digest` 从 `references/INDEX.csv` 生成，不要手改。路径和索引完全一致，写卡时照抄路径。",
+             "每行：路径｜等级｜能学什么｜画面结构｜光型｜风格｜故事｜不能学。", ""]
+    groups = {}
+    for r in keep:
+        fits = split(r["fits"])
+        key = fits[0] if fits else "其他"
+        groups.setdefault(key, []).append(r)
+    order = [f for f in FIT_ORDER if f in groups] + sorted(k for k in groups if k not in FIT_ORDER)
+    for key in order:
+        lines.append("## %s" % key)
+        lines.append("")
+        for r in sorted(groups[key], key=lambda r: (r["grade"], r["path"])):
+            lines.append("- `%s`｜%s｜%s｜%s｜%s｜%s｜%s｜%s" % (
+                r["path"], r["grade"], r["learn"] or "-", r["structure"] or "-", r["light"] or "-",
+                r["style_id"] or "-", r["story"] or "无故事", r["avoid"] or "-"))
+        lines.append("")
+    return "\n".join(lines)
+
+
+def write_digest(root=ROOT):
+    path = os.path.join(root, "references", "CASES.md")
+    with open(path, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(digest_text(root))
+    return path
+
+
 def inbox(root=ROOT, out=sys.stdout):
     folder = os.path.join(root, "references", "inbox")
     files = sorted(f for f in os.listdir(folder)
@@ -118,10 +157,18 @@ def main(argv=None):
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--inbox", action="store_true", help="list images waiting in references/inbox/")
+    ap.add_argument("--digest", action="store_true", help="rewrite references/CASES.md from the index")
     args = ap.parse_args(argv)
     if args.inbox:
         return inbox()
+    if args.digest:
+        print("WROTE " + os.path.relpath(write_digest(), ROOT))
+        return 0
     errors = validate()
+    cases = os.path.join(ROOT, "references", "CASES.md")
+    current = open(cases, encoding="utf-8").read() if os.path.exists(cases) else ""
+    if current != digest_text():
+        errors.append("references/CASES.md 和索引不一致：运行 python tools/check_index.py --digest")
     for e in errors:
         print("FAIL " + e)
     if errors:

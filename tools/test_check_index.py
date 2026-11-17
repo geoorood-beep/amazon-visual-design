@@ -48,6 +48,47 @@ class IndexTest(unittest.TestCase):
         self.assertIn("NEW_my_case_1.jpg", text)
 
 
+class WiringTest(unittest.TestCase):
+    """Everything the scripts and the card writer depend on is named where they read it."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_digest_is_in_sync(self):
+        self.assertEqual(self.read("references", "CASES.md"), check_index.digest_text())
+
+    def test_read_list_names_every_pool(self):
+        import check_set
+        guide = self.read("UTA_STYLE.md")
+        start = guide.index("### 2.1 读什么")
+        section = guide[start:guide.index("### 2.2", start)]
+        for fname in check_set.POOL_FILES.values():
+            self.assertIn("pools/" + fname, section)
+        self.assertIn("references/CASES.md", section)
+
+    def test_guide_ends_with_the_marker_section(self):
+        guide = self.read("UTA_STYLE.md")
+        headings = [l for l in guide.splitlines() if l.startswith("## ")]
+        self.assertEqual(headings[-1], "## 禁用词")
+        self.assertIn("最后一节是「禁用词」", guide)
+
+    def test_choice_numbers_match_the_example(self):
+        guide = self.read("UTA_STYLE.md")
+        for row in ("| 0 | 故事 |", "| 1 | 证据方案 |", "| 2 | 场景 |", "| 3 | 宠物 |",
+                    "| 4 | 表情 |", "| 5 | 人物 |", "| 6 | 标题 |"):
+            self.assertIn(row, guide)
+        self.assertIn("S5：0B 1A 2B 3A 4C 5A 6B", guide)
+
+    def test_card_fields_checked_by_script_are_documented(self):
+        import check_set
+        guide = self.read("UTA_STYLE.md")
+        start = guide.index("### 2.4")
+        section = guide[start:guide.index("### 2.5", start)]
+        for field in check_set.POOL_FIELDS + ["story"] + check_set.V2_IMAGE_FIELDS:
+            self.assertIn("`%s`" % field, section, field)
+
+
 class AgentsIntakeTest(unittest.TestCase):
     def test_agents_and_guide_name_the_intake(self):
         with open(os.path.join(ROOT, "AGENTS.md"), encoding="utf-8") as fh:
