@@ -70,7 +70,7 @@ hero_number: none
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: docs/uta_style_v3/assets/key/D_multipet_C5X2G933.jpg | two pets sharing one product in the same frame only; not the product, the spacing marks, numbers or any text
-  expression: docs/uta_style_v3/assets/key/XHS_003.jpg | the candid drinking moment only; not the outdoor colour, background or any text
+  expression: docs/uta_style_v3/assets/key/XHS_003.jpg | the eyes half closed in focus look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -108,7 +108,7 @@ hero_number: 10 L
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: none
-  expression: docs/uta_style_v3/assets/key/EXP_011.jpg | the curious leaning-in look only; not the fisheye distortion, background or fur colour
+  expression: none
   layout: none
 ---
 
@@ -146,7 +146,7 @@ hero_number: 304
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: docs/uta_style_v3/assets/key/F_steel_macro_FJX69D2R.jpg | the raking light and highlight band on brushed steel only; not the product, text or water drops
-  expression: docs/uta_style_v3/assets/key/EXP_007.jpg | the reaching paw only; not the black background
+  expression: docs/uta_style_v3/assets/key/EXP_007.jpg | the one paw raised toward the rim look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -184,7 +184,7 @@ hero_number: Under 20 dB
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: references/anchors/v06_S5_quiet_dusk.png | the dark room and the cat asleep against the fountain only; not the product or its text placement
-  expression: docs/uta_style_v3/assets/key/EXP_014.jpg | the fully relaxed sleepy mood only; not the hat, sweater or sofa
+  expression: docs/uta_style_v3/assets/key/XHS_002.jpg | the eyes fully closed look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -222,7 +222,7 @@ hero_number: none
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: references/anchors/round_S5_clean_sink.png | window light and the cat's gaze at the basin only; not the product shape or the text placement
-  expression: docs/uta_style_v3/assets/key/EXP_011.jpg | the curious leaning-in look only; not the fisheye distortion, background or fur colour
+  expression: docs/uta_style_v3/assets/key/XHS_004.jpg | the eyes locked on the moving hand or cloth look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -260,7 +260,7 @@ hero_number: none
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: none
-  expression: docs/uta_style_v3/assets/key/EXP_011.jpg | the curious leaning-in look only; not the fisheye distortion, background or fur colour
+  expression: docs/uta_style_v3/assets/key/XHS_014.jpg | the eyes level with the water look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -303,7 +303,7 @@ hero_number: none
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: docs/uta_style_v3/assets/key/D_multipet_C5X2G933.jpg | two pets sharing one product only; not the product, the spacing marks, numbers or any text
-  expression: docs/uta_style_v3/assets/key/XHS_003.jpg | the candid drinking moment only; not the outdoor colour, background or any text
+  expression: docs/uta_style_v3/assets/key/XHS_003.jpg | the eyes half closed in focus look only; not the background, props, colour or any text
   layout: docs/uta_style_v3/assets/key/AP_005.jpg | the opening screen only, with the title on the calm side away from faces; not its product, logo, numbers or text
 ---
 
@@ -362,7 +362,7 @@ label: none
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: docs/uta_style_v3/assets/key/F_silent_night_GYZQ79CY.jpg | a pet sleeping in a darkened room only; not the product, veterinary or health implication, or any text
-  expression: docs/uta_style_v3/assets/key/XHS_002.jpg | the relaxed sleepy mood only; not the product, background or any text
+  expression: docs/uta_style_v3/assets/key/EXP_014.jpg | the eyes half open and sleepy look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -460,7 +460,7 @@ label: Water Level Window
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: none
-  expression: docs/uta_style_v3/assets/key/EXP_011.jpg | the curious leaning-in look only; not the fisheye distortion, background or fur colour
+  expression: docs/uta_style_v3/assets/key/EXP_011.jpg | the eyes wide and round look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -498,8 +498,8 @@ hero_number: none
 label: Cats and Dogs
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
-  anchor: docs/uta_style_v3/assets/key/D_multipet_C5X2G933.jpg | two pets sharing one product only; not the product, the spacing marks, numbers or any text
-  expression: docs/uta_style_v3/assets/key/EXP_007.jpg | the reaching paw only; not the black background
+  anchor: docs/uta_style_v3/assets/key/D_floor_labels_G4DX3QR8.jpg | two pets side by side at the same product only; not the product, the floor labels, numbers or any text
+  expression: docs/uta_style_v3/assets/key/EXP_007.jpg | the one paw raised toward the rim look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -541,7 +541,7 @@ hero_number: 10 L
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: none
-  expression: docs/uta_style_v3/assets/key/XHS_003.jpg | the candid drinking moment only; not the outdoor colour, background or any text
+  expression: docs/uta_style_v3/assets/key/F_emotion_lick_DPMNQJ2N.jpg | the just finished drinking look only; not the background, props, colour or any text
   layout: docs/uta_style_v3/assets/key/AP_005.jpg | the title on the clean side away from faces only; not its product, logo, numbers or text
 ---
 
@@ -600,7 +600,7 @@ label: Running Low
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: none
-  expression: docs/uta_style_v3/assets/key/EXP_011.jpg | the curious leaning-in look only; not the fisheye distortion, background or fur colour
+  expression: docs/uta_style_v3/assets/key/EXP_011.jpg | the eyes wide and round look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -639,7 +639,7 @@ label: Topped Up
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: none
-  expression: docs/uta_style_v3/assets/key/XHS_003.jpg | the candid drinking moment only; not the outdoor colour, background or any text
+  expression: docs/uta_style_v3/assets/key/XHS_014.jpg | the eyes level with the water look only; not the background, props, colour or any text
   layout: none
 ---
 
@@ -660,7 +660,7 @@ hero_number: none
 panels: P6a, P6b
 lines: none
 refs:
-  layout: docs/uta_style_v3/assets/key/L_oneisall_easeclean_EaseS1.jpg | steps shown left to right with a short label under each only; not its product, text, icons or any disassembly
+  layout: docs/uta_style_v3/assets/key/L_neakasa_m9_steps_HC6Y2MS3.jpg | steps shown left to right with a short label under each only; not its product, text, icons or any disassembly
 ---
 
 === cards/round10l/P6a_rinse.md ===
@@ -737,7 +737,7 @@ label: Wipe
 refs:
   product: products/round10l/ref/front_high.png | product structure, proportions and steel finish only
   anchor: references/anchors/round_S5_clean_sink.png | the wiping hand, the cat watching, and window light only; not the product shape or the 45-degree angle
-  expression: docs/uta_style_v3/assets/key/EXP_011.jpg | the curious leaning-in look only; not the fisheye distortion, background or fur colour
+  expression: docs/uta_style_v3/assets/key/XHS_004.jpg | the eyes locked on the moving hand or cloth look only; not the background, props, colour or any text
   layout: none
 ---
 

@@ -354,7 +354,7 @@ hero_number: none
 panels: P6a, P6b
 lines: none
 refs:
-  layout: docs/uta_style_v3/assets/key/L_oneisall_easeclean_EaseS1.jpg | steps shown left to right with a short label under each only; not its product, text, icons or any disassembly
+  layout: docs/uta_style_v3/assets/key/L_neakasa_m9_steps_HC6Y2MS3.jpg | steps shown left to right with a short label under each only; not its product, text, icons or any disassembly
 ---
 
 === cards/round10l/P6a_rinse.md ===
