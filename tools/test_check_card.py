@@ -77,6 +77,60 @@ class CheckCardTest(unittest.TestCase):
         prompt = check_card.build_prompt(context, check_card.load_prompt_blocks())
         self.assertNotIn("SIZE AND PARTS", prompt)
 
+    def validate_with_baseline(self, status):
+        original = check_card.baseline_status
+        check_card.baseline_status = lambda product: status
+        try:
+            card = ROOT / "cards" / "round10l" / "S5_clean.md"
+            return check_card.validate(card, self.index)
+        finally:
+            check_card.baseline_status = original
+
+    def test_unconfirmed_baseline_blocks_the_card(self):
+        for status in ("未做", "待确认", ""):
+            errors, _warnings, context = self.validate_with_baseline(status)
+            self.assertTrue(any("造型基准" in e and "1.12" in e for e in errors), (status, errors))
+            self.assertIsNone(context)
+
+    def test_confirmed_baseline_passes_quietly(self):
+        errors, warnings, _context = self.validate_with_baseline("已确认（2026-11-17）")
+        self.assertEqual(errors, [])
+        self.assertFalse(any("造型基准" in w for w in warnings), warnings)
+
+    def test_missing_baseline_section_only_warns(self):
+        errors, warnings, _context = self.validate_with_baseline(None)
+        self.assertEqual(errors, [])
+        self.assertTrue(any("造型基准" in w for w in warnings), warnings)
+
+    def test_template_starts_unconfirmed(self):
+        text = (ROOT / "products" / "_template" / "PRODUCT.md").read_text(encoding="utf-8")
+        self.assertIn("## 造型基准\n\n状态：未做", text.replace("\r\n", "\n"))
+
+    def test_baseline_prints_every_view(self):
+        with tempfile.TemporaryDirectory() as folder:
+            (Path(folder) / "a.jpg").write_bytes(b"x")
+            (Path(folder) / "notes.txt").write_text("skip", encoding="utf-8")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = check_card.print_baseline("round10l", photos_dir=folder)
+        text = out.getvalue()
+        self.assertEqual(code, 0, text)
+        for view in ("front", "back", "side", "top_down", "three_quarter", "detail_1"):
+            self.assertIn(f"=== {view} ===", text)
+        self.assertNotIn("notes.txt", text)
+        self.assertIn("baseline/v01/top_down.png", text)
+        self.assertIn("plain seamless mid-grey background", text)
+        self.assertIn("SIZE AND PARTS: exactly one fountain", text)
+        self.assertNotIn("detail_7", text, "the 'no clover window' line is not a detail view")
+
+    def test_baseline_without_photos_fails(self):
+        with tempfile.TemporaryDirectory() as folder:
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = check_card.print_baseline("round10l", photos_dir=folder)
+        self.assertEqual(code, 1)
+        self.assertIn("no real photos", out.getvalue())
+
     def test_number_outside_the_fact_is_rejected(self):
         self.assert_rejected("hero_number: none", "hero_number: 25 dB", "number '25'")
 
