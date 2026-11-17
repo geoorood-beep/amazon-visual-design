@@ -538,6 +538,19 @@ class MainImageTest(unittest.TestCase):
         self.assertEqual([slot for slot, _path, _purpose in context["attach"]], ["product"])
 
 
+class AgentsTest(unittest.TestCase):
+    """AGENTS.md is what Codex reads first: it must start every task with the baseline check."""
+
+    def test_agents_checks_the_shape_baseline_first(self):
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        guide = (ROOT / "UTA_STYLE.md").read_text(encoding="utf-8")
+        self.assertIn("UTA_STYLE.md", agents)
+        for text in ("第一步先查造型基准", "已确认", "未做", "待确认", "3.5"):
+            self.assertIn(text, agents)
+        self.assertIn("0. **先查造型基准。**", guide)
+        self.assertLess(guide.index("0. **先查造型基准。**"), guide.index("1. **存任务单。**"))
+
+
 class GrokSkillTest(unittest.TestCase):
     """The grok-UTAstyle skill must stay in step with UTA_STYLE.md and the repo."""
 
