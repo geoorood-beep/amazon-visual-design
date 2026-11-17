@@ -99,6 +99,18 @@ class BootstrapTest(unittest.TestCase):
         self.assertIn("每次都重新读取", text)
 
 
+class ChooserTest(unittest.TestCase):
+    def test_choice_format_example_parses(self):
+        import json, re
+        with open(os.path.join(ROOT, "UTA_STYLE.md"), encoding="utf-8") as fh:
+            guide = fh.read()
+        m = re.search(r"```\nUTA-CHOICES\n(.*?)\n```", guide, re.S)
+        self.assertIsNotNone(m)
+        data = json.loads(m.group(1))
+        self.assertEqual(data["cards"][0]["questions"][0]["no"], "0")
+        self.assertTrue(os.path.isfile(os.path.join(ROOT, "grok", "chooser.html")))
+
+
 class AgentsIntakeTest(unittest.TestCase):
     def test_agents_and_guide_name_the_intake(self):
         with open(os.path.join(ROOT, "AGENTS.md"), encoding="utf-8") as fh:
