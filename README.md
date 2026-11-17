@@ -1,12 +1,12 @@
 # 亚马逊美工设计
 
-规则版本 **3.1**（2026-11-16）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
+规则版本 **3.3**（2026-11-17）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
 
 出图只有一份指引：**[UTA_STYLE.md](UTA_STYLE.md)**。写任务的 Grok 和出图的 Codex 读的是同一份。
 
 ## 怎么用
 
-**准备一次：给 Grok 装上 grok-UTAstyle skill 3.1。** 把 [grok/grok-UTAstyle-skill.md](grok/grok-UTAstyle-skill.md) 的全文放进 Grok 的项目指令或自定义指令。不方便放的话，每次开新对话时发这一句：
+**准备一次：给 Grok 装上 grok-UTAstyle skill。** 把 [grok/grok-UTAstyle-skill.md](grok/grok-UTAstyle-skill.md) 的全文放进 Grok 的项目指令或自定义指令。不方便放的话，每次开新对话时发这一句：
 
 ```
 请读取 https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/grok/grok-UTAstyle-skill.md 并按它执行。
@@ -14,7 +14,7 @@
 
 **第一步：让 Grok 写任务单。** 对它说产品名就可以开始，例如「产品：round10l，开始」。它的第一条回复会先报出读到的版本号、事实编号和参考图数量，对不上说明它没读到文件。
 
-Grok 会用选择题和你确认：这一轮做主图、副图、A+ 还是整套；A+ 用标准版还是高级版；做哪几个卖点；每张图的呈现形式、场景、宠物和标题；A+ 每一屏用哪种模块。选项覆盖不了的个性化信息它会直接问，每轮最多两个问题。你用编号回答，最后回复「确认」，它一次输出整份任务单。
+Grok 会用选择题和你确认：这一轮做主图、副图、A+ 还是整套；A+ 用标准版还是高级版；做哪几个卖点；每张图用哪个证据方案（同一个卖点有几种证明画面可选，可以留两个备选，也可以写一句自定义）、场景、宠物和标题；A+ 每一屏用哪种模块。选项覆盖不了的个性化信息它会直接问，每轮最多两个问题。你用编号回答，最后回复「确认」，它一次输出整份任务单。
 
 **第二步：把 Grok 输出的任务单交给 Codex。** 在 Codex 里打开本仓库，发：
 
@@ -35,6 +35,7 @@ Codex 会校验、逐张出图、排版、拼版、验收，最后给一份回�
 | 你要做的事 | 改哪里 |
 |---|---|
 | 新增或修改产品事实 | `products/<产品>/PRODUCT.md` |
+| 给某个卖点增加或修改证明画面 | `products/<产品>/evidence_options.csv`（列的含义见 `UTA_STYLE.md` 1.10） |
 | 补产品参考图 | 放进 `products/<产品>/ref/`，在产品卡和 [references/INDEX.csv](references/INDEX.csv) 各加一行 |
 | 把认可的成图设为锚图 | 对 Codex 说「这张做锚图」 |
 | 多张图有同一个毛病 | 改 [tools/prompt_base.txt](tools/prompt_base.txt) 里的固定提示词段落 |

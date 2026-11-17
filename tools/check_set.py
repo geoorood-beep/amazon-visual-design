@@ -27,7 +27,7 @@ import os
 import re
 import sys
 
-VERSION = "3.2"
+VERSION = "3.3"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
