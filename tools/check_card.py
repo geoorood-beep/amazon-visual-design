@@ -237,11 +237,19 @@ BASELINE_VIEWS = [
     ("top_down", "camera directly above looking straight down, the full outline and any curve visible"),
     ("three_quarter", "front three-quarter view from about 45 degrees to the side and slightly above"),
 ]
+FLAT_BASELINE_VIEWS = [
+    ("top", "camera directly above looking straight down at the upper face, the full outline and any curve visible"),
+    ("bottom", "the product turned over, camera directly above looking straight down at the underside, the full outline visible"),
+    ("long_edge", "camera level with the surface, looking straight at the long edge, showing thickness and edge profile along the whole length"),
+    ("short_edge", "camera level with the surface at one end, looking straight at the short edge, showing the thickness and the cross-section of the end"),
+    ("three_quarter", "from about 45 degrees above one corner, the upper face and the thickness visible together"),
+]
+BASELINE_FORMS = {"立体": BASELINE_VIEWS, "扁平": FLAT_BASELINE_VIEWS}
 PHOTO_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 
 
-def baseline_status(product):
-    """Status text under '## 造型基准', '' if the section has no status line, None if no section."""
+def baseline_field(product, key):
+    """Value of 'key：...' under '## 造型基准'; '' if the section lacks it, None if no section."""
     product_md = ROOT / "products" / product / "PRODUCT.md"
     if not product_md.is_file():
         return None
@@ -252,10 +260,15 @@ def baseline_status(product):
             found = found or inside
             continue
         if inside:
-            match = re.match(r"^\s*状态\s*[:：]\s*(.+?)\s*$", line)
+            match = re.match(r"^\s*" + re.escape(key) + r"\s*[:：]\s*(.+?)\s*$", line)
             if match:
                 return match.group(1)
     return "" if found else None
+
+
+def baseline_status(product):
+    """Status text under '## 造型基准', '' if the section has no status line, None if no section."""
+    return baseline_field(product, "状态")
 
 
 def check_baseline_gate(product, errors, warnings):
@@ -294,14 +307,19 @@ def print_baseline(product, photos_dir=None):
     out_dir = f"products/{product}/baseline/{version}"
     blocks = load_prompt_blocks()
 
-    views = list(BASELINE_VIEWS)
+    form = baseline_field(product, "形态") or "立体"
+    if form not in BASELINE_FORMS:
+        print(f"FAIL  {product}")
+        print(f"  - 造型基准 形态 must be one of: {', '.join(BASELINE_FORMS)} (got '{form}')")
+        return 1
+    views = list(BASELINE_FORMS[form])
     details = [b for b in identity if not b.lower().startswith("no ")]
     views += [(f"detail_{i}", f"extreme close-up of this feature only: {b}; the rest of the product may be cut off by the frame")
               for i, b in enumerate(details, start=1)]
     views += [(f"part_{i}", f"this part alone, separate from the main product, three-quarter view from slightly above: {b}")
               for i, b in enumerate(parts, start=1)]
 
-    print(f"BASELINE {product} {version}  (UTA_STYLE 1.12, 3.5)\n")
+    print(f"BASELINE {product} {version}  形态 {form}  (UTA_STYLE 1.12, 3.5)\n")
     print("ATTACH (real photos, in this order, for every view):")
     for i, photo in enumerate(photos, start=1):
         try:
