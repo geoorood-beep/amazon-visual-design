@@ -13,6 +13,12 @@ The product must match the attached product reference image exactly: same outlin
 [GEOMETRY_RULES]
 Follow the size, outline and parts list above. Copy the outline of the product in the attached product reference: do not straighten, bend, stretch, thin, thicken, enlarge or shrink it, and show nothing from the product set that is not in the parts list.
 
+[BASELINE]
+Product shape baseline render, not an advertisement. The product alone on a plain seamless mid-grey background (RGB 200,200,200). Soft, even studio light from above, a soft contact shadow, no props, no hands, no pets, no text, no logo. Long lens, no wide-angle distortion.
+
+[BASELINE_RULES]
+Copy the shape, proportions, thickness, edges and surface texture from the attached real photos exactly. Where the photos do not show a side or a part, keep it plain and simple and invent nothing: no extra holes, seams, layers, buttons, labels or parts.
+
 [PET_RULES]
 Real fur with visible strands, natural anatomy, natural eyes. The expression comes from the action. No cartoon eyes, no human-like smile.
 

@@ -5,6 +5,7 @@ Usage:
     python tools/check_card.py --task outputs/task.md     a task sheet from the card writer
     python tools/check_card.py cards/round10l/S5_clean.md one card: attach list, prompt, typesetting
     python tools/check_card.py --set cards/round10l       every card in a folder
+    python tools/check_card.py --baseline <product>       shape baseline renders for a new product (UTA_STYLE 1.12)
 
 A card that fails validation must not be used to generate an image.
 Rules are documented in UTA_STYLE.md section 2. Standard library only.
@@ -229,6 +230,102 @@ def load_product(product, errors):
     return md_facts(text), identity, md_section_bullets(text, "禁用词"), geometry
 
 
+BASELINE_VIEWS = [
+    ("front", "straight-on front view at eye level, the whole product centred"),
+    ("back", "straight-on back view at eye level, the whole product centred"),
+    ("side", "straight-on side view at the height of the product, showing its thickness and edge profile"),
+    ("top_down", "camera directly above looking straight down, the full outline and any curve visible"),
+    ("three_quarter", "front three-quarter view from about 45 degrees to the side and slightly above"),
+]
+PHOTO_EXT = {".png", ".jpg", ".jpeg", ".webp"}
+
+
+def baseline_status(product):
+    """Status text under '## 造型基准', '' if the section has no status line, None if no section."""
+    product_md = ROOT / "products" / product / "PRODUCT.md"
+    if not product_md.is_file():
+        return None
+    inside, found = False, False
+    for line in read(product_md).splitlines():
+        if line.startswith("## "):
+            inside = line[3:].strip() == "造型基准"
+            found = found or inside
+            continue
+        if inside:
+            match = re.match(r"^\s*状态\s*[:：]\s*(.+?)\s*$", line)
+            if match:
+                return match.group(1)
+    return "" if found else None
+
+
+def check_baseline_gate(product, errors, warnings):
+    status = baseline_status(product)
+    if status is None:
+        warnings.append(
+            f"products/{product}/PRODUCT.md has no '造型基准' section: "
+            "the product shape was never confirmed on its own (UTA_STYLE 1.12)"
+        )
+    elif not status.startswith("已确认"):
+        errors.append(
+            f"products/{product}: 造型基准 is '{status or '未填'}', not 已确认. "
+            "Make and confirm the shape baseline before any scene image (UTA_STYLE 1.12, 3.5)"
+        )
+
+
+def print_baseline(product, photos_dir=None):
+    """Print the attach list and one prompt per baseline view. Return an exit code."""
+    errors = []
+    _facts, identity, _forbidden, geometry = load_product(product, errors)
+    if errors:
+        print(f"FAIL  {product}")
+        for error in errors:
+            print(f"  - {error}")
+        return 1
+    product_dir = ROOT / "products" / product
+    parts = md_section_bullets(read(product_dir / "PRODUCT.md"), "Parts (prompt)")
+    photos_dir = Path(photos_dir) if photos_dir else product_dir / "photos"
+    photos = sorted(p for p in photos_dir.glob("*") if p.suffix.lower() in PHOTO_EXT) if photos_dir.is_dir() else []
+    if not photos:
+        print(f"FAIL  {product}")
+        print(f"  - no real photos in products/{product}/photos/ (png, jpg, webp). Ask the user for them.")
+        return 1
+    done = [int(d.name[1:]) for d in (product_dir / "baseline").glob("v[0-9][0-9]") if d.is_dir()]
+    version = f"v{(max(done) + 1) if done else 1:02d}"
+    out_dir = f"products/{product}/baseline/{version}"
+    blocks = load_prompt_blocks()
+
+    views = list(BASELINE_VIEWS)
+    details = [b for b in identity if not b.lower().startswith("no ")]
+    views += [(f"detail_{i}", f"extreme close-up of this feature only: {b}; the rest of the product may be cut off by the frame")
+              for i, b in enumerate(details, start=1)]
+    views += [(f"part_{i}", f"this part alone, separate from the main product, three-quarter view from slightly above: {b}")
+              for i, b in enumerate(parts, start=1)]
+
+    print(f"BASELINE {product} {version}  (UTA_STYLE 1.12, 3.5)\n")
+    print("ATTACH (real photos, in this order, for every view):")
+    for i, photo in enumerate(photos, start=1):
+        try:
+            shown = photo.relative_to(ROOT).as_posix()
+        except ValueError:
+            shown = photo.as_posix()
+        print(f"  {i}. {shown}")
+    if not geometry:
+        print("\n! no 'Geometry (prompt)' in the product card: proportions come from the photos only. Mark the sheet 比例推定.")
+    if not parts:
+        print("! no 'Parts (prompt)' in the product card: no part_<n> views. Accessories without real photos are 缺实拍.")
+    product_line = "PRODUCT: " + "; ".join(identity) + "."
+    if geometry:
+        product_line += " SIZE AND PARTS: " + "; ".join(geometry) + "."
+    for name, view in views:
+        print(f"\n=== {name} ===")
+        print(f"SAVE: {out_dir}/{name}.png")
+        print("PROMPT:")
+        print(" ".join([blocks["BASELINE"], f"VIEW: {view}.", product_line, blocks["BASELINE_RULES"]]))
+    print(f"\nTHEN: one contact sheet {out_dir}/sheet.png, each cell labelled with the view name and "
+          "有实拍 / 无实拍，推定 / 缺实拍. Report one line per cell and ask the user to answer 对 or 不对 for each.")
+    return 0
+
+
 def check_copy(copy, allowed_texts, product, product_forbidden, errors, what="copy"):
     """Forbidden words and numbers. allowed_texts: the 'allowed copy' of the facts in play."""
     global_forbidden = md_section_bullets(read(ROOT / "UTA_STYLE.md"), "禁用词")
@@ -369,6 +466,8 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
 
     product = fields["product"]
     facts, identity, product_forbidden, geometry = load_product(product, errors)
+    if not any("PRODUCT.md" in e for e in errors):
+        check_baseline_gate(product, errors, warnings)
     if fields["product"] and not geometry and not any("PRODUCT.md" in e for e in errors):
         warnings.append(
             f"products/{product}/PRODUCT.md has no 'Geometry (prompt)' bullets: "
@@ -939,10 +1038,13 @@ def main():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("target", help="a card file, a folder with --set, or a task sheet with --task")
+    parser.add_argument("target", help="a card file, a folder with --set, a task sheet with --task, or a product with --baseline")
     parser.add_argument("--set", action="store_true", help="check every card in a folder")
     parser.add_argument("--task", action="store_true", help="split a task sheet into cards and check them")
+    parser.add_argument("--baseline", action="store_true", help="shape baseline renders for a product id (UTA_STYLE 1.12)")
     args = parser.parse_args()
+    if args.baseline:
+        return print_baseline(args.target)
 
     target = Path(args.target)
     if not target.is_absolute():
