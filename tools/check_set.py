@@ -27,13 +27,15 @@ import os
 import re
 import sys
 
-VERSION = "3.10"
+VERSION = "3.11"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
 POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id", "expression_id"]
 FACE_SHOWN = {"half_body", "full_body", "group"}
-V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat"} | set(POOL_FIELDS)
+V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story"} | set(POOL_FIELDS)
+MAX_STORY_WORDS = 35
+CJK_RE = re.compile(r"[\u3400-\u9fff]")
 POOL_FILES = {"scenes": "scenes.csv", "pets": "pets.csv", "people": "people.csv",
               "expressions": "expressions.csv", "styles": "styles.csv", "moods": "moods.csv"}
 
@@ -476,6 +478,7 @@ def check_card_v2(card, views, pools=None, evidence=None):
     check_copy(card, errs)
     if pools is not None:
         check_pool_fields(card, pools, evidence, errs)
+        check_story(card, errs)
         style = pools.get("style_row")
         if style and card.f("light_setup") not in split_list(style["lights"]):
             errs.append("风格 %s（%s）只配光型 %s，这张卡是 %s" % (style["id"], style["name"], style["lights"], card.f("light_setup")))
@@ -555,6 +558,28 @@ def check_pool_fields(card, pools, evidence, errs):
         mid = card.f("person_mood_id").strip()
         if mid not in pools["moods"]:
             errs.append("person_mood_id %s 不在人物情绪池 pools/moods.csv 里" % mid)
+
+
+def check_story(card, errs):
+    """1.14: a card with a pet or a person carries a one-sentence English story."""
+    story = card.f("story", "").strip()
+    needs = not (card.is_none("pet") and card.is_none("human_action"))
+    if story.lower() in ("", "none"):
+        if needs:
+            errs.append("有宠物或人物的图要写 story：一句英文，谁、什么时刻、什么情绪、卖点怎么被看见（1.14）")
+        return
+    if CJK_RE.search(story):
+        errs.append("story 要用英文写")
+    if len(story.split()) > MAX_STORY_WORDS:
+        errs.append("story 超过 %d 个词，写成一句话" % MAX_STORY_WORDS)
+    hits = positive_hits(DURATION_RE, story)
+    if hits:
+        errs.append("story 写了时长说法（%s），会暗示没确认的续航（1.14、2.7）" % ", ".join(sorted(set(hits))))
+    hits = positive_hits(STRUCTURE_RE, story)
+    if hits:
+        errs.append("story 写了参考图看不到的结构或特效（%s）（1.14、2.7）" % ", ".join(sorted(set(hits))))
+    if POINT_RE.search(story):
+        errs.append("story 写了指着产品的动作（1.2）")
 
 
 def check_card_legacy(card):
@@ -723,6 +748,17 @@ def pool_rules(ts, evidence, pools=None):
             if row and row["shown"].strip() in FACE_SHOWN:
                 return True
         return False
+
+    stories = []
+    for t, name, cards in units:
+        text = " ".join(c.f("story") for c in cards if not c.is_none("story"))
+        if text:
+            stories.append((name, words(text)))
+    for i, (a, wa) in enumerate(stories):
+        for b, wb in stories[i + 1:]:
+            sim = jaccard(wa, wb)
+            if sim >= 0.5:
+                warns.append(("K-4", "%s 和 %s 的故事相似度 %.2f：换一个时刻、人物或情绪" % (a, b, sim)))
 
     if len(subs) >= 5 and not any(has_face(u[2]) for u in subs):
         fails.append(("K-3", "副图有 %d 张，没有一张是有人物出镜的情景（只出手不算）" % len(subs)))
@@ -972,6 +1008,8 @@ def compile_card(card, pools=None):
         if image:
             if key == "evidence":
                 f = card.fields
+                if not card.is_none("story"):
+                    val = join_sentence("Story: %s" % card.f("story").strip().rstrip("."), val)
                 bits = [SHOT_TEXT[f["shot_size"]].format(focus=focus_label(f["focus"])),
                         VIEW_TEXT[f["product_view"]],
                         ("The sharpest point of the picture is %s." % focus_label(f["focus"]))

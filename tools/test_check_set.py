@@ -350,6 +350,32 @@ class PoolRules(Base):
         s1 = self.card_block(read(emit), "S1_together.md")
         self.assertIn("Mood: a soft genuine smile, eyes on the pet; not looking at the camera.", s1)
 
+    def test_story_required_with_pet_or_person(self):
+        text = re.sub(r"(?m)^story: Same spot after a refill.*\n", "", read(V2))
+        code, out, _ = self.run_text(text)
+        self.assertIn("有宠物或人物的图要写 story", out)
+
+    def test_story_guards(self):
+        old = "story: A curious orange cat taps the rim"
+        code, out, _ = self.run_text(self.mutate(old, "story: 一只橘猫 taps the rim"))
+        self.assertIn("story 要用英文写", out)
+        code, out, _ = self.run_text(self.mutate(old, "story: After a weekend away, a curious orange cat taps the rim"))
+        self.assertIn("story 写了时长说法（weekend）", out)
+        code, out, _ = self.run_text(self.mutate(old, "story: The pump hums as a curious orange cat taps the rim"))
+        self.assertIn("story 写了参考图看不到的结构或特效（pump）", out)
+
+    def test_story_leads_the_evidence(self):
+        code, out, emit = self.run_task(V2)
+        s1 = self.card_block(read(emit), "S1_together.md")
+        self.assertIn("evidence: Story: Late afternoon at home: the cat and the dog who never share anything", s1)
+        self.assertNotIn("\nstory:", read(emit))
+
+    def test_similar_stories_warn(self):
+        text = self.mutate("story: In the sunroom the cat and the dog lean in from opposite sides and drink together, faces almost touching, a small peace between rivals.",
+                           "story: Late afternoon at home: the cat and the dog who never share anything drink side by side from one basin, and the woman smiles at the truce.")
+        code, out, _ = self.run_text(text)
+        self.assertIn("WARN [K-4] S1 和 P1 的故事相似度", out)
+
     def test_pools_reach_the_compiled_card(self):
         code, out, emit = self.run_task(V2)
         s2 = self.card_block(read(emit), "S2_capacity.md")
