@@ -89,6 +89,16 @@ class WiringTest(unittest.TestCase):
             self.assertIn("`%s`" % field, section, field)
 
 
+class BootstrapTest(unittest.TestCase):
+    def test_bootstrap_points_at_the_live_skill(self):
+        with open(os.path.join(ROOT, "grok", "BOOTSTRAP.md"), encoding="utf-8") as fh:
+            text = fh.read()
+        url = "https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/grok/grok-UTAstyle-skill.md"
+        self.assertIn(url, text)
+        self.assertTrue(os.path.isfile(os.path.join(ROOT, "grok", "grok-UTAstyle-skill.md")))
+        self.assertIn("每次都重新读取", text)
+
+
 class AgentsIntakeTest(unittest.TestCase):
     def test_agents_and_guide_name_the_intake(self):
         with open(os.path.join(ROOT, "AGENTS.md"), encoding="utf-8") as fh:
