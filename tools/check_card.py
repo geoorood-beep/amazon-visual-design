@@ -216,16 +216,17 @@ def normalise_numbers(text):
 
 
 def load_product(product, errors):
-    """Return (facts, identity bullets, forbidden words) for a product id."""
+    """Return (facts, identity bullets, forbidden words, geometry bullets) for a product id."""
     product_md = ROOT / "products" / product / "PRODUCT.md"
     if not re.fullmatch(r"[a-z0-9_]+", product) or not product_md.is_file():
         errors.append(f"product '{product}' has no products/{product}/PRODUCT.md")
-        return {}, [], []
+        return {}, [], [], []
     text = read(product_md)
     identity = md_section_bullets(text, "Identity (prompt)")
     if not identity:
         errors.append(f"products/{product}/PRODUCT.md has no 'Identity (prompt)' bullets")
-    return md_facts(text), identity, md_section_bullets(text, "禁用词")
+    geometry = md_section_bullets(text, "Geometry (prompt)")
+    return md_facts(text), identity, md_section_bullets(text, "禁用词"), geometry
 
 
 def check_copy(copy, allowed_texts, product, product_forbidden, errors, what="copy"):
@@ -367,7 +368,12 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
             errors.append(f"canvas for {slot} must be {canvas}")
 
     product = fields["product"]
-    facts, identity, product_forbidden = load_product(product, errors)
+    facts, identity, product_forbidden, geometry = load_product(product, errors)
+    if fields["product"] and not geometry and not any("PRODUCT.md" in e for e in errors):
+        warnings.append(
+            f"products/{product}/PRODUCT.md has no 'Geometry (prompt)' bullets: "
+            "size, outline and parts are not locked (UTA_STYLE 1.11)"
+        )
 
     selling_point, fact = fields["selling_point"], None
     if is_none(selling_point):
@@ -443,7 +449,7 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
         return errors, warnings, None
     context = {
         "type": "image", "fields": fields, "kind": kind, "panel": is_panel,
-        "identity": identity, "attach": attach, "path": path, **look,
+        "identity": identity, "geometry": geometry, "attach": attach, "path": path, **look,
     }
     return errors, warnings, context
 
@@ -475,7 +481,7 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
     if fields["canvas"] != "2.44:1":
         errors.append(f"canvas for {slot} must be 2.44:1")
     product = fields["product"]
-    facts, _identity, product_forbidden = load_product(product, errors)
+    facts, _identity, product_forbidden, _geometry = load_product(product, errors)
 
     for key in ("headline", "subtitle"):
         if is_none(fields[key]):
@@ -597,6 +603,8 @@ def build_prompt(context, blocks):
     else:
         out.append("STYLE: " + blocks["STYLE"])
     out.append("PRODUCT: " + "; ".join(context["identity"]) + ". " + blocks["PRODUCT_RULES"])
+    if context.get("geometry"):
+        out.append("SIZE AND PARTS: " + "; ".join(context["geometry"]) + ". " + blocks["GEOMETRY_RULES"])
     if kind != "M":
         out.append("SCENE: " + fields["scene"].rstrip(".") + ".")
         action = ["WHAT IS HAPPENING: " + fields["evidence"].rstrip(".") + "."]
