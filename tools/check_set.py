@@ -27,14 +27,15 @@ import os
 import re
 import sys
 
-VERSION = "3.9"
+VERSION = "3.10"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
-POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "expression_id"]
+POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id", "expression_id"]
+FACE_SHOWN = {"half_body", "full_body", "group"}
 V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat"} | set(POOL_FIELDS)
 POOL_FILES = {"scenes": "scenes.csv", "pets": "pets.csv", "people": "people.csv",
-              "expressions": "expressions.csv", "styles": "styles.csv"}
+              "expressions": "expressions.csv", "styles": "styles.csv", "moods": "moods.csv"}
 
 SHOT_ORDER = ["extreme_close", "close", "medium", "full", "wide"]
 CLOSE_SHOTS = {"extreme_close", "close"}
@@ -544,6 +545,16 @@ def check_pool_fields(card, pools, evidence, errs):
             errs.append("person_id %s 不在人物池 pools/people.csv 里" % hid)
         elif INTERACTIONS.get(inter) == "human" and row["shown"].strip() != "hands":
             errs.append("演示操作只出手和小臂（1.7）：%s 是 %s" % (hid, row["shown"].strip()))
+        elif row["shown"].strip() in FACE_SHOWN and card.is_none("person_mood_id"):
+            errs.append("情景里出镜的人物 %s 要写 person_mood_id（人物情绪池，1.7）" % hid)
+        elif row["shown"].strip() == "hands" and not card.is_none("person_mood_id"):
+            errs.append("只出手的人物看不到脸，person_mood_id 写 none")
+    if card.is_none("person_id") and not card.is_none("person_mood_id"):
+        errs.append("没有人物时 person_mood_id 写 none")
+    if not card.is_none("person_mood_id"):
+        mid = card.f("person_mood_id").strip()
+        if mid not in pools["moods"]:
+            errs.append("person_mood_id %s 不在人物情绪池 pools/moods.csv 里" % mid)
 
 
 def check_card_legacy(card):
@@ -625,7 +636,7 @@ def image_units(ts):
     return units
 
 
-def pool_rules(ts, evidence):
+def pool_rules(ts, evidence, pools=None):
     """E-1, E-3, K-1, K-2 (2.6). Return (fails, warns)."""
     fails, warns = [], []
     units = [u for u in image_units(ts)
@@ -705,6 +716,19 @@ def pool_rules(ts, evidence):
         same = set(ids(a[2], "expression_id")) & set(ids(b[2], "expression_id"))
         if same:
             fails.append(("K-2", "相邻两张副图 %s 和 %s 用同一个表情 %s" % (a[1], b[1], ", ".join(sorted(same)))))
+
+    def has_face(cards):
+        for c in cards:
+            row = (pools or {}).get("people", {}).get(c.f("person_id").strip())
+            if row and row["shown"].strip() in FACE_SHOWN:
+                return True
+        return False
+
+    if len(subs) >= 5 and not any(has_face(u[2]) for u in subs):
+        fails.append(("K-3", "副图有 %d 张，没有一张是有人物出镜的情景（只出手不算）" % len(subs)))
+    aplus = [u for u in units if u[0] == "P"]
+    if len(ts.screens) >= 4 and not any(has_face(u[2]) for u in aplus):
+        fails.append(("K-3", "A+ 有 %d 屏，没有一屏是有人物出镜的情景（只出手不算）" % len(ts.screens)))
     return fails, warns
 
 
@@ -712,7 +736,7 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
     """Return (fails, warns). Each item is (rule_id, message)."""
     fails, warns = [], []
     if strict and pools:
-        f2, w2 = pool_rules(ts, evidence)
+        f2, w2 = pool_rules(ts, evidence, pools if isinstance(pools, dict) else None)
         fails += f2
         warns += w2
     out = fails if strict else warns
@@ -966,6 +990,9 @@ def compile_card(card, pools=None):
                 row = pools["people"].get(card.f("person_id").strip())
                 if row:
                     val = join_sentence(val, "Person: %s." % row["look_en"].strip().rstrip("."))
+                    mood = pools.get("moods", {}).get(card.f("person_mood_id").strip())
+                    if mood:
+                        val = join_sentence(val, "Mood: %s; not looking at the camera." % mood["look_en"].strip().rstrip("."))
             elif key == "pet_action" and pools and not card.is_none("expression_id"):
                 looks = [pools["expressions"][e]["look_en"].strip().rstrip(".")
                          for e in pool_ids(card, "expression_id") if e in pools["expressions"]]
@@ -1103,7 +1130,7 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
             p("WARN [2.8] 没有上一次的整套 %s，跳过 2.6" % state)
             run_set = False
 
-    fails, warns = (set_rules(TaskSet(set_cards), views, strict=True, evidence=evidence, pools=True)
+    fails, warns = (set_rules(TaskSet(set_cards), views, strict=True, evidence=evidence, pools=pools)
                     if run_set else ([], []))
     for rid, msg in fails:
         p("SET FAIL [%s] %s" % (rid, msg))

@@ -3,5 +3,11 @@ HP01,女性的手（浅肤色）,hands,"a woman's hands with light skin and shor
 HP02,男性的手（中等肤色）,hands,"a man's hands with a medium skin tone, a rolled-up denim shirt sleeve",
 HP03,女性的手（深肤色）,hands,"a woman's hands with deep brown skin, a white cotton sleeve, one thin gold ring",
 HP04,年长女性的手,hands,"an older woman's hands with fair skin, a grey cardigan sleeve",
-HP05,三十多岁女性（半身）,half_body,"a woman in her thirties with light brown hair in a loose bun, an oatmeal sweater, relaxed, looking at the pet rather than the camera",只用于宠物和人互动的生活场景，不用于演示操作
-HP06,三十多岁男性（半身）,half_body,"a man in his thirties with short dark hair and light stubble, an olive T-shirt, relaxed, looking at the pet rather than the camera",只用于宠物和人互动的生活场景，不用于演示操作
+HP05,三十多岁女性（半身）,half_body,"a woman in her thirties with light brown hair in a loose bun, an oatmeal sweater, relaxed, looking at the pet rather than the camera",情景图用；演示操作不用
+HP06,三十多岁男性（半身）,half_body,"a man in his thirties with short dark hair and light stubble, an olive T-shirt, relaxed, looking at the pet rather than the camera",情景图用；演示操作不用
+HP07,三十多岁女性（全身）,full_body,"a woman in her thirties in a soft grey sweater and jeans, barefoot at home",
+HP08,三十多岁男性（全身）,full_body,"a man in his thirties in a navy knit sweater and chinos",
+HP09,一对夫妻,group,"a couple in their thirties in relaxed homewear",
+HP10,一家三口,group,"a mother and a father in their thirties and a girl of about six, all in cosy homewear",
+HP11,六十多岁女性（全身）,full_body,"a woman in her sixties with short silver hair and a long cardigan",
+HP12,二十多岁男性（半身）,half_body,"a man in his twenties with curly hair and a hoodie",

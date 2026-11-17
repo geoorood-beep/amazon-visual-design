@@ -328,6 +328,28 @@ class PoolRules(Base):
         code, out, _ = self.run_text(self.mutate("style: ST02", "style: ST04"))
         self.assertIn("风格 ST04（萌宠海报风）只配光型", out)
 
+    def test_operation_hands_have_no_mood(self):
+        code, out, _ = self.run_text(self.mutate("person_id: HP02\nperson_mood_id: none", "person_id: HP02\nperson_mood_id: MD01"))
+        self.assertIn("只出手的人物看不到脸", out)
+
+    def test_scene_person_needs_mood(self):
+        code, out, _ = self.run_text(self.mutate("person_id: HP05\nperson_mood_id: MD01", "person_id: HP05\nperson_mood_id: none"))
+        self.assertIn("情景里出镜的人物 HP05 要写 person_mood_id", out)
+
+    def test_scenes_need_people(self):
+        text = self.mutate("person_id: HP05\nperson_mood_id: MD01", "person_id: HP01\nperson_mood_id: none")
+        code, out, _ = self.run_text(text)
+        self.assertEqual(code, 2, out)
+        self.assertIn("SET FAIL [K-3] 副图有 6 张，没有一张是有人物出镜的情景", out)
+        text = self.mutate("person_id: HP08\nperson_mood_id: MD03", "person_id: HP02\nperson_mood_id: none")
+        code, out, _ = self.run_text(text)
+        self.assertIn("SET FAIL [K-3] A+ 有 7 屏", out)
+
+    def test_mood_reaches_the_prompt(self):
+        code, out, emit = self.run_task(V2)
+        s1 = self.card_block(read(emit), "S1_together.md")
+        self.assertIn("Mood: a soft genuine smile, eyes on the pet; not looking at the camera.", s1)
+
     def test_pools_reach_the_compiled_card(self):
         code, out, emit = self.run_task(V2)
         s2 = self.card_block(read(emit), "S2_capacity.md")
