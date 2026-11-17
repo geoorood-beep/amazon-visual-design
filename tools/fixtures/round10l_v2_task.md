@@ -231,6 +231,7 @@ module: scene
 edition: premium
 tone: light
 beat: hook
+eyebrow: CATS AND DOGS
 selling_point: F4
 evidence: Close on the rim of the basin, a ragdoll cat and a golden retriever drink side by side, faces almost touching, water rippling between them
 human_action: none
@@ -318,6 +319,7 @@ module: grid
 edition: premium
 tone: light
 beat: detail
+eyebrow: THE DETAILS
 selling_point: none
 headline: Details You Can See
 subtitle: Brushed steel, a clear window, room for two.

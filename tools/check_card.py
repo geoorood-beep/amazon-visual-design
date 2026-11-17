@@ -80,15 +80,16 @@ MODULE_KEYS = [
     "card_version", "product", "slot", "canvas", "module", "selling_point",
     "headline", "subtitle", "hero_number", "panels", "lines", "refs",
 ]
-OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone"]
+OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow"]
 ALL_KEYS = set(IMAGE_KEYS) | set(MODULE_KEYS) | set(OPTIONAL_KEYS)
 ENGLISH_FIELDS = [
     "evidence", "human_action", "pet", "pet_action", "scene", "light",
-    "headline", "subtitle", "hero_number", "label", "lines",
+    "headline", "subtitle", "hero_number", "label", "lines", "eyebrow",
 ]
 MAX_HEADLINE_WORDS = 6
 MAX_SUBTITLE_WORDS = 10
 MAX_LABEL_WORDS = 4
+MAX_EYEBROW_WORDS = 4
 SLOT = re.compile(r"(M1|S[1-9]|P[1-8])([a-d]?)")
 CJK = re.compile(r"[　-〿㐀-鿿＀-￯]")
 NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
@@ -329,6 +330,12 @@ def validate(path, index):
     elif not is_none(fields.get("edition")) or not is_none(fields.get("tone")):
         errors.append("'edition' and 'tone' are only for P1-P8 cards, not for panels, M1 or S cards")
     look = {"edition": edition, "tone": tone}
+    if not is_none(fields.get("eyebrow")):
+        if kind != "P" or is_panel:
+            errors.append("'eyebrow' is only for P1-P8 screen cards, not for panels, M1 or S cards")
+        elif edition != "premium":
+            errors.append("eyebrow: only the premium edition has an eyebrow line")
+        check_words(fields, "eyebrow", MAX_EYEBROW_WORDS, errors)
 
     if kind == "P" and not is_panel and module != "scene":
         return validate_module(path, fields, refs, errors, warnings, module, look, index)
@@ -417,7 +424,7 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
     if not is_none(fields["hero_number"]) and not NUMBER.search(fields["hero_number"]):
         errors.append("hero_number must contain a number, or be none")
     copy = " ".join(
-        fields[k] for k in ("headline", "subtitle", "hero_number", "label") if not is_none(fields.get(k))
+        fields[k] for k in ("eyebrow", "headline", "subtitle", "hero_number", "label") if not is_none(fields.get(k))
     )
     check_copy(copy, [fact["allowed"]] if fact else [], product, product_forbidden, errors)
 
@@ -559,7 +566,7 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
     elif not is_none(fields["lines"]):
         errors.append("'lines' is only for a specs module")
 
-    copy = " ".join(fields[k] for k in ("headline", "subtitle", "hero_number") if not is_none(fields[k]))
+    copy = " ".join(fields[k] for k in ("eyebrow", "headline", "subtitle", "hero_number") if not is_none(fields.get(k)))
     allowed_texts = [facts[f]["allowed"] for f in sorted(used_facts) if f in facts]
     check_copy(copy, allowed_texts, product, product_forbidden, errors)
 
@@ -613,6 +620,11 @@ def build_prompt(context, blocks):
             f"TEXT: {blocks['TEXT_RULES']} Clear area: the {fields['text_area']} third of the "
             "frame, inside the middle band."
         )
+        if context.get("edition") == "premium":
+            out[-1] += (
+                " Keep the lower half of that side especially calm and low in detail, "
+                "because on the phone the text sits there."
+            )
     else:
         area = fields["text_area"].replace("_", " ")
         out.append(f"TEXT: {blocks['TEXT_RULES']} Clear area: {area}.")
@@ -631,6 +643,8 @@ def output_stem(context):
 
 
 def print_copy(fields):
+    if not is_none(fields.get("eyebrow")):
+        print(f"eyebrow (amber, all caps): {fields['eyebrow']}")
     print(f"headline: {fields['headline']}")
     print(f"subtitle: {fields['subtitle']}")
     if not is_none(fields["hero_number"]):
@@ -662,8 +676,12 @@ def print_package(context, blocks):
     elif kind == "P":
         print("== TYPESET AFTER GENERATION: two files from this one image (UTA_STYLE.md 1.9) ==")
         print(f"save the image without text as: {stem}_base_v01.png")
-        print(f"desktop {stem}_desktop_1464x600_v01.png : crop the middle band, text on the {fields['text_area']}")
-        print(f"mobile  {stem}_mobile_600x450_v01.png  : text band on top, image below")
+        if context["edition"] == "premium":
+            print(f"desktop {stem}_desktop_1464x600_v01.png : full bleed, white text on a gradient on the {fields['text_area']}")
+            print(f"mobile  {stem}_mobile_600x450_v01.png  : full bleed, text on the image at the lower {fields['text_area']}")
+        else:
+            print(f"desktop {stem}_desktop_1464x600_v01.png : crop the middle band, text on the {fields['text_area']}")
+            print(f"mobile  {stem}_mobile_600x450_v01.png  : text band on top, image below")
         print(f"edition: {context['edition']}   tone: {context['tone']}")
         print_copy(fields)
     else:
