@@ -1,0 +1,7 @@
+id,name,shown,look_en,note
+HP01,女性的手（浅肤色）,hands,"a woman's hands with light skin and short natural nails, a cream knit sleeve pushed to the forearm",
+HP02,男性的手（中等肤色）,hands,"a man's hands with a medium skin tone, a rolled-up denim shirt sleeve",
+HP03,女性的手（深肤色）,hands,"a woman's hands with deep brown skin, a white cotton sleeve, one thin gold ring",
+HP04,年长女性的手,hands,"an older woman's hands with fair skin, a grey cardigan sleeve",
+HP05,三十多岁女性（半身）,half_body,"a woman in her thirties with light brown hair in a loose bun, an oatmeal sweater, relaxed, looking at the pet rather than the camera",只用于宠物和人互动的生活场景，不用于演示操作
+HP06,三十多岁男性（半身）,half_body,"a man in his thirties with short dark hair and light stubble, an olive T-shirt, relaxed, looking at the pet rather than the camera",只用于宠物和人互动的生活场景，不用于演示操作

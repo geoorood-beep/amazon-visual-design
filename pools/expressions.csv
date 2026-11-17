@@ -1,0 +1,13 @@
+id,name,look_en,interactions,ref,avoid
+EX01,专注喝水,"eyes half closed in focus, tongue lapping the water, ears relaxed",drink;share_drink,docs/uta_style_v3/assets/key/XHS_003.jpg,张大嘴
+EX02,好奇探头,"eyes wide and round, whiskers forward, head tilted, leaning in",inspect;wait;human,docs/uta_style_v3/assets/key/EXP_011.jpg,鱼眼变形过度
+EX03,安心熟睡,"eyes fully closed, chin resting on the paws, body loose and curled",rest,docs/uta_style_v3/assets/key/XHS_002.jpg,
+EX04,慵懒半睁眼,"eyes half open and sleepy, ears soft, body stretched out",rest;wait,docs/uta_style_v3/assets/key/EXP_014.jpg,
+EX05,盯住目标,"eyes locked on the moving hand or cloth, pupils slightly wide, ears pricked",inspect;wait;human,docs/uta_style_v3/assets/key/XHS_004.jpg,扑咬
+EX06,伸爪试探,"one paw raised toward the rim, eyes fixed on the paw, ears forward",paw_touch,docs/uta_style_v3/assets/key/EXP_007.jpg,爪子遮住水窗
+EX07,满足舔嘴,"just finished drinking, tongue licking the nose, eyes soft",drink;rest,docs/uta_style_v3/assets/key/F_emotion_lick_DPMNQJ2N.jpg,
+EX08,平视凝视,"eyes level with the water, steady calm gaze, nose close to the surface",inspect;drink;wait,docs/uta_style_v3/assets/key/XHS_014.jpg,
+EX09,放松张嘴,"mouth softly open, relaxed tongue, bright eyes, tail mid-wag",wait;share_drink;drink;human,,只用于狗
+EX10,闭眼享受,"eyes closed, face tilted up into the light, whiskers relaxed",rest;wait,docs/uta_style_v3/assets/key/XHS_017.jpg,
+EX11,竖耳警觉,"head up, ears pricked toward the movement, eyes alert",wait;inspect;human,,惊吓
+EX12,歪头疑惑,"head tilted to one side, one ear turned, eyes curious",inspect;wait;human,,拟人化表情
