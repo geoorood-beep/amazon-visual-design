@@ -6,7 +6,7 @@
 
 ## 怎么用
 
-**准备一次：给 Grok 装上 grok-UTAstyle skill。** 把 [grok/grok-UTAstyle-skill.md](grok/grok-UTAstyle-skill.md) 的全文放进 Grok 的项目指令或自定义指令。不方便放的话，每次开新对话时发这一句：
+**准备一次：给 Grok 装上启动指令。** 把 [grok/BOOTSTRAP.md](grok/BOOTSTRAP.md) 方框里的一小段放进 Geo / Grok 的项目指令或 skill。它每次开新对话都会去仓库读最新的 [grok/grok-UTAstyle-skill.md](grok/grok-UTAstyle-skill.md)，以后 skill 更新了不用再重新粘贴。不方便放的话，每次开新对话时发这一句：
 
 ```
 请读取 https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/grok/grok-UTAstyle-skill.md 并按它执行。

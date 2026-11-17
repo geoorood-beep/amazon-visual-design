@@ -1,6 +1,6 @@
 # grok-UTAstyle skill
 
-UTA Style 出图调度。把本文件全文放进 Grok 的项目指令（或自定义指令），或在每次对话开头发给 Grok。
+UTA Style 出图调度。推荐的装法：只把 `grok/BOOTSTRAP.md` 里那一小段放进 Grok 的项目指令，它每次都会来读本文件的最新版；不要把本文件全文粘进去，否则仓库更新后那份副本就过时了。
 
 本文件不写规范版本号。版本以每次启动读到的 `UTA_STYLE.md` 为准。
 
