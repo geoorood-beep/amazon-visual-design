@@ -10,6 +10,9 @@ One directional daylight source from a window. Crisp, directional cast shadows o
 [PRODUCT_RULES]
 The product must match the attached product reference image exactly: same outline, proportions, parts and part positions. Do not add, remove or restyle any part. Show the whole product in frame unless the card explicitly asks for a close shot or an extreme close-up. Being close to the floor or the counter is not a close shot. Only a close shot or an extreme close-up may crop the product, and every part that remains visible must match the reference, including its shape. Do not use cropping to change the outline. The focused part of the product is sharp, and the product never glows.
 
+[GEOMETRY_RULES]
+Follow the size, outline and parts list above. Copy the outline of the product in the attached product reference: do not straighten, bend, stretch, thin, thicken, enlarge or shrink it, and show nothing from the product set that is not in the parts list.
+
 [PET_RULES]
 Real fur with visible strands, natural anatomy, natural eyes. The expression comes from the action. No cartoon eyes, no human-like smile.
 

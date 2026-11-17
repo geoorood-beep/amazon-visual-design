@@ -52,6 +52,31 @@ class CheckCardTest(unittest.TestCase):
         self.assertIn("Attached image 1 is the product reference", prompt)
         self.assertNotIn("Easy to Clean", prompt, "copy must not reach the image model")
 
+    def test_geometry_reaches_the_prompt(self):
+        card = ROOT / "cards" / "round10l" / "S5_clean.md"
+        _errors, warnings, context = check_card.validate(card, self.index)
+        prompt = check_card.build_prompt(context, check_card.load_prompt_blocks())
+        self.assertIn("SIZE AND PARTS: exactly one fountain in frame", prompt)
+        self.assertIn("do not straighten, bend, stretch, thin", prompt)
+        self.assertFalse(any("Geometry (prompt)" in w for w in warnings), warnings)
+
+    def test_missing_geometry_warns_and_prompt_skips_it(self):
+        original = check_card.md_section_bullets
+
+        def no_geometry(text, heading):
+            return [] if heading == "Geometry (prompt)" else original(text, heading)
+
+        check_card.md_section_bullets = no_geometry
+        try:
+            card = ROOT / "cards" / "round10l" / "S5_clean.md"
+            errors, warnings, context = check_card.validate(card, self.index)
+        finally:
+            check_card.md_section_bullets = original
+        self.assertEqual(errors, [])
+        self.assertTrue(any("Geometry (prompt)" in w and "1.11" in w for w in warnings), warnings)
+        prompt = check_card.build_prompt(context, check_card.load_prompt_blocks())
+        self.assertNotIn("SIZE AND PARTS", prompt)
+
     def test_number_outside_the_fact_is_rejected(self):
         self.assert_rejected("hero_number: none", "hero_number: 25 dB", "number '25'")
 
