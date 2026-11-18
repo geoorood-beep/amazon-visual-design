@@ -29,13 +29,13 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.30"
+VERSION = "3.31"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
 POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id", "expression_id"]
 FACE_SHOWN = {"half_body", "full_body", "group"}
-V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect"} | set(POOL_FIELDS)
+V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect", "lens"} | set(POOL_FIELDS)
 MAX_STORY_WORDS = 35
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
 POOL_FILES = {"scenes": "scenes.csv", "pets": "pets.csv", "people": "people.csv",
@@ -111,6 +111,24 @@ STRUCTURE_RE = re.compile(
     r"inner structure|pump|filter|filters|cartridge|LED|light-up)\b", re.I)
 NEGATION = {"no", "not", "without", "never", "nor"}
 EFFECTS = ["none", "xray", "cutaway", "exploded", "flow_path"]
+LENSES = ["standard", "wide_close", "ground_level", "action_freeze", "peek_frame", "pet_pov", "hero_low"]
+PRODUCT_SAFE = ("The product itself stays undistorted, upright and true to the product reference; keep it away "
+                "from the frame edges where a wide lens would stretch it.")
+LENS_TEXT = {
+    "wide_close": ("Wide-angle lens right up close to the pet's face: the face looms large in the foreground with "
+                   "exaggerated depth, the product smaller in the middle ground near the centre of the frame. " + PRODUCT_SAFE),
+    "ground_level": ("Camera resting on the floor at the pet's eye height, the pet coming toward the lens, the floor "
+                     "stretching away behind; the product stands full and upright behind or beside the pet. " + PRODUCT_SAFE),
+    "action_freeze": ("Very fast shutter freezing the action mid-motion: ears flying, paws off the ground, droplets or "
+                      "kibble hanging in the air; the product perfectly sharp and still. " + PRODUCT_SAFE),
+    "peek_frame": ("Shot past a soft, out-of-focus foreground object (a door frame, sofa edge or table edge) that "
+                   "frames the scene, as if peeking in on the moment. " + PRODUCT_SAFE),
+    "pet_pov": ("From the pet's point of view at floor height looking at the product, as if the viewer were the pet; "
+                "a soft whisker or paw edge in the near foreground. " + PRODUCT_SAFE),
+    "hero_low": ("Very low camera angled up: the pet and the product stand tall and bold against a bright ceiling or "
+                 "window, heroic and confident; vertical lines on the product stay straight. " + PRODUCT_SAFE),
+}
+IMPACT = {"calm": (0, 0, 1), "balanced": (2, 1, 2), "bold": (-1, 2, 4)}   # (min special subs, min special A+, max vivid)
 EFFECT_WORDS = {"xray", "cutaway", "crosssection", "exploded", "seethrough", "internalstructure", "innerstructure"}
 EFFECT_TEXT = {
     "xray": ("Product X-ray effect: parts of the outer shell are rendered semi-transparent like clear frosted "
@@ -565,6 +583,9 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
         errs.append("%s 的 focus 不能是 whole，写出焦点部位" % shot)
     usage = (pools or {}).get("usage")
     card.allowed_structure = allowed_structure(card, usage)
+    lens = card.f("lens", "standard").strip() or "standard"
+    if lens not in LENSES:
+        errs.append("lens 要写 %s 之一（1.17）" % " / ".join(LENSES))
     effect = card.f("effect", "none").strip() or "none"
     if effect not in EFFECTS:
         errs.append("effect 要写 %s 之一（1.16）" % " / ".join(EFFECTS))
@@ -917,6 +938,31 @@ def angle_rules(imgs, pair_id, effect_id, label, max_effects):
     return out
 
 
+def is_vivid(card, pools):
+    rows = (pools or {}).get("expressions", {})
+    return any((rows.get(e, {}).get("level") or "").strip() == "夸张" for e in pool_ids(card, "expression_id"))
+
+
+def impact_rules(ts, pools):
+    """S-11 / A-16 special lenses, K-6 exaggerated expressions, by the task's impact level (1.17)."""
+    out = []
+    level = (pools or {}).get("impact", "balanced")
+    min_sub, min_aplus, max_vivid = IMPACT[level]
+    subs, imgs = ts.subs, ts.aplus_images()
+    special = lambda cs: [c.slot for c in cs if (c.f("lens", "standard").strip() or "standard") != "standard"]
+    n = len(subs)
+    need = int(math.ceil(n / 2.0)) if min_sub < 0 else min_sub
+    if n >= 5 and len(special(subs)) < need:
+        out.append(("S-11", "冲击力 %s：副图里特殊镜头（lens 不是 standard）只有 %d 张，至少 %d 张" % (level, len(special(subs)), need)))
+    if len(imgs) >= 4 and len(special(imgs)) < min_aplus:
+        out.append(("A-16", "冲击力 %s：A+ 里特殊镜头只有 %d 张，至少 %d 张" % (level, len(special(imgs)), min_aplus)))
+    for label, cs in (("主图和副图", subs), ("A+", imgs)):
+        vivid = [c.slot for c in cs if is_vivid(c, pools)]
+        if len(vivid) > max_vivid:
+            out.append(("K-6", "冲击力 %s：%s里夸张表情用了 %d 张：%s；最多 %d 张" % (level, label, len(vivid), ", ".join(vivid), max_vivid)))
+    return out
+
+
 def usage_warnings(ts, usage):
     """U-1: a card's view, camera or shot is outside what its fact usually needs (1.16). Warning only."""
     warns = []
@@ -929,6 +975,13 @@ def usage_warnings(ts, usage):
             want = [w for w in req.get(key, []) if w]
             if want and c.f(field) not in want:
                 miss.append("%s 建议 %s" % (field, "/".join(want)))
+        for key, field, label in (("moods", "person_mood_id", "人物情绪"), ("expressions", "expression_id", "宠物表情"),
+                                  ("lenses", "lens", "镜头")):
+            want = [w for w in req.get(key, []) if w]
+            have = [x for x in split_list(c.f(field, "standard" if field == "lens" else "none").replace("+", ";"))
+                    if x and x != "none"]
+            if want and have and not any(h in want for h in have):
+                miss.append("%s建议 %s" % (label, "/".join(want)))
         if req.get("effect") and (c.f("effect", "none").strip() or "none") == "none":
             miss.append("可以考虑 effect=%s（先确认内部结构）" % req["effect"])
         if miss:
@@ -941,6 +994,8 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
     fails, warns = [], []
     if strict and isinstance(pools, dict) and pools.get("usage"):
         warns += usage_warnings(ts, pools["usage"])
+    if strict and isinstance(pools, dict):
+        fails += impact_rules(ts, pools)
     if strict and pools:
         f2, w2 = pool_rules(ts, evidence, pools if isinstance(pools, dict) else None)
         fails += f2
@@ -1204,6 +1259,9 @@ def compile_card(card, pools=None):
                         ("The sharpest point of the picture is %s." % focus_label(f["focus"]))
                         if f["focus"] != "whole" else "The whole product is in sharp focus.",
                         CAMERA_TEXT[f["camera"]], REF_ONLY_TEXT]
+                lens = card.f("lens", "standard").strip() or "standard"
+                if lens in LENS_TEXT:
+                    bits.append(LENS_TEXT[lens])
                 if card.refs.get("anchor", "").strip():
                     bits.append(CASE_CAMERA_TEXT)
                 ref = nearest_ref(card, (pools or {}).get("views"))
@@ -1322,6 +1380,11 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
         p("TASK ERROR: 头部要写 style: 风格池 pools/styles.csv 里的编号（1.13），现在是「%s」" % style_id)
         return 2
     pools["style_row"] = pools["styles"][style_id]
+    impact = header.get("impact", "balanced").strip() or "balanced"
+    if impact not in IMPACT:
+        p("TASK ERROR: 头部 impact 只能写 calm、balanced 或 bold（1.17），现在是「%s」" % impact)
+        return 2
+    pools["impact"] = impact
     pools["usage"] = load_usage(root, product)
     pools["views"] = views
     if not pools["usage"]["understanding"].startswith("已确认"):

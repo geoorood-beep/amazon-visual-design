@@ -588,5 +588,47 @@ class AnglesAndEffects(Base):
         self.assertNotIn("pump", check_set.allowed_structure(card, usage))
 
 
+class LensesAndVividExpressions(Base):
+    """Special lenses, exaggerated expressions and the impact level (UTA_STYLE.md 1.17, v3.31)."""
+
+    def test_lens_reaches_the_prompt(self):
+        code, out, emit = self.run_task(V2)
+        self.assertEqual(code, 0, out)
+        s2 = self.card_block(read(emit), "S2_capacity.md")
+        self.assertIn("Very low camera angled up", s2)
+        self.assertIn("The product itself stays undistorted", s2)
+        self.assertIsNone(re.search(r"^lens:", read(emit), re.M))
+        self.assertIn("宠物表情建议", out)
+
+    def test_unknown_lens_fails(self):
+        text = self.mutate("lens: hero_low\n", "lens: fisheye\n")
+        code, out, _ = self.run_task(self.write("t.md", text))
+        self.assertIn("lens 要写 standard", out)
+
+    def test_impact_levels(self):
+        calm = self.mutate("lens: hero_low\n", "lens: standard\n").replace("lens: pet_pov\n", "lens: standard\n")
+        calm = calm.replace("style: ", "impact: calm\nstyle: ", 1)
+        code, out, _ = self.run_task(self.write("calm.md", calm))
+        self.assertNotIn("[S-11]", out)
+        bold = read(V2).replace("style: ", "impact: bold\nstyle: ", 1)
+        code, out, _ = self.run_task(self.write("bold.md", bold))
+        self.assertIn("[S-11] 冲击力 bold", out)
+        bad = read(V2).replace("style: ", "impact: wild\nstyle: ", 1)
+        code, out, _ = self.run_task(self.write("bad.md", bad))
+        self.assertEqual(code, 2, out)
+        self.assertIn("impact 只能写 calm、balanced 或 bold", out)
+
+    def test_vivid_expressions_are_capped(self):
+        pools = check_set.load_pools(ROOT)
+        pools["impact"] = "balanced"
+        cards = [check_set.Card("cards/x/S%d.md" % i, ["slot: S%d" % i, "expression_id: EX1%d" % (i + 3)])
+                 for i in range(1, 4)]
+        found = check_set.impact_rules(check_set.TaskSet(cards), pools)
+        self.assertTrue(any(r == "K-6" for r, _ in found), found)
+        pools["impact"] = "bold"
+        found = check_set.impact_rules(check_set.TaskSet(cards), pools)
+        self.assertFalse(any(r == "K-6" for r, _ in found), found)
+
+
 if __name__ == "__main__":
     unittest.main()

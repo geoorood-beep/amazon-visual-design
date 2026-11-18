@@ -1,13 +1,21 @@
-id,name,look_en,interactions,ref,avoid
-EX01,专注喝水,"eyes half closed in focus, tongue lapping the water, ears relaxed",drink;share_drink,docs/uta_style_v3/assets/key/XHS_003.jpg,张大嘴
-EX02,好奇探头,"eyes wide and round, whiskers forward, head tilted, leaning in",inspect;wait;human,docs/uta_style_v3/assets/key/EXP_011.jpg,鱼眼变形过度
-EX03,安心熟睡,"eyes fully closed, chin resting on the paws, body loose and curled",rest,docs/uta_style_v3/assets/key/XHS_002.jpg,
-EX04,慵懒半睁眼,"eyes half open and sleepy, ears soft, body stretched out",rest;wait,docs/uta_style_v3/assets/key/EXP_014.jpg,
-EX05,盯住目标,"eyes locked on the moving hand or cloth, pupils slightly wide, ears pricked",inspect;wait;human,docs/uta_style_v3/assets/key/XHS_004.jpg,扑咬
-EX06,伸爪试探,"one paw raised toward the rim, eyes fixed on the paw, ears forward",paw_touch,docs/uta_style_v3/assets/key/EXP_007.jpg,爪子遮住水窗
-EX07,满足舔嘴,"just finished drinking, tongue licking the nose, eyes soft",drink;rest,docs/uta_style_v3/assets/key/F_emotion_lick_DPMNQJ2N.jpg,
-EX08,平视凝视,"eyes level with the water, steady calm gaze, nose close to the surface",inspect;drink;wait,docs/uta_style_v3/assets/key/XHS_014.jpg,
-EX09,放松张嘴,"mouth softly open, relaxed tongue, bright eyes, tail mid-wag",wait;share_drink;drink;human,,只用于狗
-EX10,闭眼享受,"eyes closed, face tilted up into the light, whiskers relaxed",rest;wait,docs/uta_style_v3/assets/key/XHS_017.jpg,
-EX11,竖耳警觉,"head up, ears pricked toward the movement, eyes alert",wait;inspect;human,,惊吓
-EX12,歪头疑惑,"head tilted to one side, one ear turned, eyes curious",inspect;wait;human,,拟人化表情
+id,name,look_en,interactions,ref,avoid,level
+EX01,专注喝水,"eyes half closed in focus, tongue lapping the water, ears relaxed",drink;share_drink,docs/uta_style_v3/assets/key/XHS_003.jpg,张大嘴,自然
+EX02,好奇探头,"eyes wide and round, whiskers forward, head tilted, leaning in",inspect;wait;human,docs/uta_style_v3/assets/key/EXP_011.jpg,鱼眼变形过度,自然
+EX03,安心熟睡,"eyes fully closed, chin resting on the paws, body loose and curled",rest,docs/uta_style_v3/assets/key/XHS_002.jpg,,自然
+EX04,慵懒半睁眼,"eyes half open and sleepy, ears soft, body stretched out",rest;wait,docs/uta_style_v3/assets/key/EXP_014.jpg,,自然
+EX05,盯住目标,"eyes locked on the moving hand or cloth, pupils slightly wide, ears pricked",inspect;wait;human,docs/uta_style_v3/assets/key/XHS_004.jpg,扑咬,自然
+EX06,伸爪试探,"one paw raised toward the rim, eyes fixed on the paw, ears forward",paw_touch,docs/uta_style_v3/assets/key/EXP_007.jpg,爪子遮住水窗,自然
+EX07,满足舔嘴,"just finished drinking, tongue licking the nose, eyes soft",drink;rest,docs/uta_style_v3/assets/key/F_emotion_lick_DPMNQJ2N.jpg,,自然
+EX08,平视凝视,"eyes level with the water, steady calm gaze, nose close to the surface",inspect;drink;wait,docs/uta_style_v3/assets/key/XHS_014.jpg,,自然
+EX09,放松张嘴,"mouth softly open, relaxed tongue, bright eyes, tail mid-wag",wait;share_drink;drink;human,,只用于狗,自然
+EX10,闭眼享受,"eyes closed, face tilted up into the light, whiskers relaxed",rest;wait,docs/uta_style_v3/assets/key/XHS_017.jpg,,自然
+EX11,竖耳警觉,"head up, ears pricked toward the movement, eyes alert",wait;inspect;human,,惊吓,自然
+EX12,歪头疑惑,"head tilted to one side, one ear turned, eyes curious",inspect;wait;human,,拟人化表情,自然
+EX13,瞪圆眼伸舌舔,"eyes huge and round with big pupils, tongue stretched far out mid-lick, whiskers pushed forward, paw gripping the edge",drink;share_drink;paw_touch,,学自用户截图（猫肉泥海报，未入库）；舌头不能伸进出水口,夸张
+EX14,耳朵飞起冲过来,"ears flying back, mouth open in a happy pant, eyes wide and bright, caught mid-stride rushing toward the product",wait;inspect,docs/uta_style_v3/assets/key/XHS_025.jpg,撞翻产品；产品被挡住,夸张
+EX15,鼻子贴近镜头,"nose almost touching the lens, eyes big and curious, the face filling the foreground",inspect;wait;human,docs/uta_style_v3/assets/key/EXP_013.jpg,鱼眼变形用在产品上,夸张
+EX16,迈步凝视镜头,"walking straight toward the camera, one front paw reaching forward, steady direct gaze into the lens",wait;inspect,docs/uta_style_v3/assets/key/XHS_024.jpg,,夸张
+EX17,委屈翻白眼,"looking up with the whites of the eyes showing, brows pulled together, a grumpy pout",wait;inspect,docs/uta_style_v3/assets/key/EXP_004.jpg,只用于「没有它会怎样」那一半；不用在我方产品正在工作的画面,夸张
+EX18,惊喜瞪眼,"eyes suddenly wide, ears shooting up, head pulled back a little in delighted surprise",inspect;wait;drink,docs/uta_style_v3/assets/key/EXP_007.jpg,惊吓,夸张
+EX19,仰头张大嘴开心,"head tipped up, mouth wide open in a big happy pant, tongue out, eyes squeezed with joy",wait;human,docs/uta_style_v3/assets/key/EXP_009.jpg,只用于狗；不用在喝水那一刻,夸张
+EX20,皱眉嫌弃,"brows furrowed, nose wrinkled, a doubtful sideways look",inspect;wait,docs/uta_style_v3/assets/key/EXP_016.jpg,只用于「没有它会怎样」那一半,夸张

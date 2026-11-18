@@ -83,6 +83,7 @@ def load_usage(root, product, rules=None):
             explicit[cells[0]] = {"state": cells[1], "must_show": cells[2], "must_not": cells[3],
                                   "views": _split(more[0]), "cameras": _split(more[1]),
                                   "shots": _split(more[2]), "effect": more[3].strip(),
+                                  "moods": [], "expressions": [], "lenses": [],
                                   "source": "产品卡「事实的画面要求」"}
     structure = []
     for line in _section(text, "## 内部结构"):
@@ -125,5 +126,7 @@ def requirement(usage, fact_id):
             "must_not": "; ".join(r["must_not_en"].strip().rstrip(".") for r in hits if r["must_not_en"].strip()),
             "views": _split(first.get("views")), "cameras": _split(first.get("cameras")),
             "shots": _split(first.get("shots")),
+            "moods": _split(first.get("moods")), "expressions": _split(first.get("expressions")),
+            "lenses": _split(first.get("lenses")),
             "effect": next(((r.get("effect") or "").strip() for r in hits if (r.get("effect") or "").strip()), ""),
             "source": "推断规则 %s（references/fact_visuals.csv）" % "、".join(r["id"] for r in hits)}
