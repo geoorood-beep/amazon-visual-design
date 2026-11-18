@@ -26,6 +26,13 @@
 - **把矛盾说成同时做到。** 第三方广告库总结它最近的主线：把「体积、速度、功率三者只能取其二」说成一次全解决。[Motion 广告库](https://library.motionapp.com/anker) → T37
 - 注意：eufy 页面有「无菌材料」「更健康」这类功效说法。我方规范禁止，**不学**。
 
+**功能特效：把看不见的技术画成看得见的光。**
+
+- **深色科技屏。** GaNPrime 页面的「Discover the Tech」一节换成黑色背景，一个技术点一张卡：GaN 转换效率、ActiveShield 每天监测温度的次数、PowerIQ 动态分配电力。[GaNPrime](https://www.anker.com/ganprime) → T55
+- **看不见的功能做成看得见的光。** 温度监测、电力分配、散热都是看不见的，Anker 用发光的部件、流动的光线和大数字讲。[GaNPrime](https://www.anker.com/ganprime)、[Nano](https://www.anker.com/ca/anker-nano) → T56
+- **一个动作说清技术。** MagGo 把磁吸无线充电讲成「一吸就充」的那一下。[MagGo](https://www.anker.com/uk/maggo-magsafe-compatible-wireless-charger) → T57
+- 搬到我方：无线、感应用光波（`signal_wave`），电池用发光透视或能量流（`glow_xray`、`energy_flow`），电机、水泵用运行特效（`motion_run`）；整套一种点缀色（`accent`）。规则见 `UTA_STYLE.md` 1.16。
+
 ## 4. 场景：按用途分组，不是只有一个家
 
 - **按使用场合分组。** 产品线页面直接分「For Desktop」「For Travel」，还有一个让用户自己拼桌面的小工具。[Prime](https://www.anker.com/anker-prime-2024) → T42
@@ -58,6 +65,7 @@
 | 讲安静 | T35 三拍祈使句、T39 数字带基准（只用产品卡「画面可写」） |
 | 讲容量 | T10 换成宠物能喝几天、T39 |
 | 讲清洗 | T40 给真实部件一个好记的叫法、T26 |
+| 讲无线、感应、电池、电机这类看不见的功能 | T55 深色科技屏、T56 看不见的做成看得见的光、T57 一个动作说清技术 |
 | A+ 的四格或分组屏 | T41 四种家，一台都合适 |
 | 标题选项 | T35、T36、T37、T38、T28 |
 

@@ -10,7 +10,8 @@ The last four columns of 事实的画面要求 are optional; values are separate
 
 When it does not, the requirement for a fact is inferred from references/fact_visuals.csv:
 up to two rules whose keywords appear in the fact's own text or its 「画面可写」 column are
-merged (state and camera advice from the first, visible evidence from both).
+merged, the one whose keyword appears earliest first (state, camera and effect advice from the
+first, visible evidence from both).
 The 「不可写成」 column is never matched, so a card that forbids "拆解" does not trigger
 the disassembly rule.
 """
@@ -116,7 +117,25 @@ def requirement(usage, fact_id):
     text = usage["facts"].get(fact_id, "").lower()
     if not text:
         return None
-    hits = [r for r in usage["rules"] if any(w in text for w in r["words"])][:MAX_MERGED_RULES]
+    # The rule whose keyword appears earliest in the fact wins, so a caveat at the end of a fact
+    # ("frequent sensing may shorten battery life") does not outrank its subject ("battery").
+    found = []
+    for order, r in enumerate(usage["rules"]):
+        spots = [text.find(w) for w in r["words"] if w in text]
+        if spots:
+            found.append((min(spots), order, r))
+    found.sort(key=lambda x: (x[0], x[1]))
+    ranked = [r for _, _, r in found]
+    # A second rule merges in only when its keyword is in the fact's first sentence.
+    ends = [i for i in (text.find(c) for c in "。；;") if i >= 0]
+    first_end = min(ends) if ends else len(text)
+    hits = ranked[:1] + [r for pos, _, r in found[1:] if pos < first_end][:MAX_MERGED_RULES - 1]
+    # A rule that changes the product's state (take apart, fill) must never be dropped.
+    state_rule = next((r for r in ranked if r["state"] != "assembled"), None)
+    if state_rule is not None:
+        # Taken apart or being filled: only rules for that same state apply (no "water flowing" while washing).
+        hits = [state_rule] + [r for r in ranked if r is not state_rule and r["state"] == state_rule["state"]]
+        hits = hits[:MAX_MERGED_RULES]
     if not hits:
         return None
     first = hits[0]
@@ -128,5 +147,5 @@ def requirement(usage, fact_id):
             "shots": _split(first.get("shots")),
             "moods": _split(first.get("moods")), "expressions": _split(first.get("expressions")),
             "lenses": _split(first.get("lenses")),
-            "effect": next(((r.get("effect") or "").strip() for r in hits if (r.get("effect") or "").strip()), ""),
+            "effect": (first.get("effect") or "").strip(),
             "source": "推断规则 %s（references/fact_visuals.csv）" % "、".join(r["id"] for r in hits)}
