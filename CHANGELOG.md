@@ -1,5 +1,11 @@
 # 版本记录
 
+## v3.22 — 2026-11-18 品牌手法配上公开案例
+
+- `references/techniques.csv` 加 `examples` 列：19 条手法配上能打开的公开页面（Apple 新闻稿、AirPods「Quiet the noise」、Shot on iPhone 宠物肖像、《Glad I Met You》；Anker Prime；小米宠物饮水机 2 和 15 Ultra 产品页；可口可乐 Share a Coke 新闻稿和 2021 圣诞片），每条写明去看什么。
+- 新增两条：T33 Apple 慢下来的情绪高点，T34 小米短标题加一句好处。
+- 品牌图片不下载进仓库（仓库公开，有版权）；逐张学图走 3.6 入库。`check_index.py` 校验链接格式。
+
 ## v3.21 — 2026-11-18 图文确认单、品牌手法库
 
 为什么改：Grok 把确认表发成 md 附件，人核对时看不清；故事、卖点、标题的表达方式还不够丰富，想向 Apple、Anker、小米、可口可乐学。

@@ -185,12 +185,22 @@ class ConfirmAndTechniquesTest(unittest.TestCase):
         path = os.path.join(folder, "t.csv")
         with open(path, "w", encoding="utf-8") as fh:
             fh.write(",".join(check_index.TECH_COLUMNS) + "\n")
-            fh.write("T01,poster,Apple,x,how,transfer,all,avoid\n")
-            fh.write("T01,story,,x,how,transfer,all,avoid\n")
+            fh.write("T01,poster,Apple,x,how,transfer,all,avoid,\n")
+            fh.write("T01,story,,x,how,transfer,all,avoid,www.apple.com no note\n")
         errors = check_index.validate_techniques(path=path)
         self.assertTrue(any("dimension" in e for e in errors), errors)
         self.assertTrue(any("id 重复" in e for e in errors), errors)
         self.assertTrue(any("brand 不能空" in e for e in errors), errors)
+        self.assertTrue(any("examples 每一条" in e for e in errors), errors)
+
+    def test_examples_cover_every_brand(self):
+        import csv
+        with open(os.path.join(ROOT, "references", "techniques.csv"), encoding="utf-8") as fh:
+            rows = list(csv.DictReader(fh))
+        with_examples = [r for r in rows if r["examples"].strip()]
+        self.assertGreaterEqual(len(with_examples), len(rows) // 2)
+        for domain in ("apple.com", "anker.com", "mi.com", "coca-colacompany.com"):
+            self.assertTrue(any(domain in r["examples"] for r in with_examples), domain)
 
     def test_every_dimension_and_brand_is_covered(self):
         import csv

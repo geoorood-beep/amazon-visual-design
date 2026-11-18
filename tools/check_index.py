@@ -27,7 +27,7 @@ GRADES = {"A", "B", "C"}
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 CASE_DIR = "docs/uta_style_v3/assets/key"
 NAME_RE = re.compile(r"^[A-Za-z0-9_]+\.(png|jpg|jpeg|webp)$")
-TECH_COLUMNS = ["id", "dimension", "brand", "name", "how", "transfer", "fits", "avoid"]
+TECH_COLUMNS = ["id", "dimension", "brand", "name", "how", "transfer", "fits", "avoid", "examples"]
 TECH_DIMENSIONS = {"story", "selling", "scene", "headline", "interaction", "emotion", "expression"}
 TECH_ID_RE = re.compile(r"^T\d{2,3}$")
 
@@ -117,6 +117,10 @@ def validate_techniques(root=ROOT, path=None):
             for col in ("brand", "name", "how", "transfer", "avoid"):
                 if not (row[col] or "").strip():
                     errors.append(where + "：%s 不能空" % col)
+            for item in [x.strip() for x in (row["examples"] or "").split(" ; ") if x.strip()]:
+                link, _, note = item.partition("｜")
+                if not link.startswith("https://") or not note.strip():
+                    errors.append(where + "：examples 每一条写成「https 链接｜看什么」，多条用「 ; 」隔开")
     return errors
 
 
