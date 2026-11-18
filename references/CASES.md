@@ -1,4 +1,4 @@
-案例摘要：A 级 36 张、B 级 56 张（C 级 64 张只留档，不列出）。
+案例摘要：A 级 36 张、B 级 60 张（C 级 60 张只留档，不列出）。
 
 由 `tools/check_index.py --digest` 从 `references/INDEX.csv` 生成，不要手改。路径和索引完全一致，写卡时照抄路径。
 每行：路径｜等级｜能学什么｜画面结构｜光型｜风格｜故事｜不能学。
@@ -21,8 +21,12 @@
 - `docs/uta_style_v3/assets/key/D_cute_cat_GFDH3WD5.jpg`｜B｜expression;emotion;light｜none｜low_sun｜ST03｜三花猫在地毯上翻肚撒娇，眼睛直视镜头；放松到露肚子本身就是「家里很安心」｜摄像头、TF 卡、云存储功能不学
 - `docs/uta_style_v3/assets/key/D_lock_D4DL67CV.jpg`｜B｜light;composition;emotion｜none｜side_back｜ST01｜黄昏，一只黑白猫趴在机器边伸爪偷吃；暖色窗光从背后打出毛边｜防偷吃锁是对方功能
 - `docs/uta_style_v3/assets/key/EXP_004.jpg`｜B｜expression;composition｜none｜low_sun｜ST04｜无故事｜金毛顶榴莲壳翻白眼；可学仰视镜头时露出眼白的委屈表情，不学道具
+- `docs/uta_style_v3/assets/key/EXP_005.jpg`｜B｜expression｜none｜side｜-｜无故事｜拟人的酷脸神态可学（只在任务单选了可以拟人时）；衣服、墨镜、棚拍时尚感不学
+- `docs/uta_style_v3/assets/key/EXP_006.jpg`｜B｜expression｜none｜side｜-｜无故事｜拟人的得意神态可学（只在可以拟人时）；墨镜、衣服不学
 - `docs/uta_style_v3/assets/key/EXP_007.jpg`｜B｜expression;composition｜none｜side｜-｜无故事｜黑底棚拍，小狗捂嘴瞪眼、爪子怼近镜头；表情偏搞怪拟人，只学爪子贴近镜头的前后景深
+- `docs/uta_style_v3/assets/key/EXP_008.jpg`｜B｜expression｜none｜side｜-｜无故事｜拟人的眨眼吐舌卖萌可学（只在可以拟人时）；比耶手势和黑底棚拍不学
 - `docs/uta_style_v3/assets/key/EXP_009.jpg`｜B｜expression;composition;light｜none｜side｜-｜无故事｜蓝底棚拍，比特犬仰头张大嘴、舌头是焦点；低机位仰拍。不能用于喝水图的夸张表情
+- `docs/uta_style_v3/assets/key/EXP_010.jpg`｜B｜expression;light｜none｜low_sun｜ST01｜无故事｜拟人的陶醉闭眼神态可学（只在可以拟人时）；卫衣、咖啡杯、户外街景不学
 - `docs/uta_style_v3/assets/key/EXP_011.jpg`｜B｜expression;composition｜none｜side｜-｜无故事｜小狗从门框后探头，鼻子贴近广角镜头，好奇又呆；被样例用了 6 次，最该换着用
 - `docs/uta_style_v3/assets/key/EXP_012.jpg`｜B｜expression;composition;emotion｜none｜low_sun｜ST04｜无故事｜小狗在草坪上冲向镜头，伸爪、舌头甩出来的首帧；户外，鱼眼变形别用在产品上
 - `docs/uta_style_v3/assets/key/EXP_013.jpg`｜B｜expression;composition｜none｜side｜-｜无故事｜小狗斜眼凑近广角镜头，表达「怎么还没好」；鱼眼变形别用在产品上

@@ -361,7 +361,7 @@ class FastPathTest(unittest.TestCase):
             self.assertIn(marker, guide)
         with open(os.path.join(ROOT, "pools", "expressions.csv"), encoding="utf-8") as fh:
             rows = list(csv.DictReader(fh))
-        self.assertEqual({r["level"] for r in rows}, {"自然", "夸张"})
+        self.assertEqual({r["level"] for r in rows}, {"自然", "夸张", "拟人"})
         self.assertGreaterEqual(sum(r["level"] == "夸张" for r in rows), 8)
         skill = self.read("grok", "grok-UTAstyle-skill.md")
         self.assertIn("人物情绪 · 宠物表情 · 镜头", skill)
