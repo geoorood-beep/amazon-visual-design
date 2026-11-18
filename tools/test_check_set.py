@@ -11,6 +11,7 @@ import tempfile
 import unittest
 
 import check_set
+import usage_model
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIX = os.path.join(ROOT, "tools", "fixtures")
@@ -92,7 +93,9 @@ class SampleV2(Base):
         self.assertIsNone(re.search(r"^(shot_size|product_view|focus|interaction|light_setup|foreground|beat|scope):",
                                     text, re.M))
         s3 = self.card_block(text, "S3_steel.md")
-        self.assertIn("for scale. Extreme close-up with a macro-lens look: the rim fills", s3)
+        self.assertIn("for scale. Must be visible: the brushed steel texture", s3)
+        self.assertIn("Extreme close-up with a macro-lens look: the rim fills", s3)
+        self.assertIn("The product reference shows the product from the front; turn it to the view", s3)
         self.assertIn("do not copy its camera angle or framing.", s3)
         self.assertIn("Foreground: the cat's whiskers along the top edge, soft and out of focus", s3)
         self.assertIn("Light setup: hard side light", s3)
@@ -440,6 +443,73 @@ class PatchScope(Base):
                                      state=os.path.join(self.tmp, "missing.md"))
         self.assertEqual(code, 0, out)
         self.assertIn("没有上一次的整套", out)
+
+
+class UsageModel(Base):
+    """Product states, what each fact must show, and view spread (UTA_STYLE.md 1.15, v3.25)."""
+
+    def product(self, body):
+        root = os.path.join(self.tmp, "repo")
+        os.makedirs(os.path.join(root, "products", "p"))
+        os.makedirs(os.path.join(root, "references"))
+        shutil.copy(os.path.join(ROOT, "references", "fact_visuals.csv"), os.path.join(root, "references"))
+        with open(os.path.join(root, "products", "p", "PRODUCT.md"), "w", encoding="utf-8") as fh:
+            fh.write(body)
+        return usage_model.load_usage(root, "p")
+
+    def test_rules_read_the_fact_not_the_forbidden_column(self):
+        usage = self.product(
+            "| 编号 | 事实 | 画面可写 | 不可写成 |\n|---|---|---|---|\n"
+            "| F1 | 取出水泵后，钢盆可放进洗碗机 | dishwasher-safe basin | 无 |\n"
+            "| F2 | 易清洗 | Easy to clean、rinse | 拆解、洗碗机 |\n"
+            "| F3 | 无线 | Cordless | 无 |\n")
+        self.assertEqual(usage_model.requirement(usage, "F1")["state"], "top_removed")
+        self.assertEqual(usage_model.requirement(usage, "F2")["state"], "assembled")
+        self.assertIsNone(usage_model.requirement(usage, "F3"))
+
+    def test_product_card_overrides_the_rules(self):
+        usage = self.product(
+            "| 编号 | 事实 | 画面可写 | 不可写成 |\n|---|---|---|---|\n"
+            "| F1 | 易清洗 | rinse | 无 |\n\n"
+            "## 产品状态\n\n| id | 名称 | 看得见 | 拿掉或看不见 | Prompt |\n|---|---|---|---|---|\n"
+            "| assembled | 装好 | 全部 | 无 | |\n| lid_off | 开盖 | 盆 | 盖子 | The lid is off. |\n\n"
+            "## 事实的画面要求\n\n| 事实 | 状态 | 必须看得见 | 不能出现 |\n|---|---|---|---|\n"
+            "| F1 | lid_off | the open basin | the lid on |\n")
+        req = usage_model.requirement(usage, "F1")
+        self.assertEqual(req["state"], "lid_off")
+        self.assertEqual(set(usage["states"]), {"assembled", "lid_off"})
+
+    def test_pw002_s_facts_are_inferred(self):
+        usage = usage_model.load_usage(ROOT, "pw002_s")
+        self.assertEqual(usage_model.requirement(usage, "F9")["state"], "top_removed")
+        self.assertIn("FV03", usage_model.requirement(usage, "F2")["source"])
+        self.assertIn("flowing", usage_model.requirement(usage, "F12")["must_show"])
+
+    def test_wrong_state_fails_the_card(self):
+        text = self.mutate("slot: S5\n", "slot: S5\nproduct_state: top_removed\n")
+        code, out, _ = self.run_task(self.write("t.md", text))
+        self.assertEqual(code, 1, out)
+        self.assertIn("F5 要求产品状态 assembled，这张卡写的是 top_removed", out)
+
+    def test_unknown_state_fails(self):
+        text = self.mutate("slot: S5\n", "slot: S5\nproduct_state: melted\n")
+        code, out, _ = self.run_task(self.write("t.md", text))
+        self.assertIn("product_state 不认识：melted", out)
+
+    def test_too_many_front_views_fail(self):
+        text = read(V2)
+        for v in ("three_quarter_left", "three_quarter_right", "side_left", "side_right"):
+            text = text.replace("product_view: " + v, "product_view: front")
+        code, out, _ = self.run_task(self.write("t.md", text))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("[S-8]", out)
+        self.assertIn("[A-13]", out)
+
+    def test_state_and_evidence_reach_the_prompt(self):
+        code, out, emit = self.run_task(V2)
+        s4 = self.card_block(read(emit), "S4_quiet.md")
+        self.assertIn("Must be visible: water visibly flowing from the outlet", s4)
+        self.assertNotIn("product_state", read(emit))
 
 
 if __name__ == "__main__":

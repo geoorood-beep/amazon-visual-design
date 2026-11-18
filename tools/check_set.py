@@ -27,13 +27,15 @@ import os
 import re
 import sys
 
-VERSION = "3.24"
+from usage_model import load_usage, requirement
+
+VERSION = "3.25"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
 POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id", "expression_id"]
 FACE_SHOWN = {"half_body", "full_body", "group"}
-V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story"} | set(POOL_FIELDS)
+V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state"} | set(POOL_FIELDS)
 MAX_STORY_WORDS = 35
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
 POOL_FILES = {"scenes": "scenes.csv", "pets": "pets.csv", "people": "people.csv",
@@ -93,6 +95,13 @@ LIGHT_TEXT = {
 }
 REF_ONLY_TEXT = ("Use the product reference image only for shape, parts, proportions "
                  "and finish; do not copy its camera angle or framing.")
+FRONTISH = {"front", "front_left", "front_right"}
+VIEW_ANGLE = {"front": 0, "front_left": -15, "front_right": 15, "three_quarter_left": -45,
+              "three_quarter_right": 45, "side_left": -90, "side_right": 90, "rear": 180}
+VIEW_LABEL = {"front": "the front", "front_left": "slightly left of the front",
+              "front_right": "slightly right of the front", "three_quarter_left": "the front-left at about 45 degrees",
+              "three_quarter_right": "the front-right at about 45 degrees", "side_left": "its left side",
+              "side_right": "its right side", "rear": "the back", "cutaway": "a cutaway"}
 CASE_CAMERA_TEXT = ("Take the camera height, framing and composition from the style reference; "
                     "the product itself always follows the product reference.")
 
@@ -271,7 +280,8 @@ def load_views(path):
             if bad:
                 raise TaskError("%s 第 %d 行：cameras 不认识：%s" % (path, n, ",".join(bad)))
             rows.append({"path": row["path"].strip(), "view": view, "cameras": cams,
-                         "parts": parts, "checked": row["checked"].strip().lower() == "yes"})
+                         "parts": parts, "checked": row["checked"].strip().lower() == "yes",
+                         "state": (row.get("state") or "").strip() or "assembled"})
     if not rows:
         raise TaskError("%s 里没有任何参考图" % path)
     return rows
@@ -345,6 +355,27 @@ def focus_label(focus):
 
 def product_ref_path(card):
     return card.refs.get("product", "").split("|")[0].strip()
+
+
+def card_state(card):
+    return card.f("product_state", "assembled").strip() or "assembled"
+
+
+def nearest_ref(card, views):
+    """The registered product reference closest to this card's view, camera and state (1.4, 1.15)."""
+    if not views:
+        return None
+    view, cam, state = card.f("product_view"), card.f("camera"), card_state(card)
+    own = product_ref_path(card)
+
+    def cost(r):
+        if view == "cutaway" or r["view"] == "cutaway":
+            angle = 0 if r["view"] == view else 1000
+        else:
+            a = abs(VIEW_ANGLE.get(r["view"], 0) - VIEW_ANGLE.get(view, 0)) % 360
+            angle = min(a, 360 - a)
+        return (0 if r["state"] == state else 1000) + angle + (0 if cam in r["cameras"] else 30) +             (0 if r["path"] == own else 1)
+    return min(views, key=cost)
 
 
 def ceil_half(n):
@@ -507,6 +538,16 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
         style = pools.get("style_row")
         if style and card.f("light_setup") not in split_list(style["lights"]):
             errs.append("风格 %s（%s）只配光型 %s，这张卡是 %s" % (style["id"], style["name"], style["lights"], card.f("light_setup")))
+        usage = pools.get("usage")
+        if usage is not None:
+            state = card_state(card)
+            if state not in usage["states"]:
+                errs.append("product_state 不认识：%s；可选 %s（1.15）" % (state, " / ".join(usage["states"])))
+            fact = bound_fact(card)
+            req = requirement(usage, fact)
+            if req and req["state"] and state != req["state"]:
+                errs.append("%s 要求产品状态 %s，这张卡写的是 %s（依据：%s；1.15）"
+                            % (fact, req["state"], state, req["source"]))
     return errs
 
 
@@ -829,6 +870,10 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         if dup:
             out.append(("S-1", "同一个事实做了不止一张副图：%s" % ", ".join(dup)))
         cams = [c.f("camera") for c in subs]
+        front = [c.slot for c in subs if c.f("product_view") in FRONTISH]
+        if len(front) > int(math.ceil(n / 3.0)):
+            out.append(("S-8", "副图里正面朝向（front、front_left、front_right）用了 %d 张：%s；最多 %d 张，换成三四十五度、侧面等其他朝向"
+                        % (len(front), ", ".join(front), int(math.ceil(n / 3.0)))))
         for a, b in zip(subs, subs[1:]):
             if a.f("camera") == b.f("camera"):
                 out.append(("S-2", "相邻两张副图机位相同：%s 和 %s 都是 %s" % (a.slot, b.slot, a.f("camera"))))
@@ -946,6 +991,11 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
                     out.append(("A-8", "深色屏相邻：%s 和 %s" % (a.slot, b.slot)))
             if not any(s.module == "number" or (s.module == "scene" and not s.is_none("hero_number")) for s in scr):
                 out.append(("A-8", "高级版至少一屏巨型数字（number，或带强调数字的 scene）"))
+        if strict and imgs:
+            front = [c.slot for c in imgs if c.f("product_view") in FRONTISH]
+            if len(front) > int(math.ceil(len(imgs) / 2.0)):
+                fails.append(("A-13", "A+ 的图里正面朝向用了 %d 张：%s；最多一半（%d 张）"
+                              % (len(front), ", ".join(front), int(math.ceil(len(imgs) / 2.0)))))
         if strict:
             inters = [c.f("interaction") for c in imgs]
             for it in sorted(set(inters)):
@@ -1042,6 +1092,16 @@ def compile_card(card, pools=None):
                 f = card.fields
                 if not card.is_none("story"):
                     val = join_sentence("Story: %s" % card.f("story").strip().rstrip("."), val)
+                usage = (pools or {}).get("usage")
+                if usage:
+                    state_text = usage["states"].get(card_state(card), "")
+                    if state_text:
+                        val = join_sentence(val, state_text)
+                    req = requirement(usage, bound_fact(card))
+                    if req:
+                        val = join_sentence(val, "Must be visible: %s." % req["must_show"].strip().rstrip("."))
+                        if req["must_not"].strip():
+                            val = join_sentence(val, "Must not appear: %s." % req["must_not"].strip().rstrip("."))
                 bits = [SHOT_TEXT[f["shot_size"]].format(focus=focus_label(f["focus"])),
                         VIEW_TEXT[f["product_view"]],
                         ("The sharpest point of the picture is %s." % focus_label(f["focus"]))
@@ -1049,6 +1109,10 @@ def compile_card(card, pools=None):
                         CAMERA_TEXT[f["camera"]], REF_ONLY_TEXT]
                 if card.refs.get("anchor", "").strip():
                     bits.append(CASE_CAMERA_TEXT)
+                ref = nearest_ref(card, (pools or {}).get("views"))
+                if ref and ref["view"] != f["product_view"] and f["product_view"] in VIEW_LABEL:
+                    bits.append("The product reference shows the product from %s; turn it to the view "
+                                "described here and keep every part identical." % VIEW_LABEL[ref["view"]])
                 val = join_sentence(val, " ".join(bits))
             elif key == "light":
                 val = join_sentence(val, LIGHT_TEXT[card.f("light_setup")])
@@ -1070,6 +1134,10 @@ def compile_card(card, pools=None):
                          for e in pool_ids(card, "expression_id") if e in pools["expressions"]]
                 if looks:
                     val = join_sentence(val, "Expression: %s." % "; ".join(looks))
+        if image and key == "refs":
+            ref = nearest_ref(card, (pools or {}).get("views"))
+            if ref:
+                extra = [("  product: %s" % ref["path"]) if l.strip().startswith("product:") else l for l in extra]
         out.append("%s: %s" % (key, val) if val else "%s:" % key)
         out.extend(extra)
     return out
@@ -1157,6 +1225,8 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
         p("TASK ERROR: 头部要写 style: 风格池 pools/styles.csv 里的编号（1.13），现在是「%s」" % style_id)
         return 2
     pools["style_row"] = pools["styles"][style_id]
+    pools["usage"] = load_usage(root, product)
+    pools["views"] = views
     evidence = load_evidence(root, product)
     from copy_exceptions import load_claims, load_grants
     grants = load_grants(root, product)
