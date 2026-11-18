@@ -476,25 +476,65 @@ class ImageBaselineDisambiguationTest(unittest.TestCase):
         self.assertIn("主横幅重做", card)
         with open(os.path.join(ROOT, "products", "pw002_s", "ref_views.csv"), encoding="utf-8", newline="") as fh:
             rows = list(csv.DictReader(fh))
+        confirmed = [
+            "products/pw002_s/ref/baseline_front.png",
+            "products/pw002_s/ref/baseline_side.png",
+            "products/pw002_s/ref/baseline_top_down.png",
+            "products/pw002_s/ref/baseline_three_quarter.png",
+            "products/pw002_s/ref/baseline_detail_1.png",
+            "products/pw002_s/ref/baseline_detail_2.png",
+            "products/pw002_s/ref/baseline_detail_3.png",
+            "products/pw002_s/ref/baseline_detail_4.png",
+            "products/pw002_s/ref/baseline_detail_5.png",
+            "products/pw002_s/ref/baseline_detail_6.png",
+            "products/pw002_s/ref/baseline_detail_7.png",
+            "products/pw002_s/ref/baseline_detail_8.png",
+        ]
+        uploaded = [
+            "products/pw002_s/ref/user_20261118_01_whole_top.jpg",
+            "products/pw002_s/ref/user_20261118_02_front_down.png",
+            "products/pw002_s/ref/user_20261118_03_side_left.png",
+            "products/pw002_s/ref/user_20261118_04_side_right.png",
+            "products/pw002_s/ref/user_20261118_05_connection.jpg",
+            "products/pw002_s/ref/user_20261118_06_pump_exploded.jpg",
+            "products/pw002_s/ref/user_20261118_07_button_panel.jpg",
+            "products/pw002_s/ref/user_20261118_08_accessory_back.jpg",
+            "products/pw002_s/ref/user_20261118_09_accessory_side.jpg",
+        ]
+        self.assertEqual([row["path"] for row in rows[:len(confirmed)]], confirmed)
+        self.assertEqual([row["path"] for row in rows[len(confirmed):]], uploaded)
+        self.assertTrue(all(row["checked"] == "yes" for row in rows[:len(confirmed)]))
         self.assertEqual(
-            [row["path"] for row in rows],
+            [(row["product_view"], row["cameras"], row["parts"]) for row in rows[:len(confirmed)]],
             [
-                "products/pw002_s/ref/baseline_front.png",
-                "products/pw002_s/ref/baseline_side.png",
-                "products/pw002_s/ref/baseline_top_down.png",
-                "products/pw002_s/ref/baseline_three_quarter.png",
-                "products/pw002_s/ref/baseline_detail_1.png",
-                "products/pw002_s/ref/baseline_detail_2.png",
-                "products/pw002_s/ref/baseline_detail_3.png",
-                "products/pw002_s/ref/baseline_detail_4.png",
-                "products/pw002_s/ref/baseline_detail_5.png",
-                "products/pw002_s/ref/baseline_detail_6.png",
-                "products/pw002_s/ref/baseline_detail_7.png",
-                "products/pw002_s/ref/baseline_detail_8.png",
+                ("front", "eye_level", "whole;rim;water_window;control_head;front_opening"),
+                ("side_left", "eye_level", "whole;rim;control_head"),
+                ("front", "top_down", "whole;rim;control_head;tray;front_slot"),
+                ("three_quarter_left", "eye_level;down_45", "whole;rim;water_window;control_head"),
+                ("front", "eye_level", "rim"),
+                ("front", "eye_level", "water_window"),
+                ("front", "down_45", "tray;rim;control_head"),
+                ("front", "eye_level", "control_head"),
+                ("front", "top_down", "control_head;keys"),
+                ("front", "eye_level", "front_opening"),
+                ("front", "down_45", "tray"),
+                ("front", "top_down", "front_slot"),
             ],
         )
-        self.assertTrue(all(row["checked"] == "yes" for row in rows))
         self.assertNotIn("part_", " ".join(row["path"] for row in rows))
+        by_path = {row["path"]: row for row in rows}
+        pump = by_path["products/pw002_s/ref/user_20261118_06_pump_exploded.jpg"]
+        back = by_path["products/pw002_s/ref/user_20261118_08_accessory_back.jpg"]
+        self.assertEqual(pump["product_view"], "front")
+        self.assertNotEqual(pump["product_view"], "cutaway")
+        self.assertEqual(pump["state"], "disassembled")
+        self.assertNotEqual(back["product_view"], "rear")
+        self.assertEqual(back["product_view"], "front")
+        self.assertIn("本轮用户上传的造型参考", card)
+        self.assertIn("不是早先12张", card)
+        self.assertNotIn("它是真实拆解照片", card)
+        self.assertIn("不写 `cutaway`", card)
+        self.assertIn("不写 `rear`", card)
         plan = self.read("products", "pw002_s", "planning_round1.md")
         self.assertIn("主图 1 张、副图 6 张、高级版 A+ 7 屏", plan)
         sample = self.read("tools", "fixtures", "round10l_v2_task.md")

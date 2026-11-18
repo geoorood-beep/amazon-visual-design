@@ -1,4 +1,4 @@
-path,product_view,cameras,parts,checked
+path,product_view,cameras,parts,checked,state
 products/pw002_s/ref/baseline_front.png,front,eye_level,whole;rim;water_window;control_head;front_opening,yes
 products/pw002_s/ref/baseline_side.png,side_left,eye_level,whole;rim;control_head,yes
 products/pw002_s/ref/baseline_top_down.png,front,top_down,whole;rim;control_head;tray;front_slot,yes
@@ -11,3 +11,12 @@ products/pw002_s/ref/baseline_detail_5.png,front,top_down,control_head;keys,yes
 products/pw002_s/ref/baseline_detail_6.png,front,eye_level,front_opening,yes
 products/pw002_s/ref/baseline_detail_7.png,front,down_45,tray,yes
 products/pw002_s/ref/baseline_detail_8.png,front,top_down,front_slot,yes
+products/pw002_s/ref/user_20261118_01_whole_top.jpg,front,top_down,whole;rim;tray;control_head;keys;front_slot,yes,assembled
+products/pw002_s/ref/user_20261118_02_front_down.png,front,down_45,whole;rim;water_window;control_head;front_opening;keys,yes,assembled
+products/pw002_s/ref/user_20261118_03_side_left.png,side_left,eye_level,whole;rim;control_head,yes,assembled
+products/pw002_s/ref/user_20261118_04_side_right.png,side_right,eye_level,whole;rim;control_head,yes,assembled
+products/pw002_s/ref/user_20261118_05_connection.jpg,front,eye_level,control_head;usb_c;cable;pump;stem,yes,assembled
+products/pw002_s/ref/user_20261118_06_pump_exploded.jpg,front,eye_level,pump;stem;cable;filter_sponge,yes,disassembled
+products/pw002_s/ref/user_20261118_07_button_panel.jpg,front,top_down,control_head;keys,yes,assembled
+products/pw002_s/ref/user_20261118_08_accessory_back.jpg,front,eye_level,control_head;pump_head;usb_c;pump;stem;cable,yes,assembled
+products/pw002_s/ref/user_20261118_09_accessory_side.jpg,side_right,eye_level,control_head;pump_head;pump;stem;cable,yes,assembled
