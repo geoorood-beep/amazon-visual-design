@@ -3,7 +3,10 @@
 A product card may spell this out in two optional sections:
 
   ## 产品状态          | id | 名称 | 看得见 | 拿掉或看不见 | Prompt |
-  ## 事实的画面要求    | 事实 | 状态 | 必须看得见（英文） | 不能出现（英文） |
+  ## 事实的画面要求    | 事实 | 状态 | 必须看得见（英文） | 不能出现（英文） | 推荐朝向 | 推荐机位 | 推荐景别 | 特效 |
+  ## 内部结构          | 部件 | 英文名 | 位置 | 来源 |
+
+The last four columns of 事实的画面要求 are optional; values are separated by ";".
 
 When it does not, the requirement for a fact is inferred from references/fact_visuals.csv:
 the first rule whose keyword appears in the fact's own text or its 「画面可写」 column wins.
@@ -38,6 +41,10 @@ def _section(text, heading):
     return out
 
 
+def _split(val):
+    return [v.strip() for v in (val or "").split(";") if v.strip()]
+
+
 def _cells(line):
     return [c.strip() for c in line.strip().strip("|").split("|")]
 
@@ -70,13 +77,22 @@ def load_usage(root, product, rules=None):
     for line in _section(text, "## 事实的画面要求"):
         cells = _cells(line)
         if len(cells) >= 4 and re.fullmatch(r"F\d+", cells[0]):
+            more = cells[4:8] + [""] * (8 - len(cells))
             explicit[cells[0]] = {"state": cells[1], "must_show": cells[2], "must_not": cells[3],
+                                  "views": _split(more[0]), "cameras": _split(more[1]),
+                                  "shots": _split(more[2]), "effect": more[3].strip(),
                                   "source": "产品卡「事实的画面要求」"}
+    structure = []
+    for line in _section(text, "## 内部结构"):
+        cells = _cells(line)
+        if len(cells) >= 4 and cells[0] not in ("部件", "") and not set(cells[0]) <= set("-: ") and cells[1]:
+            structure.append({"part": cells[0], "part_en": cells[1], "where": cells[2], "source": cells[3]})
     return {
         "facts": facts,
         "states": states or dict(GENERIC_STATES),
         "own_states": bool(states),
         "explicit": explicit,
+        "structure": structure,
         "rules": rules if rules is not None else load_rules(root),
     }
 
@@ -93,5 +109,7 @@ def requirement(usage, fact_id):
     for r in usage["rules"]:
         if any(w in text for w in r["words"]):
             return {"state": r["state"], "must_show": r["must_show_en"], "must_not": r["must_not_en"],
+                    "views": _split(r.get("views")), "cameras": _split(r.get("cameras")),
+                    "shots": _split(r.get("shots")), "effect": (r.get("effect") or "").strip(),
                     "source": "推断规则 %s（references/fact_visuals.csv）" % r["id"]}
     return None

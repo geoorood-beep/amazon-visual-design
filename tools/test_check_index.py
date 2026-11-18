@@ -272,11 +272,15 @@ class UsageWiringTest(unittest.TestCase):
         self.assertIn("references/fact_visuals.csv", guide[start:guide.index("### 2.2", start)])
         start = guide.index("### 2.4")
         self.assertIn("`product_state`", guide[start:guide.index("### 2.5", start)])
-        for marker in ("### 1.15 产品怎么用", "### 3.7 入库产品视频", "| V5 |", "- S-8 ", "- A-13 "):
+        for marker in ("### 1.15 产品怎么用", "### 3.7 入库产品视频", "| V5 |", "- S-8 ", "- A-13 ",
+                       "### 1.16 多角度", "- S-9 ", "- S-10 ", "- A-14 ", "- A-15 ", "- U-1 ", "`effect`",
+                       "**不确定就问用户。**"):
             self.assertIn(marker, guide)
         self.assertIn("product_state", self.read("grok", "grok-UTAstyle-skill.md"))
         self.assertIn("入库产品视频", self.read("AGENTS.md"))
         self.assertIn("## 事实的画面要求", self.read("products", "_template", "PRODUCT.md"))
+        self.assertIn("## 内部结构", self.read("products", "_template", "PRODUCT.md"))
+        self.assertIn("不确定就问", self.read("grok", "grok-UTAstyle-skill.md"))
 
 
 if __name__ == "__main__":
