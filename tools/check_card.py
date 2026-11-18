@@ -251,6 +251,14 @@ FLAT_BASELINE_VIEWS = [
 ]
 BASELINE_FORMS = {"立体": BASELINE_VIEWS, "扁平": FLAT_BASELINE_VIEWS}
 PHOTO_EXT = {".png", ".jpg", ".jpeg", ".webp"}
+# Which baseline views a real photo already shows, judged from its file name (UTA_STYLE 1.12 fast baseline).
+PHOTO_VIEW_HINTS = {
+    "front": ("front", "正面", "正视"), "back": ("back", "rear", "背面", "背视"), "side": ("side", "侧面", "侧视", "left", "right"),
+    "top_down": ("top", "俯视", "俯拍"), "top": ("top", "俯视", "俯拍"), "bottom": ("bottom", "底面"),
+}
+ALL_VIEW_HINTS = ("five_view", "five-view", "五视", "multi_view", "三视", "turnaround")
+MIN_BASELINE = {"立体": ["front", "three_quarter", "side"], "扁平": ["top", "three_quarter", "long_edge"]}
+BASELINE_MINUTES = 15
 
 
 def baseline_field(product, key):
@@ -339,6 +347,37 @@ def print_baseline(product, photos_dir=None):
     product_line = "PRODUCT: " + "; ".join(identity) + "."
     if geometry:
         product_line += " SIZE AND PARTS: " + "; ".join(geometry) + "."
+    main_views = list(BASELINE_FORMS[form])
+    covered = {}
+    for photo in photos:
+        low = photo.name.lower()
+        for name, _view in main_views:
+            hints = PHOTO_VIEW_HINTS.get(name, ())
+            sheet = name != "three_quarter" and any(h in low for h in ALL_VIEW_HINTS)  # five-view sheets are straight-on only
+            if any(h in low for h in hints) or sheet:
+                covered.setdefault(name, photo.name)
+    missing = [(n, v) for n, v in main_views if n not in covered]
+    print(f"\n== FAST (default, UTA_STYLE 1.12): finish within {BASELINE_MINUTES} minutes ==")
+    print("1. Views the real photos already show: cut the product out onto plain mid-grey, do not regenerate:")
+    for name, _view in main_views:
+        if name in covered:
+            print(f"   {name}: {covered[name]}")
+    if not covered:
+        print("   (none recognised from file names; check the photos yourself)")
+    if missing:
+        print("2. Generate every remaining view in ONE image, a turnaround sheet, attaching all real photos:")
+        cells = "; ".join(f"cell {i}: {v}" for i, (_n, v) in enumerate(missing, start=1))
+        print("   PROMPT: " + " ".join([
+            blocks["BASELINE"],
+            f"One clean product turnaround sheet on a plain mid-grey background: the very same product shown "
+            f"{len(missing)} times in a neat grid, identical in every cell except the viewing angle; {cells}.",
+            product_line, blocks["BASELINE_RULES"]]))
+        print(f"   SAVE: {out_dir}/sheet_generated.png, then crop each cell to {out_dir}/<view>.png")
+    if details:
+        print("3. Detail close-ups: crop them from the real photos; generate a detail only if no photo shows it.")
+    print("4. Minimum to confirm and start scene work: " + ", ".join(MIN_BASELINE[form]) +
+          ". A view that fails twice is skipped and marked 缺; it never holds up the rest.")
+    print("\n== SLOW (only for a view the fast route could not give) ==")
     for name, view in views:
         print(f"\n=== {name} ===")
         print(f"SAVE: {out_dir}/{name}.png")

@@ -381,6 +381,25 @@ class FastPathTest(unittest.TestCase):
         self.assertIn("科技特效", self.read("grok", "grok-UTAstyle-skill.md"))
         self.assertIn("**功能特效：", self.read("references", "brands", "anker.md"))
 
+    def test_speed_and_status_rules(self):
+        guide = self.read("UTA_STYLE.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("**快速造型基准（默认）。**", guide)
+        self.assertIn("## 连接 Codex 的固定路线", skill)
+        self.assertIn("## 状态标记、收图和进度", skill)
+        for marker in ("🟠 需要你确认", "⏳ 进行中", "✅ 完成", "⚠️ 卡住了", "一次最多 5 张图"):
+            self.assertIn(marker, skill)
+
+    def test_baseline_prints_the_fast_route(self):
+        import subprocess, sys
+        out = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "check_card.py"), "--baseline", "pw002_s"],
+                             capture_output=True, text=True, encoding="utf-8", cwd=ROOT,
+                             env=dict(os.environ, PYTHONIOENCODING="utf-8")).stdout
+        self.assertIn("== FAST", out)
+        self.assertIn("front: 01_front.png", out)
+        self.assertIn("ONE image", out)
+        self.assertLess(out.index("== FAST"), out.index("== SLOW"))
+
     def test_default_eight_sub_images(self):
         self.assertIn("副图默认 8 张", self.read("UTA_STYLE.md"))
         self.assertIn("副图默认 8 张", self.read("grok", "grok-UTAstyle-skill.md"))
