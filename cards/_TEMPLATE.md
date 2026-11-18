@@ -15,6 +15,8 @@ text_area: <top | top_left | top_right | bottom | bottom_left | bottom_right | l
 headline: <English. 最多 6 个词>
 subtitle: <English. 最多 10 个词>
 hero_number: <一个带数字的短语，例如 Under 20 dB；不用就写 none>
+caption: <可见说明，最多 12 个英文词；不用就写 none。排版加字，不进 story>
+comparison: <只有 pw002_s 的 S6 可写 risk_scenario；其他卡写 none>
 refs:
   product: <INDEX.csv 里 type=product 的路径> | <English. 只取什么>
   anchor: <type=anchor 或 scene 的路径> | <English. 取什么，不取什么>
