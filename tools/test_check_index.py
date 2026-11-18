@@ -367,6 +367,13 @@ class FastPathTest(unittest.TestCase):
         self.assertIn("人物情绪 · 宠物表情 · 镜头", skill)
         self.assertIn("冲击力", skill)
 
+    def test_tech_effects_are_wired(self):
+        guide = self.read("UTA_STYLE.md")
+        for marker in ("`signal_wave`", "`glow_xray`", "`motion_run`", "`energy_flow`", "`accent:`", "**科技特效**"):
+            self.assertIn(marker, guide)
+        self.assertIn("科技特效", self.read("grok", "grok-UTAstyle-skill.md"))
+        self.assertIn("**功能特效：", self.read("references", "brands", "anker.md"))
+
     def test_default_eight_sub_images(self):
         self.assertIn("副图默认 8 张", self.read("UTA_STYLE.md"))
         self.assertIn("副图默认 8 张", self.read("grok", "grok-UTAstyle-skill.md"))

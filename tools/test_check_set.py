@@ -669,5 +669,33 @@ class AnthropomorphicOption(Base):
         self.assertTrue(any(r == "K-7" for r, _ in found), found)
 
 
+class TechEffects(Base):
+    """Signal waves, glowing X-ray, running parts, energy flow (UTA_STYLE.md 1.16, v3.33)."""
+
+    def test_signal_wave_only_for_wireless_or_sensor(self):
+        text = self.mutate("slot: S3\n", "slot: S3\neffect: signal_wave\n")
+        code, out, _ = self.run_task(self.write("t.md", text))
+        self.assertEqual(code, 1, out)
+        self.assertIn("effect=signal_wave 只用于无线、感应这类卖点", out)
+
+    def test_glow_xray_needs_structure(self):
+        text = self.mutate("slot: S3\n", "slot: S3\neffect: glow_xray\n")
+        code, out, _ = self.run_task(self.write("t.md", text))
+        self.assertIn("effect=glow_xray 要先知道真实的内部结构", out)
+
+    def test_pw002_effect_suggestions(self):
+        usage = usage_model.load_usage(ROOT, "pw002_s")
+        self.assertEqual(usage_model.requirement(usage, "F2")["effect"], "signal_wave")
+        self.assertEqual(usage_model.requirement(usage, "F5")["effect"], "glow_xray")
+        self.assertEqual(usage_model.requirement(usage, "F9")["effect"], "")
+        self.assertNotIn("FV03", usage_model.requirement(usage, "F5")["source"])
+        self.assertNotIn("output", usage_model.requirement(usage, "F9")["must_show"])
+        self.assertIn("FV14", usage_model.requirement(usage, "F11")["source"])
+
+    def test_accent_reaches_the_prompt(self):
+        self.assertIn("{accent}", check_set.EFFECT_TEXT["signal_wave"])
+        self.assertIn("soft blue", check_set.DEFAULT_ACCENT)
+
+
 if __name__ == "__main__":
     unittest.main()

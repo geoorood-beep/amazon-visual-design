@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.32"
+VERSION = "3.33"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -110,7 +110,10 @@ STRUCTURE_RE = re.compile(
     r"\b(x-?ray|cut-?away|cross[- ]section|exploded|see-through|internal structure|"
     r"inner structure|pump|filter|filters|cartridge|LED|light-up)\b", re.I)
 NEGATION = {"no", "not", "without", "never", "nor"}
-EFFECTS = ["none", "xray", "cutaway", "exploded", "flow_path"]
+EFFECTS = ["none", "xray", "cutaway", "exploded", "flow_path", "signal_wave", "glow_xray", "motion_run", "energy_flow"]
+TECH_EFFECTS = {"signal_wave", "glow_xray", "motion_run", "energy_flow"}
+NEEDS_STRUCTURE = {"xray", "cutaway", "exploded", "flow_path", "glow_xray", "motion_run", "energy_flow"}
+DEFAULT_ACCENT = "soft blue"
 LENSES = ["standard", "wide_close", "ground_level", "action_freeze", "peek_frame", "pet_pov", "hero_low"]
 PRODUCT_SAFE = ("The product itself stays undistorted, upright and true to the product reference; keep it away "
                 "from the frame edges where a wide lens would stretch it.")
@@ -142,6 +145,18 @@ EFFECT_TEXT = {
                  "and orientation, evenly spaced, nothing added or missing."),
     "flow_path": ("Water-path effect: the real flowing water is followed by a soft, natural highlight along its "
                   "path through the parts listed below; it looks like light on water, not a drawn arrow."),
+    "signal_wave": ("Tech visual: soft translucent rings of {accent} light ripple outward through the air from the "
+                    "product's wireless or sensing part, fading with distance like a gentle signal wave; subtle, "
+                    "no hard lines, no numbers, no icons, no text."),
+    "glow_xray": ("Tech X-ray: the outer shell turns semi-transparent and the internal parts listed below glow softly "
+                  "in {accent}, crisp and clean like a premium product cutaway render, against a slightly darker "
+                  "background; everything outside stays photoreal and true to the product reference."),
+    "motion_run": ("Tech X-ray of the working parts: through a semi-transparent shell the internal parts listed below "
+                   "are shown running, with soft motion-blur arcs on the moving part and a faint {accent} glow; no "
+                   "arrows, no labels."),
+    "energy_flow": ("Energy-flow visual: thin lines of soft {accent} light travel from the power source to where the "
+                    "power is used, following the real internal path through the parts listed below; no arrowheads, "
+                    "no labels, no numbers."),
 }
 PART_WORDS = {"pump": ("水泵", "泵", "pump"), "filter": ("滤芯", "滤网", "过滤", "filter"),
               "filters": ("滤芯", "滤网", "过滤", "filter"), "cartridge": ("滤芯", "cartridge"),
@@ -591,7 +606,11 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
     effect = card.f("effect", "none").strip() or "none"
     if effect not in EFFECTS:
         errs.append("effect 要写 %s 之一（1.16）" % " / ".join(EFFECTS))
-    elif effect != "none" and usage is not None:
+    elif effect == "signal_wave" and usage is not None:
+        req = requirement(usage, bound_fact(card)) or {}
+        if not (any(k in req.get("source", "") for k in ("FV03", "FV08")) or req.get("effect") == "signal_wave"):
+            errs.append("effect=signal_wave 只用于无线、感应这类卖点；这张卡讲的 %s 不是（1.16）" % (bound_fact(card) or "没写事实"))
+    elif effect in NEEDS_STRUCTURE and usage is not None:
         has_cut = any(r["view"] == "cutaway" for r in views)
         if not usage.get("structure") and not has_cut:
             errs.append("effect=%s 要先知道真实的内部结构：产品卡写「内部结构」一节，或 ref_views.csv 登记真实结构图（cutaway）。"
@@ -1026,7 +1045,8 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         if dup:
             out.append(("S-1", "同一个事实做了不止一张副图：%s" % ", ".join(dup)))
         cams = [c.f("camera") for c in subs]
-        out += angle_rules(subs, "S-9", "S-10", "副图", 1)
+        bold = isinstance(pools, dict) and pools.get("impact") == "bold"
+        out += angle_rules(subs, "S-9", "S-10", "副图", 2 if bold else 1)
         front = [c.slot for c in subs if c.f("product_view") in FRONTISH]
         if len(front) > int(math.ceil(n / 3.0)):
             out.append(("S-8", "副图里正面朝向（front、front_left、front_right）用了 %d 张：%s；最多 %d 张，换成三四十五度、侧面等其他朝向"
@@ -1149,7 +1169,8 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
             if not any(s.module == "number" or (s.module == "scene" and not s.is_none("hero_number")) for s in scr):
                 out.append(("A-8", "高级版至少一屏巨型数字（number，或带强调数字的 scene）"))
         if strict and imgs:
-            fails.extend(angle_rules(imgs, "A-14", "A-15", "A+", 2))
+            bold = isinstance(pools, dict) and pools.get("impact") == "bold"
+            fails.extend(angle_rules(imgs, "A-14", "A-15", "A+", 3 if bold else 2))
             front = [c.slot for c in imgs if c.f("product_view") in FRONTISH]
             if len(front) > int(math.ceil(len(imgs) / 2.0)):
                 fails.append(("A-13", "A+ 的图里正面朝向用了 %d 张：%s；最多一半（%d 张）"
@@ -1263,7 +1284,7 @@ def compile_card(card, pools=None):
                 effect = card.f("effect", "none").strip() or "none"
                 if effect in EFFECT_TEXT and usage:
                     parts = [r["part_en"] for r in usage.get("structure", [])]
-                    val = join_sentence(val, EFFECT_TEXT[effect])
+                    val = join_sentence(val, EFFECT_TEXT[effect].replace("{accent}", (pools or {}).get("accent", DEFAULT_ACCENT)))
                     if parts:
                         val = join_sentence(val, "Internal parts that may be shown: %s; show nothing else inside." % ", ".join(parts))
                 bits = [SHOT_TEXT[f["shot_size"]].format(focus=focus_label(f["focus"])),
@@ -1403,6 +1424,7 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
         p("TASK ERROR: 头部 persona 只能写 natural 或 anthro（1.17），现在是「%s」" % persona)
         return 2
     pools["persona"] = persona
+    pools["accent"] = header.get("accent", "").strip() or DEFAULT_ACCENT
     pools["usage"] = load_usage(root, product)
     pools["views"] = views
     if not pools["usage"]["understanding"].startswith("已确认"):
