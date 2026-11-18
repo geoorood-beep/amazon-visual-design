@@ -68,7 +68,20 @@
 
 `baseline/v01/` 里 `front`、`three_quarter`、`detail_1`–`detail_8` 仍待用户逐格确认。`side`、`top_down`、`back` 当时各生成两次，画面仍是正面或偏正面，所以没有收成正式视角；落选图在 `baseline/v01/not_used/`。失败原因是生成时五张实拍按脚本顺序整组附上，正面图排在第一张，模型把侧面和俯视也画成了正面。这不是原图缺失。外形识别点、物理边界、Identity、Geometry 没有因此改写，不新增外形。
 
-用户 2026-11-18 指出这三格不该放弃。按 1.12 另出 `baseline/v02/`，不覆盖 v01。v02 正式文件是 `side.png`、`top_down.png`、`back.png` 和 `sheet.png`。三张都是新生成的灰底渲染，不是原图复制或裁切。`top_down` 和 `back` 用脚本列出的五张实拍，原提示词末尾加一行 `FIX:`。`side` 第一次仍把控制头放在长面正中，按 4.3 用掉最后一次重做；这次只附 `photos/02_side_head_left.png` 和 `photos/03_side_head_right.png`，没有再附正面图。落选的第一次侧面在 `baseline/v02/not_used/`。状态仍是「待确认」。没有 `part_<n>`，配件标「缺实拍」。总览标「比例推定」。v01 已有的图仍待逐格确认。
+用户 2026-11-18 指出这三格不该放弃。按 1.12 另出 `baseline/v02/`，不覆盖 v01。v02 正式文件是 `side.png`、`top_down.png`、`back.png` 和 `sheet.png`。三张都是新生成的灰底渲染，不是原图复制或裁切。`top_down` 和 `back` 用脚本列出的五张实拍，原提示词末尾加一行 `FIX:`。`side` 第一次仍把控制头放在长面正中；第二次只附了两张侧面图，这一步违反 3.5「ATTACH 原样附带」，不能再用作做法。落选的第一次侧面在 `baseline/v02/not_used/`。
+
+用户对 v02 的原话：「你侧面视角的那一张图的按钮的位置就不对，那个还有一张背面的视角也不对，空间位置感不对，和按钮还没显示了。」侧面和背面明确不通过。`front`、`three_quarter`、`top_down`、`detail_1`–`detail_8` 都还没有逐张确认。状态仍是「待确认」。没有 `part_<n>`，配件标「缺实拍」。总览标「比例推定」。
+
+对照已入库实拍，控制头的相对位置是：
+
+- 控制头固定在顶盘后缘中央，不挪到前面或侧面。
+- 两个圆键和四段英文只在控制头的顶面，朝上。侧面平视看到的是控制头的侧面，顶面按键不转向镜头。`photos/02_side_head_left.png` 和 `photos/03_side_head_right.png` 里，控制头是一端的黑色圆角块，看不见 M 和电源键。
+- 控制头正面的横向开口朝前。侧面平视和背面平视都看不到这块开口。
+- 背面以 `photos/05_five_view.jpg` 的 REAR 为准：平视，控制头在顶沿后部正中，镜头看到的是它的后侧面，一块没有按键的黑盖。这张实拍没有把 M 或电源键显示在后表面上。不能为了露出按键把顶面转到镜头前，也不能在后表面上加按键。
+
+v02 侧面错在把顶面按键转成面向镜头。v02 背面错在控制头像盖中的圆钮，和 REAR 里贴后沿的位置、平视关系不一致。这两点写进下面的外形识别点、Identity 和 Geometry。
+
+`baseline/v03/` 只重做侧面和背面，不覆盖 v01、v02。脚本提示词原样使用，五张实拍按原顺序全部附上。侧面第一次仍是长面正中、按键朝向镜头，文件在 `baseline/v03/not_used/`。随后按 4.3 在原提示词末尾加一行 `FIX:` 重做一次，五张实拍仍然全附；留下的 `side.png` 控制头在左端，只见侧面，没有把按键转到镜头前。背面留下第一次的 `back.png`：平视，控制头是后侧面，后表面上没有 M 或电源键，因为 REAR 实拍本身也看不见这两颗键。状态仍是「待确认」。俯视和其他格都还没有逐张确认。
 
 ## 物理边界
 
@@ -89,6 +102,7 @@
 - no confirmed millimetre length, width, height, or aspect ratio; copy proportions only from the attached photos
 - one upright rounded-rectangle deep basin with straight brushed walls, rounded bottom corners, and one outward horizontal rim
 - do not add a separate pump, cable, adapter, filter, logo, or feet; none of those are visible in the photos
+- the control head stays at the rear centre of the tray; its key face points up and its front opening points forward
 
 ## Parts (prompt)
 
@@ -103,8 +117,8 @@
 - 整体是横放的圆角矩形不锈钢深桶，四壁为拉丝不锈钢，底部四角圆润，上沿有一圈向外的水平翻边。
 - 正面中央有一条竖向胶囊形水位窗，浅色金属边框，窗内为深色竖条，上方标 MAX，下方标 MIN，中段有一条更深的横带。左侧面、右侧面和背面的外壁是完整的拉丝钢面，没有水位窗。
 - 顶部是拉丝不锈钢浅盘面，内沿圆角。盘面后缘中央坐着一枚黑色、矮的圆角控制头，高出盘面，左右不顶到外沿。
-- 控制头顶面可见两个圆形键：左侧为 M，右侧为电源符号。按键下方有四段英文，从左到右为 NORMAL、INDUCTION、TIMING、POWER。这只是参考图里看得见的标识；各键与三种模式如何对应、有无指示灯，均未确认。
-- 控制头朝向正面的一侧，中部有一条横向胶囊形深色开口。只记可见开口，不把它写成充电口、灯或按键。
+- 控制头顶面可见两个圆形键：左侧为 M，右侧为电源符号。按键下方有四段英文，从左到右为 NORMAL、INDUCTION、TIMING、POWER。按键只在顶面、朝上。侧面平视和背面平视都不把这块顶面转向镜头。各键与三种模式如何对应、有无指示灯，均未确认。
+- 控制头朝向正面的一侧，中部有一条横向胶囊形深色开口。只记可见开口，不把它写成充电口、灯或按键。侧面平视和背面平视看不到这条开口。
 - 控制头左右两侧的盘面有对称的起伏轮廓。这里只记外形，不解释水路，也不标出水孔。
 - 盆内前缘中部有一条横向长条深色开口，两端圆角。只记为可见开口，功能未确认。
 - 正面略俯的单张产品照里，因为机位稍高，可以看见控制头顶部的圆键；不要据此再画一块未经单独拍清的机身前面板。控制头自身正面的那条开口以正面实拍为准。
@@ -118,21 +132,23 @@
 - 不是把盆前缘长条开口或控制头正面开口画成水龙头、喷泉柱、滤芯仓、感应窗、排水口、溢流口、充电口或其他未被确认的结构。
 - 不是在机身上增加参考图没有的屏幕、灯带、Logo、外露水管或电源线。
 - 不是把水位窗画成发光体。
+- 不是把顶面按键转到侧面或背面的镜头前，也不是在控制头的侧面或后表面上加按键。
 
 ## Identity (prompt)
 
 - horizontal rounded-rectangle deep basin in brushed stainless steel, rounded bottom corners, one outward horizontal rim
 - one vertical capsule-shaped water window centred on the front, pale metal frame, dark inner strip, MAX above and MIN below, with a darker horizontal band across the middle of the strip
 - shallow brushed stainless tray on top, rounded inner edge, sitting inside the rim
-- one short black rounded control head at the rear centre of the tray, raised above the tray and not reaching the left or right outer rim
-- control-head top has two round keys, M on the left and a power symbol on the right, with four small labels under them reading NORMAL, INDUCTION, TIMING, POWER
-- one horizontal capsule-shaped dark opening centred on the front face of the black control head
+- one short black rounded control head fixed at the rear centre of the tray; a side view shows its plain side at one end, a rear view shows its plain back at the rear edge
+- two round keys, M on the left and a power symbol on the right, with labels NORMAL, INDUCTION, TIMING, POWER, only on the upward top face; side and rear views do not turn that face toward the camera
+- one horizontal capsule-shaped dark opening only on the front face of the control head, not visible in a straight side view or a straight rear view
 - matching raised wavy contours on the tray to the left and right of the control head
 - one dark horizontal rounded slot in the middle of the inner front edge
 - no water window on the left side, the right side, or the back
 - no separate pump, cable, adapter, filter, logo, feet, or visible underside
 - no round or oval basin, no shallow dish, no full black lid, no control head moved to the centre or the front
 - no spout, fountain column, screen, light strip, exposed pipe, glowing window, or extra front panel
+- no keys on the side face or the back face of the control head
 
 ## 产品参考图
 
