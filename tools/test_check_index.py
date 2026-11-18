@@ -110,5 +110,30 @@ class AgentsIntakeTest(unittest.TestCase):
         self.assertIn("**案例的三种用法。**", guide)
 
 
+class NewProductFlowTest(unittest.TestCase):
+    """A new product must not stop at the product card (v3.18)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_skill_keeps_going_after_the_card(self):
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("## 新产品：建卡之后接着往下", skill)
+        self.assertNotIn("确认后再来。不进入第 1 步", skill)
+        self.assertIn("新建产品 <产品> 并做造型基准", skill)
+        self.assertIn("同一条消息里接着进入第 1 步", skill)
+
+    def test_guide_and_agents_accept_the_handoff(self):
+        guide = self.read("UTA_STYLE.md")
+        agents = self.read("AGENTS.md")
+        start = guide.index("### 2.1 读什么")
+        section = guide[start:guide.index("### 2.2", start)]
+        self.assertNotIn("不进入 2.2", section)
+        self.assertIn("同时照常进入 2.2", section)
+        self.assertIn("新产品先建卡", guide)
+        self.assertIn("新建产品 <产品> 并做造型基准", agents)
+
+
 if __name__ == "__main__":
     unittest.main()
