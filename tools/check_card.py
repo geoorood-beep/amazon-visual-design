@@ -349,11 +349,18 @@ def print_baseline(product, photos_dir=None):
     return 0
 
 
-def check_copy(copy, allowed_texts, product, product_forbidden, errors, what="copy"):
+def check_copy(copy, allowed_texts, product, product_forbidden, errors, what="copy", fact_id=None):
     """Forbidden words and numbers. allowed_texts: the 'allowed copy' of the facts in play."""
+    from copy_exceptions import duration_hits, invented_feature_hits, load_claims, load_grants
+
     global_forbidden = md_section_bullets(read(ROOT / "UTA_STYLE.md"), "禁用词")
     for word in find_forbidden(copy, global_forbidden):
         errors.append(f"{what} contains a word forbidden by UTA_STYLE.md: '{word}'")
+    held = load_grants(ROOT, product).get(fact_id or "", set())
+    for word in duration_hits(copy, held):
+        errors.append(f"{what} contains a duration that is not allowed for this fact: '{word}'")
+    for word in invented_feature_hits(copy, load_claims(ROOT, product)):
+        errors.append(f"{what} states a feature the product card does not confirm: '{word}'")
     for word in find_forbidden(copy, product_forbidden):
         errors.append(f"{what} contains a word forbidden for {product}: '{word}'")
     allowed = set()
@@ -558,7 +565,9 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
     copy = " ".join(
         fields[k] for k in ("eyebrow", "headline", "subtitle", "hero_number", "label") if not is_none(fields.get(k))
     )
-    check_copy(copy, [fact["allowed"]] if fact else [], product, product_forbidden, errors)
+    selling = fields.get("selling_point", "")
+    bound = selling if re.fullmatch(r"F\d+", selling or "") else None
+    check_copy(copy, [fact["allowed"]] if fact else [], product, product_forbidden, errors, fact_id=bound)
 
     allowed_slots = {"product"}
     if kind != "M":
@@ -690,7 +699,10 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
                 continue
             if len(text.split()) > MAX_LABEL_WORDS:
                 errors.append(f"line '{text}' has more than {MAX_LABEL_WORDS} words")
-            check_copy(text, [facts[fact_id]["allowed"]], product, product_forbidden, errors, what=f"line '{text}'")
+            check_copy(
+                text, [facts[fact_id]["allowed"]], product, product_forbidden, errors,
+                what=f"line '{text}'", fact_id=fact_id,
+            )
             used_facts.add(fact_id)
             lines.append((fact_id, text))
         if len({fact_id for fact_id, _text in lines}) != len(lines):

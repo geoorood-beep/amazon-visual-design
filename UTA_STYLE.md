@@ -1,6 +1,6 @@
 # UTA Style
 
-版本 3.19（2026-11-17）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
+版本 3.20（2026-11-18）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
 
 「UTA style」「Uta Style」「Youta style」「有它风格」指的都是本文件。它与 `docs/`、`archive/` 里的任何旧文字冲突时，以本文件为准；那两个目录出图时不读。
 
@@ -446,7 +446,7 @@ M1 和 S 位按生图工具的原生尺寸出图，如实记录实际像素，�
 
 **护栏。**
 
-- 故事不能暗示产品卡没确认的事实：不写出门几天回来水还在（续航），不放在户外，不暗示防水、可拆、感应。
+- 故事不能暗示产品卡没确认的事实：不写出门几天回来水还在（续航），不放在户外，不暗示防水、可拆、感应。vacation、travel、trip、weekend、holiday 不能用来暗示无人照管。只有 2.7 允许的那句 “15-21 days”，并且同一句里写上缩短续航的限定，才可以出现在绑定了该事实的 story 里。
 - 故事里的情绪是人和宠物自然的状态，不拟人，不夸张到抢走产品。
 - 一张图一个故事，讲一个卖点。整套里几张图的故事不能是同一个时刻换个说法（K-4 给警告）。
 
@@ -578,7 +578,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 | `interaction` | 互动 | 宠物做的：`share_drink`、`drink`、`wait`、`inspect`、`paw_touch`、`rest`；人手做的（宠物可以在旁边看）：`human_fill`、`human_rinse`、`human_wipe`、`human_check`；没有人和宠物：`product_only` |
 | `light_setup` | 光型 | 1.3 的五个取值之一。`light` 里写的方向要和它一致 |
 | `foreground` | 前景 | 英文，画面最前面一层虚化的东西，例如 the cat's whiskers；没有写 `none` |
-| `story` | 场景故事 | 英文一句，最多 35 个词：谁、什么时刻、什么情绪、卖点怎么被看见（1.14）。有宠物或人物的图必填；只有产品写 `none`。不写时长、看不到的结构和指着产品的动作 |
+| `story` | 场景故事 | 英文一句，最多 35 个词：谁、什么时刻、什么情绪、卖点怎么被看见（1.14）。有宠物或人物的图必填；只有产品写 `none`。不写时长（2.7 的定向例外除外）、看不到的结构和指着产品的动作 |
 | `evidence_id` | 证据方案编号 | 证据方案表里属于这个事实的编号；用户自定义的证据写 `custom`；只有产品单独出镜的小格可以写 `none` |
 | `scene_id` | 场景编号 | 场景池的编号。`scene` 里要出现这个场景的一个 `keywords` |
 | `pet_id` | 宠物编号 | 宠物池的编号，两只用 `+` 连；没有宠物写 `none`。`pet` 里要原样写出每只的 `look_en` |
@@ -717,7 +717,12 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 - 不碰产品卡「未知项」：不画、不写、不暗示。
 - 画面字段里不写参考图看不到的结构：泵、滤芯、内部结构、X 光、剖视、发光。
 - 画面字段里不写和产品卡「物理边界」矛盾的大小、形状或件数（例如 huge、tiny、a pair of、a stack of），也不让产品卡部件清单之外的东西入画。
-- 文案里不写时长（day、week、month、vacation、travel 一类）。产品卡确认了时长事实时，先改本条和 `tools/check_set.py`，再写。
+- 文案里不写时长（day、week、month、vacation、travel 一类）。唯一例外是下面这一句，而且四条要同时成立，缺一条就整句仍禁止：
+  1. 图位的 `selling_point`，或参数行里这一行的事实编号，指向一条已确认事实。这条事实的「画面可写」同时写有「15–21 天」、`多宠` 和「缩短续航」。只写在「不可写成」里不算授权。
+  2. 含有时长的那一句英文，写的是 `15-21 days` 或 `15–21 days`，不是单独的 15 days、21 days，也不是别的数字或单位。
+  3. 同一句里还有完整限定，只能是 `multiple pets or frequent sensing may shorten runtime`，或 `multiple pets or high-frequency sensing may shorten runtime`。限定在另一句、另一字段，或只塞进 multiple、shorten、runtime 这几个词，都不算。
+  4. 这一句里再出现 week、month、vacation、travel、trip、weekend、holiday，或其他 day 说法，仍然禁止。
+  `wireless` 和 `battery` 不是禁用词，不在文末名单里，也不按事实编号特许。它们仍是事实：产品卡已确认事实的「事实」或「画面可写」里，去掉「不得 / 不要 / 不能 / 不可 / 避开 / 不写」之后没有「无线」，文案就不能写 `wireless`；没有「电池」，就不能写 `battery`。这是「不写未确认事实」，不是禁词例外。story 用同一套规则。
 - 不写索引里没有的图片路径。
 - 不增加表里没有的字段，不写检查清单、阶段门、矩阵或提示词。
 - 不替出图方决定重试次数、验收标准或出图顺序。
@@ -986,7 +991,7 @@ python -m unittest discover -s tools -p "test_check_*.py"
 
 ## 禁用词
 
-下列词不得出现在主标题、副标题或强调数字里。校验脚本读取这份列表。
+下列词不得出现在主标题、副标题或强调数字里。校验脚本读取这份列表。`wireless` 和 `battery` 不是这张名单里的词。
 
 - Illustration
 - confirmed
@@ -1006,8 +1011,6 @@ python -m unittest discover -s tools -p "test_check_*.py"
 - healthy
 - health
 - Wi-Fi
-- wireless
-- battery
 - antibacterial
 - anti-bacterial
 - bacteria

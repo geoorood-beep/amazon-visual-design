@@ -1,0 +1,12 @@
+path,product_view,cameras,parts,checked
+products/pw002_s/ref/baseline_front.png,front,eye_level,whole;rim;water_window;control_head;front_opening,yes
+products/pw002_s/ref/baseline_side.png,side_left,eye_level,whole;rim;control_head,yes
+products/pw002_s/ref/baseline_top_down.png,front,top_down,whole;rim;control_head;tray;front_slot,yes
+products/pw002_s/ref/baseline_detail_1.png,front,eye_level,rim,yes
+products/pw002_s/ref/baseline_detail_2.png,front,eye_level,water_window,yes
+products/pw002_s/ref/baseline_detail_3.png,front,down_45,tray;rim;control_head,yes
+products/pw002_s/ref/baseline_detail_4.png,front,eye_level,control_head,yes
+products/pw002_s/ref/baseline_detail_5.png,front,top_down,control_head;keys,yes
+products/pw002_s/ref/baseline_detail_6.png,front,eye_level,front_opening,yes
+products/pw002_s/ref/baseline_detail_7.png,front,down_45,tray,yes
+products/pw002_s/ref/baseline_detail_8.png,front,top_down,front_slot,yes

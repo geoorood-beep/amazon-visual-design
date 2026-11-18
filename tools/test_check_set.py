@@ -68,7 +68,7 @@ class LegacyV1(Base):
                        "WARN S2: headline 里重复了强调数字 10",
                        "WARN S6: human_action 写了指着产品的动作"):
             self.assertIn(expect, out)
-        self.assertNotIn("没有产品参考图支撑", out)  # v3.19: camera is not limited by ref_views
+        self.assertNotIn("没有产品参考图支撑", out)  # v3.20: camera is not limited by ref_views
         self.assertNotIn("FAIL", out)
         body = read(V1)
         expected = "\n".join(l for l in body[body.index("UTA-TASK v1"):].splitlines()
@@ -111,7 +111,7 @@ class SampleV2(Base):
 
 class CardRules(Base):
     def test_camera_not_in_ref_views_is_allowed(self):
-        # v3.19: camera comes from the case reference, not from ref_views.csv
+        # v3.20: camera comes from the case reference, not from ref_views.csv
         text = self.mutate("camera: low_angle\nscene: Bedroom floor at night",
                            "camera: top_down\nscene: Bedroom floor at night")
         code, out, emit = self.run_task(self.write("t.md", text))

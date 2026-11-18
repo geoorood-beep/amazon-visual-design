@@ -136,7 +136,7 @@ class NewProductFlowTest(unittest.TestCase):
 
 
 class FlowV319Test(unittest.TestCase):
-    """No mid-flow stops, baseline as a reference set, deeper story options (v3.19)."""
+    """No mid-flow stops, baseline as a reference set, deeper story options (v3.20)."""
 
     def read(self, *parts):
         with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
