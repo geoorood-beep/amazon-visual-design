@@ -283,5 +283,42 @@ class UsageWiringTest(unittest.TestCase):
         self.assertIn("不确定就问", self.read("grok", "grok-UTAstyle-skill.md"))
 
 
+class UnderstandingTest(unittest.TestCase):
+    """Every product is understood first; unsure points go to the user (v3.27)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_understand_template_has_a_parseable_sheet(self):
+        import json, re
+        html = self.read("grok", "understand_template.html")
+        m = re.search(r'<script id="sheet" type="application/json">(.*?)</script>', html, re.S)
+        data = json.loads(m.group(1))
+        for key in ("summary", "parts", "flow", "functions", "states", "internal", "questions"):
+            self.assertIn(key, data)
+        self.assertIn("confidence", data["functions"][0])
+        self.assertIn("recommend", data["questions"][0])
+
+    def test_wiring(self):
+        guide = self.read("UTA_STYLE.md")
+        for marker in ("**先理解产品（所有产品通用，每个产品一次）。**", "**第零轮：先理解产品", "### 3.8 更新产品理解",
+                       "`disassembled`", "`loading`", "grok/understand_template.html"):
+            self.assertIn(marker, guide)
+        self.assertNotIn("top_removed", guide)
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("## 先理解产品（每个产品一次）", skill)
+        self.assertIn("grok/understand_template.html", skill)
+        self.assertIn("更新产品理解", self.read("AGENTS.md"))
+        self.assertIn("## 产品理解", self.read("products", "_template", "PRODUCT.md"))
+
+    def test_generic_rules_are_not_fountain_only(self):
+        import csv
+        with open(os.path.join(ROOT, "references", "fact_visuals.csv"), encoding="utf-8") as fh:
+            text = " ".join(r["must_show_en"] for r in csv.DictReader(fh))
+        self.assertNotIn("top unit", text)
+        self.assertIn("air", text)
+
+
 if __name__ == "__main__":
     unittest.main()

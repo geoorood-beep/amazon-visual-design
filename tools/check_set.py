@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.26"
+VERSION = "3.27"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -123,8 +123,9 @@ EFFECT_TEXT = {
     "flow_path": ("Water-path effect: the real flowing water is followed by a soft, natural highlight along its "
                   "path through the parts listed below; it looks like light on water, not a drawn arrow."),
 }
-PART_WORDS = {"pump": ("水泵", "pump"), "filter": ("滤芯", "过滤", "filter"), "filters": ("滤芯", "过滤", "filter"),
-              "cartridge": ("滤芯", "cartridge")}
+PART_WORDS = {"pump": ("水泵", "泵", "pump"), "filter": ("滤芯", "滤网", "过滤", "filter"),
+              "filters": ("滤芯", "滤网", "过滤", "filter"), "cartridge": ("滤芯", "cartridge"),
+              "led": ("灯", "发光", "照明", "led", "light"), "lightup": ("灯", "发光", "照明", "led", "light")}
 DURATION_RE = re.compile(
     r"\b(day|days|week|weeks|month|months|vacation|vacations|holiday|holidays|"
     r"travel|trip|trips|weekend|weekends)\b", re.I)
@@ -1323,6 +1324,9 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
     pools["style_row"] = pools["styles"][style_id]
     pools["usage"] = load_usage(root, product)
     pools["views"] = views
+    if not pools["usage"]["understanding"].startswith("已确认"):
+        p("WARN [1.15] 产品卡的「产品理解」还不是已确认（现在：%s）：画面要求按通用推断规则，建议先做产品理解，让用户确认（2.2 第零轮）"
+          % (pools["usage"]["understanding"] or "没有这一节"))
     evidence = load_evidence(root, product)
     from copy_exceptions import load_claims, load_grants
     grants = load_grants(root, product)
