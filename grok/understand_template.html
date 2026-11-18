@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>产品理解</title>
+<!--
+  UTA style 产品理解页（给人看、让人判断的版本）。
+  写卡方只改下面 id 为 sheet 的那个 JSON 脚本块里的内容，页面其余部分原样不动。
+  字段说明见 UTA_STYLE.md 1.15「先理解产品」。
+-->
+<style>
+:root{
+  --bg:#f6f2ec; --card:#fffdf9; --ink:#1f2630; --sub:#5d6673; --line:#e4ddd2; --chip:#efe8dc;
+  --accent:#b4572e; --accent-soft:#f6e3d8; --ok:#2f7a4f; --ok-soft:#e2f1e7; --warn:#a15c00; --warn-soft:#fbefd9;
+  --bad:#b03a2e; --bad-soft:#f8e0dc; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#16181c; --card:#1f2228; --ink:#eceae6; --sub:#a3a9b3; --line:#30343c; --chip:#2a2e35;
+    --accent:#e58a5c; --accent-soft:#3a2a22; --ok:#6fcf97; --ok-soft:#1f3328; --warn:#f2b94b; --warn-soft:#3a3020;
+    --bad:#ff8a7a; --bad-soft:#3a2420; --shadow:none;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:26px;margin:0 0 4px}
+h2{font-size:17px;margin:28px 0 10px}
+.sub{color:var(--sub)}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.ask{background:var(--warn-soft);border:2px solid var(--warn);border-radius:16px;padding:16px 18px}
+.ask h2{margin-top:0}
+.q{background:var(--card);border-radius:12px;padding:12px 14px;margin:10px 0}
+.q .t{font-weight:700}
+.q .why{color:var(--sub);font-size:13px;margin:2px 0 8px}
+.opt{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:4px 10px;margin:3px 6px 3px 0;font-size:14px}
+.opt.rec{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.fn{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.fn .head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.fn .fact{font-weight:800}
+.conf{font-size:12px;font-weight:700;border-radius:6px;padding:1px 8px;white-space:nowrap}
+.conf.c1{background:var(--ok-soft);color:var(--ok)} .conf.c2{background:var(--warn-soft);color:var(--warn)} .conf.c3{background:var(--bad-soft);color:var(--bad)}
+.row{margin-top:6px;font-size:14px}
+.row span{color:var(--sub);display:inline-block;min-width:5.5em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--chip);border-radius:8px;padding:3px 10px;font-size:13px}
+ol{margin:6px 0;padding-left:22px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--sub);font-weight:600}
+.foot{margin-top:28px;text-align:center;color:var(--sub)}
+.foot b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script id="sheet" type="application/json">
+{
+  "product": "示例产品",
+  "status": "待确认",
+  "summary": "一句话：这是什么产品、给谁用、在哪里用。",
+  "parts": [
+    {"name": "主体", "en": "main body", "removable": "否", "visible": "是"}
+  ],
+  "flow": ["第一步怎么用", "第二步怎么用"],
+  "functions": [
+    {"fact": "F1", "text": "事实原文", "how": "这个功能是怎么做到的", "proof": "画面里看得见的证据",
+     "state": "装好", "angle": "左前 45° 低机位近景", "effect": "", "confidence": "推定"}
+  ],
+  "states": [{"id": "assembled", "name": "装好", "shows": "全部部件"}],
+  "internal": [],
+  "questions": [
+    {"q": "需要人判断的问题", "why": "为什么要问：答案会影响哪几张图", "options": ["选项一", "选项二", "不确定，这张先不拍这个"], "recommend": "选项一"}
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById("sheet").textContent);
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function conf(c) { var k = c === "确定" ? "c1" : (c === "不确定" ? "c3" : "c2"); return '<span class="conf ' + k + '">' + esc(c || "推定") + '</span>'; }
+  var h = [];
+  h.push('<h1>' + esc(data.product) + ' · 产品理解</h1>');
+  h.push('<div class="sub"><span class="pill">' + esc(data.status || "待确认") + '</span> ' + esc(data.summary || "") + '</div>');
+
+  var qs = data.questions || [];
+  if (qs.length) {
+    h.push('<div class="ask" style="margin-top:18px"><h2>需要你判断（' + qs.length + ' 个）</h2>');
+    qs.forEach(function (q, i) {
+      h.push('<div class="q"><div class="t">' + (i + 1) + '. ' + esc(q.q) + '</div>' + (q.why ? '<div class="why">' + esc(q.why) + '</div>' : ""));
+      (q.options || []).forEach(function (o) {
+        var rec = o === q.recommend;
+        h.push('<span class="opt' + (rec ? " rec" : "") + '">' + (rec ? "★ " : "") + esc(o) + '</span>');
+      });
+      h.push('</div>');
+    });
+    h.push('<div class="sub">在下面的提问卡里点选，或者直接打字告诉我。</div></div>');
+  }
+
+  h.push('<h2>每个功能怎么工作、画面怎么证明</h2><div class="grid">');
+  (data.functions || []).forEach(function (f) {
+    h.push('<div class="fn"><div class="head"><span class="fact">' + esc(f.fact) + ' ' + esc(f.text || "") + '</span>' + conf(f.confidence) + '</div>' +
+      '<div class="row"><span>怎么工作</span>' + esc(f.how || "—") + '</div>' +
+      '<div class="row"><span>看得见的证据</span><b>' + esc(f.proof || "—") + '</b></div>' +
+      '<div class="row"><span>产品状态</span>' + esc(f.state || "装好") + '</div>' +
+      '<div class="row"><span>推荐拍法</span>' + esc(f.angle || "—") + '</div>' +
+      (f.effect ? '<div class="row"><span>特效</span>' + esc(f.effect) + '</div>' : "") + '</div>');
+  });
+  h.push('</div>');
+
+  if ((data.parts || []).length) {
+    h.push('<h2>部件</h2><div class="panel"><table><tr><th>部件</th><th>英文名</th><th>能拆吗</th><th>外面看得见吗</th></tr>');
+    data.parts.forEach(function (p) { h.push('<tr><td>' + esc(p.name) + '</td><td>' + esc(p.en) + '</td><td>' + esc(p.removable) + '</td><td>' + esc(p.visible) + '</td></tr>'); });
+    h.push('</table></div>');
+  }
+  if ((data.flow || []).length) {
+    h.push('<h2>怎么用</h2><div class="panel"><ol>' + data.flow.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join("") + '</ol></div>');
+  }
+  if ((data.states || []).length) {
+    h.push('<h2>产品有哪几种样子</h2><div class="chips">' + data.states.map(function (s) { return '<span class="chip"><b>' + esc(s.name) + '</b>（' + esc(s.id) + '）：' + esc(s.shows) + '</span>'; }).join("") + '</div>');
+  }
+  h.push('<h2>内部结构</h2>');
+  if ((data.internal || []).length) {
+    h.push('<div class="panel"><table><tr><th>部件</th><th>位置</th><th>来源</th></tr>' +
+      data.internal.map(function (r) { return '<tr><td>' + esc(r.part) + '</td><td>' + esc(r.where) + '</td><td>' + esc(r.source) + '</td></tr>'; }).join("") + '</table></div>');
+  } else {
+    h.push('<div class="panel sub">还不知道。没有确认之前，不做透视、剖视这类特效。</div>');
+  }
+  h.push('<div class="foot">判断完点 <b>确认</b>，我会把确认过的内容交给 Codex 写进产品卡，然后接着做选择题。</div>');
+  document.getElementById("app").innerHTML = h.join("");
+  document.title = (data.product || "") + " 产品理解";
+})();
+</script>
+</body>
+</html>

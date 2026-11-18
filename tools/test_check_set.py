@@ -93,7 +93,7 @@ class SampleV2(Base):
         self.assertIsNone(re.search(r"^(shot_size|product_view|focus|interaction|light_setup|foreground|beat|scope):",
                                     text, re.M))
         s3 = self.card_block(text, "S3_steel.md")
-        self.assertIn("for scale. Must be visible: the brushed steel texture", s3)
+        self.assertIn("for scale. Must be visible: the material's real texture catching the light", s3)
         self.assertIn("Extreme close-up with a macro-lens look: the rim fills", s3)
         self.assertIn("The product reference shows the product from the front; turn it to the view", s3)
         self.assertIn("do not copy its camera angle or framing.", s3)
@@ -462,10 +462,25 @@ class UsageModel(Base):
             "| 编号 | 事实 | 画面可写 | 不可写成 |\n|---|---|---|---|\n"
             "| F1 | 取出水泵后，钢盆可放进洗碗机 | dishwasher-safe basin | 无 |\n"
             "| F2 | 易清洗 | Easy to clean、rinse | 拆解、洗碗机 |\n"
-            "| F3 | 无线 | Cordless | 无 |\n")
-        self.assertEqual(usage_model.requirement(usage, "F1")["state"], "top_removed")
+            "| F3 | 两年质保 | 2-year warranty | 无 |\n")
+        self.assertEqual(usage_model.requirement(usage, "F1")["state"], "disassembled")
         self.assertEqual(usage_model.requirement(usage, "F2")["state"], "assembled")
         self.assertIsNone(usage_model.requirement(usage, "F3"))
+
+    def test_rules_work_for_other_products(self):
+        usage = self.product(
+            "| 编号 | 事实 | 画面可写 | 不可写成 |\n|---|---|---|---|\n"
+            "| F1 | 吹风机滤网可拆洗 | removable filter | 无 |\n"
+            "| F2 | 便携咖啡机，无线 | cordless | 无 |\n"
+            "| F3 | 台灯三档调光 | dimmable lamp | 无 |\n"
+            "| F4 | 加湿器喷雾安静 | quiet mist | 无 |\n")
+        self.assertEqual(usage_model.requirement(usage, "F1")["state"], "disassembled")
+        self.assertIn("no power cable", usage_model.requirement(usage, "F2")["must_show"])
+        f4 = usage_model.requirement(usage, "F4")["must_show"]
+        self.assertIn("undisturbed", f4)
+        self.assertIn("mist", f4)
+        card = check_set.Card("x.md", ["slot: S1"])
+        self.assertIn("led", check_set.allowed_structure(card, usage))
 
     def test_product_card_overrides_the_rules(self):
         usage = self.product(
@@ -481,15 +496,17 @@ class UsageModel(Base):
 
     def test_pw002_s_facts_are_inferred(self):
         usage = usage_model.load_usage(ROOT, "pw002_s")
-        self.assertEqual(usage_model.requirement(usage, "F9")["state"], "top_removed")
+        self.assertEqual(usage_model.requirement(usage, "F9")["state"], "disassembled")
         self.assertIn("FV03", usage_model.requirement(usage, "F2")["source"])
-        self.assertIn("flowing", usage_model.requirement(usage, "F12")["must_show"])
+        f12 = usage_model.requirement(usage, "F12")["must_show"]
+        self.assertIn("undisturbed", f12)
+        self.assertIn("water flowing", f12)
 
     def test_wrong_state_fails_the_card(self):
-        text = self.mutate("slot: S5\n", "slot: S5\nproduct_state: top_removed\n")
+        text = self.mutate("slot: S5\n", "slot: S5\nproduct_state: disassembled\n")
         code, out, _ = self.run_task(self.write("t.md", text))
         self.assertEqual(code, 1, out)
-        self.assertIn("F5 要求产品状态 assembled，这张卡写的是 top_removed", out)
+        self.assertIn("F5 要求产品状态 assembled，这张卡写的是 disassembled", out)
 
     def test_unknown_state_fails(self):
         text = self.mutate("slot: S5\n", "slot: S5\nproduct_state: melted\n")
@@ -508,7 +525,7 @@ class UsageModel(Base):
     def test_state_and_evidence_reach_the_prompt(self):
         code, out, emit = self.run_task(V2)
         s4 = self.card_block(read(emit), "S4_quiet.md")
-        self.assertIn("Must be visible: water visibly flowing from the outlet", s4)
+        self.assertIn("Must be visible: the product visibly running while a person or pet right next to it stays completely undisturbed", s4)
         self.assertNotIn("product_state", read(emit))
 
 
@@ -534,6 +551,7 @@ class AnglesAndEffects(Base):
         code, out, _ = self.run_task(V2)
         self.assertEqual(code, 0, out)
         self.assertIn("WARN [U-1] P4（F1）", out)
+        self.assertIn("WARN [1.15] 产品卡的「产品理解」还不是已确认", out)
 
     def test_effect_needs_known_structure(self):
         text = self.mutate("slot: S3\n", "slot: S3\neffect: xray\n")

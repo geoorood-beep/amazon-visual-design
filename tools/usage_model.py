@@ -9,7 +9,8 @@ A product card may spell this out in two optional sections:
 The last four columns of 事实的画面要求 are optional; values are separated by ";".
 
 When it does not, the requirement for a fact is inferred from references/fact_visuals.csv:
-the first rule whose keyword appears in the fact's own text or its 「画面可写」 column wins.
+up to two rules whose keywords appear in the fact's own text or its 「画面可写」 column are
+merged (state and camera advice from the first, visible evidence from both).
 The 「不可写成」 column is never matched, so a card that forbids "拆解" does not trigger
 the disassembly rule.
 """
@@ -19,10 +20,11 @@ import re
 
 GENERIC_STATES = {
     "assembled": "",
-    "top_removed": ("The removable top unit with the pump is lifted off and set aside, away from the "
-                    "water; the basin is open and empty."),
-    "refilling": "The top unit is lifted off and clean water is being poured into the open basin.",
+    "disassembled": ("The removable part is taken off and set aside, so the opened product and the detached "
+                     "part are both clearly visible."),
+    "loading": "The product is open and being filled; the contents are visibly going in.",
 }
+MAX_MERGED_RULES = 2
 STATE_ID_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 FACT_ROW_RE = re.compile(r"^\|\s*(F\d+)\s*\|([^|]*)\|([^|]*)\|")
 
@@ -87,7 +89,14 @@ def load_usage(root, product, rules=None):
         cells = _cells(line)
         if len(cells) >= 4 and cells[0] not in ("部件", "") and not set(cells[0]) <= set("-: ") and cells[1]:
             structure.append({"part": cells[0], "part_en": cells[1], "where": cells[2], "source": cells[3]})
+    understanding = ""
+    for line in _section(text, "## 产品理解"):
+        m = re.match(r"^状态[:：]\s*(\S+)", line.strip())
+        if m:
+            understanding = m.group(1)
+            break
     return {
+        "understanding": understanding,
         "facts": facts,
         "states": states or dict(GENERIC_STATES),
         "own_states": bool(states),
@@ -106,10 +115,15 @@ def requirement(usage, fact_id):
     text = usage["facts"].get(fact_id, "").lower()
     if not text:
         return None
-    for r in usage["rules"]:
-        if any(w in text for w in r["words"]):
-            return {"state": r["state"], "must_show": r["must_show_en"], "must_not": r["must_not_en"],
-                    "views": _split(r.get("views")), "cameras": _split(r.get("cameras")),
-                    "shots": _split(r.get("shots")), "effect": (r.get("effect") or "").strip(),
-                    "source": "推断规则 %s（references/fact_visuals.csv）" % r["id"]}
-    return None
+    hits = [r for r in usage["rules"] if any(w in text for w in r["words"])][:MAX_MERGED_RULES]
+    if not hits:
+        return None
+    first = hits[0]
+    state = next((r["state"] for r in hits if r["state"] != "assembled"), "assembled")
+    return {"state": state,
+            "must_show": "; ".join(r["must_show_en"].strip().rstrip(".") for r in hits),
+            "must_not": "; ".join(r["must_not_en"].strip().rstrip(".") for r in hits if r["must_not_en"].strip()),
+            "views": _split(first.get("views")), "cameras": _split(first.get("cameras")),
+            "shots": _split(first.get("shots")),
+            "effect": next(((r.get("effect") or "").strip() for r in hits if (r.get("effect") or "").strip()), ""),
+            "source": "推断规则 %s（references/fact_visuals.csv）" % "、".join(r["id"] for r in hits)}
