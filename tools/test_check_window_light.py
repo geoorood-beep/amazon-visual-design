@@ -3,6 +3,7 @@
 Run from the repository root:
     python3 -m unittest discover -s tools -p "test_check_*.py"
 """
+import json
 import os
 import unittest
 
@@ -35,9 +36,16 @@ class WindowLight(unittest.TestCase):
     def test_only_the_confirmed_product_has_the_sentence(self):
         self.assertIn("blue light", self.usage["window_light"])
         self.assertIn("readable", self.usage["window_light"])
+        self.assertIn("MAX and MIN marks already on that window", self.usage["window_light"])
         self.assertNotIn("do not", self.usage["window_light"].lower())
         self.assertNotIn("never", self.usage["window_light"].lower())
         self.assertEqual(self.other["window_light"], "")
+        with open(os.path.join(ROOT, "products", "pw002_s", "PRODUCT.md"), encoding="utf-8") as fh:
+            product = fh.read()
+        section = product.split("## 运行外观", 1)[1].split("## ", 1)[0]
+        self.assertIn("未出水时窗亮不亮：未确认", section)
+        self.assertIn("不是确认「未工作必不亮」", section)
+        self.assertNotIn("按不发光画", section)
 
     def test_running_front_view_only(self):
         self.assertTrue(usage_model.window_light_applies(self.usage, fields()))
@@ -51,6 +59,44 @@ class WindowLight(unittest.TestCase):
             self.usage, fields(evidence="This frame is not an operating shot. When water is running, do not paint a working glow.")))
         self.assertTrue(usage_model.window_light_applies(
             self.usage, fields(evidence="The fountain is running and the water window stays in frame.")))
+        self.assertFalse(usage_model.window_light_applies(
+            self.usage, fields(product_view="side_left",
+                               evidence="Water is running and the front window is described beside a sideboard.")))
+        self.assertFalse(usage_model.window_light_applies(
+            self.usage, fields(evidence="Keep the water window out of this frame. The fountain is running.")))
+        self.assertTrue(usage_model.window_light_applies(
+            self.usage, fields(
+                product_view="three_quarter_right",
+                evidence=("Hands at their sides. If water is running and the water window is in the frame, "
+                          "a soft blue glow is visible. If the fountain is not shown running, do not invent a light."))))
+        self.assertTrue(usage_model.window_light_applies(
+            self.usage, fields(
+                evidence=("When water is running and the water window is in the frame, show the level. "
+                          "Otherwise do not paint a working glow."))))
+
+    def test_v2_task_running_window_sentences(self):
+        path = os.path.join(os.path.dirname(__file__), "testdata", "pw002_s_v2_window_cards.json")
+        with open(path, encoding="utf-8") as fh:
+            cards = json.load(fh)["cards"]
+        self.assertEqual([c["slot"] for c in cards].count("S1"), 1)
+        self.assertEqual(len(cards), 23)
+        got = []
+        for card in cards:
+            base = {
+                "product_view": card.get("product_view") or "",
+                "focus": card.get("focus") or "",
+                "evidence": card.get("evidence") or "",
+                "story": card.get("story") or "",
+                "pet_action": card.get("pet_action") or "",
+                "human_action": card.get("human_action") or "",
+            }
+            applies = usage_model.window_light_applies(self.usage, base)
+            with_light_words = dict(base, evidence=base["evidence"] + " " + (card.get("light") or ""))
+            self.assertEqual(
+                usage_model.window_light_applies(self.usage, with_light_words), applies, card["slot"])
+            if applies:
+                got.append(card["slot"])
+        self.assertEqual(got, ["S1", "S3", "S4", "S7", "S8", "P1", "P2a", "P4", "P6"])
 
     def test_running_light_does_not_replace_fact_inference(self):
         self.assertIn("FV03", usage_model.requirement(self.usage, "F2")["source"])

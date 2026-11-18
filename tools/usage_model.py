@@ -30,17 +30,20 @@ STATE_ID_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 FACT_ROW_RE = re.compile(r"^\|\s*(F\d+)\s*\|([^|]*)\|([^|]*)\|")
 RUNNING_RE = re.compile(
     r"\b(flowing|ripples?|starts to move|water starts|water falling|flow begins|"
-    r"is running|keeps running)\b",
+    r"is running|keeps running|fountain runs)\b",
     re.I,
 )
-NOT_OPERATING_RE = re.compile(
-    r"not an operating shot|not a running|not shown running|do not paint a working",
-    re.I,
-)
+# Only a statement that this frame itself is not operating turns the light off.
+# "if not shown running", "otherwise do not paint", "not an outlet", and
+# "when the fountain is not running" are other sentences in the same card.
+FRAME_OFF_RE = re.compile(r"not an operating shot", re.I)
+WINDOW_OUT_RE = re.compile(r"keep the water window out of this (?:frame|cell)", re.I)
 FRONT_VIEWS = {"front", "front_left", "front_right", "three_quarter_left", "three_quarter_right"}
+COPY_KEYS = ("evidence", "story", "pet_action", "human_action")
 WINDOW_LIGHT = (
     "While water is flowing and the front water window is in frame, a blue light is visible "
-    "inside that window and the real water level stays readable through it, including MAX and MIN."
+    "inside that window and the real water level stays readable through it, including the "
+    "MAX and MIN marks already on that window."
 )
 
 
@@ -133,17 +136,24 @@ def confirmed_window_light(text):
     return WINDOW_LIGHT
 
 
+def _copy(fields):
+    return " ".join(fields.get(key) or "" for key in COPY_KEYS)
+
+
 def window_in_frame(fields):
+    """Front-family viewpoint or an explicit water-window focus. The word "side" in the copy is not a view."""
+    if WINDOW_OUT_RE.search(_copy(fields)):
+        return False
     focus = (fields.get("focus") or "").strip()
     view = (fields.get("product_view") or "").strip()
-    if focus == "water_window":
-        return True
+    if view in ("", "none"):
+        return focus == "water_window"
     return view in FRONT_VIEWS
 
 
 def water_running(fields):
-    blob = " ".join(fields.get(key) or "" for key in ("evidence", "story", "pet_action", "human_action"))
-    if NOT_OPERATING_RE.search(blob):
+    blob = _copy(fields)
+    if FRAME_OFF_RE.search(blob):
         return False
     return bool(RUNNING_RE.search(blob))
 

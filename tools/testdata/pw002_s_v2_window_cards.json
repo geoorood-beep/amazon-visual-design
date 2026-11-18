@@ -1,0 +1,258 @@
+{
+  "source": "PW002-S-UTA-3.35-TASK-16.v2 attachment, card fields only",
+  "cards": [
+    {
+      "path": "cards/pw002_s/M1_white.md",
+      "slot": "M1",
+      "product_view": "none",
+      "focus": "none",
+      "evidence": "The assembled stainless fountain stands alone on a seamless white sweep, front-facing, product only, with no text, pets, or props. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout.",
+      "story": "none",
+      "pet_action": "none",
+      "human_action": "none",
+      "light": "a gentle side highlight on the brushed steel and a soft fill, not a flat frontal wash"
+    },
+    {
+      "path": "cards/pw002_s/S1_sensor.md",
+      "slot": "S1",
+      "product_view": "three_quarter_left",
+      "focus": "front_opening",
+      "evidence": "Close on the living-room floor, an orange tabby cat steps toward the fountain and water starts from the front opening of the black pump. The water window stays in frame. Water leaves only from the front opening of the black pump. The Type-C port on the back of the pump is not an outlet and must not be drawn as a spout or spray. When water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. Do not invent a light state for when the fountain is not running, and do not add alarms or colour meanings that were not given. A faint sensing signal wave is allowed; do not name a distance or a sensor type.",
+      "story": "At the living-room window the orange tabby steps close and water starts from the front opening; the cat leans in as the flow begins.",
+      "pet_action": "leaning in with whiskers forward and head tilted, stepping close as the water starts",
+      "human_action": "none",
+      "light": "window side light from the left, a clear highlight band on the steel and a short solid shadow on the floor"
+    },
+    {
+      "path": "cards/pw002_s/S2_place.md",
+      "slot": "S2",
+      "product_view": "front_left",
+      "focus": "whole",
+      "evidence": "In a sunroom a woman sets the fountain on the floor among potted plants. No power cable is attached to the body, and no wall outlet is being used. This is a placement moment, not a running-water close-up. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout. Do not write rainproof or waterproof claims.",
+      "story": "In the sunroom the woman sets the fountain down among the plants, the golden retriever walks over, and no power cable has to reach a wall outlet.",
+      "pet_action": "walking over toward the fountain, a calm steady gaze, nose close to the scene, not a direct staring-into-the-lens pose",
+      "human_action": "setting the fountain down on the sunroom floor beside the plants",
+      "light": "low warm sun from the glass on the left, long natural shadows of the woman, the dog and the fountain across the floor, colours not over-orange"
+    },
+    {
+      "path": "cards/pw002_s/S3_shared.md",
+      "slot": "S3",
+      "product_view": "front",
+      "focus": "whole",
+      "evidence": "In the same moment an orange tabby cat and a golden retriever both drink from this one fountain, heads lowered together. The water window stays in frame. Water leaves only from the front opening of the black pump. The Type-C port on the back of the pump is not an outlet and must not be drawn as a spout or spray. When water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. Do not invent a light state for when the fountain is not running, and do not add alarms or colour meanings that were not given. Do not imply the fountain can be left unattended for a trip or that it never needs a refill.",
+      "story": "In the kitchen corner the orange tabby and the golden retriever lower their heads together at the same fountain, sharing one basin at the same moment.",
+      "pet_action": "both lowering their heads to drink at the same time from the same basin, bodies relaxed",
+      "human_action": "none",
+      "light": "window light from behind and to the right, rim light on fur and on the water, the front of the fountain still readable"
+    },
+    {
+      "path": "cards/pw002_s/S4_quiet.md",
+      "slot": "S4",
+      "product_view": "three_quarter_left",
+      "focus": "water_window",
+      "evidence": "At evening on a living-room rug the fountain is running and a ragdoll cat sleeps beside it, undisturbed. The water window stays in frame. Water leaves only from the front opening of the black pump. The Type-C port on the back of the pump is not an outlet and must not be drawn as a spout or spray. When water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. Do not invent a light state for when the fountain is not running, and do not add alarms or colour meanings that were not given. The line Below 25 dB is a user statement, not a lab result; do not show meters, sound waves, or certification marks.",
+      "story": "In the evening living room the fountain keeps running and the ragdoll cat sleeps beside it, undisturbed by the flow.",
+      "pet_action": "sleeping beside the fountain, eyes fully closed, chin on the paws, body loose and curled",
+      "human_action": "none",
+      "light": "one warm floor lamp on the left, the rest of the room held darker, solid shadows of the cat and the fountain on the rug"
+    },
+    {
+      "path": "cards/pw002_s/S5_steel.md",
+      "slot": "S5",
+      "product_view": "side_left",
+      "focus": "rim",
+      "evidence": "Extreme close-up of the brushed stainless body, with a clear highlight band, natural falloff, and a few water beads on the steel. Do not describe the control head or the water window as 304 stainless. Keep the water window out of this frame. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout.",
+      "story": "none",
+      "pet_action": "none",
+      "human_action": "none",
+      "light": "hard side light from a window on the right, raking across the brushed steel, the left side falling into shadow"
+    },
+    {
+      "path": "cards/pw002_s/S6_runtime.md",
+      "slot": "S6",
+      "product_view": "side_left",
+      "focus": "whole",
+      "evidence": "The assembled fountain stands in an entry hall with no power cable on the body, away from any wall outlet. Do not show the inside of the battery or any hidden parts of the body. This is a placement and cordless-body frame, not a running-water close-up. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout.",
+      "story": "By the front door the fountain stands on its own, with no power cable trailing toward a wall outlet.",
+      "pet_action": "none",
+      "human_action": "none",
+      "light": "window light from behind and to the right, depth in the hall, the front of the fountain still readable"
+    },
+    {
+      "path": "cards/pw002_s/S7_no_cord.md",
+      "slot": "S7",
+      "product_view": "three_quarter_left",
+      "focus": "whole",
+      "evidence": "A corgi runs around the fountain on the living-room floor. No power cable is attached to the body or lying on the floor. Do not show a competitor, and do not write that the unit never tips. If this frame shows water leaving, it leaves only from the front opening of the black pump; the Type-C port on the back of the pump is not an outlet. If water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. If the fountain is not shown running, do not invent a working or idle light, and do not add alarms or colour meanings that were not given.",
+      "story": "At the living-room window the corgi races around the fountain, and the floor stays clear of any power cable.",
+      "pet_action": "caught mid-stride running around the fountain, head up, ears pricked and alert, not colliding with the unit",
+      "human_action": "none",
+      "light": "window side light from the right, a highlight on the steel and a crisp short shadow of the running dog on the floor"
+    },
+    {
+      "path": "cards/pw002_s/S8_timed.md",
+      "slot": "S8",
+      "product_view": "front",
+      "focus": "water_window",
+      "evidence": "At night in a bedroom the fountain is running on its own while a ragdoll cat rests beside it; no person is attending it. Copy may say every 15 minutes, but must not state how long each burst lasts. The water window stays in frame. Water leaves only from the front opening of the black pump. The Type-C port on the back of the pump is not an outlet and must not be drawn as a spout or spray. When water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. Do not invent a light state for when the fountain is not running, and do not add alarms or colour meanings that were not given.",
+      "story": "Beside the bed the fountain starts again on its own, and the ragdoll cat rests quietly nearby with no person watching it.",
+      "pet_action": "lying beside the fountain, eyes half open and sleepy, body stretched out and unbothered",
+      "human_action": "none",
+      "light": "one warm bedside lamp on the right, the rest of the room held darker, solid shadows of the cat and the fountain on the floor"
+    },
+    {
+      "path": "cards/pw002_s/P1_sensor_hook.md",
+      "slot": "P1",
+      "product_view": "front_left",
+      "focus": "whole",
+      "evidence": "Opening medium shot from ground level: the orange tabby and the fountain's identifying shape share the frame as the cat arrives and water starts from the front opening of the black pump. The water window stays in frame. Water leaves only from the front opening of the black pump. The Type-C port on the back of the pump is not an outlet and must not be drawn as a spout or spray. When water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. Do not invent a light state for when the fountain is not running, and do not add alarms or colour meanings that were not given. A faint sensing signal wave is allowed; do not name a distance or a sensor type.",
+      "story": "Beside the sideboard the orange tabby arrives at the front opening, water starts at once, and the cat tilts its head as the flow begins.",
+      "pet_action": "just arriving at the front opening, head tilted to one side, one ear turned, eyes curious as the water starts",
+      "human_action": "none",
+      "light": "window side light from the left, a highlight on the steel and on the cat's fur, a short solid shadow on the floor"
+    },
+    {
+      "path": "cards/pw002_s/P2_capacity.md",
+      "slot": "P2",
+      "product_view": null,
+      "focus": null,
+      "evidence": null,
+      "story": null,
+      "pet_action": null,
+      "human_action": null,
+      "light": null
+    },
+    {
+      "path": "cards/pw002_s/P2a_capacity_scene.md",
+      "slot": "P2a",
+      "product_view": "front",
+      "focus": "whole",
+      "evidence": "A golden retriever and the full fountain share the frame on a kitchen floor so the 10L body reads at a glance against the large dog. Do not convert 10L into days or into how many pets it can serve. If the dog is drinking and the window is in the frame, follow the running-window rule; otherwise do not paint a working glow. Water leaves only from the front opening of the black pump. The Type-C port on the back of the pump is not an outlet and must not be drawn as a spout or spray. When water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. Do not invent a light state for when the fountain is not running, and do not add alarms or colour meanings that were not given.",
+      "story": "In the kitchen corner the golden retriever drinks beside the fountain, and the 10L body is easy to read against the large dog.",
+      "pet_action": "standing with head lowered, drinking from the basin, body fully in frame beside the fountain",
+      "human_action": "none",
+      "light": "window light from behind and to the left, rim light on the fur and on the steel, the front of the fountain still readable"
+    },
+    {
+      "path": "cards/pw002_s/P3_details.md",
+      "slot": "P3",
+      "product_view": null,
+      "focus": null,
+      "evidence": null,
+      "story": null,
+      "pet_action": null,
+      "human_action": null,
+      "light": null
+    },
+    {
+      "path": "cards/pw002_s/P3a_steel.md",
+      "slot": "P3a",
+      "product_view": "side_left",
+      "focus": "rim",
+      "evidence": "A dark-field close shot of the brushed 304 stainless surface, with one clear highlight band and a natural falloff. Keep the water window out of this cell. Do not describe the control head as 304 stainless. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout.",
+      "story": "none",
+      "pet_action": "none",
+      "human_action": "none",
+      "light": "hard side light from the right raking across the steel, the left side falling into deep shadow"
+    },
+    {
+      "path": "cards/pw002_s/P3b_modes.md",
+      "slot": "P3b",
+      "product_view": "front",
+      "focus": "control_head",
+      "evidence": "An extreme close-up of the control head and its keys, with a hand checking the head. The markings on the head may be visible as they appear on the product, but do not map NORMAL, INDUCTION, TIMING, or POWER onto a three-mode claim, and do not invent mode names or functions beyond what the product card already confirms. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout.",
+      "story": "A hand checks the control head up close, and the keys stay readable without turning the four markings into a three-mode claim.",
+      "pet_action": "none",
+      "human_action": "checking the control head, fingers resting near the keys",
+      "light": "side light from the left across the control head, keys readable, no flat frontal wash"
+    },
+    {
+      "path": "cards/pw002_s/P3c_cordless.md",
+      "slot": "P3c",
+      "product_view": "side_left",
+      "focus": "rim",
+      "evidence": "A close side view of the assembled body with no power cable attached and no cable on the surface beside it. A hand checks the clear floor around the body. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout.",
+      "story": "A hand checks the floor around the fountain, and no power cable is attached to the body.",
+      "pet_action": "none",
+      "human_action": "checking the floor around the body, confirming there is no power cable",
+      "light": "side light from the left, a highlight band on the steel, the far side falling into shadow"
+    },
+    {
+      "path": "cards/pw002_s/P4_play.md",
+      "slot": "P4",
+      "product_view": "three_quarter_right",
+      "focus": "whole",
+      "evidence": "In a hallway a golden retriever and an orange tabby cat play or run beside the fountain. No power cable is attached to the body or lying on the floor. A couple stands a little farther down the hall, watching the pets, hands at their sides. Do not show a competitor, and do not write that the unit never tips. If this frame shows water leaving, it leaves only from the front opening of the black pump; the Type-C port on the back of the pump is not an outlet. If water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. If the fountain is not shown running, do not invent a working or idle light, and do not add alarms or colour meanings that were not given.",
+      "story": "In the hallway the couple watches from a little farther off as the golden retriever and the orange tabby play beside the fountain, and the floor stays clear of any cord.",
+      "pet_action": "the golden retriever caught mid-stride near the fountain, the orange tabby leaning in beside it, both keeping the unit's shape readable",
+      "human_action": "standing farther down the hallway, watching the pets play, hands at their sides",
+      "light": "window side light from the left, a highlight on the steel and crisp short shadows of the pets on the rug"
+    },
+    {
+      "path": "cards/pw002_s/P5_cleaning.md",
+      "slot": "P5",
+      "product_view": null,
+      "focus": null,
+      "evidence": null,
+      "story": null,
+      "pet_action": null,
+      "human_action": null,
+      "light": null
+    },
+    {
+      "path": "cards/pw002_s/P5a_lifted_basin.md",
+      "slot": "P5a",
+      "product_view": "three_quarter_left",
+      "focus": "tray",
+      "evidence": "Before: the empty steel basin sits on the kitchen counter beside the sink, after the connected parts have been removed and kept out of the water. A hand wipes the empty basin. Do not show the connected parts in the basin or in the water. This cell is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim.",
+      "story": "On the kitchen counter a hand wipes the empty steel basin after the connected parts have been taken out, before it is rinsed in the sink.",
+      "pet_action": "none",
+      "human_action": "wiping the empty steel basin on the counter, with the connected parts already removed and kept out of the water",
+      "light": "window side light from the left, a highlight on the steel and a short solid shadow on the counter"
+    },
+    {
+      "path": "cards/pw002_s/P5b_wash_basin.md",
+      "slot": "P5b",
+      "product_view": "three_quarter_left",
+      "focus": "tray",
+      "evidence": "After: only the empty steel basin is being rinsed in the stainless sink, after the connected parts have been removed. Do not show the black pump, control head, tubes, or any other component in the water or soaking in the basin. Keep the Type-C charge port out of the water; it is not an outlet and should not appear in this wash cell. Full disassembly and wash scope are still unconfirmed, so this cell shows only the empty steel basin. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout.",
+      "story": "At the kitchen sink a pair of hands rinses the empty steel basin, with the connected parts already kept out of the water.",
+      "pet_action": "none",
+      "human_action": "rinsing the empty steel basin under the tap, with the connected parts already removed and kept out of the water",
+      "light": "window side light from the left, a highlight on the wet steel and a short solid shadow in the sink"
+    },
+    {
+      "path": "cards/pw002_s/P6_timed_scene.md",
+      "slot": "P6",
+      "product_view": "front_right",
+      "focus": "water_window",
+      "evidence": "At evening on a living-room rug the fountain runs again on its own while a ragdoll cat stays nearby; no person is attending it. Copy may say every 15 minutes, but must not state how long each burst lasts. The water window stays in frame. Water leaves only from the front opening of the black pump. The Type-C port on the back of the pump is not an outlet and must not be drawn as a spout or spray. When water is running and the water window is in the frame, a soft blue glow is visible inside the window and the real water level stays readable; the glow must not hide the level. Do not invent a light state for when the fountain is not running, and do not add alarms or colour meanings that were not given.",
+      "story": "On the evening living-room rug the fountain runs again on its own, and the ragdoll cat stays on the rug with no person watching it.",
+      "pet_action": "resting on the rug beside the fountain, eyes fully closed, chin on the paws, body loose and unbothered",
+      "human_action": "none",
+      "light": "one warm floor lamp on the left, the rest of the room held darker, solid shadows of the cat and the fountain on the rug"
+    },
+    {
+      "path": "cards/pw002_s/P7_specs.md",
+      "slot": "P7",
+      "product_view": null,
+      "focus": null,
+      "evidence": null,
+      "story": null,
+      "pet_action": null,
+      "human_action": null,
+      "light": null
+    },
+    {
+      "path": "cards/pw002_s/P7a_product.md",
+      "slot": "P7a",
+      "product_view": "front",
+      "focus": "whole",
+      "evidence": "A clear, identifiable view of the assembled fountain in a dining area beside a sideboard, product only, not a lifestyle story and not an operating shot. This frame is not an operating shot, so do not paint a working blue window glow and do not invent an idle-light claim. The Type-C port on the back of the black pump is not an outlet and must not be drawn as a spout.",
+      "story": "none",
+      "pet_action": "none",
+      "human_action": "none",
+      "light": "side light from the left, a highlight band on the steel, the far side falling into soft shadow"
+    }
+  ]
+}
