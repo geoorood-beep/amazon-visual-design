@@ -764,6 +764,19 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
     return errors, warnings, context
 
 
+def _window_light(fields):
+    """The positive running-window sentence, or '' when this picture must not add it."""
+    from usage_model import load_usage, window_light_applies
+
+    product = (fields or {}).get("product", "")
+    if not product:
+        return ""
+    usage = load_usage(str(ROOT), product)
+    if not window_light_applies(usage, fields):
+        return ""
+    return usage.get("window_light") or ""
+
+
 def build_prompt(context, blocks):
     fields, kind, is_panel = context["fields"], context["kind"], context["panel"]
     if is_panel:
@@ -779,7 +792,14 @@ def build_prompt(context, blocks):
         )
     else:
         out.append("STYLE: " + blocks["STYLE"])
-    out.append("PRODUCT: " + "; ".join(context["identity"]) + ". " + blocks["PRODUCT_RULES"])
+    applies = _window_light(fields)
+    identity = [b for b in context["identity"] if not (applies and "glowing window" in b.lower())]
+    rules = blocks["PRODUCT_RULES"]
+    avoid = blocks["AVOID"]
+    if applies:
+        rules = rules.replace("and the product never glows", "and the steel body does not glow")
+        avoid = avoid.replace(", glowing water window", "").replace("glowing water window, ", "")
+    out.append("PRODUCT: " + "; ".join(identity) + ". " + rules)
     if context.get("geometry"):
         out.append("SIZE AND PARTS: " + "; ".join(context["geometry"]) + ". " + blocks["GEOMETRY_RULES"])
     if kind != "M":
@@ -790,6 +810,8 @@ def build_prompt(context, blocks):
         if not is_none(fields["pet"]):
             action.append(f"Pet ({fields['pet']}): " + fields["pet_action"].rstrip(".") + ".")
         out.append(" ".join(action))
+        if applies:
+            out.append(applies)
     if kind == "M":
         out.append("CAMERA: the same front view from slightly above as the product reference, whole product in frame.")
     else:
@@ -818,7 +840,7 @@ def build_prompt(context, blocks):
         for i, (slot, _path, purpose) in enumerate(context["attach"], start=1)
     ]
     out.append("REFERENCES: " + " ".join(refs) + " " + blocks["REFERENCE_RULES"])
-    out.append("AVOID: " + blocks["AVOID"])
+    out.append("AVOID: " + avoid)
     return "\n\n".join(out)
 
 
