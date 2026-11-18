@@ -27,7 +27,7 @@ import os
 import re
 import sys
 
-VERSION = "3.18"
+VERSION = "3.19"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -380,17 +380,42 @@ def legacy_interaction(card):
 
 
 # ---------------------------------------------------------------- card checks
-def check_copy(card, errs):
+def bound_fact(card):
+    fact = card.f("selling_point", "").strip()
+    return fact if re.fullmatch(r"F\d+", fact) else ""
+
+
+def report_copy_limits(text, fact_id, grants, errs, where):
+    """Duration and wireless/battery limits for one field bound to one fact."""
+    from copy_exceptions import duration_hits, term_hits
+
+    held = (grants or {}).get(fact_id, set())
+    hits = duration_hits(text, held)
+    if hits:
+        errs.append("%s 写了时长说法（%s），不在已确认事实里（2.7）" % (where, ", ".join(sorted(set(hits)))))
+    words = term_hits(text, held)
+    if words:
+        errs.append("%s 写了未授权的词（%s），wireless 和 battery 仍是禁用词（2.7）" % (
+            where, ", ".join(sorted(set(words)))))
+
+
+def check_copy(card, errs, grants=None):
+    from copy_exceptions import line_bindings
+
     head = card.f("headline", "none")
     hero = card.f("hero_number", "none")
     if hero.strip().lower() not in ("", "none") and head.strip().lower() not in ("", "none"):
         same = [n for n in NUM_RE.findall(hero) if n in NUM_RE.findall(head)]
         if same:
             errs.append("headline 里重复了强调数字 %s：数字只放在 hero_number，主标题写好处（1.5）" % ", ".join(same))
+    fact = bound_fact(card)
     for key in ("eyebrow", "headline", "subtitle", "hero_number", "label", "lines"):
-        hits = positive_hits(DURATION_RE, card.f(key))
-        if hits:
-            errs.append("%s 写了时长说法（%s），不在已确认事实里（2.7）" % (key, ", ".join(sorted(set(hits)))))
+        text = card.f(key)
+        if key == "lines":
+            for line_fact, body in line_bindings(text):
+                report_copy_limits(body, line_fact, grants, errs, "lines")
+        else:
+            report_copy_limits(text, fact, grants, errs, key)
 
 
 def check_scene_words(card, errs):
@@ -402,7 +427,7 @@ def check_scene_words(card, errs):
             errs.append("%s 写了参考图看不到的结构或特效（%s）（1.4、2.7）" % (key, ", ".join(sorted(set(hits)))))
 
 
-def check_card_v2(card, views, pools=None, evidence=None):
+def check_card_v2(card, views, pools=None, evidence=None, grants=None):
     errs = list(card.parse_errors)
     if card.f("card_version") != "2":
         errs.append("这是 UTA-TASK v2，卡要写 card_version: 2")
@@ -427,7 +452,7 @@ def check_card_v2(card, views, pools=None, evidence=None):
             present = [k for k in V2_IMAGE_FIELDS if k in card.fields]
             if present:
                 errs.append("模块卡不写 %s（写在小格卡里）" % ", ".join(present))
-            check_copy(card, errs)
+            check_copy(card, errs, grants)
             return errs
     if kind == "panel" and "beat" in card.fields:
         errs.append("小格卡不写 beat")
@@ -475,10 +500,10 @@ def check_card_v2(card, views, pools=None, evidence=None):
     if need == "none" and not (card.is_none("pet") and card.is_none("human_action")):
         errs.append("interaction=product_only 时 pet 和 human_action 都写 none")
     check_scene_words(card, errs)
-    check_copy(card, errs)
+    check_copy(card, errs, grants)
     if pools is not None:
         check_pool_fields(card, pools, evidence, errs)
-        check_story(card, errs)
+        check_story(card, errs, grants)
         style = pools.get("style_row")
         if style and card.f("light_setup") not in split_list(style["lights"]):
             errs.append("风格 %s（%s）只配光型 %s，这张卡是 %s" % (style["id"], style["name"], style["lights"], card.f("light_setup")))
@@ -560,7 +585,7 @@ def check_pool_fields(card, pools, evidence, errs):
             errs.append("person_mood_id %s 不在人物情绪池 pools/moods.csv 里" % mid)
 
 
-def check_story(card, errs):
+def check_story(card, errs, grants=None):
     """1.14: a card with a pet or a person carries a one-sentence English story."""
     story = card.f("story", "").strip()
     needs = not (card.is_none("pet") and card.is_none("human_action"))
@@ -572,9 +597,7 @@ def check_story(card, errs):
         errs.append("story 要用英文写")
     if len(story.split()) > MAX_STORY_WORDS:
         errs.append("story 超过 %d 个词，写成一句话" % MAX_STORY_WORDS)
-    hits = positive_hits(DURATION_RE, story)
-    if hits:
-        errs.append("story 写了时长说法（%s），会暗示没确认的续航（1.14、2.7）" % ", ".join(sorted(set(hits))))
+    report_copy_limits(story, bound_fact(card), grants, errs, "story")
     hits = positive_hits(STRUCTURE_RE, story)
     if hits:
         errs.append("story 写了参考图看不到的结构或特效（%s）（1.14、2.7）" % ", ".join(sorted(set(hits))))
@@ -1141,10 +1164,12 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
         return 2
     pools["style_row"] = pools["styles"][style_id]
     evidence = load_evidence(root, product)
+    from copy_exceptions import load_grants
+    grants = load_grants(root, product)
 
     card_errs = {}
     for c in cards:
-        errs = check_card_v2(c, views, pools, evidence)
+        errs = check_card_v2(c, views, pools, evidence, grants)
         if errs:
             card_errs[c.slot] = errs
     # a module and its panels pass or fail together
