@@ -202,6 +202,19 @@ class ConfirmAndTechniquesTest(unittest.TestCase):
         for domain in ("apple.com", "anker.com", "mi.com", "coca-colacompany.com"):
             self.assertTrue(any(domain in r["examples"] for r in with_examples), domain)
 
+    def test_anker_study_points_at_real_techniques(self):
+        import csv, re
+        study = self.read("references", "brands", "anker.md")
+        with open(os.path.join(ROOT, "references", "techniques.csv"), encoding="utf-8") as fh:
+            ids = {r["id"] for r in csv.DictReader(fh)}
+        cited = set(re.findall(r"\bT\d{2}\b", study))
+        self.assertTrue(cited, "anker.md cites no technique")
+        self.assertEqual(cited - ids, set())
+        self.assertIn("## 8. 不学什么", study)
+        guide = self.read("UTA_STYLE.md")
+        start = guide.index("### 2.1 读什么")
+        self.assertIn("references/brands/anker.md", guide[start:guide.index("### 2.2", start)])
+
     def test_every_dimension_and_brand_is_covered(self):
         import csv
         with open(os.path.join(ROOT, "references", "techniques.csv"), encoding="utf-8") as fh:

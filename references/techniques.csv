@@ -8,7 +8,7 @@ T06,scene,Apple,像用户自己拍的,自然光、平视、构图不完美、人
 T07,emotion,Apple,克制的满足,情绪不放大：嘴角微笑、肩膀放松、眼神温柔，把感受留给观众,主人坐在地上看猫喝水，只是嘴角带笑；不大笑不比心,安静;省心;感应,夸张大笑；对着镜头比手势,https://appleinsider.com/articles/23/03/15/airpods-pro-noise-cancellation-featured-in-new-quiet-the-noise-ad｜主角全程平静地走，情绪不夸张，安静本身就是满足
 T08,story,Anker,一家人在地上（汇聚）,一家人在同一块地方各做各的事，所有人的位置和线条都汇到中间同一个产品上；产品是这个家的中心,见 UTA_STYLE.md 1.14 内置模板「一家人在地上」：周末地毯上拼图看书，猫狗在中间的饮水机轮流喝水,多宠;容量;感应,产品被人挡住；人看镜头,
 T09,story,Anker,出门前的安心,在出门、出差这类关键时刻，产品让人放心离开；情绪落在主人临走回头那一眼,出门前蹲下摸摸猫，饮水机在旁边出水；主人放心起身。只写产品卡确认过的「外出期间可用」，不写天数,容量;外出,写出门几天、续航天数（除非「画面可写」允许）；行李箱暗示长途,
-T10,selling,Anker,数字配一个生活参照,大数字旁边放一个人人认得的东西当参照，让数字有体感,10L 旁边是一只大狗低头喝水；数字只用「画面可写」里的，不自己换算杯数天数,容量;尺寸,自己算出来的换算；刻度线和量杯,https://www.mi.com/ph/product/xiaomi-smart-pet-fountain2/｜小米也这样写：容量后面接「一只猫能喝多少天、多猫一周」的家庭参照（我方只用产品卡的数字）
+T10,selling,Anker,数字配一个生活参照,大数字旁边放一个人人认得的东西当参照，让数字有体感,10L 旁边是一只大狗低头喝水；数字只用「画面可写」里的，不自己换算杯数天数,容量;尺寸,自己算出来的换算；刻度线和量杯,https://www.mi.com/ph/product/xiaomi-smart-pet-fountain2/｜小米也这样写：容量后面接「一只猫能喝多少天、多猫一周」的家庭参照（我方只用产品卡的数字） ; https://beta.eufy.com/products/t7320121｜Anker 自家 eufy 宠物饮水机：3L 写成够猫喝一周、狗喝四天
 T11,selling,Anker,不同东西同框说「都能用」,把不同的设备一字排开都接同一个产品，兼容性一眼看懂,一只小猫和一只大狗同时在一台饮水机两侧喝水，体型差就是证据,多宠,品种对比表；体重范围,https://www.anker.com/anker-prime-ads｜用户评价都在说一个充电器同时给所有设备充，「一个就够」 ; https://www.anker.com/story/power-banks/explore-anker-prime-multi-device-fast-charging｜同一个卖点按人群讲：上班族、旅行者、家长各一段
 T12,interaction,Anker,递和接,一个人把东西递给另一个人，或者帮另一个人一起用，动作里有关系,孩子把小猫抱到饮水机前，爸爸蹲在旁边扶着孩子,情景;多宠,手指指着产品；把宠物往水里按,https://musebyclios.com/advertising/coca-cola-just-made-its-most-charming-christmas-ad-in-years/｜可口可乐也用：邻居们递纸箱、一起帮孩子搭烟囱，关系都在动作里
 T13,selling,Xiaomi,整屏一个大数字,深色底，整屏只放一个超大数字加单位和一行解释，数字就是视觉中心,A+ number 屏：10L 或 304 占半屏，一行英文解释；数字必须在「画面可写」里,容量;材质;安静,产品卡没写的数字；同一屏放两个数字,https://www.mi.com/ph/product/xiaomi-smart-pet-fountain2/｜「100-day long battery life」这类硬参数做成整屏大字 ; https://www.mi.com/global/product/xiaomi-15-ultra/｜旗舰机页面一屏一个参数，大字加一行解释
@@ -24,7 +24,7 @@ T22,headline,Coca-Cola,一个邀请动词,标题用一个动词邀请人参与�
 T23,expression,Coca-Cola,第一口的满足,喝第一口时眼睛眯起、表情松下来，那一下的满足就是卖点,猫喝第一口眯眼、舌头卷水，对应表情池 EX01 专注喝水或 EX10 闭眼享受,感应;材质;情景,张大嘴；拟人化的夸张表情,
 T24,scene,Coca-Cola,一个颜色贯穿整套,整套图里固定一个点缀色，每张都出现一点，看到颜色就认得这一套,从风格池选定的风格里定一个点缀色（比如暖橙毯子、靠垫），每张图出现一小块,全部,用可口可乐红或任何品牌色；点缀色抢过产品,
 T25,expression,Anker,被吸引回头,人或宠物被产品的动静吸引，回头、竖耳、看过去，产品因此成为视线终点,狗听到出水声回头竖耳，对应表情池 EX11 竖耳警觉或 EX02 好奇探头,感应;安静,暗示产品没确认的声音或灯光提示,https://musebyclios.com/advertising/apples-chinese-new-year-film-is-stop-motion-love-between-humans-and-their-animals/｜苹果也用：小狗跑向女主角的那一刻是全片焦点，视线和动作都落到她身上
-T26,interaction,Apple,一次完成的手部动作,只出双手，动作干净利落一次完成，背景简单，看清每一步,取出水泵、把钢盆放进水槽或洗碗机；人物用人物池里只出手的,清洁,用手指指产品；动作停在半空,
+T26,interaction,Apple,一次完成的手部动作,只出双手，动作干净利落一次完成，背景简单，看清每一步,取出水泵、把钢盆放进水槽或洗碗机；人物用人物池里只出手的,清洁,用手指指产品；动作停在半空,https://library.motionapp.com/anker｜第三方统计 Anker 的社交广告里演示型最多：手在用、东西在动
 T27,story,Apple,先乱后静,开场先给一个乱的瞬间，接着一个安静干净的解决；反差就是故事,宠物追逐打闹差点绊倒东西，下一刻都安静地在无线饮水机前喝水（配 R4 没有它会怎样）,无线;多宠;安静,把乱画成事故灾难,
 T28,headline,Anker,No more 问题句,标题直接点出用户熟悉的麻烦并说它没了；句式 No more <problem>.,例如 No more tangled cords. 或 No more empty bowls.；麻烦要是产品卡事实能解决的,无线;容量,和竞品比较；写成绝对承诺,
 T29,emotion,Anker,一点小幽默,一个轻松好笑的小瞬间：宠物偷看、用爪子试探，让人会心一笑,猫伸爪试探刚开始流的水，对应表情池 EX06 伸爪试探,感应;情景,把宠物拍成出糗被嘲笑,
@@ -33,3 +33,11 @@ T31,story,Xiaomi,参数之外的一个人,先给一个具体的人（新手主�
 T32,scene,Apple,大片留白放标题,画面有一大块干净的墙、地或天空留给标题，主体偏一侧，版面呼吸,产品和宠物放在画面一侧三分之一，另一侧是干净的墙面留给 headline,全部,留白处有杂物；文字压在产品或宠物脸上,
 T33,emotion,Apple,慢下来的情绪高点,全片最重要的一下用慢动作拉长，比如宠物跑向人的那一刻；情绪靠时间放大，不靠夸张表情,狗冲向刚进门的主人、猫跳上台边喝第一口水，用高速快门凝固那一瞬，毛发和水花都停在空中,情景;多宠;感应,悲情剧情；拟人化表演,https://musebyclios.com/advertising/apples-chinese-new-year-film-is-stop-motion-love-between-humans-and-their-animals/｜《Glad I Met You》：导演说最重要的镜头是小狗跑向女主角，用慢动作放大情绪
 T34,headline,Xiaomi,短标题加一句好处,上面一个两三个词的短标题说功能，下面一行小字说这个功能给生活带来什么,例如 Quiet flow. 下面一行 So the whole house sleeps.；好处句只写感受，不写功效,全部,好处句写成健康功效或绝对承诺,https://www.mi.com/ph/product/xiaomi-smart-pet-fountain2/｜「Quieter design」下面一行写安静带来的好睡眠；每一节都是短标题加一句好处
+T35,headline,Anker,三拍祈使句,三个很短的祈使句一步步走：先解决问题，再给感受，最后落到状态；每句两三个词，句号收,例如 Walk up. Sip fresh. Settle in.；每一拍只写已确认事实带来的感受,感应;安静;多宠,照抄原句；三拍里塞没确认的功能,https://www.soundcore.com/｜睡眠耳机的标题：减噪、听见安静、睡着，三拍落到感受
+T36,headline,Anker,平行重复,同一个开头连说三次，前两次讲功能，最后一次落到「照顾」这种情感词,例如 Made to sense them. Made to keep it flowing. Made for the ones you love.；只写产品卡确认的功能,感应;材质;全部,第三句变成功效承诺,https://www.anker.com/｜智能充电器连说三次 Built to…，最后一次落到 care
+T37,headline,Anker,反差对仗,前后两半结构一样、意思一抑一扬：一边是挡在外面的麻烦，一边是照常继续的生活；或者把两个看似矛盾的好处并在一起,例如 Cord off. Water on. 或 Small footprint. Big refill.；数字和比较只用「画面可写」里的,无线;容量;安静,和竞品比较；把对仗写成绝对承诺,"https://www.anker.com/anker-prime-2024｜Minimum Size, Maximum Power：一小一大并列 ; https://www.ankersolix.com/power-outage｜Storm Stays Out. Life Stays On.：麻烦在外，生活照常"
+T38,headline,Anker,功能一拍加生活一拍,两拍短句：第一拍是产品做到的事，第二拍是人因此得到的生活状态，比如能专心陪伴、能安心出门,例如 Go cordless. Stay close.；第二拍写人和宠物的关系，不写功效,无线;外出;安静,第二拍写成产品卡没有的能力（比如几天不用管）,https://www.anker.com/｜旅行充电器：一拍讲轻，一拍讲人能专心享受当下
+T39,selling,Anker,数字带对照基准和脚注,大数字后面写清楚和什么比、在什么条件下测的，用一行小字脚注；数字有了基准才可信,只用产品卡「画面可写」里的数字；产品卡注明是用户声明的（比如安静的分贝），脚注照实写来源，不写成测试结果,安静;容量;材质,自己编对照对象；把用户声明写成实验室数据,https://www.anker.com/anker-prime-2024｜52% Smaller 下面注明和哪款旧充电器比 ; https://www.anker.com/ca/anker-nano｜充电时间和温度都注明是内部实验室数据
+T40,selling,Anker,给关键部件一个好记的叫法,把最能证明卖点的那个部件单独拎出来，起一个好记的叫法，整屏围绕它讲（自家 eufy 宠物饮水机就这样讲可拆水泵）,只给产品卡确认过、照片里看得见的部件起描述性的叫法（比如「可拆水泵」「感应头」），画面里人手正在用它,清洁;感应,自造商标或 ™；虚构技术名；部件功能超出产品卡,https://beta.eufy.com/products/t7320121｜eufy 宠物饮水机整页围绕一个有名字的可拆水泵讲清洁
+T41,scene,Anker,几种家，一台都合适,把用户分成几种类型或几种情境（几种备灾性格、几种天气），每种一格，告诉每种人产品怎么帮他,A+ 四格：多猫家、猫狗同住、上班族、新手主人，各一格各一个故事，同一台产品；只写产品卡确认的事实,多宠;无线;感应,停电、出门几天照常工作（产品卡没写明时）；灾难画面,https://www.ankersolix.com/power-outage｜四种备灾性格的小测验，加按天气分区的情境网格
+T42,story,Anker,一台跟着人走完一天,不拍产品有多酷，拍一个人一天里不同场合都在用它；讲的是这个人，不是参数,无线饮水机跟着家走一天：早上在厨房、午后搬到阳光房、晚上放在卧室床边；同一只猫在三个地方都喝到水,无线;感应;多宠,户外和产品卡没确认的场所；花哨的科技镜头,https://www.digitaling.com/projects/378027.html｜耳夹耳机中文广告：上午运动、下午聚会、晚上一个人，同一副耳机 ; https://www.anker.com/anker-prime-2024｜产品线直接分 For Desktop、For Travel ; https://www.anker.com/story/power-banks/explore-anker-prime-multi-device-fast-charging｜同一个卖点按上班族、旅行者、家长分开讲

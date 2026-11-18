@@ -1,5 +1,13 @@
 # 版本记录
 
+## v3.23 — 2026-11-18 Anker 品牌整体拆解
+
+为什么改：之前只学了用户截图里 Anker 的一个片段，要学它整个品牌。
+
+- 新增 `references/brands/anker.md`：从 Anker、soundcore、eufy、Anker SOLIX 官网和产品页、中文代言广告案例、第三方广告库，拆定位、故事、卖点、场景、标题、互动情绪；每条附链接；末尾写我方怎么用、不学什么。
+- 手法库新增 8 条 Anker 手法：T35 三拍祈使句、T36 平行重复、T37 反差对仗、T38 功能一拍加生活一拍、T39 数字带对照基准和脚注、T40 给关键部件一个好记的叫法、T41 几种家一台都合适、T42 一台跟着人走完一天；T10、T26 补 Anker 案例。共 42 条，28 条有公开案例。
+- 2.1 加读取，1.14 和 Grok skill 写明要读品牌整体拆解。
+
 ## v3.22 — 2026-11-18 品牌手法配上公开案例
 
 - `references/techniques.csv` 加 `examples` 列：19 条手法配上能打开的公开页面（Apple 新闻稿、AirPods「Quiet the noise」、Shot on iPhone 宠物肖像、《Glad I Met You》；Anker Prime；小米宠物饮水机 2 和 15 Ultra 产品页；可口可乐 Share a Coke 新闻稿和 2021 圣诞片），每条写明去看什么。
