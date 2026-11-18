@@ -1,9 +1,9 @@
-"""Narrow copy exceptions for UTA_STYLE.md 2.7 and the forbidden-word list.
+"""Copy checks for UTA_STYLE.md 2.7.
 
-wireless and battery stay on the global forbidden list. 15-21 days stays a
-duration. A hit is kept only when the image is bound to one confirmed fact
-that already authorises that exact claim, and, for the duration, the same
-sentence carries the full shortening caveat.
+wireless and battery are not forbidden words. They are still facts: a product
+card that never confirms 无线 cannot say wireless, and one that never confirms
+电池 cannot say battery. 15-21 days stays a duration and is allowed only on the
+fact whose allowed copy states it, in the same sentence as the full caveat.
 """
 import os
 import re
@@ -41,16 +41,11 @@ def _positive_claim(fact, allowed):
 
 
 def grants_from_text(text):
-    """Map fact id -> set of 'wireless' | 'battery' | 'duration_15_21'."""
+    """Map fact id -> {'duration_15_21'} when that fact's allowed copy authorises it."""
     grants = {}
     for fact_id, row in fact_rows(text).items():
-        claim = _positive_claim(row["fact"], row["allowed"])
         allowed = row["allowed"]
         held = set()
-        if "无线" in claim:
-            held.add("wireless")
-        if "电池" in claim:
-            held.add("battery")
         if (
             re.search(r"15\s*[-–]\s*21\s*天", allowed)
             and "缩短续航" in allowed
@@ -61,13 +56,33 @@ def grants_from_text(text):
     return grants
 
 
-def load_grants(root, product):
+def claims_from_text(text):
+    """Product-wide confirmed claims. Not a per-fact permit for a banned word."""
+    claims = set()
+    for row in fact_rows(text).values():
+        claim = _positive_claim(row["fact"], row["allowed"])
+        if "无线" in claim:
+            claims.add("wireless")
+        if "电池" in claim:
+            claims.add("battery")
+    return claims
+
+
+def _read_product(root, product):
     path = os.path.join(root, "products", product, "PRODUCT.md")
     try:
         with open(path, encoding="utf-8") as handle:
-            return grants_from_text(handle.read())
+            return handle.read()
     except OSError:
-        return {}
+        return ""
+
+
+def load_grants(root, product):
+    return grants_from_text(_read_product(root, product))
+
+
+def load_claims(root, product):
+    return claims_from_text(_read_product(root, product))
 
 
 def _sentences(text):
@@ -114,14 +129,14 @@ def duration_hits(text, granted):
     return bad
 
 
-def term_hits(text, granted):
-    """wireless/battery hits that this fact does not authorise."""
+def invented_feature_hits(text, claims):
+    """wireless/battery used by a product card that never confirms that fact."""
     bad = []
+    confirmed = claims or set()
     for match in WORD_RE.finditer(text or ""):
         word = match.group(1).lower()
-        if word in (granted or set()):
-            continue
-        bad.append(word)
+        if word not in confirmed:
+            bad.append(word)
     return bad
 
 

@@ -27,17 +27,13 @@ class Grants(unittest.TestCase):
     def setUp(self):
         self.grants = copy_exceptions.grants_from_text(CARD)
 
-    def test_only_confirmed_claims_are_granted(self):
-        self.assertIn("wireless", self.grants["F1"])
-        self.assertIn("wireless", self.grants["F2"])
-        self.assertNotIn("battery", self.grants["F1"])
-        self.assertIn("battery", self.grants["F5"])
+    def test_duration_grant_stays_on_the_fact_that_states_it(self):
         self.assertIn("duration_15_21", self.grants["F5"])
-        self.assertNotIn("wireless", self.grants["F6"])
-        self.assertNotIn("battery", self.grants["F6"])
+        self.assertNotIn("duration_15_21", self.grants["F1"])
         self.assertNotIn("duration_15_21", self.grants["F6"])
         self.assertEqual(self.grants["F7"], set())
-        self.assertEqual(self.grants["F8"], set())
+        claims = copy_exceptions.claims_from_text(CARD)
+        self.assertEqual(claims, {"wireless", "battery"})
 
     def test_banned_column_does_not_grant(self):
         text = "| F1 | 不锈钢盆 | 304 | 不得写无线，避开 battery，可写 15–21 天 |"
@@ -87,21 +83,26 @@ class Duration(unittest.TestCase):
 
 
 class Terms(unittest.TestCase):
-    def setUp(self):
-        self.grants = copy_exceptions.grants_from_text(CARD)
+    def test_words_are_not_banned_when_the_product_confirms_them(self):
+        claims = copy_exceptions.claims_from_text(CARD)
+        self.assertEqual(copy_exceptions.invented_feature_hits("Wireless flow", claims), [])
+        self.assertEqual(copy_exceptions.invented_feature_hits("4000 mAh battery", claims), [])
+        self.assertEqual(copy_exceptions.invented_feature_hits("Wireless battery", claims), [])
 
-    def test_bound_words_pass_and_the_other_word_does_not(self):
-        self.assertEqual(copy_exceptions.term_hits("Wireless flow", self.grants["F2"]), [])
-        self.assertEqual(copy_exceptions.term_hits("4000 mAh battery", self.grants["F5"]), [])
-        self.assertEqual(copy_exceptions.term_hits("Wireless battery", self.grants["F2"]), ["battery"])
-        self.assertEqual(copy_exceptions.term_hits("Wireless", self.grants["F6"]), ["wireless"])
-        self.assertEqual(copy_exceptions.term_hits("battery", self.grants["F8"]), ["battery"])
+    def test_a_product_without_the_fact_cannot_invent_it(self):
+        self.assertEqual(copy_exceptions.invented_feature_hits("Wireless", set()), ["wireless"])
+        self.assertEqual(copy_exceptions.invented_feature_hits("battery", set()), ["battery"])
+        only_wireless = copy_exceptions.claims_from_text(
+            "| F1 | 无线饮水机 | 可写「无线」 | 避开 battery |"
+        )
+        self.assertEqual(only_wireless, {"wireless"})
+        self.assertEqual(copy_exceptions.invented_feature_hits("battery", only_wireless), ["battery"])
 
-    def test_round10l_has_no_grant(self):
-        grants = copy_exceptions.load_grants(ROOT, "round10l")
-        self.assertTrue(all("wireless" not in held and "battery" not in held for held in grants.values()))
-        self.assertEqual(copy_exceptions.term_hits("Wireless", grants.get("F1", set())), ["wireless"])
-        self.assertIn("days", copy_exceptions.duration_hits("Lasts for days", grants.get("F1", set())))
+    def test_round10l_has_neither_claim(self):
+        claims = copy_exceptions.load_claims(ROOT, "round10l")
+        self.assertEqual(claims, set())
+        self.assertEqual(copy_exceptions.invented_feature_hits("Wireless", claims), ["wireless"])
+        self.assertIn("days", copy_exceptions.duration_hits("Lasts for days", set()))
 
 
 class CheckerWiring(unittest.TestCase):
@@ -119,8 +120,9 @@ class CheckerWiring(unittest.TestCase):
         ok = self.card(selling_point="F5", headline=OK, story=OK, eyebrow="none",
                        subtitle="none", hero_number="none", label="none", lines="none")
         errs = []
-        check_set.check_copy(ok, errs, grants)
-        check_set.check_story(ok, errs, grants)
+        claims = {"wireless", "battery"}
+        check_set.check_copy(ok, errs, grants, claims)
+        check_set.check_story(ok, errs, grants, claims)
         self.assertEqual(errs, [])
         split = self.card(
             selling_point="F5",
@@ -130,8 +132,8 @@ class CheckerWiring(unittest.TestCase):
             eyebrow="none", hero_number="none", label="none", lines="none",
         )
         errs = []
-        check_set.check_copy(split, errs, grants)
-        check_set.check_story(split, errs, grants)
+        check_set.check_copy(split, errs, grants, claims)
+        check_set.check_story(split, errs, grants, claims)
         self.assertTrue(any("headline" in err and "days" in err for err in errs), errs)
         self.assertTrue(any(err.startswith("story") and "days" in err for err in errs), errs)
 
@@ -143,7 +145,7 @@ class CheckerWiring(unittest.TestCase):
             label="none", lines="F6 | " + OK,
         )
         errs = []
-        check_set.check_copy(card, errs, grants)
+        check_set.check_copy(card, errs, grants, {"wireless", "battery"})
         self.assertTrue(any("lines" in err and "days" in err for err in errs), errs)
         good = self.card(
             selling_point="none",
@@ -151,35 +153,46 @@ class CheckerWiring(unittest.TestCase):
             label="none", lines="F5 | " + OK,
         )
         errs = []
-        check_set.check_copy(good, errs, grants)
-        self.assertTrue(any("headline" in err and "wireless" in err for err in errs), errs)
+        check_set.check_copy(good, errs, grants, {"wireless", "battery"})
+        self.assertFalse(any("wireless" in err for err in errs), errs)
         self.assertFalse(any(err.startswith("lines") for err in errs), errs)
+        errs = []
+        check_set.check_copy(good, errs, grants, set())
+        self.assertTrue(any("没有确认的功能" in err and "wireless" in err for err in errs), errs)
 
     def test_check_card_keeps_round10l_blocked_and_allows_a_bound_fact(self):
         errs = []
         check_card.check_copy("Wireless flow", ["10 L"], "round10l", [], errs, fact_id="F1")
-        self.assertTrue(any("wireless" in err for err in errs), errs)
+        self.assertTrue(any("does not confirm" in err and "wireless" in err for err in errs), errs)
+        self.assertFalse(any("forbidden" in err and "wireless" in err for err in errs), errs)
         errs = []
         check_card.check_copy("Fresh water for days", ["10 L"], "round10l", [], errs, fact_id="F1")
         self.assertTrue(any("days" in err for err in errs), errs)
 
-        def fake_load(_root, _product):
+        def fake_grants(_root, _product):
             return copy_exceptions.grants_from_text(CARD)
 
-        original = copy_exceptions.load_grants
-        copy_exceptions.load_grants = fake_load
+        def fake_claims(_root, _product):
+            return copy_exceptions.claims_from_text(CARD)
+
+        original_grants = copy_exceptions.load_grants
+        original_claims = copy_exceptions.load_claims
+        copy_exceptions.load_grants = fake_grants
+        copy_exceptions.load_claims = fake_claims
         try:
             errs = []
-            check_card.check_copy("Wireless flow", ["感应出水"], "fixture", [], errs, fact_id="F2")
+            check_card.check_copy("Wireless flow", ["304"], "fixture", [], errs, fact_id="F6")
             self.assertEqual(errs, [])
             errs = []
             check_card.check_copy(OK, ["15-21 days"], "fixture", [], errs, fact_id="F5")
             self.assertEqual(errs, [])
             errs = []
-            check_card.check_copy("Wireless flow", ["304"], "fixture", [], errs, fact_id="F6")
-            self.assertTrue(any("wireless" in err for err in errs), errs)
-            errs = []
             check_card.check_copy(OK, ["304"], "fixture", [], errs, fact_id="F6")
             self.assertTrue(any("days" in err for err in errs), errs)
+            errs = []
+            check_card.check_copy("4000 mAh battery", ["304"], "fixture", [], errs, fact_id="F6")
+            self.assertTrue(any("number '4000'" in err for err in errs), errs)
+            self.assertFalse(any("battery" in err and "forbidden" in err for err in errs), errs)
         finally:
-            copy_exceptions.load_grants = original
+            copy_exceptions.load_grants = original_grants
+            copy_exceptions.load_claims = original_claims

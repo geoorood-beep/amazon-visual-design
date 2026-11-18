@@ -351,17 +351,16 @@ def print_baseline(product, photos_dir=None):
 
 def check_copy(copy, allowed_texts, product, product_forbidden, errors, what="copy", fact_id=None):
     """Forbidden words and numbers. allowed_texts: the 'allowed copy' of the facts in play."""
-    from copy_exceptions import duration_hits, load_grants, term_hits
+    from copy_exceptions import duration_hits, invented_feature_hits, load_claims, load_grants
 
     global_forbidden = md_section_bullets(read(ROOT / "UTA_STYLE.md"), "禁用词")
-    plain_forbidden = [word for word in global_forbidden if word.lower() not in {"wireless", "battery"}]
-    for word in find_forbidden(copy, plain_forbidden):
+    for word in find_forbidden(copy, global_forbidden):
         errors.append(f"{what} contains a word forbidden by UTA_STYLE.md: '{word}'")
     held = load_grants(ROOT, product).get(fact_id or "", set())
-    for word in term_hits(copy, held):
-        errors.append(f"{what} contains a word forbidden by UTA_STYLE.md: '{word}'")
     for word in duration_hits(copy, held):
         errors.append(f"{what} contains a duration that is not allowed for this fact: '{word}'")
+    for word in invented_feature_hits(copy, load_claims(ROOT, product)):
+        errors.append(f"{what} states a feature the product card does not confirm: '{word}'")
     for word in find_forbidden(copy, product_forbidden):
         errors.append(f"{what} contains a word forbidden for {product}: '{word}'")
     allowed = set()

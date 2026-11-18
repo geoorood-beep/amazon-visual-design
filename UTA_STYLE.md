@@ -695,7 +695,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
   2. 含有时长的那一句英文，写的是 `15-21 days` 或 `15–21 days`，不是单独的 15 days、21 days，也不是别的数字或单位。
   3. 同一句里还有完整限定，只能是 `multiple pets or frequent sensing may shorten runtime`，或 `multiple pets or high-frequency sensing may shorten runtime`。限定在另一句、另一字段，或只塞进 multiple、shorten、runtime 这几个词，都不算。
   4. 这一句里再出现 week、month、vacation、travel、trip、weekend、holiday，或其他 day 说法，仍然禁止。
-  `wireless` 和 `battery` 仍留在文末禁用词里，不从名单删除。一张图只有在它绑定的那条事实的「事实」或「画面可写」里，去掉「不得 / 不要 / 不能 / 不可 / 避开 / 不写」之后仍然有「无线」，才可以写 `wireless`；仍然有「电池」，才可以写 `battery`。绑定错事实、事实没有这个词、或写在没有事实编号的模块标题上，都不放行。story 用同一套规则。
+  `wireless` 和 `battery` 不是禁用词，不在文末名单里，也不按事实编号特许。它们仍是事实：产品卡已确认事实的「事实」或「画面可写」里，去掉「不得 / 不要 / 不能 / 不可 / 避开 / 不写」之后没有「无线」，文案就不能写 `wireless`；没有「电池」，就不能写 `battery`。这是「不写未确认事实」，不是禁词例外。story 用同一套规则。
 - 不写索引里没有的图片路径。
 - 不增加表里没有的字段，不写检查清单、阶段门、矩阵或提示词。
 - 不替出图方决定重试次数、验收标准或出图顺序。
@@ -964,7 +964,7 @@ python -m unittest discover -s tools -p "test_check_*.py"
 
 ## 禁用词
 
-下列词不得出现在主标题、副标题或强调数字里。校验脚本读取这份列表。`wireless` 和 `battery` 仍在名单上；只有 2.7 的定向例外、并且绑定到授权事实时才能写，不是从名单里拿掉。
+下列词不得出现在主标题、副标题或强调数字里。校验脚本读取这份列表。`wireless` 和 `battery` 不是这张名单里的词。
 
 - Illustration
 - confirmed
@@ -984,8 +984,6 @@ python -m unittest discover -s tools -p "test_check_*.py"
 - healthy
 - health
 - Wi-Fi
-- wireless
-- battery
 - antibacterial
 - anti-bacterial
 - bacteria
