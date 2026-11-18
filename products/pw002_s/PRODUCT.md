@@ -53,7 +53,7 @@
 
 ## 造型基准
 
-状态：待确认
+状态：已确认（2026-11-18）
 形态：立体
 
 见 `UTA_STYLE.md` 1.12。形态写「立体」或「扁平」，决定出哪一套视角。状态只有三种：未做、待确认、已确认（日期）。不是「已确认」时，脚本拒绝这个产品的所有图位卡。
@@ -86,6 +86,15 @@ v02 侧面错在把顶面按键转成面向镜头。v02 背面错在控制头像
 用户随后要求停下背视，原话：「你先从库里把背面的那张去掉吧，然后就开始先往下推。」背视暂不采用。后续图位禁止背面机位，禁止 `product_view: rear`。已生成的背面图移到 `baseline/abandoned/`，只作放弃档案，不是造型基准，不能进 `ref/`，也不能当后续参考。`photos/` 里的五张原图全部保留，包括 `photos/05_five_view.jpg`。这不等于 `front`、`side`、`top_down`、`three_quarter` 或任何 `detail` 已确认。当前总览是 `baseline/active_sheet.png`。旧的 `v01`、`v02`、`v03` 总览若还看得到背面格，该格作废。
 
 用户已说明的前后关系记在这里，供以后若重新启用背视时使用，这一轮不据此再出背面图：背视时黑色控制头在靠近镜头的盆沿一端，水盆向远离镜头的方向延伸。正面是水位窗靠近镜头、控制头在远端。先前把控制头放在画面远端，是错误理解，不能再当成背面的正确构图。按键仍只在顶面朝上，不搬到侧面。
+
+用户 2026-11-18 确认当前有效总览 `baseline/active_sheet.png` 所对应的有效造型。按 1.12 只登记有实拍依据、且仍在有效集合里的生成图。`checked` 写 `yes` 的只有这些。背面停用，不复制到 `ref/`，不登记，`checked` 不是 `yes`。`three_quarter` 是无 45° 实拍的推定，不登记，不写成实拍。水泵、充电口和 `part` 没有图，不登记。比例仍是「比例推定」，尺寸未确认。
+
+| 确认图 | 依据 | 朝向与机位 |
+|---|---|---|
+| `ref/baseline_front.png` | `baseline/v01/front.png`，实拍 `photos/01_front.png` | `front` / `eye_level` |
+| `ref/baseline_side.png` | `baseline/v03/side.png`，实拍 `photos/02_side_head_left.png` | `side_left` / `eye_level` |
+| `ref/baseline_top_down.png` | `baseline/v02/top_down.png`，实拍 `photos/04_top.png` | 俯拍，`camera` 为 `top_down` |
+| `ref/baseline_detail_1.png` 至 `ref/baseline_detail_8.png` | `baseline/v01/detail_1.png` 至 `detail_8.png`，部位都能在实拍里看见 | 见 `ref_views.csv` |
 
 ## 物理边界
 
@@ -171,11 +180,11 @@ v02 侧面错在把顶面按键转成面向镜头。v02 背面错在控制头像
 | `photos/04_top.png` | `img4.png` | `9c47f4940fd2d8fe6d2fd930fe5363015e5e1f6e7c4009e07af4d9baa649d046.png` | `7cef81ae5d13ead241a50325a26a37053f7b87566094b7f84a9705c8a39f5e6f` | 俯。正俯拍，2000×2000。可见顶面两键、NORMAL / INDUCTION / TIMING / POWER，以及盆内前缘长条开口。 |
 | `photos/05_five_view.jpg` | `img5.jpg` | `69ed4f76559818283f1aa85435a067a81561bdf06e096ec2ee6e9acf4a63ab48.jpg` | `5806bbd5410668cc0bbae049507200582d7b60979171152edd22286d45a1906e` | 五视图拼图，1920×1280，内含 FRONT、REAR、LEFT、RIGHT、TOP。REAR 可见背面无水位窗。这是拼图，不是单张规格照，也不能单独当成某一面的已确认基准。 |
 
-背面没有独立单张，只出现在五视图的 REAR 格。没有约 45° 的前侧实拍。底面没有实拍。
+背面没有独立单张，只出现在五视图的 REAR 格。没有约 45° 的前侧实拍。底面没有实拍。上面五张是实拍来源，不是已确认的造型基准图。已确认的生成图在 `ref/baseline_*.png`，登记在 `ref_views.csv`，`checked` 为 `yes` 的只有正面、左侧、正俯拍和八张有实拍部位的细节。`three_quarter`、背面、水泵和充电口不在这张表里。
 
 ## 禁用词
 
-画面主标题、副标题和强调数字还须遵守 `UTA_STYLE.md` 文末禁用词表（校验脚本读取那份列表），包括但不限于：`certified`、`healthy`、`health`、`FDA`、`BPA`、`antibacterial`、`bacteria`、`germs`、`test report`、`guarantee`、`100%`、`Best`、`No.1`、`#1`，以及流程用语如 `confirmed`、`TBD`、`Illustration`。`wireless` 和 `battery` 不是禁词。文案仍只能写已确认事实，不能给没有电池事实的产品写电池。规范名单的删除在独立草稿，尚未进入 main。
+画面主标题、副标题和强调数字还须遵守 `UTA_STYLE.md` 文末禁用词表（校验脚本读取那份列表），包括但不限于：`certified`、`healthy`、`health`、`FDA`、`BPA`、`antibacterial`、`bacteria`、`germs`、`test report`、`guarantee`、`100%`、`Best`、`No.1`、`#1`，以及流程用语如 `confirmed`、`TBD`、`Illustration`。`wireless` 和 `battery` 不是本卡禁用词。文案仍只能写已确认事实，不能给没有电池事实的产品写电池。
 
 本产品另外不得在文案或画面中出现：
 
