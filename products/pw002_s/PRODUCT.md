@@ -60,7 +60,15 @@
 
 本产品为立着放、有正反面的饮水机，故形态记为「立体」。用户已确认产品卡，但还没有逐格确认造型基准图。状态是「待确认」，不是「已确认」。`checked` 不写 `yes`，不登记 `ref/`。
 
-`baseline/v01/` 是不完整的第一版，总览在 `baseline/v01/sheet.png`，总览上标了「比例推定」。已生成并作为正式视角留下的只有 `front.png`、`three_quarter.png` 和 `detail_1.png` 到 `detail_8.png`。`back`、`side`、`top_down` 各按脚本原提示词生成了两次，画面仍是正面或偏正面，没有正式视角文件；这两轮落选图在 `baseline/v01/not_used/`，不能当基准。没有 `part_<n>`，配件标「缺实拍」。用户还没有逐格回「对」。
+侧面、正俯视和背面都有实拍，不是缺图，也不需要重拍：
+
+- `side` 有实拍：`photos/02_side_head_left.png`、`photos/03_side_head_right.png`。平视侧面，控制头在画面一端，面对镜头的外壁没有水位窗。
+- `top_down` 有实拍：`photos/04_top.png`。镜头在正上方，只看顶盘内部、控制头和前缘开口，看不见正面立壁。
+- `back` 有实拍：`photos/05_five_view.jpg` 的 REAR 格，没有独立单张。背面平视，外壁没有水位窗，控制头从后方看是一块黑盖。
+
+`baseline/v01/` 里 `front`、`three_quarter`、`detail_1`–`detail_8` 仍待用户逐格确认。`side`、`top_down`、`back` 当时各生成两次，画面仍是正面或偏正面，所以没有收成正式视角；落选图在 `baseline/v01/not_used/`。失败原因是生成时五张实拍按脚本顺序整组附上，正面图排在第一张，模型把侧面和俯视也画成了正面。这不是原图缺失。外形识别点、物理边界、Identity、Geometry 没有因此改写，不新增外形。
+
+用户 2026-11-18 指出这三格不该放弃。按 1.12 另出 `baseline/v02/`，不覆盖 v01。v02 正式文件是 `side.png`、`top_down.png`、`back.png` 和 `sheet.png`。三张都是新生成的灰底渲染，不是原图复制或裁切。`top_down` 和 `back` 用脚本列出的五张实拍，原提示词末尾加一行 `FIX:`。`side` 第一次仍把控制头放在长面正中，按 4.3 用掉最后一次重做；这次只附 `photos/02_side_head_left.png` 和 `photos/03_side_head_right.png`，没有再附正面图。落选的第一次侧面在 `baseline/v02/not_used/`。状态仍是「待确认」。没有 `part_<n>`，配件标「缺实拍」。总览标「比例推定」。v01 已有的图仍待逐格确认。
 
 ## 物理边界
 
