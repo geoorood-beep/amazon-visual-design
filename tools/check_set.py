@@ -27,7 +27,7 @@ import os
 import re
 import sys
 
-VERSION = "3.18"
+VERSION = "3.19"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -93,6 +93,8 @@ LIGHT_TEXT = {
 }
 REF_ONLY_TEXT = ("Use the product reference image only for shape, parts, proportions "
                  "and finish; do not copy its camera angle or framing.")
+CASE_CAMERA_TEXT = ("Take the camera height, framing and composition from the style reference; "
+                    "the product itself always follows the product reference.")
 
 POINT_RE = re.compile(r"\b(point|points|pointed|pointing)\b|\bindex finger\b", re.I)
 STRUCTURE_RE = re.compile(
@@ -453,18 +455,16 @@ def check_card_v2(card, views, pools=None, evidence=None):
         errs.append("foreground 要写内容或 none")
     if errs:
         return errs
-    # coverage (1.4)
-    rows = [r for r in views if r["view"] == view and cam in r["cameras"]]
-    if not rows:
-        errs.append("参考视角覆盖：ref_views.csv 里没有能支撑 product_view=%s、camera=%s 的产品参考图。"
-                    "换成支撑得了的视角，用景别、光型、互动来变化（1.4）" % (view, cam))
-    else:
-        parts = set(p for r in rows for p in r["parts"])
-        if focus != "whole" and focus not in parts:
-            errs.append("focus=%s 不在支撑这个视角的参考图 parts 里（%s）" % (focus, ";".join(sorted(parts))))
-        ref = product_ref_path(card)
-        if ref and ref not in [r["path"] for r in rows]:
-            errs.append("refs.product 用的 %s 不支撑 %s / %s；换成 %s" % (ref, view, cam, rows[0]["path"]))
+    # coverage (1.4): product references give the shape, case references give the camera.
+    if view == "cutaway" and not [r for r in views if r["view"] == "cutaway"]:
+        errs.append("cutaway 只有 ref_views.csv 登记了 cutaway 那一行（真实结构图或拆解照片）才能用（1.4）")
+    parts = set(p for r in views for p in r["parts"])
+    if focus != "whole" and focus not in parts:
+        errs.append("focus=%s 不在任何产品参考图的 parts 里（%s）；谁也没拍过的部位不画（1.4）"
+                    % (focus, ";".join(sorted(parts))))
+    ref = product_ref_path(card)
+    if ref and ref not in [r["path"] for r in views]:
+        errs.append("refs.product 用的 %s 没有登记在 ref_views.csv 里（1.4）" % ref)
     if shot in CLOSE_SHOTS and focus == "whole":
         errs.append("%s 的 focus 不能是 whole，写出焦点部位" % shot)
     need = INTERACTIONS[inter]
@@ -814,8 +814,7 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         if n >= 4:
             if not any(c in OVERHEAD for c in cams):
                 out.append(("S-2", "副图里没有俯拍（down_45 或 top_down）"))
-            low_ok = (views is None) or any("low_angle" in r["cameras"] for r in views)
-            if low_ok and cams.count("low_angle") < 2:
+            if cams.count("low_angle") < 2:
                 out.append(("S-2", "low_angle 只有 %d 张，至少两张" % cams.count("low_angle")))
     if n and strict:
         shots = [c.f("shot_size") for c in subs]
@@ -1003,13 +1002,6 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         for side in ("left", "right"):
             if sides and sides.count(side) * 3 > len(sides) * 2:
                 warns.append(("S-4", "%d 张写了光向的图里 %d 张的主光都从 %s 来" % (len(sides), sides.count(side), side)))
-        if views is not None:
-            front = [r for r in views if r["view"] == "front"]
-            cams = set(cm for r in front for cm in r["cameras"])
-            for c in imgs:
-                cam = c.f("camera")
-                if cam in CAMERA_V2 and cam not in cams:
-                    warns.append(("1.4", "%s 的机位 %s 没有产品参考图支撑（ref_views.csv）" % (c.slot, cam)))
     return fails, warns
 
 
@@ -1032,6 +1024,8 @@ def compile_card(card, pools=None):
                         ("The sharpest point of the picture is %s." % focus_label(f["focus"]))
                         if f["focus"] != "whole" else "The whole product is in sharp focus.",
                         CAMERA_TEXT[f["camera"]], REF_ONLY_TEXT]
+                if card.refs.get("anchor", "").strip():
+                    bits.append(CASE_CAMERA_TEXT)
                 val = join_sentence(val, " ".join(bits))
             elif key == "light":
                 val = join_sentence(val, LIGHT_TEXT[card.f("light_setup")])

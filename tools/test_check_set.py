@@ -66,9 +66,9 @@ class LegacyV1(Base):
                        "[G-1] 同一种互动和宠物组合出现 4 次：S1, S2, P1, P2a",
                        "[A-1] 开场屏 P1 是远景 wide",
                        "WARN S2: headline 里重复了强调数字 10",
-                       "WARN S6: human_action 写了指着产品的动作",
-                       "WARN [1.4] P2a 的机位 top_down 没有产品参考图支撑"):
+                       "WARN S6: human_action 写了指着产品的动作"):
             self.assertIn(expect, out)
+        self.assertNotIn("没有产品参考图支撑", out)  # v3.19: camera is not limited by ref_views
         self.assertNotIn("FAIL", out)
         body = read(V1)
         expected = "\n".join(l for l in body[body.index("UTA-TASK v1"):].splitlines()
@@ -110,20 +110,28 @@ class SampleV2(Base):
 
 
 class CardRules(Base):
-    def test_unsupported_view_fails_card(self):
+    def test_camera_not_in_ref_views_is_allowed(self):
+        # v3.19: camera comes from the case reference, not from ref_views.csv
         text = self.mutate("camera: low_angle\nscene: Bedroom floor at night",
                            "camera: top_down\nscene: Bedroom floor at night")
         code, out, emit = self.run_task(self.write("t.md", text))
+        self.assertIn("OK   cards/round10l/S4_quiet.md", out)
+        self.assertNotIn("参考视角覆盖", out)
+        self.assertIn("Take the camera height, framing and composition from the style reference", read(emit))
+
+    def test_cutaway_still_needs_structure_reference(self):
+        text = self.mutate("camera: low_angle\nscene: Bedroom floor at night",
+                           "camera: low_angle\nscene: Bedroom floor at night")
+        text = text.replace("product_view: front\n", "product_view: cutaway\n", 1)
+        code, out, _ = self.run_task(self.write("t.md", text))
         self.assertEqual(code, 1, out)
-        self.assertIn("FAIL cards/round10l/S4_quiet.md", out)
-        self.assertIn("参考视角覆盖", out)
-        self.assertIn("cards: 22", read(emit))
+        self.assertIn("cutaway 只有 ref_views.csv 登记了 cutaway 那一行", out)
 
     def test_focus_must_be_in_parts(self):
         text = self.mutate("focus: spout", "focus: base_plate")
         code, out, _ = self.run_task(self.write("t.md", text))
         self.assertEqual(code, 1, out)
-        self.assertIn("focus=base_plate 不在支撑这个视角的参考图 parts 里", out)
+        self.assertIn("focus=base_plate 不在任何产品参考图的 parts 里", out)
 
     def test_close_shot_cannot_focus_whole(self):
         text = self.mutate("focus: spout", "focus: whole")

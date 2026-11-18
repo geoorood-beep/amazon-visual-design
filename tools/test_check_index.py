@@ -135,5 +135,39 @@ class NewProductFlowTest(unittest.TestCase):
         self.assertIn("新建产品 <产品> 并做造型基准", agents)
 
 
+class FlowV319Test(unittest.TestCase):
+    """No mid-flow stops, baseline as a reference set, deeper story options (v3.19)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_skill_keeps_going(self):
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("## 一直往下走", skill)
+        self.assertIn("每条消息只能停在三种地方", skill)
+        self.assertIn("进度：", skill)
+        self.assertNotIn("每一格一张提问卡", skill)
+
+    def test_baseline_is_a_reference_set(self):
+        guide = self.read("UTA_STYLE.md")
+        self.assertIn("**造型基准是参考集，不是机位清单。**", guide)
+        self.assertIn("**确认：整体看一次。**", guide)
+        self.assertNotIn("用户逐格回", guide)
+        self.assertIn("**产品参考和机位参考分开。**", guide)
+
+    def test_story_options_cover_routes(self):
+        guide = self.read("UTA_STYLE.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        for route in ("R1 证据直给", "R2 家庭生活时刻", "R3 汇聚共享", "R4 没有它会怎样",
+                      "R5 没人注意", "R6 尺度参照", "R7 情绪落点"):
+            self.assertIn(route, guide)
+        self.assertIn("| 一家人在地上 |", guide)
+        self.assertIn("4 个故事选项", guide)
+        self.assertIn("**卖点梳理。**", guide)
+        self.assertNotIn("2–3 个故事", guide)
+        self.assertNotIn("2–3 个故事", skill)
+
+
 if __name__ == "__main__":
     unittest.main()
