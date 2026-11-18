@@ -320,5 +320,31 @@ class UnderstandingTest(unittest.TestCase):
         self.assertIn("air", text)
 
 
+class FastPathTest(unittest.TestCase):
+    """Normal path is three clicks; no batching by image; light reading (v3.28)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_fast_path_is_the_default(self):
+        guide = self.read("UTA_STYLE.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("**快速通道：正常情况下用户只点三次。**", guide)
+        self.assertNotIn("按图分批", guide + skill)
+        self.assertIn("「★ 全部按推荐」", skill)
+        self.assertIn("卡片以外的文字最多三行", skill)
+        self.assertIn("正常情况下用户只点三次", skill)
+
+    def test_read_check_is_one_line(self):
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("已读取：规范 <版本句原文>", skill)
+        self.assertNotIn("每个再加一行", skill)
+
+    def test_codex_does_not_stop_midway(self):
+        guide = self.read("UTA_STYLE.md")
+        self.assertIn("不在出图中途停下等用户", guide)
+
+
 if __name__ == "__main__":
     unittest.main()
