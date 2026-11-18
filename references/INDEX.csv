@@ -158,3 +158,15 @@
 "docs/uta_style_v3/assets/key/XHS_027.jpg","expression","情绪/表情","可学超广角近拍与图标行排版；禁学「健康、消化、BPA-free」","expression;composition","金毛在地毯上扑向前景的慢食碗，瞪眼伸爪；超广角近拍","none","low_sun","ST06","开场","Better Digestion、BPA-free、Healthy 等健康功效绝对不学","C"
 "docs/uta_style_v3/assets/key/XHS_028.jpg","scene","场景融合/情绪/表情","可学宠物在产品内部互动的构图","expression;composition;light","橘猫钻在隧道里伸爪拨弄毛球，舌尖露出来；镜头从隧道口往里看，产品把猫框住","none","side","ST02","开场","猫隧道是对方产品","B"
 "docs/uta_style_v3/assets/key/XHS_029.jpg","expression","情绪/表情/场景融合","可学户外浅景深与树荫上的粗体白字","expression;composition;light","拳师犬叼着飞盘在草地上跑过来，耳朵飞起；浅景深树荫","none","low_sun","ST04","开场","户外和飞盘是对方场景","C"
+products/pw002_s/ref/baseline_front.png,product,pw002_s/front,正面平视，checked yes；只取产品结构、比例和材质,product,,,,,,,
+products/pw002_s/ref/baseline_side.png,product,pw002_s/side_left,左侧平视，checked yes；只取产品结构、比例和材质,product,,,,,,,
+products/pw002_s/ref/baseline_top_down.png,product,pw002_s/top_down,正俯拍，product_view front，checked yes；只取产品结构、比例和材质,product,,,,,,,
+products/pw002_s/ref/baseline_three_quarter.png,product,pw002_s/three_quarter_left,推定，没有45°实拍；checked yes；只取产品结构、比例和材质，不当成45°实拍,product,,,,,,,
+products/pw002_s/ref/baseline_detail_1.png,product,pw002_s/detail_1,细节 rim，checked yes；只取该部位,product,,,,,,,
+products/pw002_s/ref/baseline_detail_2.png,product,pw002_s/detail_2,细节 water_window，checked yes；只取该部位,product,,,,,,,
+products/pw002_s/ref/baseline_detail_3.png,product,pw002_s/detail_3,细节 tray，checked yes；只取该部位,product,,,,,,,
+products/pw002_s/ref/baseline_detail_4.png,product,pw002_s/detail_4,细节 control_head，checked yes；只取该部位,product,,,,,,,
+products/pw002_s/ref/baseline_detail_5.png,product,pw002_s/detail_5,细节 keys，checked yes；只取该部位,product,,,,,,,
+products/pw002_s/ref/baseline_detail_6.png,product,pw002_s/detail_6,细节 front_opening，checked yes；只取该部位,product,,,,,,,
+products/pw002_s/ref/baseline_detail_7.png,product,pw002_s/detail_7,细节 tray，checked yes；只取该部位,product,,,,,,,
+products/pw002_s/ref/baseline_detail_8.png,product,pw002_s/detail_8,细节 front_slot，checked yes；只取该部位,product,,,,,,,
