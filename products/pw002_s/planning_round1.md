@@ -91,3 +91,37 @@
 插线常流有合法字段：参数行 `F4 | Three Modes Include Plug-In`（4 个词），副标题 `Plug-in mode keeps water flowing`。画面不画线材和插头。F4 允许写插线持续出水。
 
 F9、F10 的文字本身可以写，不因为没有水泵和充电口的实拍就不准写。洗机身要写明取出水泵之后；勿浸泡写充电口和上半部分，不画接口。P7 的四行已经被 10L、304、每 15 分钟、三种模式占满，副标题用来解释插线常流。没有剩下的可见文字位。F9、F10 在这一套里未覆盖。
+
+## 3.20 重启后的第 1 步（本轮已确认）
+
+依据 main `76a0f22415519e3bff45a2f59d8821d47b482709`，规范 3.20。上面各节是旧轮历史，不删。旧轮故事不带入本轮。PR #31 的 caption 和 S6 例外未合并，本轮不使用。
+
+本轮已确认，尚未确认第 2 步故事：
+
+- 范围：主图 1、副图 6、高级版 A+ 7 屏
+- 版式：premium
+- 风格：ST01
+- 卖点：F1–F12 全部保留，按新版重排图位
+
+本轮推荐分配（故事仍待选）：
+
+| 图位 | 卖点 | 可见文字 |
+|---|---|---|
+| M1 | none | 无 |
+| S1 | F2 | 主标题副标题，不写感应距离 |
+| S2 | F1 | 强调数字 10L |
+| S3 | F11 | 多宠共用 |
+| S4 | F12 | 低于 25 分贝，不写检测 |
+| S5 | F6 | 304 与拉丝 |
+| S6 | F5 | 副标题整句 `15-21 days, multiple pets or frequent sensing may shorten runtime` |
+| P1 | F2 | 另一时刻的感应 |
+| P2 | F1 | 大数字 10L |
+| P3a | F6 | 标签 Brushed 304 Steel |
+| P3b | F11 | 标签 Shared Bowl |
+| P3c | F7 | 标签 Place Without A Cord |
+| P4 | F9 | 副标题 Remove the pump before a dishwasher or sink wash。画面不画泵 |
+| P5 | F10 | 副标题 Do not soak the top or port; a splash is fine。画面不画接口 |
+| P6 | F8 | 副标题 Nothing trails from this basin。不画他牌 |
+| P7 | F1、F6、F3、F4 | 行：10L Stainless；304 Stainless；Every 15 Minutes；Three Modes Include Plug-In |
+
+这不是确认表，也不是任务单。
