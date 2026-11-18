@@ -27,7 +27,7 @@ import os
 import re
 import sys
 
-VERSION = "3.19"
+VERSION = "3.20"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -409,7 +409,7 @@ def check_copy(card, errs, grants=None, claims=None):
         if same:
             errs.append("headline 里重复了强调数字 %s：数字只放在 hero_number，主标题写好处（1.5）" % ", ".join(same))
     fact = bound_fact(card)
-    for key in ("eyebrow", "headline", "subtitle", "hero_number", "label", "lines"):
+    for key in ("eyebrow", "headline", "subtitle", "hero_number", "label", "caption", "lines"):
         text = card.f(key)
         if key == "lines":
             for line_fact, body in line_bindings(text):
@@ -427,8 +427,33 @@ def check_scene_words(card, errs):
             errs.append("%s 写了参考图看不到的结构或特效（%s）（1.4、2.7）" % (key, ", ".join(sorted(set(hits)))))
 
 
+def check_comparison(card, errs):
+    """The cord-risk scene is pw002_s S6 / F8 only. Other cards cannot opt in."""
+    from copy_exceptions import COMPARISON_CAPTION_RE, comparison_problems, comparison_scope
+
+    comparison = card.f("comparison", "none").strip()
+    if comparison.lower() in ("", "none"):
+        return
+    if comparison != "risk_scenario":
+        errs.append("comparison 只能写 risk_scenario 或 none")
+        return
+    if not comparison_scope(card.f("product"), card.slot, card.f("selling_point")):
+        errs.append("comparison: risk_scenario 只允许 pw002_s 的 S6，卖点 F8")
+        return
+    if not COMPARISON_CAPTION_RE.search(card.f("caption", "")):
+        errs.append("caption 必须含有 generic unbranded cord risk, not a test")
+    blob = " ".join(card.f(key) for key in ("caption", "evidence", "headline", "subtitle", "story"))
+    bad = comparison_problems(blob)
+    if bad:
+        errs.append("对照文案不允许：" + ", ".join(sorted(set(bad))))
+    evidence = card.f("evidence")
+    if not re.search(r"unbranded", evidence, re.I) or not re.search(r"\bcord\b", evidence, re.I):
+        errs.append("evidence 要写明无品牌电线，不能写成他牌")
+
+
 def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=None):
     errs = list(card.parse_errors)
+    check_comparison(card, errs)
     if card.f("card_version") != "2":
         errs.append("这是 UTA-TASK v2，卡要写 card_version: 2")
     kind = card.kind

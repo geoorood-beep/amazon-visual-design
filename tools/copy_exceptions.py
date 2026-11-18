@@ -140,6 +140,43 @@ def invented_feature_hits(text, claims):
     return bad
 
 
+COMPARISON_CAPTION_RE = re.compile(r"generic unbranded cord risk, not a test", re.I)
+TIP_RE = re.compile(r"\b(tips over|tipped over|tip-over|knocked over|overturned)\b", re.I)
+COMPARISON_BAN_RE = re.compile(
+    r"\b(injury|injured|blood|wound|safest|guarantee|guaranteed|certified|"
+    r"test report|measured test|pokpet|petlibro|oneisall|neakasa)\b",
+    re.I,
+)
+MAX_CAPTION_WORDS = 12
+
+
+def comparison_scope(product, slot, fact):
+    """The only card allowed to show the generic corded risk scene."""
+    return product == "pw002_s" and slot == "S6" and fact == "F8"
+
+
+def comparison_problems(text):
+    """Claims that the S6 risk scene must not make."""
+    bad = []
+    for pattern in (TIP_RE, COMPARISON_BAN_RE):
+        bad.extend(match.group(0) for match in pattern.finditer(text or ""))
+    return bad
+
+
+def comparison_prompt_note(product, slot, fact, comparison):
+    """Extra prompt sentence for the one allowed comparison card. Empty otherwise."""
+    if str(comparison or "").strip().lower() != "risk_scenario":
+        return ""
+    if not comparison_scope(product, slot, fact):
+        return ""
+    return (
+        "Left of frame may show one plain unbranded corded basin, not a known brand "
+        "and not a copy of the main product. Two dogs may trip on that cord. "
+        "The main product stays on the right with no cord. Do not tip either basin, "
+        "do not show an injury, a logo, or a test instrument."
+    )
+
+
 def line_bindings(text):
     """Yield (fact_id or '', body) for a specs lines field."""
     for part in (text or "").split(";"):

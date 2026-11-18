@@ -1,6 +1,6 @@
 # UTA Style
 
-版本 3.19（2026-11-18）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
+版本 3.20（2026-11-18）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
 
 「UTA style」「Uta Style」「Youta style」「有它风格」指的都是本文件。它与 `docs/`、`archive/` 里的任何旧文字冲突时，以本文件为准；那两个目录出图时不读。
 
@@ -113,7 +113,7 @@ Grok：按 2.9 处理回报
 ### 1.5 文字
 
 - 图像模型不画任何文字。先出无字底图，再用排版工具加字。
-- 只有三种文字：主标题、副标题、一个强调数字。A+ 组合模块另有每个小格一个短标签（最多 4 个英文词），参数收尾屏另有 2–4 行参数。高级版 A+ 的每一屏另可有一行眉题（最多 4 个英文词）。除此之外不加任何字。
+- 只有三种文字：主标题、副标题、一个强调数字。A+ 组合模块另有每个小格一个短标签（最多 4 个英文词），参数收尾屏另有 2–4 行参数。高级版 A+ 的每一屏另可有一行眉题（最多 4 个英文词）。小格、副图和单场景还可以多一行 `caption`：排版加在标签或副标题下面，最多 12 个英文词，不进生图提示词，也不代替 `story`。没有就写 `none`。除此之外不加任何字。
 - 主标题 Poppins Bold；副标题 Poppins Regular，字号约为主标题的 0.4 倍，紧贴主标题下方；标签和参数行 Poppins SemiBold。眉题 Poppins SemiBold，全大写，字距加宽约 0.12 em，琥珀色 `#F47A21`，在主标题正上方。
 - 文字深海军蓝 `#0F2438`；强调数字琥珀色 `#F47A21`。
 - 主标题最多 6 个英文词、最多两行；副标题最多 10 个英文词。
@@ -562,6 +562,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 | `headline` | 主标题 | 英文，最多 6 个词 |
 | `subtitle` | 副标题 | 英文，最多 10 个词 |
 | `hero_number` | 强调数字 | 必须含数字，例如 `Under 20 dB`；不用写 `none` |
+| `caption` | 可见说明 | 英文，最多 12 个词，排在副标题或小格标签下面。时长跟这一张卡自己的卖点。不用写 `none`。不进 `story` |
 | `refs` | 参考图 | 四行，各缩进两个空格，见 2.5 |
 
 文案里出现的每一个数字，必须出现在所选事实的「画面可写」一列里。文案不能出现文末「禁用词」和产品卡「禁用词」里的词。M1 的文案字段和 `text_area` 都写 `none`；M1 的 `shot_size`、`product_view`、`focus`、`interaction`、`light_setup`、`foreground` 也都写 `none`。`interaction` 是宠物做的，`pet` 不能是 `none`；是人手做的，`human_action` 不能是 `none`；是 `product_only`，两者都是 `none`。`human_action` 不写指着产品的动作。
@@ -601,6 +602,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 - `canvas` 填 `1:1`。高级版三格拼盘的第一格和 `number` 的场景格填 `3:2`。
 - `headline`、`subtitle`、`hero_number`、`text_area` 都写 `none`。
 - 多一个字段 `label`：这一格的标签，最多 4 个词。`specs` 和 `number` 的小格写 `none`。
+- 可以写 `caption`。它跟这张小格自己的卖点。拼盘整屏的标题仍然绑不到某一个事实。
 - `refs` 里 `layout` 写 `none`。
 
 `grid` 的每格讲一个不同的事实；`steps`、`number`、`contrast` 的每格都是模块卡上的那个事实。`number` 的模块卡必须有 `hero_number`。`contrast` 的两格依次是前和后，地点和机位写成一样的。
@@ -695,7 +697,9 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
   2. 含有时长的那一句英文，写的是 `15-21 days` 或 `15–21 days`，不是单独的 15 days、21 days，也不是别的数字或单位。
   3. 同一句里还有完整限定，只能是 `multiple pets or frequent sensing may shorten runtime`，或 `multiple pets or high-frequency sensing may shorten runtime`。限定在另一句、另一字段，或只塞进 multiple、shorten、runtime 这几个词，都不算。
   4. 这一句里再出现 week、month、vacation、travel、trip、weekend、holiday，或其他 day 说法，仍然禁止。
-  `wireless` 和 `battery` 不是禁用词，不在文末名单里，也不按事实编号特许。它们仍是事实：产品卡已确认事实的「事实」或「画面可写」里，去掉「不得 / 不要 / 不能 / 不可 / 避开 / 不写」之后没有「无线」，文案就不能写 `wireless`；没有「电池」，就不能写 `battery`。这是「不写未确认事实」，不是禁词例外。story 用同一套规则。
+  `wireless` 和 `battery` 不是禁用词，不在文末名单里，也不按事实编号特许。它们仍是事实：产品卡已确认事实的「事实」或「画面可写」里，去掉「不得 / 不要 / 不能 / 不可 / 避开 / 不写」之后没有「无线」，文案就不能写 `wireless`；没有「电池」，就不能写 `battery`。这是「不写未确认事实」，不是禁词例外。`story` 和 `caption` 用同一套规则。`caption` 单独成句：把天数放在主标题、把限定放在 `caption`，两句都不通过。
+
+**S6 风险对照，只此一张。** 只有产品 `pw002_s`、图位 `S6`、卖点 `F8`，并且卡上写 `comparison: risk_scenario` 时，允许一张左右对照：左边是无品牌、不能认出他牌的普通有线款，两只狗追逐时被电线绊倒，不是盆翻倒；右边是本机，边牧喝水，机身没有拖线。这是风险场景的表达，不是已发生的事故，也不是实测。可见的 `caption` 必须含有 `generic unbranded cord risk, not a test`，并且不得写伤害、绝对安全、检测报告或他牌。其他产品、其他图位、其他事实写这个字段，校验失败。`contrast` 仍只拍自家产品的两个状态。生图提示词只在这张卡上放行左边那一只普通有线款，其他卡的「不要第二件产品」不变。
 - 不写索引里没有的图片路径。
 - 不增加表里没有的字段，不写检查清单、阶段门、矩阵或提示词。
 - 不替出图方决定重试次数、验收标准或出图顺序。

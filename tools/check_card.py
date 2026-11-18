@@ -86,16 +86,17 @@ MODULE_KEYS = [
     "card_version", "product", "slot", "canvas", "module", "selling_point",
     "headline", "subtitle", "hero_number", "panels", "lines", "refs",
 ]
-OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow"]
+OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow", "caption", "comparison"]
 ALL_KEYS = set(IMAGE_KEYS) | set(MODULE_KEYS) | set(OPTIONAL_KEYS)
 ENGLISH_FIELDS = [
     "evidence", "human_action", "pet", "pet_action", "scene", "light",
-    "headline", "subtitle", "hero_number", "label", "lines", "eyebrow",
+    "headline", "subtitle", "hero_number", "label", "lines", "eyebrow", "caption",
 ]
 MAX_HEADLINE_WORDS = 6
 MAX_SUBTITLE_WORDS = 10
 MAX_LABEL_WORDS = 4
 MAX_EYEBROW_WORDS = 4
+MAX_CAPTION_WORDS = 12
 SLOT = re.compile(r"(M1|S[1-9]|P[1-8])([a-d]?)")
 CJK = re.compile(r"[　-〿㐀-鿿＀-￯]")
 NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
@@ -381,6 +382,65 @@ def check_words(fields, key, limit, errors):
         errors.append(f"{key} has more than {limit} words")
 
 
+def visible_typeset_lines(fields):
+    """On-image lines. story is not one of them."""
+    lines = []
+    if not is_none(fields.get("eyebrow")):
+        lines.append(("eyebrow", fields["eyebrow"]))
+    if not is_none(fields.get("headline")):
+        lines.append(("headline", fields["headline"]))
+    if not is_none(fields.get("subtitle")):
+        lines.append(("subtitle", fields["subtitle"]))
+    if not is_none(fields.get("hero_number")):
+        lines.append(("hero_number", fields["hero_number"]))
+    if not is_none(fields.get("label")):
+        lines.append(("label", fields["label"]))
+    if not is_none(fields.get("caption")):
+        lines.append(("caption", fields["caption"]))
+    return lines
+
+
+def check_comparison_card(fields, errors):
+    """S6 risk scene is one card. Every other comparison value fails."""
+    from copy_exceptions import (
+        COMPARISON_CAPTION_RE, comparison_problems, comparison_scope,
+    )
+
+    comparison = fields.get("comparison", "none")
+    if is_none(comparison):
+        return
+    product, slot, fact = fields.get("product", ""), fields.get("slot", ""), fields.get("selling_point", "")
+    if not comparison_scope(product, slot, fact):
+        errors.append(
+            "comparison: risk_scenario is only for pw002_s S6 selling_point F8"
+        )
+        return
+    caption = fields.get("caption", "none")
+    if is_none(caption) or not COMPARISON_CAPTION_RE.search(caption):
+        errors.append(
+            "caption must include 'generic unbranded cord risk, not a test'"
+        )
+    blob = " ".join(
+        fields.get(key, "") for key in ("caption", "evidence", "headline", "subtitle", "story")
+        if not is_none(fields.get(key))
+    )
+    bad = comparison_problems(blob)
+    if bad:
+        errors.append("comparison copy is not allowed: " + ", ".join(sorted(set(bad))))
+    evidence = fields.get("evidence", "")
+    if not re.search(r"unbranded", evidence, re.I) or not re.search(r"\bcord\b", evidence, re.I):
+        errors.append("evidence must describe the unbranded cord, not a branded product")
+
+
+def check_visible_field(fields, key, allowed_texts, product, product_forbidden, errors, fact_id):
+    if is_none(fields.get(key)):
+        return
+    check_copy(
+        fields[key], allowed_texts, product, product_forbidden, errors,
+        what=key, fact_id=fact_id,
+    )
+
+
 def check_refs(refs, allowed_slots, product, index, errors):
     """Validate reference lines. Return the attach list [(slot, path, purpose)]."""
     attach = []
@@ -525,6 +585,11 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
     label = fields.get("label", "none")
     if not is_panel and not is_none(label):
         errors.append("'label' is only for panel cards such as P6a")
+    if kind == "M":
+        if not is_none(fields.get("caption")):
+            errors.append("M1 is product only on white: 'caption' must be none")
+    if not is_none(fields.get("comparison")) and fields.get("comparison") != "risk_scenario":
+        errors.append("comparison must be risk_scenario or none")
     if kind == "M" or is_panel:
         who = "M1 is product only on white" if kind == "M" else "a panel carries no text of its own"
         text_keys = ("headline", "subtitle", "hero_number")
@@ -560,14 +625,20 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
     check_words(fields, "headline", MAX_HEADLINE_WORDS, errors)
     check_words(fields, "subtitle", MAX_SUBTITLE_WORDS, errors)
     check_words(fields, "label", MAX_LABEL_WORDS, errors)
+    check_words(fields, "caption", MAX_CAPTION_WORDS, errors)
     if not is_none(fields["hero_number"]) and not NUMBER.search(fields["hero_number"]):
         errors.append("hero_number must contain a number, or be none")
     copy = " ".join(
-        fields[k] for k in ("eyebrow", "headline", "subtitle", "hero_number", "label") if not is_none(fields.get(k))
+        fields[k] for k in ("eyebrow", "headline", "subtitle", "hero_number", "label", "caption")
+        if not is_none(fields.get(k))
     )
     selling = fields.get("selling_point", "")
     bound = selling if re.fullmatch(r"F\d+", selling or "") else None
-    check_copy(copy, [fact["allowed"]] if fact else [], product, product_forbidden, errors, fact_id=bound)
+    allowed_texts = [fact["allowed"]] if fact else []
+    check_copy(copy, allowed_texts, product, product_forbidden, errors, fact_id=bound)
+    for key in ("headline", "subtitle", "hero_number", "label", "caption"):
+        check_visible_field(fields, key, allowed_texts, product, product_forbidden, errors, bound)
+    check_comparison_card(fields, errors)
 
     allowed_slots = {"product"}
     if kind != "M":
@@ -608,6 +679,8 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
             errors.append(f"'{key}' belongs on the panel cards, not on a {module} module card")
     if not is_none(fields.get("label")):
         errors.append("'label' belongs on the panel cards")
+    if not is_none(fields.get("caption")):
+        errors.append("'caption' belongs on the image or panel card, not on the module card")
     if errors:
         return errors, warnings, None
 
@@ -711,6 +784,7 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
         errors.append("'lines' is only for a specs module")
 
     copy = " ".join(fields[k] for k in ("eyebrow", "headline", "subtitle", "hero_number") if not is_none(fields.get(k)))
+    check_comparison_card(fields, errors)
     allowed_texts = [facts[f]["allowed"] for f in sorted(used_facts) if f in facts]
     check_copy(copy, allowed_texts, product, product_forbidden, errors)
 
@@ -779,7 +853,17 @@ def build_prompt(context, blocks):
         for i, (slot, _path, purpose) in enumerate(context["attach"], start=1)
     ]
     out.append("REFERENCES: " + " ".join(refs) + " " + blocks["REFERENCE_RULES"])
-    out.append("AVOID: " + blocks["AVOID"])
+    from copy_exceptions import comparison_prompt_note
+
+    avoid = blocks["AVOID"]
+    note = comparison_prompt_note(
+        fields.get("product", ""), fields.get("slot", ""), fields.get("selling_point", ""),
+        fields.get("comparison", "none"),
+    )
+    if note:
+        avoid = avoid.replace("duplicate product, ", "")
+        avoid = avoid.rstrip(".") + ". " + note
+    out.append("AVOID: " + avoid)
     return "\n\n".join(out)
 
 
@@ -789,12 +873,15 @@ def output_stem(context):
 
 
 def print_copy(fields):
-    if not is_none(fields.get("eyebrow")):
-        print(f"eyebrow (amber, all caps): {fields['eyebrow']}")
-    print(f"headline: {fields['headline']}")
-    print(f"subtitle: {fields['subtitle']}")
-    if not is_none(fields["hero_number"]):
-        print(f"hero number (amber): {fields['hero_number']}")
+    for key, value in visible_typeset_lines(fields):
+        if key == "eyebrow":
+            print(f"eyebrow (amber, all caps): {value}")
+        elif key == "hero_number":
+            print(f"hero number (amber): {value}")
+        elif key == "caption":
+            print(f"caption (typeset on the image, not in the generation prompt): {value}")
+        else:
+            print(f"{key}: {value}")
 
 
 def print_package(context, blocks):
@@ -815,6 +902,8 @@ def print_package(context, blocks):
         print(f"save the image without text as: {stem}_v01.png")
         if not is_none(fields.get("label")):
             print(f"label, added when {fields['slot'][:2]} is composed: {fields['label']}")
+        if not is_none(fields.get("caption")):
+            print(f"caption, typeset under that label: {fields['caption']}")
         print(f"do not typeset this panel; compose it with its module card {fields['slot'][:2]}")
     elif kind == "M":
         print("== AFTER GENERATION ==")
@@ -855,6 +944,8 @@ def print_module(context):
     for number, panel in enumerate(context["panels"], start=1):
         panel_fields = panel["fields"]
         label = "" if is_none(panel_fields.get("label")) else f"   label: {panel_fields['label']}"
+        if not is_none(panel_fields.get("caption")):
+            label += f"   caption: {panel_fields['caption']}"
         step = f"step {number}  " if module == "steps" else ""
         if module == "contrast":
             step = "before  " if number == 1 else "after  "
