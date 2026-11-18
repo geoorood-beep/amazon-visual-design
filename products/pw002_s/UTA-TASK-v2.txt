@@ -1,0 +1,789 @@
+UTA-TASK v2
+product: pw002_s
+style: ST01
+scope: full
+cards: 22
+
+=== cards/pw002_s/M1_white.md ===
+---
+card_version: 2
+product: pw002_s
+slot: M1
+canvas: 1:1
+selling_point: none
+evidence: none
+human_action: none
+pet: none
+pet_action: none
+camera: none
+scene: none
+light: none
+shot_size: none
+product_view: none
+focus: none
+interaction: none
+light_setup: none
+foreground: none
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: none
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/S1_sense.md ===
+---
+card_version: 2
+product: pw002_s
+slot: S1
+canvas: 4:5
+selling_point: F2
+evidence: An orange tabby steps toward the basin in an entry hall and the water surface starts to move
+human_action: none
+pet: one orange tabby cat
+pet_action: steps closer and leans in as the water begins to move
+camera: low_angle
+scene: an entry hall near the front door with a bench and coat hooks, evening
+light: low sun from the left through the doorway
+shot_size: close
+product_view: front
+focus: rim
+interaction: wait
+light_setup: low_sun
+foreground: the edge of the entry bench
+story: In the evening entry hall an orange tabby steps closer and the water starts to move.
+evidence_id: none
+scene_id: SC06
+pet_id: PT02
+person_id: none
+person_mood_id: none
+expression_id: EX02
+text_area: right
+headline: Water When They Come
+subtitle: It starts as they step closer
+hero_number: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/XHS_025.jpg | the pet moving toward the bowl only; not the product or text
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/S2_capacity.md ===
+---
+card_version: 2
+product: pw002_s
+slot: S2
+canvas: 4:5
+selling_point: F1
+evidence: A golden retriever lowers its head to a wide open basin of water
+human_action: none
+pet: one golden retriever
+pet_action: drinks from the wide basin
+camera: down_45
+scene: a kitchen floor corner in front of the lower cabinets
+light: side light from the left
+shot_size: medium
+product_view: front
+focus: whole
+interaction: drink
+light_setup: side
+foreground: none
+story: On the kitchen floor a golden retriever drinks from the wide basin.
+evidence_id: none
+scene_id: SC02
+pet_id: PT07
+person_id: none
+person_mood_id: none
+expression_id: EX09
+text_area: left
+headline: Room For A Big Drink
+subtitle: A golden dog beside the full basin
+hero_number: 10L
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/F_capacity_chart_D5B6RLYY.jpg | a large dog with the basin only; not the days chart or text
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/S3_share.md ===
+---
+card_version: 2
+product: pw002_s
+slot: S3
+canvas: 4:5
+selling_point: F11
+evidence: A calico cat and a corgi drink from opposite ends of one basin while a woman watches from the sofa
+human_action: sits on the sofa and watches the two pets drink
+pet: one calico cat and one corgi
+pet_action: both lower their heads to the same basin
+camera: low_angle
+scene: a living-room floor by a tall window with a rug and the edge of a sofa
+light: side-back light from the window on the right
+shot_size: wide
+product_view: front
+focus: whole
+interaction: share_drink
+light_setup: side_back
+foreground: the edge of the sofa
+story: In the afternoon living room a woman watches a calico cat and a corgi drink from one basin.
+evidence_id: none
+scene_id: SC03
+pet_id: PT06+PT08
+person_id: HP05
+person_mood_id: MD01
+expression_id: EX01
+text_area: right
+headline: Two Pets, One Basin
+subtitle: Cat and dog drink together
+hero_number: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/D_multipet_C5X2G933.jpg | two pets sharing while a person watches only; not the product or text
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/S4_quiet.md ===
+---
+card_version: 2
+product: pw002_s
+slot: S4
+canvas: 4:5
+selling_point: F12
+evidence: A ragdoll cat sleeps beside the basin while ripples remain on the water
+human_action: none
+pet: one ragdoll cat with blue eyes
+pet_action: sleeps with eyes closed beside the basin
+camera: down_45
+scene: a living-room rug in the evening with one floor lamp on
+light: one warm lamp from the left, the rest of the room dark
+shot_size: close
+product_view: front
+focus: rim
+interaction: rest
+light_setup: night_lamp
+foreground: a corner of the rug
+story: At night on the living-room rug a ragdoll sleeps beside the basin while the water still ripples.
+evidence_id: none
+scene_id: SC12
+pet_id: PT01
+person_id: none
+person_mood_id: none
+expression_id: EX03
+text_area: left
+headline: Asleep Beside The Flow
+subtitle: Under 25 dB as ripples remain
+hero_number: 25
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/F_silent_night_GYZQ79CY.jpg | a cat asleep beside a running fountain at night only; not the product or the decibel note
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/S5_steel.md ===
+---
+card_version: 2
+product: pw002_s
+slot: S5
+canvas: 4:5
+selling_point: F6
+evidence: Side light crosses the brushed steel rim while one paw rests on it
+human_action: none
+pet: one calico cat
+pet_action: rests one paw on the rim
+camera: top_down
+scene: a dining area beside a sideboard
+light: side light from the left raking the steel
+shot_size: extreme_close
+product_view: front
+focus: rim
+interaction: paw_touch
+light_setup: side
+foreground: none
+story: Beside the sideboard side light shows the brushed steel as a calico rests one paw on the rim.
+evidence_id: none
+scene_id: SC09
+pet_id: PT06
+person_id: none
+person_mood_id: none
+expression_id: EX06
+text_area: right
+headline: Side Light On Steel
+subtitle: 304 stainless in side light
+hero_number: none
+refs:
+  product: products/pw002_s/ref/baseline_top_down.png | top tray outline, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/D_steel_304_G4DX3QR8.jpg | side light on brushed steel only; not the standing numerals or text
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/S6_runtime.md ===
+---
+card_version: 2
+product: pw002_s
+slot: S6
+canvas: 4:5
+selling_point: F5
+evidence: A British shorthair rests beside the flowing water in a home office
+human_action: none
+pet: one British shorthair cat with a blue-grey coat
+pet_action: rests with eyes closed beside the basin
+camera: down_45
+scene: a home office floor beside a desk and a bookshelf
+light: side-back light from the left
+shot_size: medium
+product_view: front
+focus: whole
+interaction: rest
+light_setup: side_back
+foreground: none
+story: In the home office a British shorthair rests beside the flowing water.
+evidence_id: none
+scene_id: SC05
+pet_id: PT05
+person_id: none
+person_mood_id: none
+expression_id: EX10
+text_area: left
+headline: 4000 mAh Battery
+subtitle: 15-21 days, multiple pets or frequent sensing may shorten runtime
+hero_number: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/F_lifestyle_relax_FJX69D2R.jpg | a cat resting beside moving water only; not the product or text
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P1_morning.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P1
+canvas: 2.44:1
+module: scene
+edition: premium
+tone: light
+beat: hook
+eyebrow: AT THE WINDOW
+selling_point: F2
+evidence: A silver tabby pauses by the window and the water starts to move
+human_action: none
+pet: one silver tabby cat
+pet_action: pauses and leans toward the basin as the water begins
+camera: down_45
+scene: a living-room floor by a tall window with a rug and the edge of a sofa, morning
+light: low sun from the window on the left
+shot_size: close
+product_view: front
+focus: rim
+interaction: inspect
+light_setup: low_sun
+foreground: none
+story: In the morning by the living-room window a silver tabby pauses and the water starts.
+evidence_id: none
+scene_id: SC03
+pet_id: PT03
+person_id: none
+person_mood_id: none
+expression_id: EX11
+text_area: left
+headline: Water Starts Then
+subtitle: The shorthair steps up and flow begins
+hero_number: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/XHS_024.jpg | a pet stepping in from a low camera only; not the product or text
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P2_capacity.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P2
+canvas: 2.44:1
+module: number
+edition: premium
+tone: light
+beat: life
+eyebrow: STAINLESS BASIN
+selling_point: F1
+headline: Room For A Big Drink
+subtitle: The whole basin stays beside the dog
+hero_number: 10L
+panels: P2a
+lines: none
+refs:
+  layout: none
+---
+
+=== cards/pw002_s/P2a_dog.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P2a
+canvas: 3:2
+selling_point: F1
+evidence: A golden retriever stands with the whole basin in the same frame
+human_action: none
+pet: one golden retriever
+pet_action: drinks with the whole basin still in frame
+camera: eye_level
+scene: a dining area beside a sideboard
+light: side light from the left
+shot_size: wide
+product_view: front
+focus: whole
+interaction: drink
+light_setup: side
+foreground: none
+story: Beside the sideboard a golden retriever stands with the whole basin in frame.
+evidence_id: none
+scene_id: SC09
+pet_id: PT07
+person_id: none
+person_mood_id: none
+expression_id: EX09
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+label: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/L_neakasa_717L_DCFY8SB4.jpg | a large number beside a life scene only; not the other brand or its number
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P3_details.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P3
+canvas: 2.44:1
+module: grid
+edition: premium
+tone: dark
+beat: detail
+eyebrow: IN THE DETAILS
+selling_point: none
+headline: Steel, Sharing, Place
+subtitle: Three close views of one basin
+hero_number: none
+panels: P3a, P3b, P3c
+lines: none
+refs:
+  layout: none
+---
+
+=== cards/pw002_s/P3a_steel.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P3a
+canvas: 3:2
+selling_point: F6
+evidence: The brushed steel surface fills the frame under side light
+human_action: none
+pet: none
+pet_action: none
+camera: eye_level
+scene: a kitchen floor corner in front of the lower cabinets
+light: side light from the left, the rest of the frame dark
+shot_size: extreme_close
+product_view: front
+focus: rim
+interaction: product_only
+light_setup: side
+foreground: none
+story: none
+evidence_id: none
+scene_id: SC02
+pet_id: none
+person_id: none
+person_mood_id: none
+expression_id: none
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+label: Brushed 304 Steel
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/F_steel_macro_FJX69D2R.jpg | raking light on steel only; not the product or text
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P3b_share.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P3b
+canvas: 1:1
+selling_point: F11
+evidence: An orange tabby and a golden retriever drink from the same basin
+human_action: none
+pet: one orange tabby cat and one golden retriever
+pet_action: both drink from opposite sides
+camera: down_45
+scene: a kitchen floor corner in front of the lower cabinets
+light: side light from the left
+shot_size: close
+product_view: front
+focus: tray
+interaction: share_drink
+light_setup: side
+foreground: none
+story: On the kitchen floor an orange tabby and a golden retriever drink from one basin.
+evidence_id: none
+scene_id: SC02
+pet_id: PT02+PT07
+person_id: none
+person_mood_id: none
+expression_id: EX01
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+label: Shared Bowl
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/D_floor_labels_G4DX3QR8.jpg | two pets at one basin only; not the floor labels or brand
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P3c_place.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P3c
+canvas: 1:1
+selling_point: F7
+evidence: A woman sets the basin on an open kitchen floor and an orange tabby waits beside it, with no cord trailing from the basin
+human_action: sets the basin down on the open floor
+pet: one orange tabby cat
+pet_action: waits and leans toward the basin
+camera: eye_level
+scene: a kitchen floor corner in front of the lower cabinets
+light: side light from the left
+shot_size: medium
+product_view: front
+focus: whole
+interaction: wait
+light_setup: side
+foreground: none
+story: A woman sets the basin on the kitchen floor and an orange tabby waits beside it.
+evidence_id: none
+scene_id: SC02
+pet_id: PT02
+person_id: HP07
+person_mood_id: MD03
+expression_id: EX02
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+label: Place Without A Cord
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/F_places_3panel_GYZQ79CY.jpg | placing one product in a home only; not the three panels or text
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P4_wash.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P4
+canvas: 2.44:1
+module: scene
+edition: premium
+tone: light
+beat: life
+eyebrow: AFTER THE PUMP
+selling_point: F9
+evidence: Hands rinse only the steel body in a kitchen sink while a silver tabby watches the same basin. The removed part is not in the frame and no internal parts are shown
+human_action: rinses only the steel body under the kitchen tap
+pet: one silver tabby cat
+pet_action: watches the steel body being rinsed
+camera: eye_level
+scene: a kitchen counter next to a stainless sink with a window above it
+light: side light from the window on the left
+shot_size: medium
+product_view: front
+focus: whole
+interaction: human_rinse
+light_setup: side
+foreground: none
+story: At the kitchen sink hands rinse only the steel body while a silver tabby watches.
+evidence_id: none
+scene_id: SC01
+pet_id: PT03
+person_id: HP02
+person_mood_id: none
+expression_id: EX05
+text_area: left
+headline: Steel Body, Then Water
+subtitle: Remove pump; wash steel body in dishwasher or sink
+hero_number: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: references/anchors/round_S5_clean_sink.png | hands rinsing a steel basin while a cat watches only; not the other product shape
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P5_dry.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P5
+canvas: 2.44:1
+module: scene
+edition: premium
+tone: light
+beat: life
+eyebrow: KEEP IT DRY
+selling_point: F10
+evidence: Hands wipe the outside of the steel body and keep the top dry. No opening is drawn or shown
+human_action: wipes the outside of the steel body and keeps the top dry
+pet: one British shorthair cat with a blue-grey coat
+pet_action: watches from beside the basin
+camera: down_45
+scene: a laundry room floor beside the washing machine
+light: side-back light from the left
+shot_size: full
+product_view: front
+focus: whole
+interaction: human_wipe
+light_setup: side_back
+foreground: none
+story: In the laundry room hands wipe the outside of the steel body while a British shorthair watches.
+evidence_id: none
+scene_id: SC08
+pet_id: PT05
+person_id: HP04
+person_mood_id: none
+expression_id: EX05
+text_area: right
+headline: Wipe The Outside
+subtitle: Do not soak the top or charging port
+hero_number: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: references/anchors/v06_S6_clean_sink.png | hands at a basin with a cat watching only; not the other product shape
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P6_clear.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P6
+canvas: 2.44:1
+module: steps
+edition: premium
+tone: light
+beat: routine
+eyebrow: NO TRAILING CORD
+selling_point: F8
+headline: Run Past And Drink
+subtitle: Nothing trails from this basin
+hero_number: none
+panels: P6a, P6b, P6c
+lines: none
+refs:
+  layout: none
+---
+
+=== cards/pw002_s/P6a_run.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P6a
+canvas: 1:1
+selling_point: F8
+evidence: The border collie runs toward the basin and no cord trails from it
+human_action: none
+pet: one black-and-white border collie
+pet_action: runs toward the basin
+camera: eye_level
+scene: a hallway with a runner rug and a framed picture
+light: side light from the left
+shot_size: close
+product_view: side_left
+focus: rim
+interaction: inspect
+light_setup: side
+foreground: none
+story: A border collie runs in, passes the basin, and then drinks, and no cord trails from it.
+evidence_id: none
+scene_id: SC11
+pet_id: PT10
+person_id: none
+person_mood_id: none
+expression_id: EX11
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+label: Runs In
+refs:
+  product: products/pw002_s/ref/baseline_side.png | left side profile, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/XHS_018.jpg | a pet moving low past the product only; not the toy or effects
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P6b_pass.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P6b
+canvas: 1:1
+selling_point: F8
+evidence: The border collie passes the basin and no cord trails from it
+human_action: none
+pet: one black-and-white border collie
+pet_action: passes beside the basin
+camera: eye_level
+scene: a hallway with a runner rug and a framed picture
+light: side light from the left
+shot_size: full
+product_view: side_left
+focus: whole
+interaction: wait
+light_setup: side
+foreground: none
+story: A border collie runs in, passes the basin, and then drinks, and no cord trails from it.
+evidence_id: none
+scene_id: SC11
+pet_id: PT10
+person_id: none
+person_mood_id: none
+expression_id: EX12
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+label: Passes Clear
+refs:
+  product: products/pw002_s/ref/baseline_side.png | left side profile, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/L_petlibro_legs_FKT2J6PV.jpg | a body passing the product only; not the bag or brand
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P6c_drink.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P6c
+canvas: 1:1
+selling_point: F8
+evidence: The border collie drinks and no cord trails from the basin
+human_action: none
+pet: one black-and-white border collie
+pet_action: drinks from the basin
+camera: eye_level
+scene: a hallway with a runner rug and a framed picture
+light: side light from the left
+shot_size: close
+product_view: front
+focus: rim
+interaction: drink
+light_setup: side
+foreground: none
+story: A border collie runs in, passes the basin, and then drinks, and no cord trails from it.
+evidence_id: none
+scene_id: SC11
+pet_id: PT10
+person_id: none
+person_mood_id: none
+expression_id: EX07
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+label: Drinks Here
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/XHS_009.jpg | a pet drinking close to the water only; not the other product
+  expression: none
+  layout: none
+---
+
+=== cards/pw002_s/P7_facts.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P7
+canvas: 2.44:1
+module: specs
+edition: premium
+tone: light
+beat: close
+eyebrow: AT A GLANCE
+selling_point: none
+headline: The Stated Facts
+subtitle: Plug-in mode keeps water flowing
+hero_number: none
+panels: P7a
+lines: F1 | 10L Stainless ; F6 | 304 Stainless ; F3 | Every 15 Minutes ; F4 | Three Modes Include Plug-In
+refs:
+  layout: none
+---
+
+=== cards/pw002_s/P7a_product.md ===
+---
+card_version: 2
+product: pw002_s
+slot: P7a
+canvas: 1:1
+selling_point: F1
+evidence: The basin stands alone, full of water, with no cord and no extra parts
+human_action: none
+pet: none
+pet_action: none
+camera: eye_level
+scene: a dining area beside a sideboard
+light: side light from the left
+shot_size: medium
+product_view: front
+focus: whole
+interaction: product_only
+light_setup: side
+foreground: none
+story: none
+evidence_id: none
+scene_id: SC09
+pet_id: none
+person_id: none
+person_mood_id: none
+expression_id: none
+text_area: none
+headline: none
+subtitle: none
+hero_number: none
+label: none
+refs:
+  product: products/pw002_s/ref/baseline_front.png | shape, proportions and brushed steel only
+  anchor: docs/uta_style_v3/assets/key/AP_003.jpg | a product beside a short fact list only; not its numbers, brand or badges
+  expression: none
+  layout: none
+---
