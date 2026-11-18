@@ -125,3 +125,50 @@ F9、F10 的文字本身可以写，不因为没有水泵和充电口的实拍�
 | P7 | F1、F6、F3、F4 | 行：10L Stainless；304 Stainless；Every 15 Minutes；Three Modes Include Plug-In |
 
 这不是确认表，也不是任务单。
+
+## 3.20 第 3 步确认表（待用户回复「确认」）
+
+main `76a0f22415519e3bff45a2f59d8821d47b482709`。风格 ST01。故事用本轮 ★，不是旧轮。尚未确认，不是任务单。
+
+内部用现行 `check_set.py` 核过 22 张卡：OK 22，SET FAIL 0。换成旧卡后，`check_card.py` 还要求产品参考图出现在 `references/INDEX.csv`；这些图目前只在 `ref_views.csv`。出任务单前要补索引。本轮不改索引。
+
+`ref_views.csv` 已有行的 `checked` 都是 `yes`。没有未核对的行。背面、水泵、充电口没有登记。`three_quarter` 是推定但仍是 `yes`。
+
+自动调整（故事原文不改）：
+
+- S1、S3 用 `low_angle`。副图至少两张仰视。不新做仰视造型基准。
+- S6 景别用 medium。副图 close 最多两张，已给 S1 和 S4。
+- P5 景别用 full。P4 已是 medium，相邻主图景别不能相同。
+- S2 表情用 EX09。EX01 留给 S3 和 P3b 的同饮。
+- S3 表情用 EX01。EX08 不配同饮。
+- P2 的画面格互动是 drink。整盆仍同框，避免 wait 超过两次。
+- P5 表情用 EX05，互动 `human_wipe`。EX08 不配人手擦拭。
+- P1 机位 `down_45`、互动 inspect。与 S1 的仰视、等待错开。
+- P6a 互动 inspect，P6b 互动 wait、表情 EX12。枚举里没有「跑」和「经过」。
+
+P4 只冲洗已经取下配件之后的钢体，画面里不出现水泵，也不画内部结构。副标题说明要先取泵。实拍没有水泵，不能画拆泵。
+
+| 图位 | 卖点 | 故事 | 呈现 | 场景 | 宠物 | 表情 | 人物 | 情绪 | 景别 | 机位 | 朝向 | 光型 | 互动 | 前景 | 标题 | 节拍 | 深浅 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| M1 | none | 无 | 白底产品 | 无 | 无 | 无 | 无 | 无 | 无 | 无 | 无 | 无 | 无 | 无 | 无 | 无 | 无 |
+| S1 | F2 | 傍晚玄关，橘猫走近，水面开始动 | 近景 | SC06 玄关 | PT02 橘猫 | EX02 好奇探头 | 无 | 无 | close 近景 | low_angle 仰视 | front 正面 | low_sun | wait 等待 | 玄关长凳边缘 | Water When They Come / It starts as they step closer | 无 | 无 |
+| S2 | F1 | 厨房地面，金毛对着宽盆喝 | 中景 | SC02 厨房地面 | PT07 金毛 | EX09 放松张嘴 | 无 | 无 | medium 中景 | down_45 | front 正面 | side | drink 喝水 | 无 | Room For A Big Drink / A golden dog beside the full basin。强调数字 10L | 无 | 无 |
+| S3 | F11 | 午后客厅，人坐在远处，三花和柯基同时喝 | 全景 | SC03 客厅窗边 | PT06 三花 + PT08 柯基 | EX01 专注喝水 | HP05 女性半身 | MD01 会心微笑 | wide 远景 | low_angle 仰视 | front 正面 | side_back | share_drink 同饮 | 沙发边缘 | Two Pets, One Basin / Cat and dog drink together | 无 | 无 |
+| S4 | F12 | 夜里布偶在盆旁睡着，水面有波纹 | 近景 | SC12 夜晚客厅地毯 | PT01 布偶 | EX03 安心熟睡 | 无 | 无 | close 近景 | down_45 | front 正面 | night_lamp | rest 休息 | 地毯一角 | Asleep Beside The Flow / Under 25 dB as ripples remain。强调数字 25 | 无 | 无 |
+| S5 | F6 | 侧光扫过拉丝，爪搭在盆沿 | 大特写 | SC09 餐边柜旁 | PT06 三花 | EX06 伸爪试探 | 无 | 无 | extreme_close 大特写 | top_down 正俯拍 | front 正面 | side | paw_touch 爪触 | 无 | Side Light On Steel / 304 stainless in side light | 无 | 无 |
+| S6 | F5 | 书房里英短靠在流水旁休息 | 近景，景别已调成中景 | SC05 书房 | PT05 英短 | EX10 闭眼享受 | 无 | 无 | medium 中景 | down_45 | front 正面 | side_back | rest 休息 | 无 | 4000 mAh Battery / 15-21 days, multiple pets or frequent sensing may shorten runtime | 无 | 无 |
+| P1 | F2 | 清晨窗边，美短停住，水面开始动 | 近景 | SC03 客厅窗边 | PT03 美短 | EX11 竖耳警觉 | 无 | 无 | close 近景 | down_45 | front 正面 | low_sun | inspect 看向 | 无 | 眉题 AT THE WINDOW。Water Starts Then / The shorthair steps up and flow begins | hook | light |
+| P2 | F1 | 餐边，金毛和整盆同框 | 全景 | SC09 餐边柜旁 | PT07 金毛 | EX09 放松张嘴 | 无 | 无 | wide 远景 | eye_level 平视 | front 正面 | side | drink 喝水 | 无 | 眉题 STAINLESS BASIN。Room For A Big Drink / The whole basin stays beside the dog。强调数字 10L | life | light |
+| P3 | none | 三格：钢面、猫狗共用、室内换位置 | 拼盘 | SC02 厨房地面 | 见下 | 见下 | 见下 | 见下 | 主图大特写 | 见下 | 见下 | side | 见下 | 无 | 眉题 IN THE DETAILS。Steel, Sharing, Place / Three close views of one basin | detail | dark |
+| P3a | F6 | 无 | 大特写，只有钢面 | 同上 | 无 | 无 | 无 | 无 | extreme_close | eye_level 平视 | front 正面 | side | product_only | 无 | 标签 Brushed 304 Steel | 无 | dark |
+| P3b | F11 | 橘猫和金毛同时喝 | 近景 | 同上 | PT02 + PT07 | EX01 专注喝水 | 无 | 无 | close 近景 | down_45 | front 正面 | side | share_drink 同饮 | 无 | 标签 Shared Bowl | 无 | dark |
+| P3c | F7 | 人把盆放到厨房空处，橘猫在旁等 | 中景 | 同上 | PT02 橘猫 | EX02 好奇探头 | HP07 女性全身 | MD03 安心放松 | medium 中景 | eye_level 平视 | front 正面 | side | wait 等待 | 无 | 标签 Place Without A Cord | 无 | dark |
+| P4 | F9 | 双手在水槽冲洗钢盆，美短看着 | 中景 | SC01 厨房水槽 | PT03 美短 | EX05 盯住目标 | HP02 男性的手 | 无 | medium 中景 | eye_level 平视 | front 正面 | side | human_rinse 冲洗 | 无 | 眉题 AFTER THE PUMP。Steel Body, Then Water / Remove pump; wash steel body in dishwasher or sink | life | light |
+| P5 | F10 | 洗衣房里擦钢盆外侧，顶面保持干 | 全景 | SC08 洗衣房 | PT05 英短 | EX05 盯住目标 | HP04 年长女性的手 | 无 | full 全景 | down_45 | front 正面 | side_back | human_wipe 擦拭 | 无 | 眉题 KEEP IT DRY。Wipe The Outside / Do not soak the top or charging port | life | light |
+| P6 | F8 | 边牧跑来、经过、喝水，机身没有拖线 | 三格步骤 | SC11 走廊 | PT10 边牧 | 见下 | 无 | 无 | 主图近景 | 见下 | 见下 | side | 见下 | 无 | 眉题 NO TRAILING CORD。Run Past And Drink / Nothing trails from this basin | routine | light |
+| P6a | F8 | 跑来 | 近景 | 同上 | PT10 | EX11 竖耳警觉 | 无 | 无 | close 近景 | eye_level 平视 | side_left 左侧面 | side | inspect 看向 | 无 | 标签 Runs In | 无 | light |
+| P6b | F8 | 经过 | 全景 | 同上 | PT10 | EX12 歪头疑惑 | 无 | 无 | full 全景 | eye_level 平视 | side_left 左侧面 | side | wait 等待 | 无 | 标签 Passes Clear | 无 | light |
+| P6c | F8 | 喝水 | 近景 | 同上 | PT10 | EX07 满足舔嘴 | 无 | 无 | close 近景 | eye_level 平视 | front 正面 | side | drink 喝水 | 无 | 标签 Drinks Here | 无 | light |
+| P7 | F1 F6 F3 F4 | 无 | 产品图加四行 | SC09 餐边柜旁 | 无 | 无 | 无 | 无 | medium 中景 | eye_level 平视 | front 正面 | side | product_only | 无 | 眉题 AT A GLANCE。The Stated Facts / Plug-in mode keeps water flowing。行：10L Stainless；304 Stainless；Every 15 Minutes；Three Modes Include Plug-In | close | light |
+
+可见文案覆盖：F2 在 S1、P1；F1 在 S2、P2 的 10L 和 P7 一行；F11 在 S3、P3b；F12 在 S4；F6 在 S5、P3a、P7；F5 整句只在 S6 副标题；F7 在 P3c；F9 整句在 P4 副标题；F10 整句在 P5 副标题；F8 在 P6 副标题；F3、F4 在 P7 两行，插线常流另有 P7 副标题。
