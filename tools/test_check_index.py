@@ -345,6 +345,15 @@ class FastPathTest(unittest.TestCase):
         guide = self.read("UTA_STYLE.md")
         self.assertIn("不在出图中途停下等用户", guide)
 
+    def test_story_emotion_and_items_are_selectable(self):
+        guide = self.read("UTA_STYLE.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        for text in (guide, skill):
+            self.assertIn("情绪卡", text)
+            self.assertIn("逐项选", text)
+        self.assertIn("**改某一张。**", guide)
+        self.assertIn("★ 剩下的全部按推荐", skill)
+
     def test_default_eight_sub_images(self):
         self.assertIn("副图默认 8 张", self.read("UTA_STYLE.md"))
         self.assertIn("副图默认 8 张", self.read("grok", "grok-UTAstyle-skill.md"))
