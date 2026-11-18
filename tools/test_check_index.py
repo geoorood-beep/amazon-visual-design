@@ -169,5 +169,57 @@ class FlowV319Test(unittest.TestCase):
         self.assertNotIn("2–3 个故事", skill)
 
 
+class ConfirmAndTechniquesTest(unittest.TestCase):
+    """Visual confirmation sheet and brand technique library (v3.21)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_techniques_are_valid(self):
+        self.assertEqual(check_index.validate_techniques(), [])
+
+    def test_bad_technique_is_reported(self):
+        folder = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, folder)
+        path = os.path.join(folder, "t.csv")
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write(",".join(check_index.TECH_COLUMNS) + "\n")
+            fh.write("T01,poster,Apple,x,how,transfer,all,avoid\n")
+            fh.write("T01,story,,x,how,transfer,all,avoid\n")
+        errors = check_index.validate_techniques(path=path)
+        self.assertTrue(any("dimension" in e for e in errors), errors)
+        self.assertTrue(any("id 重复" in e for e in errors), errors)
+        self.assertTrue(any("brand 不能空" in e for e in errors), errors)
+
+    def test_every_dimension_and_brand_is_covered(self):
+        import csv
+        with open(os.path.join(ROOT, "references", "techniques.csv"), encoding="utf-8") as fh:
+            rows = list(csv.DictReader(fh))
+        self.assertEqual({r["dimension"] for r in rows}, check_index.TECH_DIMENSIONS)
+        self.assertTrue({"Apple", "Anker", "Xiaomi", "Coca-Cola"} <= {r["brand"] for r in rows})
+
+    def test_template_has_a_parseable_sheet(self):
+        import json, re
+        html = self.read("grok", "confirm_template.html")
+        m = re.search(r'<script id="sheet" type="application/json">(.*?)</script>', html, re.S)
+        self.assertIsNotNone(m)
+        data = json.loads(m.group(1))
+        image = data["images"][0]
+        for key in ("slot", "story", "route", "case", "product_ref", "scene", "pet", "shot", "headline"):
+            self.assertIn(key, image)
+
+    def test_wiring(self):
+        guide = self.read("UTA_STYLE.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        start = guide.index("### 2.1 读什么")
+        self.assertIn("references/techniques.csv", guide[start:guide.index("### 2.2", start)])
+        self.assertIn("**品牌手法库。**", guide)
+        self.assertIn("**给人看的确认表。**", guide)
+        self.assertIn("grok/confirm_template.html", guide)
+        self.assertIn("grok/confirm_template.html", skill)
+        self.assertIn("不发 Markdown 文件", skill)
+
+
 if __name__ == "__main__":
     unittest.main()
