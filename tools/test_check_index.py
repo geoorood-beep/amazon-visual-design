@@ -405,5 +405,101 @@ class FastPathTest(unittest.TestCase):
         self.assertIn("副图默认 8 张", self.read("grok", "grok-UTAstyle-skill.md"))
 
 
+class ImageBaselineDisambiguationTest(unittest.TestCase):
+    """3D means multi-angle images. Mesh delivery is not a route (v3.36)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_guide_keeps_the_image_route_and_bars_mesh_files(self):
+        guide = self.read("UTA_STYLE.md")
+        self.assertIn("**3D 指的是立体效果图片。**", guide)
+        self.assertIn("**快速造型基准（默认）。**", guide)
+        self.assertIn("**确认：整体看一次。**", guide)
+        self.assertIn("**配件参考以该产品卡为准。**", guide)
+        self.assertNotIn("用户逐格回", guide)
+        self.assertNotIn("Meshy", guide)
+        self.assertNotIn("Tripo", guide)
+        self.assertNotIn("Hunyuan3D", guide)
+        self.assertNotIn("手上有 3D 建模工具时可以用", guide)
+        self.assertNotIn("建一次模", guide)
+        for marker in ("Blender mesh", "CAD", "OBJ", "GLB", "STEP", "方盒草模"):
+            self.assertIn(marker, guide)
+        self.assertNotIn("IMG_0638", guide)
+        self.assertNotIn("12 张实拍", guide)
+
+    def test_schedulers_say_images_and_real_photo_input(self):
+        import re
+        agents = self.read("AGENTS.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        for text in (agents, skill):
+            self.assertIn("Blender mesh", text)
+            self.assertIn("实际传", text)
+        self.assertIn("逐角度确认", agents)
+        self.assertIn("逐角度确认", skill)
+        self.assertEqual(re.findall(r"\b\d+\.\d+\b", skill), [])
+
+    def test_version_strings_follow_the_guide(self):
+        import check_set
+        import re
+        third = self.read("UTA_STYLE.md").splitlines()[2]
+        version = re.search(r"版本 (\d+\.\d+)", third).group(1)
+        self.assertIn("**%s**" % version, self.read("README.md"))
+        self.assertIn("## v%s" % version, self.read("CHANGELOG.md"))
+        self.assertEqual(check_set.VERSION, version)
+
+    def test_readme_and_agents_links_resolve(self):
+        import re
+        for name in ("README.md", "AGENTS.md"):
+            text = self.read(name)
+            for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", text):
+                if target.startswith(("http://", "https://", "#")):
+                    continue
+                path = target.split("#", 1)[0]
+                self.assertTrue(os.path.isfile(os.path.join(ROOT, path)), name + " -> " + target)
+
+    def test_pw002_s_accessory_scope_does_not_rewrite_confirmed_rows(self):
+        import csv
+        card = self.read("products", "pw002_s", "PRODUCT.md")
+        self.assertIn("状态：已确认（2026-11-18）", card)
+        self.assertIn("### 配件参考（未确认）", card)
+        self.assertIn("2026-11-18 22:43", card)
+        self.assertIn("IMG_0638.jpg", card)
+        self.assertIn("IMG_0653.jpeg", card)
+        self.assertIn("不是连续的 12 个编号", card)
+        self.assertIn("旧第 13 张", card)
+        self.assertIn("白底", card)
+        for view in ("正面", "背面", "俯视", "斜角"):
+            self.assertIn(view, card)
+        self.assertIn("不继续 A+ 重做", card)
+        self.assertIn("主横幅重做", card)
+        with open(os.path.join(ROOT, "products", "pw002_s", "ref_views.csv"), encoding="utf-8", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+        self.assertEqual(
+            [row["path"] for row in rows],
+            [
+                "products/pw002_s/ref/baseline_front.png",
+                "products/pw002_s/ref/baseline_side.png",
+                "products/pw002_s/ref/baseline_top_down.png",
+                "products/pw002_s/ref/baseline_three_quarter.png",
+                "products/pw002_s/ref/baseline_detail_1.png",
+                "products/pw002_s/ref/baseline_detail_2.png",
+                "products/pw002_s/ref/baseline_detail_3.png",
+                "products/pw002_s/ref/baseline_detail_4.png",
+                "products/pw002_s/ref/baseline_detail_5.png",
+                "products/pw002_s/ref/baseline_detail_6.png",
+                "products/pw002_s/ref/baseline_detail_7.png",
+                "products/pw002_s/ref/baseline_detail_8.png",
+            ],
+        )
+        self.assertTrue(all(row["checked"] == "yes" for row in rows))
+        self.assertNotIn("part_", " ".join(row["path"] for row in rows))
+        plan = self.read("products", "pw002_s", "planning_round1.md")
+        self.assertIn("主图 1 张、副图 6 张、高级版 A+ 7 屏", plan)
+        sample = self.read("tools", "fixtures", "round10l_v2_task.md")
+        self.assertIn("cards: 23", sample)
+
+
 if __name__ == "__main__":
     unittest.main()
