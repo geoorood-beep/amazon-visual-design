@@ -79,6 +79,7 @@ refs:
 card_version: 2
 product: round10l
 slot: S2
+lens: hero_low
 canvas: 4:5
 selling_point: F1
 evidence: Two adult hands pour water from a plain glass pitcher into the wide basin while a golden retriever sits right beside it; the dog's head next to the basin gives a sense of scale, the basin keeps exactly the proportions of the product reference
@@ -231,6 +232,7 @@ refs:
 card_version: 2
 product: round10l
 slot: S6
+lens: pet_pov
 canvas: 4:5
 selling_point: F6
 evidence: Seen from floor level, a cat lies in front of the fountain with its chin down and stares at the slim vertical water window on the front of the basin, the water line clearly visible inside the window
@@ -269,6 +271,7 @@ refs:
 card_version: 2
 product: round10l
 slot: P1
+lens: wide_close
 canvas: 2.44:1
 module: scene
 edition: premium

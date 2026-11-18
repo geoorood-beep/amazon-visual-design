@@ -354,6 +354,19 @@ class FastPathTest(unittest.TestCase):
         self.assertIn("**改某一张。**", guide)
         self.assertIn("★ 剩下的全部按推荐", skill)
 
+    def test_vivid_expressions_and_lenses_are_wired(self):
+        import csv
+        guide = self.read("UTA_STYLE.md")
+        for marker in ("### 1.17 夸张表情和特殊镜头", "- S-11 ", "- A-16 ", "- K-6 ", "| `lens` |", "`impact:`"):
+            self.assertIn(marker, guide)
+        with open(os.path.join(ROOT, "pools", "expressions.csv"), encoding="utf-8") as fh:
+            rows = list(csv.DictReader(fh))
+        self.assertEqual({r["level"] for r in rows}, {"自然", "夸张"})
+        self.assertGreaterEqual(sum(r["level"] == "夸张" for r in rows), 8)
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("人物情绪 · 宠物表情 · 镜头", skill)
+        self.assertIn("冲击力", skill)
+
     def test_default_eight_sub_images(self):
         self.assertIn("副图默认 8 张", self.read("UTA_STYLE.md"))
         self.assertIn("副图默认 8 张", self.read("grok", "grok-UTAstyle-skill.md"))

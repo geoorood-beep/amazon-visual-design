@@ -80,7 +80,7 @@ h2{font-size:17px;margin:28px 0 10px}
   "images": [
     {
       "slot": "S1", "kind": "副图", "fact": "F1", "selling": "示例卖点",
-      "state": "装好", "effect": "", "must_show": "水从出水口流出，水面有波纹",
+      "state": "装好", "lens": "标准", "effect": "", "must_show": "水从出水口流出，水面有波纹",
       "route": "R2 家庭生活时刻",
       "story": "一句中文故事：谁、什么时刻、什么情绪、卖点怎么被看见。",
       "learn": "学自 <案例文件名>，裂变：<改了什么>",
@@ -155,7 +155,7 @@ h2{font-size:17px;margin:28px 0 10px}
     var learn = [m.learn, m.technique ? "手法 " + m.technique : ""].filter(Boolean).join("；");
     if (learn) h.push('<div class="learn">' + esc(learn) + '</div>');
     if (m.must_show) h.push('<div class="must"><b>必须看得见：</b>' + esc(m.must_show) + '</div>');
-    h.push('<div class="chips">' + chip("产品状态", m.state) + chip("特效", m.effect) + chip("场景", m.scene, "scene") + chip("宠物", m.pet, "pet") + chip("表情", m.expression) +
+    h.push('<div class="chips">' + chip("产品状态", m.state) + chip("镜头", m.lens) + chip("特效", m.effect) + chip("场景", m.scene, "scene") + chip("宠物", m.pet, "pet") + chip("表情", m.expression) +
       chip("人物", m.person) + chip("情绪", m.mood) + chip("互动", m.interaction) + chip("前景", m.foreground) + '</div>');
     h.push('<div class="shot"><div><span>景别</span>' + esc(s.size || "—") + '</div><div><span>机位</span>' + esc(s.camera || "—") +
       '</div><div><span>产品朝向</span>' + esc(s.view || "—") + '</div><div><span>光</span>' + esc(s.light || "—") + '</div></div>');
