@@ -248,5 +248,36 @@ class ConfirmAndTechniquesTest(unittest.TestCase):
         self.assertIn("不发 Markdown 文件", skill)
 
 
+class UsageWiringTest(unittest.TestCase):
+    """Product usage model is named where the writer and Codex read (v3.25)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_fact_visuals_table_is_sane(self):
+        import csv
+        import usage_model
+        with open(os.path.join(ROOT, "references", "fact_visuals.csv"), encoding="utf-8") as fh:
+            rows = list(csv.DictReader(fh))
+        ids = [r["id"] for r in rows]
+        self.assertEqual(len(ids), len(set(ids)))
+        for r in rows:
+            self.assertIn(r["state"], usage_model.GENERIC_STATES, r["id"])
+            self.assertTrue(r["keywords"].strip() and r["must_show_en"].strip(), r["id"])
+
+    def test_spec_skill_and_agents_name_it(self):
+        guide = self.read("UTA_STYLE.md")
+        start = guide.index("### 2.1 读什么")
+        self.assertIn("references/fact_visuals.csv", guide[start:guide.index("### 2.2", start)])
+        start = guide.index("### 2.4")
+        self.assertIn("`product_state`", guide[start:guide.index("### 2.5", start)])
+        for marker in ("### 1.15 产品怎么用", "### 3.7 入库产品视频", "| V5 |", "- S-8 ", "- A-13 "):
+            self.assertIn(marker, guide)
+        self.assertIn("product_state", self.read("grok", "grok-UTAstyle-skill.md"))
+        self.assertIn("入库产品视频", self.read("AGENTS.md"))
+        self.assertIn("## 事实的画面要求", self.read("products", "_template", "PRODUCT.md"))
+
+
 if __name__ == "__main__":
     unittest.main()

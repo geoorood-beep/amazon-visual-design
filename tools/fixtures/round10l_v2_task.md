@@ -89,7 +89,7 @@ camera: down_45
 scene: Kitchen floor with pale stone tiles, light oak cabinet fronts behind, simple Nordic kitchen
 light: Hard daylight from a window on the left, a clear reflection of the window on the water surface, crisp shadows of the hands and the dog on the floor
 shot_size: medium
-product_view: front
+product_view: three_quarter_left
 focus: water_surface
 interaction: human_fill
 light_setup: side
@@ -127,7 +127,7 @@ camera: eye_level
 scene: Light oak dining sideboard top, a plain warm wall far behind and out of focus, no clutter
 light: Hard side light from a window on the left raking across the steel, the right side of the panel falls into shadow, a sharp contact shadow under the paw
 shot_size: extreme_close
-product_view: front
+product_view: three_quarter_right
 focus: rim
 interaction: paw_touch
 light_setup: side
@@ -165,7 +165,7 @@ camera: low_angle
 scene: Bedroom floor at night, a soft wool rug, the edge of a bed with a linen throw, a bedside table with a small lamp
 light: One warm bedside lamp on the right, the rest of the room dark, soft shadows of the cat and the fountain on the rug toward the left
 shot_size: close
-product_view: front
+product_view: side_left
 focus: spout
 interaction: rest
 light_setup: night_lamp
@@ -203,7 +203,7 @@ camera: down_45
 scene: Light oak kitchen counter next to a stainless sink, white tiled wall, a potted plant on the window sill, simple Nordic kitchen
 light: Window light from the left and slightly behind, bright edges on the cat's fur and on the wet steel, a crisp shadow of the hand inside the basin
 shot_size: medium
-product_view: front
+product_view: three_quarter_right
 focus: interior
 interaction: human_wipe
 light_setup: side_back
@@ -284,7 +284,7 @@ camera: eye_level
 scene: Sunny sunroom corner by a tall window, pale stone floor, light oak cabinet fronts far behind and out of focus, simple Nordic home
 light: Morning window light from behind and to the left, rim light on the fur and on the ripples, the front of the basin still readable
 shot_size: close
-product_view: front
+product_view: three_quarter_left
 focus: water_surface
 interaction: share_drink
 light_setup: side_back
@@ -342,7 +342,7 @@ camera: eye_level
 scene: Bedroom at night, light oak floor, a wool rug, the side of a bed with a linen throw, a bedside table with a small lamp
 light: One warm bedside lamp on the left, the rest of the room in deep shadow, soft shadows of the cat and the fountain on the rug toward the right
 shot_size: full
-product_view: front
+product_view: side_right
 focus: whole
 interaction: rest
 light_setup: night_lamp
@@ -402,7 +402,7 @@ camera: low_angle
 scene: A pale stone hallway floor, a plain warm wall far behind and fully out of focus
 light: Hard side light from a window on the right raking across the steel, the left side of the panel falls into shadow
 shot_size: extreme_close
-product_view: front
+product_view: three_quarter_right
 focus: front_panel
 interaction: product_only
 light_setup: side
@@ -678,7 +678,7 @@ camera: down_45
 scene: Stainless kitchen sink set in a light oak counter, white tiled wall, simple Nordic kitchen
 light: Hard daylight from a window on the left, crisp shadows of the hand and the basin inside the sink, bright highlights on the running water
 shot_size: close
-product_view: front
+product_view: three_quarter_left
 focus: interior
 interaction: human_rinse
 light_setup: side
@@ -717,7 +717,7 @@ camera: eye_level
 scene: Living-room floor of light oak by a window, a cream wall behind
 light: Window light from the left and slightly behind, rim light on the cat, a soft reflection of the cloth on the steel
 shot_size: close
-product_view: front
+product_view: three_quarter_right
 focus: front_panel
 interaction: human_wipe
 light_setup: side_back

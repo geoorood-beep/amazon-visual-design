@@ -1,0 +1,8 @@
+id,keywords,state,must_show_en,must_not_en,note
+FV01,取出;拆下;拆开;拆卸;洗碗机;dishwasher;remove the pump;removable pump,top_removed,"the removable top unit with the pump is lifted off and set aside on the counter, away from the water; only the open, empty basin is being washed","washing the basin while the top unit is still attached; the top unit or the pump under running water or soaking",清洗要先拆：事实里写了取出、拆、洗碗机，画面必须是拆开的状态，电源部分离开水
+FV02,清洗;易清洗;好清洗;冲洗;擦拭;rinse;wipe;easy to clean,assembled,"a real cleaning action on the outer surface of the assembled product: a hand wiping or rinsing it","parts taken apart or laid out; the product put in a dishwasher",事实只说好清洗、没说能拆时，画面不拆，只拍擦拭或冲洗外表
+FV03,感应;induction;sensor;靠近出水,assembled,"a pet arriving close to the outlet and a thin stream of water visibly starting to flow from the outlet","a glowing beam, icon or light showing the sensor; still water with no flow",感应要拍出「靠近了，水开始流」这一刻
+FV04,流水;出水;定时出水;持续出水;安静;静音;分贝;dB;quiet;flow,assembled,"water visibly flowing from the outlet, with soft ripples spreading across the water surface","completely still, motionless water; no visible flow",讲水流、安静、定时、持续出水的图，画面里必须看得见水在流；安静靠「水在流、旁边的宠物或人照样睡」证明
+FV05,水位;水位窗;加水;water level;water window;refill,assembled,"the water level clearly readable through the water window","a glowing window; numbers or scale marks added on the window",讲水位就让水位窗里的水位看得清
+FV06,容量;升;10L;10 L;capacity;large volume,assembled,"a generous amount of clear water filling most of the basin","an empty or nearly empty basin; measuring cups or scale lines",讲容量时盆里要有很多水
+FV07,不锈钢;304;stainless;brushed,assembled,"the brushed steel texture catching a band of light, with fine grain visible","a mirror-like chrome finish; a changed colour or material",讲材质要看得见拉丝纹理
