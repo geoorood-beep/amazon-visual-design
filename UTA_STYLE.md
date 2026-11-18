@@ -1,6 +1,6 @@
 # UTA Style
 
-版本 3.23（2026-11-18）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
+版本 3.24（2026-11-18）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
 
 「UTA style」「Uta Style」「Youta style」「有它风格」指的都是本文件。它与 `docs/`、`archive/` 里的任何旧文字冲突时，以本文件为准；那两个目录出图时不读。
 
@@ -438,7 +438,7 @@ M1 和 S 位按生图工具的原生尺寸出图，如实记录实际像素，�
 - 标题的 2–3 组选项，每组用一条不同的 `headline` 手法，选项后面注明手法编号。
 - 情绪、表情、互动的推荐，能对上一条手法就注明编号。
 - 只学方法，不学品牌：画面和文案里不出现这些品牌的名字、标志、口号原句、品牌色和产品。手法里的数字和功能，一律换成我方产品卡「画面可写」里的。
-- 想深入学一个品牌，读 `references/brands/` 里的整体拆解（现在有 `anker.md`：定位、故事、卖点、场景、标题、互动情绪七个方面，每条附链接，末尾写我方用哪条手法、不学什么）。
+- 想深入学一个品牌，读 `references/brands/` 里的整体拆解：`anker.md`、`apple.md`、`xiaomi.md`、`coca-cola.md`。每份按定位、故事、卖点、场景、标题、互动情绪拆，每条附链接，末尾写我方用哪条手法、不学什么。
 - 手法库是数据，由用户增删。用户新收集了品牌素材，可以让写卡方建议新行，用户同意后再加；`tools/check_index.py` 校验它的格式。
 
 **案例的三种用法。** 每个故事选项都标明它是哪一种：
@@ -481,7 +481,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 | `products/<产品>/PRODUCT.md` | 已确认事实、未知项、禁用词、物理边界（尺寸、轮廓、部件清单）、造型基准的状态、有哪些产品参考图。造型基准一节存在而状态不是「已确认」时，按 1.12「谁来做」第二条安排造型基准，同时照常进入 2.2；造型基准确认前不输出任务单。仓库里还没有这个产品的卡（新产品）时，同样按 1.12 先起草，不算读不到 |
 | `pools/scenes.csv`、`pools/pets.csv`、`pools/people.csv`、`pools/moods.csv`、`pools/expressions.csv`、`pools/styles.csv` | 场景、宠物、人物、人物情绪、宠物表情、风格的选项池（1.13）。选项只从这里出 |
 | `products/<产品>/ref_views.csv` | 每张产品参考图是哪个角度、拍到了哪些部位（1.4）。用来知道有哪些部位能做近景；不限制场景图的机位 |
-| `references/brands/anker.md` | Anker 品牌整体拆解（1.14）。想故事和标题时，和手法库一起看 |
+| `references/brands/anker.md`、`references/brands/apple.md`、`references/brands/xiaomi.md`、`references/brands/coca-cola.md` | 四个品牌的整体拆解（1.14）。想故事和标题时，和手法库一起看 |
 | `references/techniques.csv` | 品牌手法库（1.14）：Apple、Anker、小米、可口可乐的故事、卖点、场景、标题、互动、情绪、表情手法。想故事和标题时用 |
 | `references/CASES.md` | 案例摘要：索引里全部 A、B 级案例，按卖点类型分组，带路径、故事、画面结构和不能学的东西。选参考图、想故事只看这份；路径和索引完全一致。由 `tools/check_index.py --digest` 从 `references/INDEX.csv` 生成，不手改 |
 | `products/<产品>/evidence_options.csv` | 每个事实的证据方案（1.10）。没有这个文件就跳过 |
