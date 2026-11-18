@@ -345,6 +345,10 @@ class FastPathTest(unittest.TestCase):
         guide = self.read("UTA_STYLE.md")
         self.assertIn("不在出图中途停下等用户", guide)
 
+    def test_default_eight_sub_images(self):
+        self.assertIn("副图默认 8 张", self.read("UTA_STYLE.md"))
+        self.assertIn("副图默认 8 张", self.read("grok", "grok-UTAstyle-skill.md"))
+
 
 if __name__ == "__main__":
     unittest.main()
