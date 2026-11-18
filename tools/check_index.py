@@ -27,6 +27,9 @@ GRADES = {"A", "B", "C"}
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 CASE_DIR = "docs/uta_style_v3/assets/key"
 NAME_RE = re.compile(r"^[A-Za-z0-9_]+\.(png|jpg|jpeg|webp)$")
+TECH_COLUMNS = ["id", "dimension", "brand", "name", "how", "transfer", "fits", "avoid"]
+TECH_DIMENSIONS = {"story", "selling", "scene", "headline", "interaction", "emotion", "expression"}
+TECH_ID_RE = re.compile(r"^T\d{2,3}$")
 
 
 def split(val):
@@ -90,6 +93,31 @@ def validate(root=ROOT, index_path=None):
 
 
 FIT_ORDER = ["开场", "多宠", "容量", "材质", "安静", "清洁", "可视", "参数"]
+
+
+def validate_techniques(root=ROOT, path=None):
+    """references/techniques.csv: brand techniques Grok may borrow from (UTA_STYLE.md 1.14)."""
+    path = path or os.path.join(root, "references", "techniques.csv")
+    errors = []
+    with open(path, encoding="utf-8", newline="") as fh:
+        reader = csv.DictReader(fh)
+        if reader.fieldnames != TECH_COLUMNS:
+            return ["techniques.csv 表头要是：" + ",".join(TECH_COLUMNS)]
+        seen = set()
+        for n, row in enumerate(reader, 2):
+            tid = (row["id"] or "").strip()
+            where = "techniques.csv 第 %d 行 %s" % (n, tid)
+            if not TECH_ID_RE.match(tid):
+                errors.append(where + "：id 要写成 T 加两到三位数字")
+            if tid in seen:
+                errors.append(where + "：id 重复")
+            seen.add(tid)
+            if row["dimension"] not in TECH_DIMENSIONS:
+                errors.append(where + "：dimension 要写 " + " / ".join(sorted(TECH_DIMENSIONS)))
+            for col in ("brand", "name", "how", "transfer", "avoid"):
+                if not (row[col] or "").strip():
+                    errors.append(where + "：%s 不能空" % col)
+    return errors
 
 
 def digest_text(root=ROOT):
@@ -164,7 +192,7 @@ def main(argv=None):
     if args.digest:
         print("WROTE " + os.path.relpath(write_digest(), ROOT))
         return 0
-    errors = validate()
+    errors = validate() + validate_techniques()
     cases = os.path.join(ROOT, "references", "CASES.md")
     current = open(cases, encoding="utf-8").read() if os.path.exists(cases) else ""
     if current != digest_text():
@@ -174,7 +202,7 @@ def main(argv=None):
     if errors:
         print("索引有 %d 处错误。" % len(errors))
         return 1
-    print("OK  references/INDEX.csv")
+    print("OK  references/INDEX.csv, references/techniques.csv")
     return 0
 
 
