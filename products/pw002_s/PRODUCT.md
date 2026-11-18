@@ -83,15 +83,17 @@
 
 ### 本轮用户上传的造型参考（2026-11-18）
 
-这一节只登记用户本轮直接上传的 9 张原图。它们不是早先12张配件实拍（2026-11-18 22:43 那一批），不顶替 `photos/` 里的五张主机实拍，也不替换 `ref/baseline_*.png`。主机造型基准状态仍是「已确认（2026-11-18）」。原图按字节存入 `ref/user_20261118_*`，没有改像素、拼板、截图、压缩或重编码。
+这一节登记用户本轮提供的 9 张造型参考。来源只记这一句：用户提供的造型参考。不把这 9 张写成实拍，也不写成真实拆解照片或真实结构图。它们不是早先12张配件实拍（2026-11-18 22:43 那一批），不顶替 `photos/` 里的五张主机实拍，也不替换 `ref/baseline_*.png`。主机造型基准状态仍是「已确认（2026-11-18）」。文件按上传字节存入 `ref/user_20261118_*`，没有改像素、拼板、截图、压缩或重编码。泵头高度不因这次登记改矮。第 2 张不替换 `baseline_front`。
 
-泵头高度不降低。第 8、9 张里黑色泵头和白色泵体之间的灰色立管保持原图高度。第 2 张正面略俯不替换 `baseline_front`，不拿它把泵头改矮。第 6 张是拆开的泵，画面里没有黑色泵头。
+规范 1.4 的 `ref_views.csv` 没有来源列。来源写在本段和 `references/INDEX.csv` 的 note。`product_view` 只用 1.4 列出的朝向。
 
-第 8 张画面是配件背视（泵组件背面，不是水盆背面）。`product_view` 写成 `rear` 之后，背面机位的最近产品参考会是这张泵组件。已确认的 12 行主机基准没有被改掉。水盆背面仍然没有单独的已确认基准图。
+第 6 张称泵拆解造型参考。`state` 保留 `disassembled`，只表示这一行所示是拆开摆放。`product_view` 写 `front`，不写 `cutaway`。现行脚本把 `product_view=cutaway` 的行当作真实结构图，用来放行结构特效。这张没有那个来源，所以不登记 `cutaway`。它是表里唯一的 `disassembled` 行，拆开状态的卡在最近参考里会先对上这张；要画主机盆体时点名主机基准路径。
 
-第 9 张是配件侧视，`product_view` 写成 `side_right`，排在第 4 张整机右侧之后。没有点名这张路径时，右侧仍用第 4 张。
+第 8 张用户标注为配件背视。`product_view` 不写 `rear`。规范里的 `rear` 是整机背面，脚本会把它选成主机背面的最近参考。这张不是整机背面，改记为 `front`，排在已确认的 `baseline_front` 之后。没有点名本路径时，主机正面和主机背面都不改用这张。
 
-第 6 张 `product_view` 是 `cutaway`，`state` 是 `disassembled`。它是真实拆解照片。按 1.4，结构特效那条闸门会把这一行算作真实结构图。
+第 9 张是配件侧视，`product_view` 为 `side_right`，排在第 4 张整机右侧之后。没有点名这张路径时，右侧仍用第 4 张。
+
+后续任务要使用第 5、6、8、9 张时，必须在 `refs.product` 点名该路径，并把 `focus` 写成该行 `parts` 里的配件部位。配件背视不是整机 `rear`，不能拿来默认代替主机背面。
 
 第 3、4 张字节分别与 `photos/02_side_head_left.png`、`photos/03_side_head_right.png` 相同，仍按本轮附件另存，不覆盖 `photos/`，也不把它们叫成那 12 张。
 
@@ -102,9 +104,9 @@
 | 3 | 左侧 | `ref/user_20261118_03_side_left.png` | 1712420 | `32c8dc50a0cdd8439f53d6c28ca3cdcabf78bbf41e9f17030d3451f173f34efa` | `side_left` | `eye_level` | `assembled` |
 | 4 | 右侧 | `ref/user_20261118_04_side_right.png` | 2176970 | `0c7af31b70ce2cfa54b6eaae2fdcdea2de03374f1f6ca197cd45a1715caa072c` | `side_right` | `eye_level` | `assembled` |
 | 5 | 连接细节三拼图 | `ref/user_20261118_05_connection.jpg` | 152738 | `ca31a0df9399ce12f72a81016ff30bf69e76f8d33963c7095929e0b3a2be3138` | `front` | `eye_level` | `assembled` |
-| 6 | 泵拆解 | `ref/user_20261118_06_pump_exploded.jpg` | 102965 | `e56c4ec59135537fe83467bc70e1a8eedc99f1bacbf8e89202295b0422f7e904` | `cutaway` | `eye_level` | `disassembled` |
+| 6 | 泵拆解造型参考 | `ref/user_20261118_06_pump_exploded.jpg` | 102965 | `e56c4ec59135537fe83467bc70e1a8eedc99f1bacbf8e89202295b0422f7e904` | `front` | `eye_level` | `disassembled` |
 | 7 | 按钮面板 | `ref/user_20261118_07_button_panel.jpg` | 105628 | `37ccf7309a126cb883491e825c35adf1f2f3ca36f071e701766eb527af006d3f` | `front` | `top_down` | `assembled` |
-| 8 | 配件背视 | `ref/user_20261118_08_accessory_back.jpg` | 130801 | `26dd5f1f6c26582d80cee4e3e3fa921cd6ba3a15034b8c357aaf6764f0df05d2` | `rear` | `eye_level` | `assembled` |
+| 8 | 配件背视 | `ref/user_20261118_08_accessory_back.jpg` | 130801 | `26dd5f1f6c26582d80cee4e3e3fa921cd6ba3a15034b8c357aaf6764f0df05d2` | `front` | `eye_level` | `assembled` |
 | 9 | 配件侧视 | `ref/user_20261118_09_accessory_side.jpg` | 103700 | `d9f2f4abb1728fcfdf8a384e84c7b0a39e39ac105fe42f99f3c5a3c3c2f77fd9` | `side_right` | `eye_level` | `assembled` |
 
 九行都已写入 `references/INDEX.csv`，索引键与上表一一对应，前缀是 `pw002_s/user_20261118_`。`parts` 见 `ref_views.csv`。
@@ -235,7 +237,7 @@ v02 侧面错在把顶面按键转成面向镜头。v02 背面错在控制头像
 | `photos/04_top.png` | `img4.png` | `9c47f4940fd2d8fe6d2fd930fe5363015e5e1f6e7c4009e07af4d9baa649d046.png` | `7cef81ae5d13ead241a50325a26a37053f7b87566094b7f84a9705c8a39f5e6f` | 俯。正俯拍，2000×2000。可见顶面两键、NORMAL / INDUCTION / TIMING / POWER，以及盆内前缘长条开口。 |
 | `photos/05_five_view.jpg` | `img5.jpg` | `69ed4f76559818283f1aa85435a067a81561bdf06e096ec2ee6e9acf4a63ab48.jpg` | `5806bbd5410668cc0bbae049507200582d7b60979171152edd22286d45a1906e` | 五视图拼图，1920×1280，内含 FRONT、REAR、LEFT、RIGHT、TOP。REAR 可见背面无水位窗。这是拼图，不是单张规格照，也不能单独当成某一面的已确认基准。 |
 
-背面没有独立单张，只出现在五视图的 REAR 格。没有约 45° 的前侧实拍。底面没有实拍。上面五张是实拍来源，不是已确认的造型基准图。已确认的生成图在 `ref/baseline_*.png`，仍是 `ref_views.csv` 最前面那 12 行：正面、左侧、正俯拍、`three_quarter`（推定）和八张细节。水盆背面仍然没有单独的已确认基准图；场景图仍可用背面机位，产品照 Geometry 画。本轮 9 张用户上传原图追加在这 12 行之后，其中有水泵和充电口的特写，见「本轮用户上传的造型参考」。
+背面没有独立单张，只出现在五视图的 REAR 格。没有约 45° 的前侧实拍。底面没有实拍。上面五张是实拍来源，不是已确认的造型基准图。已确认的生成图在 `ref/baseline_*.png`，仍是 `ref_views.csv` 最前面那 12 行：正面、左侧、正俯拍、`three_quarter`（推定）和八张细节。水盆背面仍然没有单独的已确认基准图；场景图仍可用背面机位，产品照 Geometry 画。本轮 9 张用户提供的造型参考追加在这 12 行之后，见「本轮用户上传的造型参考」。不把它们写成实拍或真实结构。
 
 ## 禁用词
 

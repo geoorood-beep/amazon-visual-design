@@ -522,8 +522,19 @@ class ImageBaselineDisambiguationTest(unittest.TestCase):
             ],
         )
         self.assertNotIn("part_", " ".join(row["path"] for row in rows))
+        by_path = {row["path"]: row for row in rows}
+        pump = by_path["products/pw002_s/ref/user_20261118_06_pump_exploded.jpg"]
+        back = by_path["products/pw002_s/ref/user_20261118_08_accessory_back.jpg"]
+        self.assertEqual(pump["product_view"], "front")
+        self.assertNotEqual(pump["product_view"], "cutaway")
+        self.assertEqual(pump["state"], "disassembled")
+        self.assertNotEqual(back["product_view"], "rear")
+        self.assertEqual(back["product_view"], "front")
         self.assertIn("本轮用户上传的造型参考", card)
         self.assertIn("不是早先12张", card)
+        self.assertNotIn("它是真实拆解照片", card)
+        self.assertIn("不写 `cutaway`", card)
+        self.assertIn("不写 `rear`", card)
         plan = self.read("products", "pw002_s", "planning_round1.md")
         self.assertIn("主图 1 张、副图 6 张、高级版 A+ 7 屏", plan)
         sample = self.read("tools", "fixtures", "round10l_v2_task.md")
