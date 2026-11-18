@@ -97,6 +97,13 @@ class BootstrapTest(unittest.TestCase):
         self.assertIn(url, text)
         self.assertTrue(os.path.isfile(os.path.join(ROOT, "grok", "grok-UTAstyle-skill.md")))
         self.assertIn("每次都重新读取", text)
+        self.assertIn("只读 main", text)
+        with open(os.path.join(ROOT, "grok", "grok-UTAstyle-skill.md"), encoding="utf-8") as fh:
+            skill = fh.read()
+        self.assertIn("**只读主干 main。**", skill)
+        import re
+        for url in re.findall(r"raw\.githubusercontent\.com/\S+", skill + text):
+            self.assertIn("/amazon-visual-design/main/", url, url)
 
 
 class AgentsIntakeTest(unittest.TestCase):
