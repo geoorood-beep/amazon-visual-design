@@ -20,7 +20,7 @@ Product shape baseline render, not an advertisement. The product alone on a plai
 Copy the shape, proportions, thickness, edges and surface texture from the attached real photos exactly. Where the photos do not show a side or a part, keep it plain and simple and invent nothing: no extra holes, seams, layers, buttons, labels or parts.
 
 [PET_RULES]
-Real fur with visible strands, natural anatomy, natural eyes. The expression comes from the action. No cartoon eyes, no human-like smile.
+Real fur with visible strands, natural anatomy, natural eyes, no cartoon style. The expression comes from the action and stays animal-like, with no human-like smile, unless the pet action says the expression is anthropomorphic on purpose.
 
 [TEXT_RULES]
 Do not render any text, letters, numbers, labels, logos, icons or UI in the image. Keep the stated area clear and low in detail for typography that will be added later.

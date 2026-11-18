@@ -630,5 +630,44 @@ class LensesAndVividExpressions(Base):
         self.assertFalse(any(r == "K-6" for r, _ in found), found)
 
 
+class AnthropomorphicOption(Base):
+    """Users choose natural or anthropomorphic expressions (UTA_STYLE.md 1.17, v3.32)."""
+
+    def anthro_text(self, persona):
+        text = read(V2)
+        lines, slot = text.split("\n"), None
+        for i, l in enumerate(lines):
+            if l.startswith("slot: "):
+                slot = l[6:].strip()
+            if slot == "S4" and l.startswith("expression_id: "):
+                lines[i] = "expression_id: EX22"
+        text = "\n".join(lines)
+        if persona:
+            text = text.replace("style: ", "persona: %s\nstyle: " % persona, 1)
+        return text
+
+    def test_natural_task_rejects_anthropomorphic(self):
+        code, out, _ = self.run_task(self.write("t.md", self.anthro_text(None)))
+        self.assertEqual(code, 1, out)
+        self.assertIn("任务单选的是正常表情", out)
+
+    def test_anthro_task_marks_the_prompt(self):
+        code, out, emit = self.run_task(self.write("t.md", self.anthro_text("anthro")))
+        self.assertEqual(code, 0, out)
+        s4 = self.card_block(read(emit), "S4_quiet.md")
+        self.assertIn("Expression (anthropomorphic on purpose", s4)
+
+    def test_bad_persona(self):
+        code, out, _ = self.run_task(self.write("t.md", self.anthro_text("cartoon")))
+        self.assertEqual(code, 2, out)
+
+    def test_anthro_cap(self):
+        pools = check_set.load_pools(ROOT)
+        pools["impact"] = "bold"
+        cards = [check_set.Card("cards/x/S%d.md" % i, ["slot: S%d" % i, "expression_id: EX2%d" % i]) for i in range(1, 5)]
+        found = check_set.impact_rules(check_set.TaskSet(cards), pools)
+        self.assertTrue(any(r == "K-7" for r, _ in found), found)
+
+
 if __name__ == "__main__":
     unittest.main()

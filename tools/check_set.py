@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.31"
+VERSION = "3.32"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -128,7 +128,9 @@ LENS_TEXT = {
     "hero_low": ("Very low camera angled up: the pet and the product stand tall and bold against a bright ceiling or "
                  "window, heroic and confident; vertical lines on the product stay straight. " + PRODUCT_SAFE),
 }
-IMPACT = {"calm": (0, 0, 1), "balanced": (2, 1, 2), "bold": (-1, 2, 4)}   # (min special subs, min special A+, max vivid)
+IMPACT = {"calm": (0, 0, 1), "balanced": (2, 1, 2), "bold": (-1, 2, 4)}
+PERSONAS = ["natural", "anthro"]
+MAX_ANTHRO = 3   # (min special subs, min special A+, max vivid)
 EFFECT_WORDS = {"xray", "cutaway", "crosssection", "exploded", "seethrough", "internalstructure", "innerstructure"}
 EFFECT_TEXT = {
     "xray": ("Product X-ray effect: parts of the outer shell are rendered semi-transparent like clear frosted "
@@ -609,6 +611,8 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
         style = pools.get("style_row")
         if style and card.f("light_setup") not in split_list(style["lights"]):
             errs.append("风格 %s（%s）只配光型 %s，这张卡是 %s" % (style["id"], style["name"], style["lights"], card.f("light_setup")))
+        if pools.get("persona", "natural") == "natural" and expression_level(card, pools, "拟人"):
+            errs.append("任务单选的是正常表情（persona: natural），这张卡用了拟人表情；要拟人就把头部改成 persona: anthro（1.17）")
         usage = pools.get("usage")
         if usage is not None:
             state = card_state(card)
@@ -938,6 +942,11 @@ def angle_rules(imgs, pair_id, effect_id, label, max_effects):
     return out
 
 
+def expression_level(card, pools, level):
+    rows = (pools or {}).get("expressions", {})
+    return any((rows.get(e, {}).get("level") or "").strip() == level for e in pool_ids(card, "expression_id"))
+
+
 def is_vivid(card, pools):
     rows = (pools or {}).get("expressions", {})
     return any((rows.get(e, {}).get("level") or "").strip() == "夸张" for e in pool_ids(card, "expression_id"))
@@ -957,6 +966,9 @@ def impact_rules(ts, pools):
     if len(imgs) >= 4 and len(special(imgs)) < min_aplus:
         out.append(("A-16", "冲击力 %s：A+ 里特殊镜头只有 %d 张，至少 %d 张" % (level, len(special(imgs)), min_aplus)))
     for label, cs in (("主图和副图", subs), ("A+", imgs)):
+        anthro = [c.slot for c in cs if expression_level(c, pools, "拟人")]
+        if len(anthro) > MAX_ANTHRO:
+            out.append(("K-7", "%s里拟人表情用了 %d 张：%s；最多 %d 张" % (label, len(anthro), ", ".join(anthro), MAX_ANTHRO)))
         vivid = [c.slot for c in cs if is_vivid(c, pools)]
         if len(vivid) > max_vivid:
             out.append(("K-6", "冲击力 %s：%s里夸张表情用了 %d 张：%s；最多 %d 张" % (level, label, len(vivid), ", ".join(vivid), max_vivid)))
@@ -1288,7 +1300,8 @@ def compile_card(card, pools=None):
                 looks = [pools["expressions"][e]["look_en"].strip().rstrip(".")
                          for e in pool_ids(card, "expression_id") if e in pools["expressions"]]
                 if looks:
-                    val = join_sentence(val, "Expression: %s." % "; ".join(looks))
+                    tag = "Expression (anthropomorphic on purpose, still real fur and anatomy)"                         if expression_level(card, pools, "拟人") else "Expression"
+                    val = join_sentence(val, "%s: %s." % (tag, "; ".join(looks)))
         if image and key == "refs":
             ref = nearest_ref(card, (pools or {}).get("views"))
             if ref:
@@ -1385,6 +1398,11 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
         p("TASK ERROR: 头部 impact 只能写 calm、balanced 或 bold（1.17），现在是「%s」" % impact)
         return 2
     pools["impact"] = impact
+    persona = header.get("persona", "natural").strip() or "natural"
+    if persona not in PERSONAS:
+        p("TASK ERROR: 头部 persona 只能写 natural 或 anthro（1.17），现在是「%s」" % persona)
+        return 2
+    pools["persona"] = persona
     pools["usage"] = load_usage(root, product)
     pools["views"] = views
     if not pools["usage"]["understanding"].startswith("已确认"):

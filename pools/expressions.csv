@@ -19,3 +19,9 @@ EX17,委屈翻白眼,"looking up with the whites of the eyes showing, brows pull
 EX18,惊喜瞪眼,"eyes suddenly wide, ears shooting up, head pulled back a little in delighted surprise",inspect;wait;drink,docs/uta_style_v3/assets/key/EXP_007.jpg,惊吓,夸张
 EX19,仰头张大嘴开心,"head tipped up, mouth wide open in a big happy pant, tongue out, eyes squeezed with joy",wait;human,docs/uta_style_v3/assets/key/EXP_009.jpg,只用于狗；不用在喝水那一刻,夸张
 EX20,皱眉嫌弃,"brows furrowed, nose wrinkled, a doubtful sideways look",inspect;wait,docs/uta_style_v3/assets/key/EXP_016.jpg,只用于「没有它会怎样」那一半,夸张
+EX21,眨眼卖萌,"one eye winking, mouth curled into a cheeky, almost human smile, head tilted",wait;inspect;human,docs/uta_style_v3/assets/key/EXP_008.jpg,手势和道具,拟人
+EX22,得意坏笑,"a smug, almost human grin, eyes half closed with satisfaction, chin lifted",wait;rest;inspect,docs/uta_style_v3/assets/key/EXP_006.jpg,墨镜和衣服,拟人
+EX23,陶醉捧脸,"eyes closed in bliss, both front paws pressed to the cheeks like a person savouring something",rest;wait,docs/uta_style_v3/assets/key/EXP_010.jpg,杯子和衣服,拟人
+EX24,酷酷斜眼,"a cool sideways glance, one brow raised, unimpressed but stylish",wait;inspect,docs/uta_style_v3/assets/key/EXP_005.jpg,墨镜和衣服,拟人
+EX25,哈哈大笑,"laughing like a person, mouth wide in a human-like grin, eyes squeezed shut with joy",wait;human;rest,docs/uta_style_v3/assets/key/EXP_008.jpg,只用于狗,拟人
+EX26,托腮思考,"chin resting on one front paw, eyes rolled up thoughtfully like a person deciding",wait;rest;inspect,,不用在喝水那一刻,拟人
