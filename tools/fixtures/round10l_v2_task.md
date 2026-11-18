@@ -776,7 +776,7 @@ camera: eye_level
 scene: Light oak sideboard in front of a plain cream wall, one small green plant at the edge, simple Nordic interior, no clutter, no visible power cord or cable, no rear view
 light: Daylight from a window on the left, a clear highlight band on the steel, a soft shadow to the right
 shot_size: medium
-product_view: front
+product_view: three_quarter_right
 focus: whole
 interaction: product_only
 light_setup: side

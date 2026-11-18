@@ -29,13 +29,13 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.25"
+VERSION = "3.26"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
 POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id", "expression_id"]
 FACE_SHOWN = {"half_body", "full_body", "group"}
-V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state"} | set(POOL_FIELDS)
+V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect"} | set(POOL_FIELDS)
 MAX_STORY_WORDS = 35
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
 POOL_FILES = {"scenes": "scenes.csv", "pets": "pets.csv", "people": "people.csv",
@@ -110,6 +110,21 @@ STRUCTURE_RE = re.compile(
     r"\b(x-?ray|cut-?away|cross[- ]section|exploded|see-through|internal structure|"
     r"inner structure|pump|filter|filters|cartridge|LED|light-up)\b", re.I)
 NEGATION = {"no", "not", "without", "never", "nor"}
+EFFECTS = ["none", "xray", "cutaway", "exploded", "flow_path"]
+EFFECT_WORDS = {"xray", "cutaway", "crosssection", "exploded", "seethrough", "internalstructure", "innerstructure"}
+EFFECT_TEXT = {
+    "xray": ("Product X-ray effect: parts of the outer shell are rendered semi-transparent like clear frosted "
+             "glass, so the internal parts listed below show through in their real positions; realistic "
+             "materials, soft light, no glow, no neon, no labels."),
+    "cutaway": ("Clean cutaway: one quarter of the product is sliced away along a straight plane, revealing "
+                "the internal parts listed below in their real positions; the cut faces are plain and matte."),
+    "exploded": ("Exploded view: the product's parts float apart along one vertical axis in their real order "
+                 "and orientation, evenly spaced, nothing added or missing."),
+    "flow_path": ("Water-path effect: the real flowing water is followed by a soft, natural highlight along its "
+                  "path through the parts listed below; it looks like light on water, not a drawn arrow."),
+}
+PART_WORDS = {"pump": ("水泵", "pump"), "filter": ("滤芯", "过滤", "filter"), "filters": ("滤芯", "过滤", "filter"),
+              "cartridge": ("滤芯", "cartridge")}
 DURATION_RE = re.compile(
     r"\b(day|days|week|weeks|month|months|vacation|vacations|holiday|holidays|"
     r"travel|trip|trips|weekend|weekends)\b", re.I)
@@ -451,11 +466,35 @@ def check_copy(card, errs, grants=None, claims=None):
             report_copy_limits(text, fact, grants, errs, key, claims)
 
 
+def norm_word(w):
+    return re.sub(r"[^a-z]", "", w.lower())
+
+
+def structure_hits(card, text):
+    """Structure or effect words the card is not allowed to use (1.16)."""
+    allowed = getattr(card, "allowed_structure", set())
+    return [h for h in positive_hits(STRUCTURE_RE, text) if norm_word(h) not in allowed]
+
+
+def allowed_structure(card, usage):
+    """Part words the product's own facts name, plus effect words when the card declares an effect."""
+    allowed = set()
+    facts = " ".join((usage or {}).get("facts", {}).values()).lower()
+    for word, keys in PART_WORDS.items():
+        if any(k in facts for k in keys):
+            allowed.add(word)
+    for row in (usage or {}).get("structure", []):
+        allowed.update(norm_word(w) for w in row["part_en"].split())
+    if card.f("effect", "none").strip() not in ("", "none"):
+        allowed |= EFFECT_WORDS
+    return allowed
+
+
 def check_scene_words(card, errs):
     if POINT_RE.search(card.f("human_action")):
         errs.append("human_action 写了指着产品的动作：换成加水、冲洗、擦拭、查看这类真实动作（1.2）")
     for key in ("evidence", "scene", "light", "human_action", "pet_action", "foreground"):
-        hits = positive_hits(STRUCTURE_RE, card.f(key))
+        hits = structure_hits(card, card.f(key))
         if hits:
             errs.append("%s 写了参考图看不到的结构或特效（%s）（1.4、2.7）" % (key, ", ".join(sorted(set(hits)))))
 
@@ -523,6 +562,16 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
         errs.append("refs.product 用的 %s 没有登记在 ref_views.csv 里（1.4）" % ref)
     if shot in CLOSE_SHOTS and focus == "whole":
         errs.append("%s 的 focus 不能是 whole，写出焦点部位" % shot)
+    usage = (pools or {}).get("usage")
+    card.allowed_structure = allowed_structure(card, usage)
+    effect = card.f("effect", "none").strip() or "none"
+    if effect not in EFFECTS:
+        errs.append("effect 要写 %s 之一（1.16）" % " / ".join(EFFECTS))
+    elif effect != "none" and usage is not None:
+        has_cut = any(r["view"] == "cutaway" for r in views)
+        if not usage.get("structure") and not has_cut:
+            errs.append("effect=%s 要先知道真实的内部结构：产品卡写「内部结构」一节，或 ref_views.csv 登记真实结构图（cutaway）。"
+                        "不清楚就先问用户，不能自己画（1.16）" % effect)
     need = INTERACTIONS[inter]
     if need == "pet" and card.is_none("pet"):
         errs.append("interaction=%s 是宠物的动作，pet 不能是 none" % inter)
@@ -639,7 +688,7 @@ def check_story(card, errs, grants=None, claims=None):
     if len(story.split()) > MAX_STORY_WORDS:
         errs.append("story 超过 %d 个词，写成一句话" % MAX_STORY_WORDS)
     report_copy_limits(story, bound_fact(card), grants, errs, "story", claims)
-    hits = positive_hits(STRUCTURE_RE, story)
+    hits = structure_hits(card, story)
     if hits:
         errs.append("story 写了参考图看不到的结构或特效（%s）（1.14、2.7）" % ", ".join(sorted(set(hits))))
     if POINT_RE.search(story):
@@ -849,9 +898,48 @@ def pool_rules(ts, evidence, pools=None):
     return fails, warns
 
 
+def angle_rules(imgs, pair_id, effect_id, label, max_effects):
+    """Same view + same shot size at most twice; effect pictures capped (1.16)."""
+    out = []
+    pairs = {}
+    for c in imgs:
+        key = (c.f("product_view"), c.f("shot_size"))
+        if key[0] and key[0] != "none":
+            pairs.setdefault(key, []).append(c.slot)
+    for (view, shot), slots in sorted(pairs.items()):
+        if len(slots) > 2:
+            out.append((pair_id, "%s里同一个角度和景别（%s + %s）用了 %d 次：%s；最多两次，换角度或换景别"
+                        % (label, view, shot, len(slots), ", ".join(slots))))
+    eff = [c.slot for c in imgs if (c.f("effect", "none").strip() or "none") != "none"]
+    if len(eff) > max_effects:
+        out.append((effect_id, "%s里透视、剖视这类特效图用了 %d 张：%s；最多 %d 张" % (label, len(eff), ", ".join(eff), max_effects)))
+    return out
+
+
+def usage_warnings(ts, usage):
+    """U-1: a card's view, camera or shot is outside what its fact usually needs (1.16). Warning only."""
+    warns = []
+    for c in ts.subs + ts.aplus_images():
+        req = requirement(usage, bound_fact(c))
+        if not req:
+            continue
+        miss = []
+        for key, field in (("views", "product_view"), ("cameras", "camera"), ("shots", "shot_size")):
+            want = [w for w in req.get(key, []) if w]
+            if want and c.f(field) not in want:
+                miss.append("%s 建议 %s" % (field, "/".join(want)))
+        if req.get("effect") and (c.f("effect", "none").strip() or "none") == "none":
+            miss.append("可以考虑 effect=%s（先确认内部结构）" % req["effect"])
+        if miss:
+            warns.append(("U-1", "%s（%s）：%s" % (c.slot, bound_fact(c), "；".join(miss))))
+    return warns
+
+
 def set_rules(ts, views, strict, evidence=None, pools=False):
     """Return (fails, warns). Each item is (rule_id, message)."""
     fails, warns = [], []
+    if strict and isinstance(pools, dict) and pools.get("usage"):
+        warns += usage_warnings(ts, pools["usage"])
     if strict and pools:
         f2, w2 = pool_rules(ts, evidence, pools if isinstance(pools, dict) else None)
         fails += f2
@@ -870,6 +958,7 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         if dup:
             out.append(("S-1", "同一个事实做了不止一张副图：%s" % ", ".join(dup)))
         cams = [c.f("camera") for c in subs]
+        out += angle_rules(subs, "S-9", "S-10", "副图", 1)
         front = [c.slot for c in subs if c.f("product_view") in FRONTISH]
         if len(front) > int(math.ceil(n / 3.0)):
             out.append(("S-8", "副图里正面朝向（front、front_left、front_right）用了 %d 张：%s；最多 %d 张，换成三四十五度、侧面等其他朝向"
@@ -992,6 +1081,7 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
             if not any(s.module == "number" or (s.module == "scene" and not s.is_none("hero_number")) for s in scr):
                 out.append(("A-8", "高级版至少一屏巨型数字（number，或带强调数字的 scene）"))
         if strict and imgs:
+            fails.extend(angle_rules(imgs, "A-14", "A-15", "A+", 2))
             front = [c.slot for c in imgs if c.f("product_view") in FRONTISH]
             if len(front) > int(math.ceil(len(imgs) / 2.0)):
                 fails.append(("A-13", "A+ 的图里正面朝向用了 %d 张：%s；最多一半（%d 张）"
@@ -1102,6 +1192,12 @@ def compile_card(card, pools=None):
                         val = join_sentence(val, "Must be visible: %s." % req["must_show"].strip().rstrip("."))
                         if req["must_not"].strip():
                             val = join_sentence(val, "Must not appear: %s." % req["must_not"].strip().rstrip("."))
+                effect = card.f("effect", "none").strip() or "none"
+                if effect in EFFECT_TEXT and usage:
+                    parts = [r["part_en"] for r in usage.get("structure", [])]
+                    val = join_sentence(val, EFFECT_TEXT[effect])
+                    if parts:
+                        val = join_sentence(val, "Internal parts that may be shown: %s; show nothing else inside." % ", ".join(parts))
                 bits = [SHOT_TEXT[f["shot_size"]].format(focus=focus_label(f["focus"])),
                         VIEW_TEXT[f["product_view"]],
                         ("The sharpest point of the picture is %s." % focus_label(f["focus"]))

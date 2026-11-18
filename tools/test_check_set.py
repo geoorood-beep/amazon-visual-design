@@ -512,5 +512,63 @@ class UsageModel(Base):
         self.assertNotIn("product_state", read(emit))
 
 
+class AnglesAndEffects(Base):
+    """Same view + shot at most twice, function-matched angles, structure effects (UTA_STYLE.md 1.16, v3.26)."""
+
+    def test_same_view_and_shot_three_times_fails(self):
+        text = read(V2)
+        lines, slot = text.split("\n"), None
+        for i, l in enumerate(lines):
+            if l.startswith("slot: "):
+                slot = l[6:].strip()
+            if slot in ("S2", "S3", "S5"):
+                if l.startswith("product_view: "):
+                    lines[i] = "product_view: three_quarter_left"
+                if l.startswith("shot_size: "):
+                    lines[i] = "shot_size: close"
+        code, out, _ = self.run_task(self.write("t.md", "\n".join(lines)))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("[S-9]", out)
+
+    def test_function_matching_is_a_warning(self):
+        code, out, _ = self.run_task(V2)
+        self.assertEqual(code, 0, out)
+        self.assertIn("WARN [U-1] P4（F1）", out)
+
+    def test_effect_needs_known_structure(self):
+        text = self.mutate("slot: S3\n", "slot: S3\neffect: xray\n")
+        code, out, _ = self.run_task(self.write("t.md", text))
+        self.assertEqual(code, 1, out)
+        self.assertIn("effect=xray 要先知道真实的内部结构", out)
+
+    def test_effect_with_structure_reaches_the_prompt(self):
+        root = os.path.join(self.tmp, "repo")
+        for d in ("pools", "references", os.path.join("products", "round10l")):
+            shutil.copytree(os.path.join(ROOT, d), os.path.join(root, d))
+        card = os.path.join(root, "products", "round10l", "PRODUCT.md")
+        with open(card, "a", encoding="utf-8") as fh:
+            fh.write("\n## 内部结构\n\n| 部件 | 英文名 | 位置 | 来源 |\n|---|---|---|---|\n"
+                     "| 水泵 | submersible pump | 盆底中央 | 用户确认 2026-11-18 |\n")
+        text = self.mutate("slot: S3\n", "slot: S3\neffect: xray\n")
+        out = io.StringIO()
+        emit = os.path.join(self.tmp, "e.md")
+        code = check_set.run(self.write("t.md", text), emit=emit, root=root,
+                             views_path=os.path.join(root, "products", "round10l", "ref_views.csv"),
+                             state=os.path.join(self.tmp, "s.md"), out=out)
+        self.assertEqual(code, 0, out.getvalue())
+        s3 = self.card_block(read(emit), "S3_steel.md")
+        self.assertIn("Product X-ray effect", s3)
+        self.assertIn("Internal parts that may be shown: submersible pump", s3)
+        self.assertIsNone(re.search(r"^effect:", s3, re.M))
+
+    def test_part_words_follow_the_product_facts(self):
+        usage = {"facts": {"F9": "取出水泵后可放进洗碗机"}, "structure": []}
+        card = check_set.Card("x.md", ["slot: S1"])
+        self.assertIn("pump", check_set.allowed_structure(card, usage))
+        self.assertNotIn("xray", check_set.allowed_structure(card, usage))
+        usage = {"facts": {"F1": "易清洗"}, "structure": []}
+        self.assertNotIn("pump", check_set.allowed_structure(card, usage))
+
+
 if __name__ == "__main__":
     unittest.main()
