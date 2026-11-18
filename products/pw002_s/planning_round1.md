@@ -13,7 +13,11 @@
 
 ## 已选故事
 
-图位编号沿用已经交给用户的那套。没标成已选的搭配是自动搭配，见确认表。
+图位编号沿用已经交给用户的那套。已选故事没有改。三项待决已授权，状态如下，草稿都未合并。
+
+- P2 仰视：用户原话「交给 Codex 处理」。保留完整金毛、整盆同框、10L 和仰视显体量，不改回平视。三次造型尝试都未同时满足仰视和不改比例，没有登记 `ref/`，`checked` 不是 `yes`。见 PR #32。
+- P3：授权提交小格可见 `caption` 的规则和校验草稿，三格保留。见 PR #31 第一项。未审阅，不合并。
+- S6：授权保留左右对照，提交只限本图位的例外草稿。见 PR #31 第二项。不合并，不把草稿写成已发生的实测。
 
 - S1（F2）已选：傍晚玄关，橘猫走近时出水。SC06，PT02。
 - S2（F1）已选：狗舌与宽阔水面的特写。
@@ -43,13 +47,13 @@
 | S3 | F11 | 已选：俯视，两只猫从两端共饮 | 远景俯视，两端同时喝 | 自动 SC03 客厅窗边地面 | 自动 PT02 橘猫 + PT06 三花猫 | 自动 EX01 专注喝水 | 无 | 无 | 自动 wide 远景 | 已选 top_down 正俯拍 | front 正面 | 自动 side_back 侧逆光 | 自动 share_drink 同饮 | 无 | 自动 Two Cats, One Basin / They drink from opposite ends | 无 | 无 |
 | S4 | F12 | 已选：夜里布偶在盆旁熟睡，水面有波纹 | 近景，猫休息，水还在动，不在喝 | 自动 SC12 夜晚客厅地毯 | PT01 布偶猫 | 自动 EX03 安心熟睡 | 无 | 无 | 自动 close 近景 | 自动 down_45 45° 俯拍 | front 正面 | 自动 night_lamp 夜灯 | 自动 rest 休息 | 自动 地毯一角 | 自动 Asleep Beside The Flow / Under 25 dB as ripples remain。强调数字 25 | 无 | 无 |
 | S5 | F6 | 已选：侧光拉丝钢面加猫爪 | 大特写，钢面加爪 | 自动 SC09 餐边柜旁 | 自动 PT06 三花猫 | 自动 EX06 伸爪试探 | 无 | 无 | 自动 extreme_close 大特写 | 自动 top_down 正俯拍 | front 正面 | 已选 side 侧光 | 自动 paw_touch 爪触 | 无 | 自动 Brushed Steel, Side Light / One paw rests on the rim | 无 | 无 |
-| S6 | F8 | 待决。原话：左边是普通款两狗追逐绊倒画面，右边是我们边牧喝水画面。绊倒是狗被电线绊倒 | 待决，没有改成只拍本机 | 待决 | 右格已点名边牧 PT10；左格普通款待决 | 待决 | 待决 | 待决 | 待决 | 待决 | 待决 | 待决 | 待决 | 待决 | 待决 | 无 | 无 |
+| S6 | F8 | 已授权保留。原话：左边是普通款两狗追逐绊倒画面，右边是我们边牧喝水画面。绊倒是狗被电线绊倒 | 左右对照。例外草稿在 PR #31，未合并，所以这张还不能出 | 待草稿合并后再配 | 右格 PT10 边牧；左格无品牌普通有线款 | 待草稿合并后再配 | 无 | 无 | 待草稿合并后再配 | 待草稿合并后再配 | 右格 front 正面 | 待草稿合并后再配 | 右格 drink 喝水；左格是被电线绊倒 | 无 | 草稿要求的可见 caption：generic unbranded cord risk, not a test | 无 | 无 |
 | P1 | F2 | 已选：清晨美短走近窗边水盆，触发出水 | 近景，猫走近，出水开始 | SC03 客厅窗边地面 | PT03 银色虎斑美短 | 自动 EX02 好奇探头 | 无 | 无 | 自动 close 近景 | 自动 eye_level 平视 | front 正面 | 自动 low_sun 低角度日光 | 自动 wait 等待 | 无 | 自动眉题 AT THE WINDOW。Water Starts On Arrival / The shorthair steps up and flow begins | hook 开场 | 自动 light 浅 |
-| P2 | F1 | 已选：完整金毛和整盆同框 | 远景，金毛与整盆同框。自动：金毛低头喝，用来错开互动上限 | 自动 SC09 餐边柜旁 | PT07 金毛 | 自动 EX09 放松张嘴 | 无 | 无 | 自动 wide 远景 | 待决：用户要 low_angle 仰视。已确认参考不支持。暂记 eye_level 平视，不拉伸产品 | front 正面 | 自动 side 侧光 | 自动 drink 喝水 | 无 | 自动眉题 STAINLESS BASIN。Room For A Big Dog / The whole basin stays in frame。强调数字 10L | life 生活 | 自动 light 浅 |
+| P2 | F1 | 已选：完整金毛和整盆同框 | 远景，金毛与整盆同框。自动：金毛低头喝，用来错开互动上限 | 自动 SC09 餐边柜旁 | PT07 金毛 | 自动 EX09 放松张嘴 | 无 | 无 | 自动 wide 远景 | 已授权 low_angle 仰视，不改回平视。三次基准未通过，参考仍不支持，不拉伸产品 | front 正面 | 自动 side 侧光 | 自动 drink 喝水 | 无 | 自动眉题 STAINLESS BASIN。Room For A Big Dog / The whole basin stays in frame。强调数字 10L | life 生活 | 自动 light 浅 |
 | P3 | none | 已选三格，见下 | 三格拼盘 | 自动整屏 SC02 厨房地面角落 | 见下 | 见下 | 见下 | 见下 | 主图大特写 | 见下 | 见下 | 见下 | 见下 | 见下 | 自动眉题 IN THE DETAILS。Steel, Sharing, Power / Three close views, no extra claims | detail 细节 | 自动 light 浅 |
 | P3a | F6 | 已选：钢面拉丝 | 大特写，只有钢面 | 同上 | 无 | 无 | 无 | 无 | extreme_close 大特写 | 自动 eye_level 平视 | front 正面 | 自动 side 侧光 | product_only 只有产品 | 无 | 自动标签 Brushed 304 Steel | 无 | 随 P3 浅 |
 | P3b | F11 | 已选：猫狗共用 | 近景，猫和狗同时喝 | 同上 | 自动 PT02 橘猫 + PT07 金毛 | 自动 EX01 专注喝水 | 无 | 无 | 自动 close 近景 | 自动 down_45 45° 俯拍 | front 正面 | 自动 side 侧光 | 自动 share_drink 同饮 | 无 | 自动标签 Cat And Dog | 无 | 随 P3 浅 |
-| P3c | F5 | 已选：4000 mAh，以及带限定的续航 | 近景，猫在旁休息。续航句还不能排上画面 | 同上 | 自动 PT05 英短蓝猫 | 自动 EX10 闭眼享受 | 无 | 无 | 自动 close 近景 | 自动 eye_level 平视 | front 正面 | 自动 side 侧光 | 自动 rest 休息。不用只有产品，避免和 P7 撞满两次上限 | 无 | 自动标签 4000 mAh。拟议 caption：15-21 days, multiple pets or frequent sensing may shorten runtime | 无 | 随 P3 浅 |
+| P3c | F5 | 已选：4000 mAh，以及带限定的续航 | 近景，猫在旁休息。三格保留 | 同上 | 自动 PT05 英短蓝猫 | 自动 EX10 闭眼享受 | 无 | 无 | 自动 close 近景 | 自动 eye_level 平视 | front 正面 | 自动 side 侧光 | 自动 rest 休息。不用只有产品，避免和 P7 撞满两次上限 | 无 | 自动标签 4000 mAh。caption 草稿未合并：15-21 days, multiple pets or frequent sensing may shorten runtime | 无 | 随 P3 浅 |
 | P4 | F12 | 已选：黄昏书房，英短在盆旁熟睡，流水继续 | 全景，猫休息，水还在动 | SC05 书房地面 | PT05 英短蓝猫 | 自动 EX03 安心熟睡 | 无 | 无 | 自动 full 全景 | 自动 eye_level 平视 | front 正面 | 自动 side_back 侧逆光 | 自动 rest 休息 | 无 | 自动眉题 QUIET HOURS。Sleeps Through The Flow / Water keeps moving under 25 dB。强调数字 25 | life 生活 | 已选 dark 深 |
 | P5 | F7 | 已选：人把水盆放到客厅新位置，猫在旁等待 | 中景，人放下水盆，猫等待 | SC03 客厅窗边地面 | 自动 PT03 银色虎斑美短 | 自动 EX04 慵懒半睁眼 | 自动 HP08 三十多岁男性全身 | 自动 MD04 温柔专注 | 自动 medium 中景 | 自动 eye_level 平视 | front 正面 | 自动 side 侧光 | 自动 wait 等待。人的动作是放下水盆，不记成演示操作 | 无 | 自动眉题 A NEW SPOT。Set Down In The Room / No cord decides where it sits | life 生活 | 自动 light 浅 |
 | P6 | F8 | 已选：边牧跑来、经过、喝水，机身无拖线 | 三格步骤 | 自动 SC11 走廊 | PT10 边牧 | 见下 | 无 | 无 | 主图近景 | 见下 | 见下 | 见下 | 见下 | 见下 | 自动眉题 NO TRAILING CORD。Run Past And Drink / Nothing trails off the basin | routine 日常 | 自动 light 浅 |
@@ -69,6 +73,10 @@
 - P3c 用英短在旁休息，不用「只有产品」。否则钢面格、这一格和 P7 会让「只有产品」超过两次。P4 仍是书房里那只英短熟睡，景别是全景。
 - P6 用步骤模块。P4、P5 两张单场景之后接步骤，单图屏不会连成三张。组合模块是 P3 三格拼盘和 P6 步骤。
 - 同一个事实在副图和 A+ 里换了景别或机位，场景也分开。安静的两张都是休息、水还在动，猫不在喝。
+
+## F9、F10 仍未覆盖
+
+文字可以写，不画水泵和充电口。P7 的四行和副标题已经用来写 10L、304、每 15 分钟、三种模式和插线常流。用户没有授权加屏或改屏。`caption` 草稿如果合并，P7 的产品小格也只能再放一句最多 12 词的说明，放不下 F9 和 F10 两句完整限定。这一套里两句都还没有位置，不擅定把哪一句塞进去。
 
 ## 拟议：P3c 的可见续航句
 
