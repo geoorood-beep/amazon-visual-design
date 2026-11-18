@@ -202,18 +202,22 @@ class ConfirmAndTechniquesTest(unittest.TestCase):
         for domain in ("apple.com", "anker.com", "mi.com", "coca-colacompany.com"):
             self.assertTrue(any(domain in r["examples"] for r in with_examples), domain)
 
-    def test_anker_study_points_at_real_techniques(self):
+    def test_brand_studies_point_at_real_techniques(self):
         import csv, re
-        study = self.read("references", "brands", "anker.md")
         with open(os.path.join(ROOT, "references", "techniques.csv"), encoding="utf-8") as fh:
             ids = {r["id"] for r in csv.DictReader(fh)}
-        cited = set(re.findall(r"\bT\d{2}\b", study))
-        self.assertTrue(cited, "anker.md cites no technique")
-        self.assertEqual(cited - ids, set())
-        self.assertIn("## 8. 不学什么", study)
         guide = self.read("UTA_STYLE.md")
         start = guide.index("### 2.1 读什么")
-        self.assertIn("references/brands/anker.md", guide[start:guide.index("### 2.2", start)])
+        read_list = guide[start:guide.index("### 2.2", start)]
+        studies = sorted(f for f in os.listdir(os.path.join(ROOT, "references", "brands")) if f.endswith(".md"))
+        self.assertEqual(studies, ["anker.md", "apple.md", "coca-cola.md", "xiaomi.md"])
+        for name in studies:
+            study = self.read("references", "brands", name)
+            cited = set(re.findall(r"\bT\d{2}\b", study))
+            self.assertTrue(cited, name + " cites no technique")
+            self.assertEqual(cited - ids, set(), name)
+            self.assertIn("## 8. 不学什么", study, name)
+            self.assertIn("references/brands/" + name, read_list, name)
 
     def test_every_dimension_and_brand_is_covered(self):
         import csv
