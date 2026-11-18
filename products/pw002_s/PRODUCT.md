@@ -161,7 +161,7 @@ v02 侧面错在把顶面按键转成面向镜头。v02 背面错在控制头像
 - 不是把水位窗画在侧面或背面，或正面没有水位窗。
 - 不是把盆前缘长条开口或控制头正面开口画成水龙头、喷泉柱、滤芯仓、感应窗、排水口、溢流口、充电口或其他未被确认的结构。
 - 不是在机身上增加参考图没有的屏幕、灯带、Logo、外露水管或电源线。
-- 不是把水位窗画成发光体。
+- 不是把水位窗画成发光体。例外只有「运行外观」已确认的那一种：出水正在运行，并且水位窗在画面里时，窗内有蓝光，真实水位仍可读，蓝光不挡住水位。未出水时亮不亮未知。本体、灯带和报警灯不发光。房间里的夜灯不是这层蓝光。
 - 不是把顶面按键转到侧面或背面的镜头前，也不是在控制头的侧面或后表面上加按键。
 
 ## Identity (prompt)
@@ -177,7 +177,8 @@ v02 侧面错在把顶面按键转成面向镜头。v02 背面错在控制头像
 - no water window on the left side, the right side, or the back
 - no separate pump, cable, adapter, filter, logo, feet, or visible underside
 - no round or oval basin, no shallow dish, no full black lid, no control head moved to the centre or the front
-- no spout, fountain column, screen, light strip, exposed pipe, glowing window, or extra front panel
+- no spout, fountain column, screen, light strip, exposed pipe, or extra front panel
+- water leaves only from the front opening of the black control head when the product is running; the back is not a water outlet
 - no keys on the side face or the back face of the control head
 
 ## 产品参考图
@@ -195,6 +196,16 @@ v02 侧面错在把顶面按键转成面向镜头。v02 背面错在控制头像
 | `photos/05_five_view.jpg` | `img5.jpg` | `69ed4f76559818283f1aa85435a067a81561bdf06e096ec2ee6e9acf4a63ab48.jpg` | `5806bbd5410668cc0bbae049507200582d7b60979171152edd22286d45a1906e` | 五视图拼图，1920×1280，内含 FRONT、REAR、LEFT、RIGHT、TOP。REAR 可见背面无水位窗。这是拼图，不是单张规格照，也不能单独当成某一面的已确认基准。 |
 
 背面没有独立单张，只出现在五视图的 REAR 格。没有约 45° 的前侧实拍。底面没有实拍。上面五张是实拍来源，不是已确认的造型基准图。已确认的生成图在 `ref/baseline_*.png`，登记在 `ref_views.csv`：正面、左侧、正俯拍、`three_quarter`（推定）和八张细节。背面、水泵和充电口不在这张表里；场景图仍可用背面机位，产品照 Geometry 画。
+
+## 运行外观
+
+状态：已确认（2026-11-18）
+
+用户 2026-11-18 确认的运行事实。只约束这一台产品出水时的水位窗，不新增报警、灯色含义或本体夜灯。
+
+- 黑色控制头正面的开口是出水口。背面的 Type-C 不是出水口，不从背面画水流出。
+- 出水正在运行，并且正面水位窗在画面里时：窗内看得见蓝光，同时真实水位可读，MAX 和 MIN 仍清楚；蓝光不挡住水位。
+- 没有在出水时，窗亮不亮未知，按不发光画。不写报警、不写灯代表什么、不把房间里的夜灯画成产品自己的灯。
 
 ## 禁用词
 

@@ -27,9 +27,9 @@ import os
 import re
 import sys
 
-from usage_model import load_usage, requirement
+from usage_model import load_usage, requirement, window_light_applies
 
-VERSION = "3.35"
+VERSION = "3.36"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -93,6 +93,10 @@ LIGHT_TEXT = {
     "low_sun": "Light setup: low warm sun through a window, long directional shadows across the floor, natural colours, not orange overall.",
     "night_lamp": "Light setup: night, one warm indoor lamp on one side, the rest of the room falls dark, the product is lit only by that lamp and neither the product nor the water window glows.",
 }
+NIGHT_ROOM = (
+    "Light setup: night, one warm indoor lamp on one side, the rest of the room falls dark. "
+    "That lamp lights the room and is not a light on the product."
+)
 REF_ONLY_TEXT = ("Use the product reference image only for shape, parts, proportions "
                  "and finish; do not copy its camera angle or framing.")
 FRONTISH = {"front", "front_left", "front_right"}
@@ -1281,6 +1285,8 @@ def compile_card(card, pools=None):
                         val = join_sentence(val, "Must be visible: %s." % req["must_show"].strip().rstrip("."))
                         if req["must_not"].strip():
                             val = join_sentence(val, "Must not appear: %s." % req["must_not"].strip().rstrip("."))
+                    if window_light_applies(usage, f):
+                        val = join_sentence(val, usage["window_light"])
                 effect = card.f("effect", "none").strip() or "none"
                 if effect in EFFECT_TEXT and usage:
                     parts = [r["part_en"] for r in usage.get("structure", [])]
@@ -1303,7 +1309,11 @@ def compile_card(card, pools=None):
                                 "described here and keep every part identical." % VIEW_LABEL[ref["view"]])
                 val = join_sentence(val, " ".join(bits))
             elif key == "light":
-                val = join_sentence(val, LIGHT_TEXT[card.f("light_setup")])
+                setup = card.f("light_setup")
+                usage = (pools or {}).get("usage")
+                applies = window_light_applies(usage, card.fields)
+                sentence = NIGHT_ROOM if applies and setup == "night_lamp" else LIGHT_TEXT[setup]
+                val = join_sentence(val, sentence)
             elif key == "scene":
                 if not card.is_none("foreground"):
                     val = join_sentence(val, "Foreground: %s, soft and out of focus, framing the subject." % card.f("foreground"))

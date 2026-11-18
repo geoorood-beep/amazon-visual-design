@@ -28,6 +28,20 @@ GENERIC_STATES = {
 MAX_MERGED_RULES = 2
 STATE_ID_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 FACT_ROW_RE = re.compile(r"^\|\s*(F\d+)\s*\|([^|]*)\|([^|]*)\|")
+RUNNING_RE = re.compile(
+    r"\b(flowing|ripples?|starts to move|water starts|water falling|flow begins|"
+    r"is running|keeps running)\b",
+    re.I,
+)
+NOT_OPERATING_RE = re.compile(
+    r"not an operating shot|not a running|not shown running|do not paint a working",
+    re.I,
+)
+FRONT_VIEWS = {"front", "front_left", "front_right", "three_quarter_left", "three_quarter_right"}
+WINDOW_LIGHT = (
+    "While water is flowing and the front water window is in frame, a blue light is visible "
+    "inside that window and the real water level stays readable through it, including MAX and MIN."
+)
 
 
 def _section(text, heading):
@@ -104,8 +118,43 @@ def load_usage(root, product, rules=None):
         "own_states": bool(states),
         "explicit": explicit,
         "structure": structure,
+        "window_light": confirmed_window_light(text),
         "rules": rules if rules is not None else load_rules(root),
     }
+
+
+def confirmed_window_light(text):
+    """Positive sentence for a confirmed running water-window light, or ''."""
+    body = "\n".join(_section(text or "", "## 运行外观"))
+    if not re.search(r"状态\s*[:：]\s*已确认", body):
+        return ""
+    if "蓝光" not in body or "水位" not in body:
+        return ""
+    return WINDOW_LIGHT
+
+
+def window_in_frame(fields):
+    focus = (fields.get("focus") or "").strip()
+    view = (fields.get("product_view") or "").strip()
+    if focus == "water_window":
+        return True
+    return view in FRONT_VIEWS
+
+
+def water_running(fields):
+    blob = " ".join(fields.get(key) or "" for key in ("evidence", "story", "pet_action", "human_action"))
+    if NOT_OPERATING_RE.search(blob):
+        return False
+    return bool(RUNNING_RE.search(blob))
+
+
+def window_light_applies(usage, fields):
+    """Running, window in frame, and this product card confirmed that light."""
+    if not usage or not usage.get("window_light"):
+        return False
+    if not fields:
+        return False
+    return water_running(fields) and window_in_frame(fields)
 
 
 def requirement(usage, fact_id):
