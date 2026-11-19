@@ -76,6 +76,12 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
 #out{display:none;max-width:1180px;margin:0 auto;padding:0 16px 12px}
 #out textarea{min-height:150px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 #out .tip{font-size:13px;color:var(--sub);margin:4px 0}
+.blind{background:var(--warn-soft);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:13.5px;margin:6px 0}
+.blind b{color:var(--warn)}
+.blind .sub,.blindsum .sub{color:var(--sub);font-size:12.5px}
+.blindsum{border-color:var(--warn)}
+.blindsum.ok{border-color:var(--ok)}
+.blindsum a{font-weight:800;margin-right:6px}
 .zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
 .zoom img{max-width:96vw;max-height:94vh}
 </style>
@@ -138,6 +144,17 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
     '<span>共 ' + items.length + ' 张</span>' + (data.task ? '<span>任务单 ' + esc(data.task) + '</span>' : "") +
     (data.generated ? '<span>生成于 ' + esc(data.generated) + '</span>' : "") + '</div></header>');
   h.push('<div class="how">左边是成图，右边是这张卡要它拍的内容，对照着看。<b>满意的不用动，默认通过</b>；不满意的点一下问题类型，再写一句要怎么改。全部看完点底部的「生成验收结果」，把结果发给 Grok。</div>');
+  var flagged = data.blind_flagged || [];
+  var ran = items.some(function (it) { return it.blind && it.blind.ran; });
+  if (flagged.length) {
+    h.push('<div class="how blindsum"><b>独立核对没过的图，先看这些：</b>' + flagged.map(function (slot) {
+      var at = -1;
+      items.forEach(function (it, i) { if (it.slot === slot) at = i; });
+      return '<a href="#item-' + at + '">' + esc(slot) + '</a>';
+    }).join("　") + '<div class="sub">另一个没看过卡片的模型只看图回答了结构题，答错的就是可能画错的地方。其余的图结构题全对，可以扫一眼就过。</div></div>');
+  } else if (ran) {
+    h.push('<div class="how blindsum ok">独立核对：所有核对过的图结构题全对，可以扫一眼就过。</div>');
+  }
 
   items.forEach(function (it, i) {
     var imgs = it.images || [];
@@ -163,13 +180,21 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
     }
     var checks = (c.checks || []).length ? '<details class="checks"><summary>Codex 自检明细</summary>' +
       c.checks.map(function (x) { return esc(x); }).join("<br>") + '</details>' : "";
+    var b = it.blind || {};
+    var bBadge = !b.ran ? "" : (b.unseen ? '<span class="badge warn">独立核对：没看到产品</span>' :
+      (b.fail.length ? '<span class="badge warn">独立核对：答错 ' + b.fail.length + ' 题</span>' : '<span class="badge ok">独立核对：全对</span>'));
+    var bBox = !b.ran ? "" : (b.unseen ? '<div class="blind">审核模型说画面里没有产品：可能图片没传进去，请人看一眼。</div>' :
+      (b.fail.length ? '<div class="blind">' + b.fail.map(function (x) {
+        return '<div><b>' + esc(x.id) + '</b> ' + esc(x.question) + '<br>它看到「' + esc(x.answer) + '」，产品应该是「' +
+          esc((x.expect || []).join("」或「")) + '」' + (x.image ? '<span class="sub">（' + esc(x.image) + '）</span>' : "") + '</div>';
+      }).join("") + '</div>' : ""));
     var mine = saved[it.slot] || {text: "", tags: []};
     h.push('<section class="item" id="item-' + i + '"><div class="media">' + media + '</div><div class="body">' +
       '<div class="top"><span class="slot">' + esc(it.slot) + '</span><span class="kind">' + esc(it.kind || "") +
-      (has(it.module) ? ' · ' + esc(it.module) : "") + '</span><span class="badge ' + cls + '">Codex：' + esc(res) + '</span>' +
+      (has(it.module) ? ' · ' + esc(it.module) : "") + '</span><span class="badge ' + cls + '">Codex：' + esc(res) + '</span>' + bBadge +
       '<span class="badge state" data-state="' + i + '"></span></div>' +
       (has(it.fact) ? '<div class="fact">' + esc(it.fact) + ' <span>' + esc(it.fact_text || "") + '</span></div>' : "") +
-      row("故事", it.story) + row("画面证据", it.evidence) +
+      bBox + row("故事", it.story) + row("画面证据", it.evidence) +
       (has(c.seen) ? '<div class="seen">Codex 看到的：' + esc(c.seen) + '</div>' : "") +
       '<div class="chips">' + chip("场景", it.scene) + chip("宠物", it.pet) + chip("人物", it.person) +
       chip("镜头", shot) + chip("特殊镜头", it.lens) + '</div>' + copy + checks +

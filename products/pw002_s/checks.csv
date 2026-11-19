@@ -1,0 +1,12 @@
+id,question,options,expect,may_hide,states,status,source,fix_en,ref
+K0,第二张图是这款产品的参考照片。第一张图里的饮水机和它是同一款吗？只看产品本身的形状、比例和部件，不看场景和颜色明暗。,是同一款，形状和部件都对得上;像，但形状、比例或部件有明显不同;不是同一款;看不到产品,是同一款，形状和部件都对得上,yes,,已确认,外形识别点（2026-11-18 造型基准整体确认）,"copy the fountain exactly from the product reference: same rounded-rectangle steel basin, same proportions, same black control head",products/pw002_s/ref/baseline_front.png
+K1,饮水机顶上有一个黑色的控制头，机身外壁有一条竖着的深色水位窗。它们在产品的哪两侧？,相对的两侧（一前一后）;同一侧;相邻的两侧（一个在侧面）;看不到水位窗;看不到控制头,相对的两侧（一前一后）,yes,,已确认,外形识别点 2、4：水位窗只在正面；控制头在顶盘后端中央,"the water-level window is only on the front wall, on the side opposite the black control head; the side and back walls are plain brushed steel",
+K2,黑色控制头在顶部盘面的什么位置？,一条长边的中间;一个角上;盘面正中间;一条短边的中间;看不到控制头,一条长边的中间,yes,,已确认,外形识别点 3：控制头固定在顶盘后端中央，左右不顶到外沿,"the black control head sits at the middle of the rear long edge of the tray, never at a corner or in the center",
+K3,机身外壁上看得见几条竖着的水位窗？,0;1;2 条或更多,0;1,no,,已确认,外形识别点 2：只有正面有一条水位窗,the basin has exactly one vertical water-level window and it is on the front wall,
+K4,黑色控制头的顶面上有几个圆形按键？,1;2;3 个或更多;没有按键;看不到控制头顶面,2,yes,,已确认,外形识别点 5：顶面两个圆形键,the control head has exactly two round keys on its top face and nothing else on its sides,
+K5,机身（不算顶上的控制头）是什么形状？,横放的圆角长方体，宽比高大;接近正方体;竖着的高桶，高比宽大;圆柱形;看不清,横放的圆角长方体，宽比高大,yes,,已确认,外形识别点 1：横放的圆角矩形深桶，上沿外翻,"the basin is a low, wide rounded rectangle, clearly wider than it is tall, with one outward rim",
+K6,有没有一根线连着这台饮水机（电源线、充电线）？,没有;有,没有,no,assembled,已确认,F1、F7：无线；未插线时不画线,"no cable, cord or plug is attached to the fountain",
+K7,饮水机外面（台面、地上、手里）有没有单独放着的零件，比如水泵、管子、海绵、滤芯？,没有;有,没有,no,assembled;plugged,已确认,外形识别点 10：装好时只看见桶身和控制头,"nothing else from the set lies outside the basin: no separate pump, tube, sponge or filter",
+K8,从饮水机里拿出来、放在外面的部分是什么样子？,一整个黑色控制头，下面连着管子和白色小水泵;只有一个白色小水泵;只有黑色控制头;拆成好几件散放;没有拿出东西,一整个黑色控制头，下面连着管子和白色小水泵,no,disassembled,待确认,产品资料表 P2（AI 推定，等用户交回表单）,"the pump head is lifted out as one unit: black control head, black body, grey tube and small white pump, set on the counter away from water",
+K9,水从哪里流出来？,控制头朝盆中间那一面的开口;控制头顶上;盆边或盆壁;看不到水流;画面里没有在出水,控制头朝盆中间那一面的开口;画面里没有在出水,yes,assembled,待确认,产品资料表 Q1（AI 推定，等用户交回表单）,water comes only out of the horizontal opening on the front face of the control head,
+K10,黑色控制头的高度和它的宽度比，是什么样子？,矮扁的，高度明显小于宽度;高度和宽度差不多;比宽度还高，像一根柱子;看不到控制头,矮扁的，高度明显小于宽度,yes,,已确认,外形识别点 3：黑色、矮的圆角控制头，高出盘面,"the black control head is a low, flat rounded block, much wider than it is tall, not a tall cylinder",

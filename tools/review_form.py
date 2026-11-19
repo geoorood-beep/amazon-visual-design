@@ -189,8 +189,42 @@ def has(v):
     return bool(v) and v.strip().lower() != "none"
 
 
-def entry(card, facts, blocks, folder, out_path, mode):
+def load_blind(folder):
+    """Results of tools/blind_check.py for this product, by image file name (UTA_STYLE.md 4.7)."""
+    path = os.path.join(folder, "blind_check.json")
+    if not os.path.isfile(path):
+        return {}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except ValueError:
+        WARNINGS.append("blind_check.json is not valid JSON; independent check results left out")
+        return {}
+
+
+def blind_summary(blind, paths):
+    """What the independent check said about this card's images: wrong answers first."""
+    found = [blind[os.path.basename(p)] for p in paths if os.path.basename(p) in blind]
+    if not found:
+        return {}
+    fails, right, unseen = [], 0, False
+    for e in found:
+        if e.get("seen") is False:
+            unseen = True
+        for r in e.get("results", []):
+            if not r.get("counts"):
+                continue
+            if r.get("verdict") in ("错", "无效", "没答"):
+                fails.append({"image": os.path.basename(e.get("image", "")), "id": r.get("id"), "question": r.get("question"),
+                              "answer": r.get("answer"), "expect": r.get("expect", [])})
+            elif r.get("verdict") == "对":
+                right += 1
+    return {"ran": True, "fail": fails, "right": right, "unseen": unseen}
+
+
+def entry(card, facts, blocks, folder, out_path, mode, blind=None):
     f = card.f
+    imgs = card_images(card, folder)
     kind = KIND_LABEL.get(card.kind, "")
     if card.kind == "screen":
         kind = "A+ 单场景" if card.module == "scene" else "A+ 模块"
@@ -211,9 +245,10 @@ def entry(card, facts, blocks, folder, out_path, mode):
         "eyebrow": f("eyebrow"), "headline": f("headline"), "subtitle": f("subtitle"),
         "hero": f("hero_number"), "label": f("label"), "fix": f("fix") if has(f("fix")) else "",
         "codex": {"result": codex.get("result", ""), "seen": codex.get("seen", ""), "checks": codex.get("checks", [])},
+        "blind": blind_summary(blind or {}, [path for _label, path in imgs]),
         "images": [{"label": label, "name": os.path.basename(path), "src": image_src(path, out_path, mode),
                     "full": rel(path, out_path)}
-                   for label, path in card_images(card, folder)],
+                   for label, path in imgs],
     }
 
 
@@ -241,9 +276,11 @@ def build(task_path, report_path=None, out_path=None, link=False, root=ROOT, tem
         with open(report_path, encoding="utf-8-sig") as fh:
             blocks = parse_report(fh.read())
     facts = load_facts(root, product)
-    items = [entry(c, facts, blocks, folder, out_path, mode) for c in cards]
+    blind = load_blind(folder)
+    items = [entry(c, facts, blocks, folder, out_path, mode, blind) for c in cards]
     data = {
         "product": product, "round": round_no,
+        "blind_flagged": [it["slot"] for it in items if it["blind"] and (it["blind"]["fail"] or it["blind"]["unseen"])],
         "form": os.path.relpath(out_path, root).replace(os.sep, "/"),
         "task": os.path.relpath(task_path, root).replace(os.sep, "/"),
         "generated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
