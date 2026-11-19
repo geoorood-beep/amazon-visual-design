@@ -7,7 +7,8 @@
 <!--
   UTA style 验收表单（出图之后给人看、给人填的版本）。
   不手改这个文件：Codex 运行 tools/review_form.py，脚本只替换下面 id 为 sheet 的 JSON，
-  图片直接嵌进网页，单独一个文件在哪都能打开。规则见 UTA_STYLE.md 4.5。
+  图片以压缩预览图嵌进网页（长边 1200px 的 JPEG），单独一个文件在哪都能打开；
+  表单和成图放在一起时，点图会放大成原图，图下的「原图」链接也能打开。规则见 UTA_STYLE.md 4.5。
   用户只给不满意的图写建议，不写的默认通过；点「生成验收结果」，把结果原样发给 Grok。
 -->
 <style>
@@ -36,6 +37,7 @@ header .meta{color:var(--sub);display:flex;flex-wrap:wrap;gap:6px 16px}
 .media figure{margin:0}
 .media img{width:100%;border-radius:10px;display:block;cursor:zoom-in;background:#ddd}
 .media figcaption{font-size:12px;color:var(--sub);margin-top:3px}
+.media figcaption a{color:var(--accent)}
 .noimg{min-height:220px;border-radius:10px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--sub);text-align:center;padding:12px}
 .body{padding:16px 18px 18px;display:flex;flex-direction:column}
 .top{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
@@ -140,8 +142,11 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
   items.forEach(function (it, i) {
     var imgs = it.images || [];
     var media = imgs.length ? imgs.map(function (m) {
-      return '<figure><img src="' + esc(m.src) + '" alt="' + esc(it.slot + " " + (m.label || "")) + '" loading="lazy">' +
-        '<figcaption>' + esc(m.label || "") + (m.name ? ' · ' + esc(m.name) : "") + '</figcaption></figure>';
+      return '<figure><img src="' + esc(m.src) + '"' + (m.full ? ' data-full="' + esc(m.full) + '"' : "") +
+        ' alt="' + esc(it.slot + " " + (m.label || "")) + '" loading="lazy">' +
+        '<figcaption>' + esc(m.label || "") + (m.name ? ' · ' + esc(m.name) : "") +
+        (m.full && m.full !== m.src ? ' · <a href="' + esc(m.full) + '" target="_blank" rel="noopener">原图</a>' : "") +
+        '</figcaption></figure>';
     }).join("") : '<div class="noimg">这张没有成图<br>（校验退回或还在重做，见 Codex 回报）</div>';
     var c = it.codex || {};
     var cls = !imgs.length ? "none" : (c.result && c.result.indexOf("通过") < 0 ? "warn" : "ok");
@@ -208,7 +213,9 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
       if (k >= 0) m.tags.splice(k, 1); else m.tags.push(t.dataset.tag);
       t.classList.toggle("on", k < 0); refresh();
     } else if (t.matches(".media img")) {
-      var z = document.getElementById("zoom"); z.querySelector("img").src = t.src; z.style.display = "flex";
+      var z = document.getElementById("zoom"), big = z.querySelector("img"), full = t.getAttribute("data-full");
+      big.onerror = function () { big.onerror = null; big.src = t.src; };
+      big.src = full || t.src; z.style.display = "flex";
     } else if (t.closest("#zoom")) {
       document.getElementById("zoom").style.display = "none";
     }
