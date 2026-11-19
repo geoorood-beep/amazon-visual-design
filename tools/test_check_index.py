@@ -582,5 +582,137 @@ class AutoAdvanceTest(unittest.TestCase):
         self.assertIn('"decided"', confirm)
 
 
+
+class ReviewFormTest(unittest.TestCase):
+    """After a round, Codex turns the images into a form; blank means pass; Grok reworks (v3.38)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_guide_wires_the_form_and_the_rework(self):
+        guide = self.read("UTA_STYLE.md")
+        self.assertIn("### 4.5 验收表单", guide)
+        self.assertIn("### 4.6 自动返工", guide)
+        self.assertIn("UTA-REVIEW v1", guide)
+        self.assertIn("tools/review_form.py --task outputs/task.md --report outputs/report.md", guide)
+        self.assertIn("空着的就是通过", guide)
+        self.assertIn("FIX: …", guide)
+        self.assertIn("| `fix` | 返工说明 |", guide)
+        start = guide.index("### 3.2 固定步骤")
+        step10 = guide.index("10. **验收表单。**", start)
+        self.assertLess(guide.index("9. **回报。**", start), step10)
+        self.assertLess(step10, guide.index("### 3.3", start))
+        self.assertIn("收到「UTA-REVIEW」", guide)
+
+    def test_skill_and_agents_carry_it(self):
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        agents = self.read("AGENTS.md")
+        self.assertIn("UTA-REVIEW", skill)
+        self.assertIn("返工 第 N 轮", skill)
+        self.assertIn("review_form.py", agents)
+        self.assertIn("验收表单", self.read("README.md"))
+        template = self.read("grok", "review_template.html")
+        self.assertIn('"items"', template)
+        self.assertIn("UTA-REVIEW v1", template)
+
+    def test_form_builder_fills_the_template(self):
+        import json
+        import re
+        import tempfile
+        import review_form
+        task = os.path.join(ROOT, "tools", "fixtures", "round10l_v2_task.md")
+        with tempfile.TemporaryDirectory() as root:
+            os.symlink(os.path.join(ROOT, "products"), os.path.join(root, "products"))
+            os.makedirs(os.path.join(root, "outputs", "round10l"))
+            for name in ("S5_clean_v01.png", "S5_clean_v02.png", "S5_clean_base_v03.png"):
+                with open(os.path.join(root, "outputs", "round10l", name), "wb") as fh:
+                    fh.write(b"x")
+            out, data = review_form.build(task, None, None, True, root=root)
+            self.assertTrue(out.endswith("review_v01.html"))
+            page = open(out, encoding="utf-8").read()
+            sheet = json.loads(re.search(r'id="sheet" type="application/json">(.*?)</script>', page, re.S).group(1))
+        self.assertEqual(sheet["product"], "round10l")
+        slots = [it["slot"] for it in sheet["items"]]
+        self.assertEqual(len(slots), len(set(slots)))
+        s5 = next(it for it in sheet["items"] if it["slot"] == "S5")
+        self.assertEqual([m["name"] for m in s5["images"]], ["S5_clean_v02.png"])
+        self.assertTrue(all(not it["images"] for it in sheet["items"] if it["slot"] != "S5"))
+
+    def test_report_marks_a_failed_check_as_candidate(self):
+        import review_form
+        blocks = review_form.parse_report(
+            "图位：S5　卡：cards/round10l/S5_clean.md\nV1 产品对：通过\nV2 卖点看得懂：不合格\n"
+            "画面说明：手在水槽里冲洗钢盆\n\n汇总：无\n")
+        self.assertEqual(blocks["S5"]["result"], "候选（V2 没过）")
+        self.assertEqual(blocks["S5"]["seen"], "手在水槽里冲洗钢盆")
+
+
 if __name__ == "__main__":
     unittest.main()
+
+
+class ReviewFormTest(unittest.TestCase):
+    """After a round, Codex turns the images into a form; blank means pass; Grok reworks (v3.38)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_guide_wires_the_form_and_the_rework(self):
+        guide = self.read("UTA_STYLE.md")
+        self.assertIn("### 4.5 验收表单", guide)
+        self.assertIn("### 4.6 自动返工", guide)
+        self.assertIn("UTA-REVIEW v1", guide)
+        self.assertIn("tools/review_form.py --task outputs/task.md --report outputs/report.md", guide)
+        self.assertIn("空着的就是通过", guide)
+        self.assertIn("FIX: …", guide)
+        self.assertIn("| `fix` | 返工说明 |", guide)
+        start = guide.index("### 3.2 固定步骤")
+        step10 = guide.index("10. **验收表单。**", start)
+        self.assertLess(guide.index("9. **回报。**", start), step10)
+        self.assertLess(step10, guide.index("### 3.3", start))
+        self.assertIn("收到「UTA-REVIEW」", guide)
+
+    def test_skill_and_agents_carry_it(self):
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        agents = self.read("AGENTS.md")
+        self.assertIn("UTA-REVIEW", skill)
+        self.assertIn("返工 第 N 轮", skill)
+        self.assertIn("review_form.py", agents)
+        self.assertIn("验收表单", self.read("README.md"))
+        template = self.read("grok", "review_template.html")
+        self.assertIn('"items"', template)
+        self.assertIn("UTA-REVIEW v1", template)
+
+    def test_form_builder_fills_the_template(self):
+        import json
+        import re
+        import tempfile
+        import review_form
+        task = os.path.join(ROOT, "tools", "fixtures", "round10l_v2_task.md")
+        with tempfile.TemporaryDirectory() as root:
+            os.symlink(os.path.join(ROOT, "products"), os.path.join(root, "products"))
+            os.makedirs(os.path.join(root, "outputs", "round10l"))
+            for name in ("S5_clean_v01.png", "S5_clean_v02.png", "S5_clean_base_v03.png"):
+                with open(os.path.join(root, "outputs", "round10l", name), "wb") as fh:
+                    fh.write(b"x")
+            out, data = review_form.build(task, None, None, True, root=root)
+            self.assertTrue(out.endswith("review_v01.html"))
+            page = open(out, encoding="utf-8").read()
+            sheet = json.loads(re.search(r'id="sheet" type="application/json">(.*?)</script>', page, re.S).group(1))
+        self.assertEqual(sheet["product"], "round10l")
+        slots = [it["slot"] for it in sheet["items"]]
+        self.assertEqual(len(slots), len(set(slots)))
+        s5 = next(it for it in sheet["items"] if it["slot"] == "S5")
+        self.assertEqual([m["name"] for m in s5["images"]], ["S5_clean_v02.png"])
+        self.assertTrue(all(not it["images"] for it in sheet["items"] if it["slot"] != "S5"))
+
+    def test_report_marks_a_failed_check_as_candidate(self):
+        import review_form
+        blocks = review_form.parse_report(
+            "图位：S5　卡：cards/round10l/S5_clean.md\nV1 产品对：通过\nV2 卖点看得懂：不合格\n"
+            "画面说明：手在水槽里冲洗钢盆\n\n汇总：无\n")
+        self.assertEqual(blocks["S5"]["result"], "候选（V2 没过）")
+        self.assertEqual(blocks["S5"]["seen"], "手在水槽里冲洗钢盆")
+

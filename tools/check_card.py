@@ -86,16 +86,17 @@ MODULE_KEYS = [
     "card_version", "product", "slot", "canvas", "module", "selling_point",
     "headline", "subtitle", "hero_number", "panels", "lines", "refs",
 ]
-OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow"]
+OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow", "fix"]
 ALL_KEYS = set(IMAGE_KEYS) | set(MODULE_KEYS) | set(OPTIONAL_KEYS)
 ENGLISH_FIELDS = [
     "evidence", "human_action", "pet", "pet_action", "scene", "light",
-    "headline", "subtitle", "hero_number", "label", "lines", "eyebrow",
+    "headline", "subtitle", "hero_number", "label", "lines", "eyebrow", "fix",
 ]
 MAX_HEADLINE_WORDS = 6
 MAX_SUBTITLE_WORDS = 10
 MAX_LABEL_WORDS = 4
 MAX_EYEBROW_WORDS = 4
+MAX_FIX_WORDS = 25  # review rework note (UTA_STYLE 2.4, 4.5)
 SLOT = re.compile(r"(M1|S[1-9]|P[1-8])([a-d]?)")
 CJK = re.compile(r"[　-〿㐀-鿿＀-￯]")
 NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
@@ -602,6 +603,11 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
     check_words(fields, "headline", MAX_HEADLINE_WORDS, errors)
     check_words(fields, "subtitle", MAX_SUBTITLE_WORDS, errors)
     check_words(fields, "label", MAX_LABEL_WORDS, errors)
+    check_words(fields, "fix", MAX_FIX_WORDS, errors)
+    if not is_none(fields.get("fix")):
+        hits = find_forbidden(fields["fix"], product_forbidden)
+        if hits:
+            errors.append(f"fix contains a word forbidden by the product card: '{hits[0]}'")
     if not is_none(fields["hero_number"]) and not NUMBER.search(fields["hero_number"]):
         errors.append("hero_number must contain a number, or be none")
     copy = " ".join(
@@ -650,6 +656,8 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
             errors.append(f"'{key}' belongs on the panel cards, not on a {module} module card")
     if not is_none(fields.get("label")):
         errors.append("'label' belongs on the panel cards")
+    if not is_none(fields.get("fix")):
+        errors.append("'fix' is only for cards that become one picture; a module is rebuilt from its panels")
     if errors:
         return errors, warnings, None
 
@@ -822,6 +830,8 @@ def build_prompt(context, blocks):
     ]
     out.append("REFERENCES: " + " ".join(refs) + " " + blocks["REFERENCE_RULES"])
     out.append("AVOID: " + blocks["AVOID"])
+    if not is_none(fields.get("fix")):
+        out.append("FIX: " + fields["fix"].rstrip(".") + ".")
     return "\n\n".join(out)
 
 
