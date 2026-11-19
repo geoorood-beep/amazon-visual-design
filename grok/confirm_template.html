@@ -95,6 +95,7 @@ h2{font-size:17px;margin:28px 0 10px}
     }
   ],
   "set_checks": [],
+  "decided": [],
   "adjustments": [],
   "customs": [],
   "unchecked": []
@@ -169,7 +170,7 @@ h2{font-size:17px;margin:28px 0 10px}
     h.push('</div></section>');
   });
 
-  [["adjustments", "我为满足整套规则自动调整了"], ["customs", "你的自定义怎么处理的"], ["unchecked", "还没核对的"]].forEach(function (p) {
+  [["decided", "我替你定的（没问你，想改直接说）"], ["adjustments", "我为满足整套规则自动调整了"], ["customs", "你的自定义怎么处理的"], ["unchecked", "还没核对的"]].forEach(function (p) {
     var list = data[p[0]] || [];
     if (list.length) h.push('<h2>' + p[1] + '</h2><div class="panel warn"><ul>' + list.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + '</ul></div>');
   });
