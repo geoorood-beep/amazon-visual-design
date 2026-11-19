@@ -1,0 +1,112 @@
+{
+  "id": "pet_grooming_vacuum",
+  "name": "宠物真空美容套装",
+  "version": 1,
+  "updated": "2026-11-19",
+  "form": "立体",
+  "basis": "2026-11-19 联网整理：完整打开了 1 篇第三方评测，其余来自搜索摘要和品类常识。全部是品类常识（推定），不是某个产品的事实。",
+  "aliases": ["宠物真空美容套装", "宠物美容套装", "宠物吸毛器", "宠物美容吸尘器", "宠物理发器吸尘", "吸毛电推剪", "狗狗吸毛理发器", "宠物梳毛吸尘", "宠物剃毛吸尘一体机", "pet grooming vacuum", "dog grooming vacuum", "pet grooming kit", "grooming vacuum kit", "dog hair vacuum", "pet hair vacuum", "deshedding vacuum", "pet clipper vacuum", "5-in-1 grooming kit", "7-in-1 grooming kit", "grooming", "grooming vacuum", "美容套装"],
+  "cues": ["一个带透明集尘杯的吸尘主机，接一根半透明软管", "软管末端接梳毛刷、脱毛刷等工具，或接电推剪", "一排长短不同的定位梳和几种刷头摆在一起", "主机常配收纳底座或工具架，软管能缠起来", "主图常见狗或猫被梳毛，毛顺着软管进集尘杯"],
+  "variants": [
+    {"id": "5in1", "name": "5 合 1", "cue": "工具只有电推剪、梳毛刷、脱毛刷、清洁刷、吸嘴", "adds": []},
+    {"id": "7in1", "name": "7 合 1", "cue": "比 5 合 1 多出修爪器、脚毛修剪器", "adds": ["nail_grinder", "paw_trimmer"]},
+    {"id": "cordless_trimmer", "name": "小工具无线充电", "cue": "修爪器、脚毛修剪器带 USB 充电口", "adds": ["usb_cable"]},
+    {"id": "stand", "name": "带收纳底座", "cue": "主机卡在底座上，工具插在柱位上", "adds": ["stand"]}
+  ],
+  "parts": [
+    {"key": "main_unit", "name": "吸尘主机", "en": "vacuum main unit", "type": "组成部件", "parent": "", "where": "整套的核心，软管接在它的进风口", "visible": "一直看得见", "detach": "不拆", "variant": "", "pitfall": "画成立式吸尘器或扫地机", "refs": ["whole", "main_unit", "body"]},
+    {"key": "dust_cup", "name": "透明集尘杯", "en": "transparent dust cup", "type": "可拆件", "parent": "main_unit", "where": "嵌在主机前面或侧面，卡扣固定", "visible": "透明，能看到里面的毛", "detach": "按卡扣能取下，底部能打开倒毛", "variant": "", "pitfall": "画成不透明，或杯里没有毛", "refs": ["dust_cup", "cup", "bin"]},
+    {"key": "filter", "name": "滤网组件", "en": "filter set", "type": "耗材", "parent": "dust_cup", "where": "集尘杯和电机之间，常有金属网、海绵、HEPA 几层", "visible": "平时看不见，拆洗时看得见", "detach": "能取出清洗或更换", "variant": "", "pitfall": "凭空多画一个，或画在外面", "refs": ["filter"]},
+    {"key": "buttons", "name": "电源和档位按键", "en": "power and suction level buttons", "type": "组成部件", "parent": "main_unit", "where": "主机顶部或前面，按键数量看款式", "visible": "看得见", "detach": "不拆", "variant": "", "pitfall": "画出多余按键或乱写文字", "refs": ["keys", "buttons", "control_panel"]},
+    {"key": "handle", "name": "提手", "en": "carry handle", "type": "组成部件", "parent": "main_unit", "where": "主机顶部", "visible": "看得见", "detach": "不拆", "variant": "", "pitfall": "漏画或画成两个", "refs": ["handle"]},
+    {"key": "hose", "name": "软管", "en": "flexible semi-transparent hose", "type": "可拆件", "parent": "main_unit", "where": "一头接主机进风口，另一头接工具", "visible": "看得见，半透明能看到毛在里面走", "detach": "能拔下", "variant": "", "pitfall": "两头没接，或接到主机错误的位置，或画成不透明", "refs": ["hose"]},
+    {"key": "clipper", "name": "电推剪", "en": "electric clipper that connects to the hose", "type": "随附配件", "parent": "hose", "where": "接在软管末端，剪下的毛被吸走", "visible": "用的时候看得见刀头", "detach": "能拆", "variant": "", "pitfall": "刀头直接压在皮肤上；画成没有软管的普通理发器", "refs": ["clipper"]},
+    {"key": "guard_combs", "name": "定位梳", "en": "clipper guard combs in several lengths", "type": "随附配件", "parent": "clipper", "where": "卡在电推剪刀头上，长短不同对应不同毛长", "visible": "用的时候看得见", "detach": "能拆", "variant": "", "pitfall": "数量和长度不对，或同时装两个", "refs": ["guard_combs", "combs"]},
+    {"key": "slicker_brush", "name": "梳毛刷", "en": "slicker brush that connects to the hose", "type": "随附配件", "parent": "hose", "where": "接在软管末端，背面是软管接口", "visible": "看得见", "detach": "能拆", "variant": "", "pitfall": "针太尖太密，或画成没有接口的普通梳子", "refs": ["slicker_brush", "brush"]},
+    {"key": "deshedding_brush", "name": "脱毛刷", "en": "deshedding brush that connects to the hose", "type": "随附配件", "parent": "hose", "where": "接在软管末端，梳掉浮毛", "visible": "看得见", "detach": "能拆", "variant": "", "pitfall": "和梳毛刷画成同一个", "refs": ["deshedding_brush"]},
+    {"key": "cleaning_brush", "name": "清洁刷", "en": "cleaning brush for furniture", "type": "随附配件", "parent": "hose", "where": "接在软管末端，吸沙发和衣服上的毛", "visible": "看得见", "detach": "能拆", "variant": "", "pitfall": "画成用在宠物身上", "refs": ["cleaning_brush"]},
+    {"key": "nozzle", "name": "吸嘴", "en": "crevice nozzle", "type": "随附配件", "parent": "hose", "where": "接在软管末端，吸角落和毛堆", "visible": "看得见", "detach": "能拆", "variant": "", "pitfall": "漏画，或和刷头混在一起", "refs": ["nozzle"]},
+    {"key": "nail_grinder", "name": "修爪器", "en": "pet nail grinder", "type": "随附配件", "parent": "", "where": "单独的小工具，不接软管", "visible": "看得见", "detach": "—", "variant": "7in1", "pitfall": "画成接在软管上", "refs": ["nail_grinder"]},
+    {"key": "paw_trimmer", "name": "脚毛修剪器", "en": "small paw trimmer", "type": "随附配件", "parent": "", "where": "单独的小工具，不接软管", "visible": "看得见", "detach": "—", "variant": "7in1", "pitfall": "画成接在软管上", "refs": ["paw_trimmer"]},
+    {"key": "usb_cable", "name": "USB 充电线", "en": "USB charging cable for the small tools", "type": "随附配件", "parent": "", "where": "给无线小工具充电", "visible": "只在充电或开箱画面出现", "detach": "—", "variant": "cordless_trimmer", "pitfall": "接口形态自己编", "refs": ["usb_c", "cable"]},
+    {"key": "power_cord", "name": "电源线", "en": "power cord", "type": "随附配件", "parent": "main_unit", "where": "插在主机底部或后面，能绕在主机上", "visible": "看得见", "detach": "能拔", "variant": "", "pitfall": "画成无线，或接口位置不对", "refs": ["power_cord", "cable"]},
+    {"key": "stand", "name": "收纳底座/工具架", "en": "storage base with tool posts", "type": "随附配件", "parent": "", "where": "主机卡在底座上，工具各插一个柱位，软管缠在旁边", "visible": "看得见", "detach": "能拆", "variant": "stand", "pitfall": "工具悬空放着", "refs": ["stand"]},
+    {"key": "pet", "name": "宠物", "en": "dog or cat being groomed", "type": "外部物品", "parent": "", "where": "被梳毛的那只", "visible": "按场景", "detach": "—", "variant": "", "pitfall": "表情紧张，或像被绑着", "refs": []},
+    {"key": "pet_hair", "name": "毛发", "en": "pet hair", "type": "外部物品", "parent": "", "where": "梳下来的毛进软管和集尘杯", "visible": "看得见", "detach": "—", "variant": "", "pitfall": "毛飘在空中，而不是被吸走", "refs": []}
+  ],
+  "states": [
+    {"id": "assembled", "name": "日常使用", "keywords": ["日常", "使用", "放置"], "show": "主机放在地上或台面，软管接好，末端接一个工具", "hide": "多余的工具和杂物", "never": "软管断开、两头都空着"},
+    {"id": "brushing_suction", "name": "边梳边吸", "keywords": ["梳毛", "吸毛", "脱毛", "浮毛", "掉毛", "吸力", "brush", "suction", "deshedding"], "show": "梳毛刷或脱毛刷接在软管上，毛顺着软管进集尘杯，宠物放松", "hide": "飘在空中的毛", "never": "毛满天飞；宠物受惊"},
+    {"id": "clipping", "name": "带定位梳剃毛", "keywords": ["剃毛", "推剪", "电推剪", "修剪", "定位梳", "clipper", "trim"], "show": "电推剪装着定位梳，顺着毛的方向推，剪下的毛被吸走", "hide": "刀头贴着皮肤", "never": "刀头压在皮肤上；宠物受伤或惊恐"},
+    {"id": "emptying", "name": "倒毛", "keywords": ["倒毛", "清空", "集尘杯", "大容量", "empty", "dust cup"], "show": "集尘杯拆下或底部打开，毛倒进垃圾桶", "hide": "散落一地的毛", "never": "毛飞在空中"},
+    {"id": "changing_attachment", "name": "换工具", "keywords": ["多合一", "换头", "配件", "多种工具", "attachment"], "show": "手把一个工具从软管上拔下，另一个放在旁边", "hide": "不相关的工具", "never": "软管上同时接两个工具"},
+    {"id": "flatlay", "name": "全套平铺", "keywords": ["全套", "套装", "平铺", "包装", "in the box"], "show": "主机、软管、全部工具、定位梳按实际数量摆开", "hide": "套装以外的东西", "never": "数量比实际多或少"},
+    {"id": "disassembled", "name": "拆洗", "keywords": ["拆洗", "清洗", "滤网", "可水洗", "wash", "filter"], "show": "集尘杯和滤网拆开放在一旁", "hide": "没拆的部分保持原样", "never": "滤网位置颠倒；主机电机部分碰水"}
+  ],
+  "questions": [
+    {"key": "q_count", "decides": ["5in1", "7in1"], "text": "套装一共几件工具？", "why": "画面里工具数量必须和实物一样", "options": ["5 合 1", "7 合 1", "其他数量（写在补充里）", "不确定，全套平铺先不拍"], "rec": 3},
+    {"key": "q_clipper_power", "text": "电推剪怎么供电？", "why": "决定画面里电推剪连不连软管或电线", "options": ["通过软管/主机供电", "自带电池，无线", "单独充电线", "不确定，电推剪先不特写"], "rec": 3},
+    {"key": "q_combs", "text": "定位梳有几个？", "why": "平铺图和剃毛图要画对数量", "options": ["4 个", "5 个", "6 个", "不确定，定位梳先不拍"], "rec": 3},
+    {"key": "q_small_tools", "decides": ["cordless_trimmer"], "text": "修爪器、脚毛修剪器是单独充电、不接软管吗？", "why": "决定它们出不出现在软管上", "options": ["单独充电，不接软管", "接软管用", "没有这两样", "不确定，这两样先不拍"], "rec": 3},
+    {"key": "q_dust_cup", "text": "集尘杯透明吗？", "why": "决定能不能拍杯里的毛", "options": ["透明", "半透明", "不透明", "不确定，集尘杯不特写"], "rec": 3},
+    {"key": "q_stand", "decides": ["stand"], "text": "有收纳底座或工具架吗？", "why": "决定收纳图有没有底座", "options": ["有底座和工具架", "只有收纳袋", "没有", "不确定，收纳先不拍"], "rec": 3}
+  ],
+  "photo_slots": [
+    {"slot": "full_kit_flatlay", "label": "全套平铺", "tip": "所有工具和定位梳平铺，一张图能数清"},
+    {"slot": "hose_connection", "label": "软管两头的接口", "tip": "拍软管接主机和接工具的两头"},
+    {"slot": "dust_cup_open", "label": "集尘杯拆开", "tip": "拍杯和滤网拆开的样子"},
+    {"slot": "clipper_with_comb", "label": "装着定位梳的电推剪", "tip": "拍刀头和定位梳"},
+    {"slot": "brush_heads", "label": "各个刷头并排", "tip": "梳毛刷、脱毛刷、清洁刷、吸嘴并排拍"},
+    {"slot": "control_panel", "label": "按键", "tip": "拍电源和档位按键"},
+    {"slot": "storage_stand", "label": "收纳底座", "tip": "拍主机卡在底座上、软管缠好的样子"},
+    {"slot": "in_use_pet", "label": "实际使用", "tip": "拍真实宠物在梳毛，软管接好"}
+  ],
+  "size": {
+    "hint": "量吸尘主机本身，不算软管和工具。",
+    "dims": {
+      "L": {"short": "长", "label": "主机长：左右最宽处", "en": "wide", "noun": "width", "unit": "mm"},
+      "W": {"short": "宽", "label": "主机宽：前后最深处", "en": "deep", "noun": "depth", "unit": "mm"},
+      "H": {"short": "高", "label": "主机高：底部到提手顶", "en": "tall", "noun": "height", "unit": "mm"}
+    },
+    "ratios": [["H", "L"], ["W", "L"]],
+    "extra": [
+      {"key": "hose_length", "label": "软管长度", "short": "管长", "unit": "cm", "en": "the hose is about {v} cm long"},
+      {"key": "cup_capacity", "label": "集尘杯容量", "short": "杯容", "unit": "L", "en": "the dust cup holds about {v} liters"}
+    ]
+  },
+  "pitfalls": [
+    "软管没接上，或两头接错位置，工具悬空",
+    "工具数量和实际套装对不上，多画或少画",
+    "毛飘在空中，而不是顺着软管进集尘杯",
+    "宠物表情惊恐，或像被绑着",
+    "电推剪刀头压在宠物皮肤上",
+    "透明集尘杯画成不透明，里面没有毛",
+    "主机上多出不存在的按键或文字",
+    "电推剪画成没有软管或线的普通理发器",
+    "梳毛刷的针画得太长太尖",
+    "修爪器、脚毛修剪器画成接在软管上"
+  ],
+  "forbidden": [
+    "所有宠物都不会紧张",
+    "兽医认证或推荐",
+    "完全不掉毛",
+    "对所有宠物都静音",
+    "没有来源的分贝数",
+    "没有证据的吸力数值",
+    "100% 吸走所有毛",
+    "适合所有品种和毛长"
+  ],
+  "selling_visuals": [
+    {"point": "边梳边吸，毛不乱飞", "proof": "毛顺着透明软管进集尘杯"},
+    {"point": "一套多种工具", "proof": "全套平铺，数量和实物一样"},
+    {"point": "集尘杯大", "proof": "透明杯里装着毛，旁边标容量"},
+    {"point": "好清理", "proof": "集尘杯和滤网拆开倒毛"},
+    {"point": "定位梳多档", "proof": "定位梳并排，标出长度"},
+    {"point": "收纳方便", "proof": "主机在底座上，软管缠好，工具各归其位"}
+  ],
+  "learned": [],
+  "sources": [
+    {"url": "https://the-gadgeteer.com/2022/12/10/neakasa-p2-pro-pet-hair-vacuum-and-trimmer-review/", "used_for": "软管、供电、集尘杯拆法、三层滤网、盒内物品、收纳底座", "opened": true},
+    {"url": "https://www.amazon.com/dp/B0DQBTWWFF", "used_for": "7 合 1 款的集尘杯容量和工具概况（仅搜索摘要）", "opened": false}
+  ]
+}

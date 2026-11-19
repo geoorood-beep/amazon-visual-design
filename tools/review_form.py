@@ -8,22 +8,29 @@ It reads the task sheet (what each card asked for), finds the newest output
 file of every card under outputs/<product>/ by the names check_card.py prints,
 optionally reads the report (V1-V5 lines and the picture description), and
 writes one self-contained page outputs/<product>/review_vNN.html from
-grok/review_template.html. Images are embedded so the page opens anywhere;
-pass --link to reference them by relative path instead.
+grok/review_template.html. Images are embedded as JPEG previews (long edge
+1200 px, quality 80) so the page stays a few MB and opens in chat previews;
+each figure also links the original file by relative path. Pass --full to
+embed the originals as before, or --link to reference them by path only.
 
 The person reviewing writes a suggestion only under images that need work;
 anything left blank passes. The page turns that into a UTA-REVIEW v1 block
 for Grok, which edits the cards and sends a patch task back to Codex.
 
-Standard library only.
+Standard library only. Previews use Pillow when it is installed, otherwise
+macOS `sips`; with neither, the original is embedded and a warning printed.
 """
 import argparse
 import base64
 import datetime
+import io
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -37,6 +44,9 @@ IMAGE_EXT = ("png", "jpg", "jpeg", "webp")
 MIME = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "webp": "image/webp"}
 FACT_ROW = re.compile(r"^\|\s*(F\d+)\s*\|\s*([^|]*)\|")
 KIND_LABEL = {"main": "主图", "sub": "副图", "panel": "A+ 小格"}
+PREVIEW_EDGE = 1200
+PREVIEW_QUALITY = 80
+WARNINGS = []
 
 
 def newest(folder, stem, suffix=""):
@@ -64,12 +74,65 @@ def card_images(card, folder):
     return [("成图", single)] if single else []
 
 
-def image_src(path, out_path, link):
-    if link:
-        return os.path.relpath(path, os.path.dirname(os.path.abspath(out_path))).replace(os.sep, "/")
+def data_uri(data, mime):
+    return "data:%s;base64,%s" % (mime, base64.b64encode(data).decode("ascii"))
+
+
+def preview_bytes(path, edge=PREVIEW_EDGE, quality=PREVIEW_QUALITY):
+    """JPEG bytes of path shrunk to fit edge x edge (never enlarged), or None."""
+    try:
+        from PIL import Image
+    except ImportError:
+        Image = None
+    if Image is not None:
+        try:
+            with Image.open(path) as im:
+                im.thumbnail((edge, edge))
+                if im.mode in ("RGBA", "LA", "P"):
+                    im = im.convert("RGBA")
+                    flat = Image.new("RGB", im.size, (255, 255, 255))
+                    flat.paste(im, mask=im.split()[-1])
+                    im = flat
+                elif im.mode != "RGB":
+                    im = im.convert("RGB")
+                buf = io.BytesIO()
+                im.save(buf, "JPEG", quality=quality, optimize=True)
+                return buf.getvalue()
+        except OSError:
+            return None
+    if shutil.which("sips"):
+        dims = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", path],
+                              capture_output=True, text=True).stdout
+        sizes = [int(n) for n in re.findall(r"pixel(?:Width|Height):\s*(\d+)", dims)]
+        cmd = ["sips", "-s", "format", "jpeg", "-s", "formatOptions", str(quality)]
+        if sizes and max(sizes) > edge:
+            cmd += ["-Z", str(edge)]
+        with tempfile.TemporaryDirectory() as tmp:
+            out = os.path.join(tmp, "preview.jpg")
+            done = subprocess.run(cmd + [path, "--out", out], capture_output=True)
+            if done.returncode == 0 and os.path.isfile(out):
+                with open(out, "rb") as fh:
+                    return fh.read()
+    return None
+
+
+def rel(path, out_path):
+    return os.path.relpath(path, os.path.dirname(os.path.abspath(out_path))).replace(os.sep, "/")
+
+
+def image_src(path, out_path, mode="preview"):
+    """mode: 'preview' (embedded JPEG preview), 'full' (embedded original), 'link' (relative path)."""
+    if mode == "link":
+        return rel(path, out_path)
+    if mode == "preview":
+        data = preview_bytes(path)
+        if data is not None:
+            return data_uri(data, "image/jpeg")
+        WARNINGS.append("no preview for %s (Pillow and sips unavailable or failed); embedded the original"
+                        % os.path.basename(path))
     ext = path.rsplit(".", 1)[-1].lower()
     with open(path, "rb") as fh:
-        return "data:%s;base64,%s" % (MIME.get(ext, "image/png"), base64.b64encode(fh.read()).decode("ascii"))
+        return data_uri(fh.read(), MIME.get(ext, "image/png"))
 
 
 def load_facts(root, product):
@@ -126,7 +189,7 @@ def has(v):
     return bool(v) and v.strip().lower() != "none"
 
 
-def entry(card, facts, blocks, folder, out_path, link):
+def entry(card, facts, blocks, folder, out_path, mode):
     f = card.f
     kind = KIND_LABEL.get(card.kind, "")
     if card.kind == "screen":
@@ -148,7 +211,8 @@ def entry(card, facts, blocks, folder, out_path, link):
         "eyebrow": f("eyebrow"), "headline": f("headline"), "subtitle": f("subtitle"),
         "hero": f("hero_number"), "label": f("label"), "fix": f("fix") if has(f("fix")) else "",
         "codex": {"result": codex.get("result", ""), "seen": codex.get("seen", ""), "checks": codex.get("checks", [])},
-        "images": [{"label": label, "name": os.path.basename(path), "src": image_src(path, out_path, link)}
+        "images": [{"label": label, "name": os.path.basename(path), "src": image_src(path, out_path, mode),
+                    "full": rel(path, out_path)}
                    for label, path in card_images(card, folder)],
     }
 
@@ -160,7 +224,9 @@ def next_form(folder):
     return os.path.join(folder, "review_v%02d.html" % n), n
 
 
-def build(task_path, report_path=None, out_path=None, link=False, root=ROOT, template=TEMPLATE):
+def build(task_path, report_path=None, out_path=None, link=False, root=ROOT, template=TEMPLATE, mode=None):
+    """mode: 'preview' (default), 'full' or 'link'; link=True stays as an alias for mode='link'."""
+    mode = mode or ("link" if link else "preview")
     with open(task_path, encoding="utf-8-sig") as fh:
         _version, header, cards = check_set.parse_task(fh.read())
     product = header["product"]
@@ -175,7 +241,7 @@ def build(task_path, report_path=None, out_path=None, link=False, root=ROOT, tem
         with open(report_path, encoding="utf-8-sig") as fh:
             blocks = parse_report(fh.read())
     facts = load_facts(root, product)
-    items = [entry(c, facts, blocks, folder, out_path, link) for c in cards]
+    items = [entry(c, facts, blocks, folder, out_path, mode) for c in cards]
     data = {
         "product": product, "round": round_no,
         "form": os.path.relpath(out_path, root).replace(os.sep, "/"),
@@ -200,17 +266,23 @@ def main(argv=None):
     parser.add_argument("--task", default="outputs/task.md", help="task sheet of this round")
     parser.add_argument("--report", default="outputs/report.md", help="this round's report (4.4), optional")
     parser.add_argument("--out", help="output page; default outputs/<product>/review_vNN.html")
-    parser.add_argument("--link", action="store_true", help="link images by relative path instead of embedding")
+    how = parser.add_mutually_exclusive_group()
+    how.add_argument("--link", action="store_true", help="link images by relative path instead of embedding")
+    how.add_argument("--full", action="store_true", help="embed the original images instead of JPEG previews")
     args = parser.parse_args(argv)
+    mode = "link" if args.link else ("full" if args.full else "preview")
+    del WARNINGS[:]
     try:
-        out_path, data = build(args.task, args.report, args.out, args.link)
+        out_path, data = build(args.task, args.report, args.out, mode=mode)
     except (OSError, check_set.TaskError) as exc:
         print("REVIEW FORM ERROR: %s" % exc)
         return 1
     missing = [it["slot"] for it in data["items"] if not it["images"]]
-    print("REVIEW FORM %s  round %d  cards %d  with images %d" % (
+    print("REVIEW FORM %s  round %d  cards %d  with images %d  size %.1f MB" % (
         os.path.relpath(out_path, ROOT).replace(os.sep, "/"), data["round"], len(data["items"]),
-        len(data["items"]) - len(missing)))
+        len(data["items"]) - len(missing), os.path.getsize(out_path) / 1048576.0))
+    for warning in WARNINGS:
+        print("! %s" % warning)
     if missing:
         print("no image: %s" % ", ".join(missing))
     print("Add this line at the end of the report: 验收表单：%s" % data["form"])

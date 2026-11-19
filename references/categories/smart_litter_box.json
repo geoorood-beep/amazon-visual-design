@@ -1,0 +1,119 @@
+{
+  "id": "smart_litter_box",
+  "name": "智能猫砂盆",
+  "version": 1,
+  "updated": "2026-11-19",
+  "form": "立体",
+  "basis": "2026-11-19 联网整理：完整打开了 1 个品牌的产品页，另 2 个品牌来自搜索摘要，其余是品类常识。全部是品类常识（推定），不是某个产品的事实。",
+  "aliases": ["智能猫砂盆", "自动猫砂盆", "全自动猫砂盆", "电动猫砂盆", "自清洁猫砂盆", "滚筒猫砂盆", "开放式猫砂盆", "自动铲屎机", "电动猫厕所", "智能猫厕所", "self-cleaning litter box", "automatic litter box", "smart litter box", "self cleaning cat litter box", "automatic cat litter box", "litter robot", "open-top litter box", "rotating litter box", "litter box", "猫砂盆"],
+  "cues": ["大型球形或圆筒形主体，侧面有一个圆形或椭圆形入口", "主体下方或侧边有底座，里面是集便仓和电子部件", "入口前常有一块台阶或踏板", "机身上有按键面板和指示灯", "开放式款是矮盒，里面有耙子或筛网，没有封闭滚筒", "常配一块猫砂垫和一把铲子"],
+  "variants": [
+    {"id": "drum", "name": "滚筒式（封闭球形或圆筒）", "cue": "封闭的球形或筒形主体，只有一个侧向入口，清理时整体转动", "adds": ["drum", "entrance_step", "drum_seal"]},
+    {"id": "open_top", "name": "开放式（耙或筛）", "cue": "顶部敞开的矮盒，里面有耙子或筛网", "adds": ["rake_assembly", "litter_tray"]},
+    {"id": "top_entry", "name": "顶入口式", "cue": "猫从顶部开口进去，主体是高桶或直立盒", "adds": ["top_opening"]},
+    {"id": "app_sensor", "name": "带 App、传感器", "cue": "机身有 Wi-Fi 标志或摄像头孔，页面宣传 App 和体重记录", "adds": ["sensors", "camera_module"]},
+    {"id": "deodorizer", "name": "带除臭模块", "cue": "集便仓旁或机身里有可更换的除臭盒", "adds": ["deodorizer_cartridge"]}
+  ],
+  "parts": [
+    {"key": "base", "name": "底座主机", "en": "base housing with control electronics", "type": "组成部件", "parent": "", "where": "最下方，托着滚筒或砂盘，里面是电机和电路", "visible": "一直看得见", "detach": "不能拆", "variant": "", "pitfall": "底座画成两个零件，或比滚筒小很多", "refs": ["whole", "base"]},
+    {"key": "drum", "name": "滚筒/猫砂仓", "en": "rotating litter drum", "type": "组成部件", "parent": "base", "where": "放在底座上，侧面开口，是猫上厕所的地方", "visible": "一直看得见", "detach": "通常能整体拆下清洗", "variant": "drum", "pitfall": "画成透明、两个入口，或实心球", "refs": ["drum"]},
+    {"key": "entrance", "name": "入口", "en": "entrance opening", "type": "组成部件", "parent": "drum", "where": "滚筒正面或侧面的开口，下沿离地有一定高度", "visible": "一直看得见", "detach": "不能拆", "variant": "", "pitfall": "入口和猫的大小对不上", "refs": ["entrance"]},
+    {"key": "top_opening", "name": "顶部入口", "en": "top entry opening with grated lid", "type": "组成部件", "parent": "base", "where": "机身顶上，常带格栅盖", "visible": "一直看得见", "detach": "盖子常能拿下", "variant": "top_entry", "pitfall": "顶入口款又画出侧面入口", "refs": ["top_opening"]},
+    {"key": "entrance_step", "name": "入口台阶", "en": "entrance step", "type": "随附配件", "parent": "base", "where": "放在入口前面，连接地面和入口下沿", "visible": "装好时看得见", "detach": "能拆", "variant": "drum", "pitfall": "画到机身后面，或和入口连成一体", "refs": ["step"]},
+    {"key": "rake_assembly", "name": "耙齿/筛砂组件", "en": "rake or sifting assembly", "type": "组成部件", "parent": "base", "where": "开放式款里面，在猫砂表面上方移动", "visible": "开放式款看得见", "detach": "部分能拆洗", "variant": "open_top", "pitfall": "滚筒款里画出耙子，或耙子动时猫在里面", "refs": ["rake"]},
+    {"key": "litter_tray", "name": "猫砂盘", "en": "litter tray", "type": "组成部件", "parent": "base", "where": "开放式款底部，盛猫砂", "visible": "一直看得见", "detach": "常能拆", "variant": "open_top", "pitfall": "滚筒款里画成扁平砂盘", "refs": ["tray", "litter_tray"]},
+    {"key": "waste_drawer", "name": "集便仓", "en": "pull-out waste drawer", "type": "可拆件", "parent": "base", "where": "底座侧边或下方，装清理出来的结块", "visible": "装好时只看见外壳或盖板", "detach": "能抽出来倒", "variant": "", "pitfall": "位置画错（滚筒顶上、背后、外挂），或抽出来时露出脏东西", "refs": ["waste_drawer", "drawer"]},
+    {"key": "waste_bag", "name": "集便袋", "en": "waste drawer liner bag", "type": "耗材", "parent": "waste_drawer", "where": "套在集便仓里，满了整袋拿出", "visible": "只在换袋时看得见", "detach": "整袋更换", "variant": "", "pitfall": "画出袋里的排泄物，或袋子套在仓外", "refs": ["bag", "liner"]},
+    {"key": "deodorizer_cartridge", "name": "除臭盒", "en": "deodorizer cartridge", "type": "耗材", "parent": "waste_drawer", "where": "集便仓旁或仓盖上的卡槽里", "visible": "装好时通常看不见", "detach": "能取出更换", "variant": "deodorizer", "pitfall": "画成机身外面的摆件", "refs": ["deodorizer"]},
+    {"key": "drum_seal", "name": "滚筒密封圈", "en": "drum seal ring", "type": "组成部件", "parent": "base", "where": "滚筒和底座的接缝处", "visible": "细节处看得见", "detach": "不能拆", "variant": "drum", "pitfall": "被画成一大块单独的零件", "refs": ["seal"]},
+    {"key": "sensors", "name": "感应传感器", "en": "cat-presence and weight sensors", "type": "组成部件", "parent": "base", "where": "入口周围、底座里，肉眼基本看不见", "visible": "几乎看不见", "detach": "不能拆", "variant": "app_sensor", "pitfall": "画出激光线、光点或红色探头", "refs": ["sensor"]},
+    {"key": "camera_module", "name": "摄像头", "en": "built-in camera", "type": "组成部件", "parent": "base", "where": "入口上方或周围，只有部分型号有", "visible": "小孔看得见", "detach": "不能拆", "variant": "app_sensor", "pitfall": "没有摄像头的款也画出镜头", "refs": ["camera"]},
+    {"key": "control_panel", "name": "按键面板", "en": "control panel with buttons and indicator", "type": "组成部件", "parent": "base", "where": "底座或机身上的小面板", "visible": "一直看得见", "detach": "不能拆", "variant": "", "pitfall": "按键数量和图标乱编，或画成大屏幕", "refs": ["control_panel", "keys"]},
+    {"key": "power_adapter", "name": "电源适配器", "en": "power adapter and cord", "type": "随附配件", "parent": "base", "where": "接底座的电源口，另一头插墙", "visible": "背面看得见，通常不拍", "detach": "能拔", "variant": "", "pitfall": "线画得很粗，或穿过猫砂区", "refs": ["cable", "adapter"]},
+    {"key": "litter_mat", "name": "猫砂垫", "en": "litter trapping mat", "type": "随附配件", "parent": "", "where": "放在入口前的地上，不连机身", "visible": "看得见", "detach": "能拿走洗", "variant": "", "pitfall": "画成连在机身上", "refs": ["mat"]},
+    {"key": "scoop", "name": "铲子", "en": "litter scoop", "type": "随附配件", "parent": "", "where": "单独放在一旁", "visible": "不在机身上", "detach": "—", "variant": "", "pitfall": "画成机身上的零件", "refs": ["scoop"]},
+    {"key": "litter", "name": "猫砂", "en": "cat litter", "type": "外部物品", "parent": "", "where": "滚筒或砂盘里，用户自己加", "visible": "看得见", "detach": "—", "variant": "", "pitfall": "加得太满，或颜色太深看不清", "refs": []},
+    {"key": "cat", "name": "猫", "en": "cat", "type": "外部物品", "parent": "", "where": "在入口外，或正在使用（机器静止时）", "visible": "按场景", "detach": "—", "variant": "", "pitfall": "猫在转动的滚筒里", "refs": []}
+  ],
+  "states": [
+    {"id": "assembled", "name": "日常使用", "keywords": ["日常", "摆放", "使用", "待机", "idle"], "show": "整机放在地上，入口朝前，台阶和猫砂垫在位，猫在入口外或正走过来", "hide": "集便仓内部、传感器、电线", "never": "猫在滚筒里同时滚筒在转；排泄物；夸张的灯光"},
+    {"id": "cat_using", "name": "猫正在使用", "keywords": ["如厕", "上厕所", "进入", "入口", "大空间", "大体型"], "show": "猫正常蹲在里面或站在入口，机器静止", "hide": "清理动作、转动模糊", "never": "转动中的滚筒里有猫；猫被夹住的姿态；猫和入口大小对不上"},
+    {"id": "cleaning_cycle", "name": "自动清理", "keywords": ["自动清理", "清理", "铲屎", "自清洁", "滚动", "旋转", "cleaning", "cycle"], "show": "滚筒转动或耙子运行，猫在机器外面", "hide": "猫在机器里、砂粒细节", "never": "猫在机器里；看得见结块和排泄物；夸张的粉尘"},
+    {"id": "waste_emptying", "name": "倒集便仓", "keywords": ["倒垃圾", "集便", "倒仓", "抽屉", "waste", "empty", "drawer"], "show": "集便仓拉出来一部分，手提着提把或扎好的袋口，袋子不透明", "hide": "袋里的东西", "never": "排泄物、脏污，把气味画出来"},
+    {"id": "bag_replace", "name": "换集便袋", "keywords": ["换袋", "垃圾袋", "集便袋", "bag", "liner"], "show": "空集便仓里套上干净的新袋，袋口翻边固定", "hide": "旧袋里的东西", "never": "看得见粪便；袋子套在仓外"},
+    {"id": "adding_litter", "name": "加猫砂", "keywords": ["加砂", "加猫砂", "猫砂", "add litter", "refill"], "show": "猫砂袋口对着入口或开口倒进去，砂量不超过标线", "hide": "粉尘特写", "never": "砂量超过标线；猫在机器里"},
+    {"id": "disassembled", "name": "拆洗", "keywords": ["拆洗", "清洗", "水洗", "可拆", "wash"], "show": "滚筒或砂盘拆下放在一旁，底座和集便仓分开摆", "hide": "电子部件内部", "never": "电机、电路部分碰水"}
+  ],
+  "questions": [
+    {"key": "q_type", "decides": ["drum", "open_top", "top_entry"], "text": "是哪种结构？", "why": "不同结构的部件和入口完全不同", "options": ["滚筒式（封闭球形）", "开放式（耙或筛）", "顶入口式", "不确定，整机结构先按照片画"], "rec": 3},
+    {"key": "q_drawer_pos", "text": "集便仓在哪个位置？", "why": "决定倒仓画面里手往哪里伸", "options": ["底座侧边抽出", "底座下方抽出", "机身顶部", "不确定，倒仓先不拍"], "rec": 3},
+    {"key": "q_sensor_app", "decides": ["app_sensor"], "text": "有 App、摄像头或体重传感器吗？", "why": "避免画出不存在的屏幕或镜头", "options": ["都没有", "只有 App", "App 加摄像头", "App 加体重传感器", "不确定，智能卖点先不拍"], "rec": 4},
+    {"key": "q_entrance", "text": "入口是什么形状？", "why": "入口要和猫的大小对得上", "options": ["圆形", "椭圆形", "方形", "不确定，入口不特写"], "rec": 3},
+    {"key": "q_deodorizer", "decides": ["deodorizer"], "text": "带除臭模块吗？装在哪？", "why": "决定画不画除臭盒和位置", "options": ["没有", "在集便仓旁", "在机身里", "不确定，除臭先不拍"], "rec": 3},
+    {"key": "q_bag", "text": "集便袋用专用袋还是普通垃圾袋？", "why": "决定换袋画面里袋子的样子", "options": ["专用袋", "普通垃圾袋", "不用袋", "不确定，换袋先不拍"], "rec": 3},
+    {"key": "q_litter_type", "text": "支持哪些猫砂？", "why": "决定画面里猫砂的颜色和质地", "options": ["只用结团砂", "结团砂和豆腐砂", "混合砂", "不确定，猫砂不特写"], "rec": 3}
+  ],
+  "photo_slots": [
+    {"slot": "entrance_closeup", "label": "入口特写", "tip": "正对入口拍，最好放一把尺子或让猫站旁边对比大小"},
+    {"slot": "waste_drawer_open", "label": "集便仓抽出", "tip": "仓里套新袋或空仓，不要有脏东西"},
+    {"slot": "drum_removed", "label": "滚筒拆下", "tip": "滚筒和底座分开摆，露出接口"},
+    {"slot": "control_panel", "label": "按键面板", "tip": "正面拍清楚按键和指示灯"},
+    {"slot": "deodorizer_installed", "label": "除臭盒位置", "tip": "装进去和拿出来各拍一张"},
+    {"slot": "step_and_mat", "label": "台阶和猫砂垫", "tip": "拍摆在机身前面的完整组合"},
+    {"slot": "cat_scale", "label": "和猫的大小对比", "tip": "猫站在旁边拍，或放一把尺子"},
+    {"slot": "in_box", "label": "包装里全部东西", "tip": "全部摊开拍一张"}
+  ],
+  "size": {
+    "hint": "长宽不算台阶和猫砂垫；高从地面量到机身最高点。",
+    "dims": {
+      "L": {"short": "长", "label": "长：左右最宽处", "en": "wide", "noun": "width", "unit": "mm"},
+      "W": {"short": "宽", "label": "宽：前后最深处", "en": "deep", "noun": "depth", "unit": "mm"},
+      "H": {"short": "高", "label": "高：地面到最高点", "en": "tall", "noun": "height", "unit": "mm"}
+    },
+    "ratios": [["H", "L"], ["W", "L"]],
+    "extra": [
+      {"key": "entrance_w", "label": "入口宽", "short": "入口宽", "unit": "cm", "en": "the entrance is about {v} cm wide"},
+      {"key": "entrance_h", "label": "入口高", "short": "入口高", "unit": "cm", "en": "the entrance is about {v} cm tall"},
+      {"key": "sill_h", "label": "入口下沿离地（不算台阶）", "short": "入口离地", "unit": "cm", "en": "the entrance sill is about {v} cm above the floor"},
+      {"key": "drawer_capacity", "label": "集便仓容量", "short": "集便仓", "unit": "L", "en": "the waste drawer holds about {v} liters"}
+    ]
+  },
+  "pitfalls": [
+    "猫在转动的滚筒里，或清理时猫还在机器里：最严重的安全错误",
+    "集便仓位置画错，比如在滚筒顶上或机身背后",
+    "入口和猫的大小对不上",
+    "画面里出现排泄物、结块或脏的集便袋",
+    "编造 App 界面、屏幕内容或不存在的按键",
+    "没有摄像头的款画出镜头，或画出看得见的激光、红外线",
+    "滚筒款画成透明、两个入口，或实心球",
+    "台阶、猫砂垫画成连在机身上",
+    "猫砂太多或太少，或颜色看不清",
+    "用绿色烟雾、气泡来表现除臭"
+  ],
+  "forbidden": [
+    "100% 无异味、完全除臭",
+    "能诊断或监测猫的健康",
+    "适用所有猫砂",
+    "兽医推荐或认证",
+    "绝对安全、不会夹到猫",
+    "适合所有体型和年龄的猫，包括幼猫",
+    "完全免清理、免维护",
+    "静音或没有来源的分贝数"
+  ],
+  "selling_visuals": [
+    {"point": "自动清理省事", "proof": "猫在机器外，机器在清理，集便仓干净整洁"},
+    {"point": "大入口，大猫也能进", "proof": "猫和入口的真实比例，或尺子标出入口尺寸"},
+    {"point": "除臭", "proof": "除臭盒的位置和装法，不把气味画出来"},
+    {"point": "集便仓大，倒得少", "proof": "集便仓抽出图，配容量数字"},
+    {"point": "App 远程看", "proof": "只用卖家给的真实 App 截图，没有就不画"},
+    {"point": "安全感应", "proof": "文字说明加入口周围的简单示意，不画激光"},
+    {"point": "好拆洗", "proof": "拆下的滚筒和底座并排摆"}
+  ],
+  "learned": [],
+  "sources": [
+    {"url": "https://www.litter-robot.com/litter-robot-4.html", "used_for": "盒内物品、集便仓和内衬、除臭、传感器、App、入口尺寸、安全机制", "opened": true},
+    {"url": "https://www.petkit.com/products/purobot-max-3-automatic-cat-litter-box", "used_for": "盒内物品、集便仓位置和容量、除臭模块（仅搜索摘要）", "opened": false},
+    {"url": "https://neakasa.com/products/neakasa-m1-cat-litter-box/", "used_for": "开放式设计、集便仓、安全传感器（仅搜索摘要）", "opened": false},
+    {"url": "docs/PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md", "used_for": "第 7 节猫厕所卖点（历史文档，只作参考）", "opened": true}
+  ]
+}

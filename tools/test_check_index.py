@@ -716,3 +716,28 @@ class ReviewFormTest(unittest.TestCase):
         self.assertEqual(blocks["S5"]["result"], "候选（V2 没过）")
         self.assertEqual(blocks["S5"]["seen"], "手在水槽里冲洗钢盆")
 
+
+    def test_form_embeds_small_previews_and_links_the_original(self):
+        import json
+        import re
+        import shutil
+        import tempfile
+        import review_form
+        task = os.path.join(ROOT, "tools", "fixtures", "round10l_v2_task.md")
+        source = os.path.join(ROOT, "products", "round10l", "ref", "front_high.png")
+        with tempfile.TemporaryDirectory() as root:
+            os.symlink(os.path.join(ROOT, "products"), os.path.join(root, "products"))
+            os.makedirs(os.path.join(root, "outputs", "round10l"))
+            shutil.copy(source, os.path.join(root, "outputs", "round10l", "S5_clean_v01.png"))
+            del review_form.WARNINGS[:]
+            out, _data = review_form.build(task, None, None, root=root)
+            if review_form.WARNINGS:
+                self.skipTest("no Pillow or sips here: " + review_form.WARNINGS[0])
+            with open(out, encoding="utf-8") as fh:
+                page = fh.read()
+            sheet = json.loads(re.search(r'id="sheet" type="application/json">(.*?)</script>', page, re.S).group(1))
+        s5 = next(it for it in sheet["items"] if it["slot"] == "S5")
+        image = s5["images"][0]
+        self.assertTrue(image["src"].startswith("data:image/jpeg;base64,"))
+        self.assertEqual(image["full"], "S5_clean_v01.png")
+        self.assertLess(len(image["src"]) * 3 // 4, os.path.getsize(source) // 4)
