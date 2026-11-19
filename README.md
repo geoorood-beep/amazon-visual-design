@@ -1,6 +1,6 @@
 # 亚马逊美工设计
 
-规则版本 **3.41**（2026-11-19）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
+规则版本 **3.42**（2026-11-19）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
 
 出图只有一份指引：**[UTA_STYLE.md](UTA_STYLE.md)**。写任务的 Grok 和出图的 Codex 读的是同一份。
 
@@ -64,7 +64,9 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | `tools/check_card.py` | 校验任务单和图位卡，拼出提示词 | 机制 |
 | `tools/review_form.py` | 出图之后生成验收表单 `outputs/<产品>/review_vNN.html`（4.5） | 机制 |
 | `tools/blind_check.py` | 独立核对：另一个没看过卡片的模型只看图答结构题，脚本对照产品卡打分（4.7） | 机制 |
+| `grok/product_template.html` 和 `grok/product_form.css`、`grok/product_form.js` | 产品资料表：Grok 只抄很短的外壳，样式和脚本从仓库加载；`product_form.py build` 生成的文件把它们嵌进页面 | 机制 |
 | `tools/product_form.py` | 选填的产品资料表：定品类、出草稿、生成 `outputs/<产品>/product_form_vNN.html`（1.15、3.9） | 机制 |
+| `references/storylines.csv` | 整套主线：一天里的几个瞬间、一个家的几个角落、先乱后静、一家人各有各的需要、各讲各的（1.14） | 数据 |
 | `references/categories/` | 品类库：每个品类通常有哪些部件和关系、产品有几种样子、要问什么、要补哪些照片（1.15） | 数据 |
 | `tools/prompt_base.txt` | 提示词的固定段落 | 机制 |
 | `docs/` | 案例图库和旧版标准 | 出图时不读 |

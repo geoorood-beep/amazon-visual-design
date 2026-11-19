@@ -40,6 +40,7 @@ LENGTH_UNITS = ("mm", "cm", "m", "in", "ft")
 UNITS = LENGTH_UNITS + ("L", "ml", "g", "kg")
 PHOTO_EXT = (".png", ".jpg", ".jpeg", ".webp")
 OPEN = '<script id="sheet" type="application/json">\n'
+INLINE_RE = re.compile(r'<link[^>]*data-inline="([^"]+)"[^>]*>|<script[^>]*data-inline="([^"]+)"[^>]*></script>')
 CLOSE = "\n</script>"
 SHOWN_QUESTIONS = 3
 PREVIEW_EDGE = 480
@@ -503,6 +504,21 @@ def preview_uri(path):
         return "data:%s;base64,%s" % (mime, base64.b64encode(fh.read()).decode("ascii"))
 
 
+def inline_assets(root, html):
+    """The template loads its style and script from the repo; a built form carries them inside, so it opens anywhere."""
+    def sub(m):
+        rel = m.group(1) or m.group(2)
+        path = os.path.join(root, rel)
+        if not os.path.isfile(path):
+            raise FormError("template asset missing: %s" % rel)
+        with open(path, encoding="utf-8") as fh:
+            body = fh.read()
+        if m.group(1):
+            return "<style>\n%s\n</style>" % body
+        return "<script>\n%s\n</script>" % body.replace("</script", "<\\/script")
+    return INLINE_RE.sub(sub, html)
+
+
 def next_form_path(root, product):
     folder = os.path.join(root, "outputs", product)
     n = 1
@@ -542,7 +558,7 @@ def build(root, sheet_path, out_path=None):
     if not product:
         raise FormError("the sheet has no 'product'")
     with open(os.path.join(root, TEMPLATE_REL), encoding="utf-8") as fh:
-        html = fh.read()
+        html = inline_assets(root, fh.read())
     if OPEN not in html:
         raise FormError("template has no sheet block")
     out_path = out_path or next_form_path(root, product)

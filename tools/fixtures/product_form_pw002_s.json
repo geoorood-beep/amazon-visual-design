@@ -1,0 +1,453 @@
+{
+ "product": "pw002_s",
+ "title": "PW002-S · 产品资料（选填）",
+ "form": "outputs/pw002_s/product_form_v01.html",
+ "generated": "2026-11-19",
+ "by": "AI 草稿：依据产品卡、5 张主机实拍和 9 张造型参考",
+ "categories": [
+  {
+   "id": "pet_fountain",
+   "name": "宠物饮水机",
+   "version": 1
+  }
+ ],
+ "variants": [
+  "wireless_battery",
+  "sensor"
+ ],
+ "types": [
+  "组成部件",
+  "可拆件",
+  "耗材",
+  "随附配件",
+  "宿主产品",
+  "外部物品"
+ ],
+ "base": "../",
+ "summary": "无线 10L 不锈钢宠物饮水机：放在家里哪里都行，宠物靠近就出水，也能定时出水或插线持续出水。",
+ "questions": [
+  {
+   "id": "Q1",
+   "text": "控制头正面那条横向开口，是出水口吗？",
+   "why": "AI 的理解：白色水泵 → 灰色立管 → 黑色部分 → 从控制头正面这条开口流出。是的话，所有出水的画面，水都从这里出来。",
+   "options": [
+    "是出水口",
+    "不是（写一句）",
+    "不确定，出水画面不特写这里"
+   ],
+   "rec": 0,
+   "write": [
+    1
+   ],
+   "imgs": [
+    "products/pw002_s/ref/baseline_detail_6.png",
+    "products/pw002_s/ref/user_20261118_09_accessory_side.jpg"
+   ]
+  },
+  {
+   "id": "Q2",
+   "text": "USB-C 充电线随产品附带吗？",
+   "why": "控制头背面有一个 USB-C 口（造型参考 05、08 看得到）。F4「插线后可持续出水」那张图要画一根线插在这里，但线长什么样还没有照片，AI 不编。",
+   "options": [
+    "附带（在下面照片区补一张线的照片）",
+    "不附带",
+    "不确定，插线画面先不拍"
+   ],
+   "rec": -1,
+   "write": [],
+   "imgs": [
+    "products/pw002_s/ref/user_20261118_05_connection.jpg",
+    "products/pw002_s/ref/user_20261118_08_accessory_back.jpg"
+   ]
+  },
+  {
+   "id": "Q3",
+   "text": "顶上的不锈钢盘面能和桶身分开吗？",
+   "why": "照片里看不出来。影响拆洗那张图：分得开画两件，分不开画一整只。",
+   "options": [
+    "能分开",
+    "不能，是一整只",
+    "不确定，按一整只画"
+   ],
+   "rec": 2,
+   "write": [],
+   "imgs": [
+    "products/pw002_s/ref/baseline_top_down.png"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "id": "P1",
+   "parent": "",
+   "conf": "确定",
+   "name": "不锈钢桶身（含顶盘）",
+   "en": "brushed 304 stainless steel basin with its top tray",
+   "where": "整机主体，只有正面有水位窗",
+   "detach": "桶身本身不拆；盘面能不能分开见 Q3",
+   "visible": "一直看得见",
+   "basis": "5 张主机实拍",
+   "imgs": [
+    "products/pw002_s/ref/baseline_front.png"
+   ],
+   "type": "组成部件"
+  },
+  {
+   "id": "P2",
+   "parent": "",
+   "conf": "推定",
+   "name": "水泵头组件（一个整体）",
+   "en": "pump head assembly that lifts out as one unit",
+   "where": "从顶盘后端中央插进桶里，下半截泡在水里",
+   "detach": "能，整个向上提出来",
+   "visible": "装好时只露出最上面的黑色控制头，其余都在桶里",
+   "basis": "造型参考 08、09：黑色控制头、黑色圆柱、灰色立管、白色水泵连成一个整体；05 是它们的连接处",
+   "imgs": [
+    "products/pw002_s/ref/user_20261118_08_accessory_back.jpg",
+    "products/pw002_s/ref/user_20261118_09_accessory_side.jpg"
+   ],
+   "type": "可拆件"
+  },
+  {
+   "id": "P3",
+   "parent": "P2",
+   "conf": "确定",
+   "name": "黑色控制头",
+   "en": "black control head, the top of the pump head",
+   "where": "组件最上面，装好后高出盘面",
+   "detach": "跟着组件一起提出来",
+   "visible": "看得见：顶面 M 键和电源键，正面横向开口（Q1），背面 USB-C 口",
+   "basis": "主机实拍和造型参考 05、07、08",
+   "imgs": [
+    "products/pw002_s/ref/user_20261118_07_button_panel.jpg",
+    "products/pw002_s/ref/user_20261118_05_connection.jpg"
+   ],
+   "type": "组成部件"
+  },
+  {
+   "id": "P4",
+   "parent": "P2",
+   "conf": "推定",
+   "name": "黑色圆柱（上宽下窄）",
+   "en": "tapered black cylindrical body under the head",
+   "where": "控制头下面，伸进桶里",
+   "detach": "跟着组件一起提出来",
+   "visible": "装好时看不见。拆洗时和控制头一起不碰水：F10 说的「上半部分」，AI 推定就是控制头加这一段",
+   "basis": "造型参考 08、09。里面装的是什么不知道，不画内部",
+   "imgs": [
+    "products/pw002_s/ref/user_20261118_09_accessory_side.jpg"
+   ],
+   "type": "组成部件"
+  },
+  {
+   "id": "P5",
+   "parent": "P2",
+   "conf": "推定",
+   "name": "灰色立管",
+   "en": "grey riser tube from the pump up to the black body",
+   "where": "从水泵通到黑色圆柱底下",
+   "detach": "跟着组件一起提出来",
+   "visible": "装好时在水下，看不见",
+   "basis": "造型参考 05、08、09",
+   "imgs": [
+    "products/pw002_s/ref/user_20261118_05_connection.jpg"
+   ],
+   "type": "组成部件"
+  },
+  {
+   "id": "P6",
+   "parent": "P2",
+   "conf": "推定",
+   "name": "白色小水泵",
+   "en": "small white pump at the bottom end",
+   "where": "组件最下面，坐在桶底",
+   "detach": "跟着组件一起提出来",
+   "visible": "装好时在水下，看不见",
+   "basis": "造型参考 06、08",
+   "imgs": [
+    "products/pw002_s/ref/user_20261118_06_pump_exploded.jpg"
+   ],
+   "type": "组成部件"
+  },
+  {
+   "id": "P7",
+   "parent": "P6",
+   "conf": "推定",
+   "name": "白色格栅滤罩＋黑色过滤海绵",
+   "en": "white slotted filter cage holding a black sponge on the pump inlet",
+   "where": "套在水泵进水的一面",
+   "detach": "造型参考 06 是拆开摆的；用户能不能自己拆，没确认",
+   "visible": "装好时在水下，看不见",
+   "basis": "造型参考 06、09",
+   "imgs": [
+    "products/pw002_s/ref/user_20261118_06_pump_exploded.jpg"
+   ],
+   "type": "可拆件"
+  },
+  {
+   "id": "P8",
+   "parent": "P2",
+   "conf": "推定",
+   "name": "水泵电源线（白色细线）",
+   "en": "thin white pump wire running up to the bottom of the black body",
+   "where": "从水泵接到黑色部分的下端，小圆插头",
+   "detach": "组件内部的线，不单独拿出来画",
+   "visible": "装好时看不见；拆洗时跟着组件出现",
+   "basis": "造型参考 05 右上、06",
+   "imgs": [
+    "products/pw002_s/ref/user_20261118_05_connection.jpg"
+   ],
+   "type": "组成部件"
+  },
+  {
+   "id": "P9",
+   "parent": "",
+   "conf": "不确定",
+   "name": "USB-C 充电线",
+   "en": "USB-C charging cable",
+   "where": "插在控制头背面的 USB-C 口",
+   "detach": "—",
+   "visible": "只在插线持续出水（F4）时出现",
+   "basis": "只看到接口，没见过线；附不附带见 Q2",
+   "imgs": [],
+   "type": "随附配件"
+  }
+ ],
+ "states": [
+  {
+   "id": "assembled",
+   "conf": "推定",
+   "name": "装好（日常使用）",
+   "for": "F2 F3 F5 F6 F7 F8 F11 F12",
+   "show": "不锈钢桶身；黑色控制头高出盘面；出水时水从控制头正面开口流出（Q1）",
+   "hide": "黑色圆柱、灰色立管、白色水泵、滤罩和海绵、电线都在桶里，看不见",
+   "never": "在桶外另画一个水泵或零件"
+  },
+  {
+   "id": "disassembled",
+   "conf": "推定",
+   "name": "拆洗",
+   "for": "F9 F10",
+   "show": "水泵头组件整个提出来，按造型参考 08、09 的样子放在台面上、离开水；空的不锈钢桶身在水槽里冲，或放进洗碗机",
+   "hide": "",
+   "never": "组件或黑色部分泡在水里；整机连同组件放进洗碗机；把滤罩和海绵也拆散（那是造型参考 06 的样子，比拆洗拆得多）"
+  },
+  {
+   "id": "plugged",
+   "conf": "不确定",
+   "name": "插线持续出水",
+   "for": "F4",
+   "show": "装好的样子，加一根线插在控制头背面的 USB-C 口",
+   "hide": "",
+   "never": "自己编的插头、线、适配器样子",
+   "cond": "Q2 答「附带」并补了线的照片才拍；否则 F4 先用别的画面讲"
+  }
+ ],
+ "functions": [
+  {
+   "fact": "F2",
+   "text": "无线感应出水",
+   "how": "感应方式没给出，不写传感器名称",
+   "proof": "宠物走近的那一刻，水从控制头正面开口流出",
+   "state": "装好",
+   "angle": "前侧 45° 低机位近景",
+   "effect": "",
+   "conf": "推定"
+  },
+  {
+   "fact": "F3",
+   "text": "定时出水，每 15 分钟一次",
+   "how": "按设定的间隔出水",
+   "proof": "旁边没有宠物时水照样在流",
+   "state": "装好",
+   "angle": "平视中景",
+   "effect": "",
+   "conf": "推定"
+  },
+  {
+   "fact": "F4",
+   "text": "插线后可持续出水",
+   "how": "插线后一直出水",
+   "proof": "线插在控制头背面的接口上，水在流（线的样子见 Q2）",
+   "state": "插线",
+   "angle": "后侧 45° 近景",
+   "effect": "",
+   "conf": "不确定"
+  },
+  {
+   "fact": "F7",
+   "text": "无线移动，放哪都行",
+   "how": "不受电源线长度限制",
+   "proof": "放在离插座很远的地方，周围没有线",
+   "state": "装好",
+   "angle": "广角全景",
+   "effect": "",
+   "conf": "推定"
+  },
+  {
+   "fact": "F9",
+   "text": "取出水泵后，钢桶可进洗碗机或水池",
+   "how": "水泵头组件整个提出来",
+   "proof": "组件放在台面上离开水，空钢桶在水槽里冲",
+   "state": "拆洗",
+   "angle": "俯拍 45° 中景",
+   "effect": "",
+   "conf": "推定"
+  },
+  {
+   "fact": "F12",
+   "text": "流水安静，低于 25 分贝（用户声明）",
+   "how": "用户声明，不是测试结果",
+   "proof": "水在流，旁边的猫照样睡",
+   "state": "装好",
+   "angle": "低机位中景",
+   "effect": "",
+   "conf": "推定"
+  }
+ ],
+ "flow": [
+  "盆里加水，把水泵头组件插回顶盘后端中央",
+  "选模式：感应出水、定时出水（每 15 分钟一次）或插线持续出水",
+  "日常让宠物自己喝；电池续航 15–21 天，多宠或频繁感应会缩短",
+  "清洗时把水泵头组件整个提出来，不锈钢桶身放进水槽或洗碗机"
+ ],
+ "internal": [],
+ "updates": [
+  {
+   "id": "C1",
+   "text": "产品卡把「水泵」记成来历不明的配件，Geometry 还写着 do not add a separate pump, cable…",
+   "fix": "水泵是水泵头组件（P2）的一部分。改成分状态写：装好时不画在外面；拆洗时整个组件照造型参考 08、09 画出来。"
+  },
+  {
+   "id": "C2",
+   "text": "F4、F10 写着「参考图中未见充电口，不得自绘接口形态」",
+   "fix": "造型参考 05、08 已经看得到控制头背面的 USB-C 口。画面照参考图画这个口；文案在你确认前不写接口类型。"
+  },
+  {
+   "id": "C3",
+   "text": "产品卡没有「产品理解」和「产品状态」两节（规范 1.15），拆洗卡现在会先挑到造型参考 06",
+   "fix": "用上面的部件表和状态表补上这两节。拆洗卡的产品参考点名 08、09（整个组件），不用 06（06 连滤罩和海绵都拆散了）。"
+  }
+ ],
+ "size": {
+  "why": "量了：比例写进提示词，验收能量长宽比，宠物和产品的大小关系能统一。不量：照参考图的比例画，总览标「比例推定」，照样往下做。",
+  "hint": "量外轮廓，连外翻的盆沿一起量。高从桌面量到盆沿，不算控制头。",
+  "dims": {
+   "L": {
+    "short": "长",
+    "label": "长：左右最宽处",
+    "en": "long",
+    "noun": "length",
+    "unit": "mm"
+   },
+   "W": {
+    "short": "宽",
+    "label": "宽：前后最深处",
+    "en": "deep",
+    "noun": "depth",
+    "unit": "mm"
+   },
+   "H": {
+    "short": "高",
+    "label": "高：桌面到盆沿",
+    "en": "tall to the rim",
+    "noun": "height",
+    "unit": "mm"
+   }
+  },
+  "extra": [
+   {
+    "key": "head",
+    "label": "控制头高出盆沿",
+    "short": "控制头高出盆沿",
+    "en": "the control head rises about {v} mm above the rim",
+    "unit": "mm"
+   }
+  ],
+  "ratios": [
+   [
+    "L",
+    "H"
+   ],
+   [
+    "W",
+    "H"
+   ]
+  ]
+ },
+ "photos": [
+  {
+   "slot": "front",
+   "label": "正面平视",
+   "img": "products/pw002_s/photos/01_front.png",
+   "src": "实拍"
+  },
+  {
+   "slot": "side_left",
+   "label": "左侧平视",
+   "img": "products/pw002_s/photos/02_side_head_left.png",
+   "src": "实拍"
+  },
+  {
+   "slot": "side_right",
+   "label": "右侧平视",
+   "img": "products/pw002_s/photos/03_side_head_right.png",
+   "src": "实拍"
+  },
+  {
+   "slot": "top_down",
+   "label": "正俯拍",
+   "img": "products/pw002_s/photos/04_top.png",
+   "src": "实拍"
+  },
+  {
+   "slot": "three_quarter_left",
+   "label": "左前 45°",
+   "img": "products/pw002_s/ref/baseline_three_quarter.png",
+   "src": "AI 生成（推定）",
+   "tip": "现在这张是生成的，没有实拍。斜角最容易画变形，最值得补拍"
+  },
+  {
+   "slot": "three_quarter_right",
+   "label": "右前 45°",
+   "img": "",
+   "tip": "S2 那种右前偏低的机位，现在没有参考"
+  },
+  {
+   "slot": "low_angle",
+   "label": "低机位（宠物视角）",
+   "img": "",
+   "tip": "镜头放在桌面高度往上拍"
+  },
+  {
+   "slot": "rear",
+   "label": "背面平视（单张）",
+   "img": "",
+   "tip": "现在只有五视图拼图里的小格"
+  },
+  {
+   "slot": "spec_ruler_top",
+   "label": "规格照：正俯拍＋尺子",
+   "img": "",
+   "tip": "素色底，尺子放在旁边"
+  },
+  {
+   "slot": "spec_side_flat",
+   "label": "规格照：贴着台面拍侧面",
+   "img": "",
+   "tip": "镜头贴着桌面，看厚度和边缘"
+  },
+  {
+   "slot": "spec_hand",
+   "label": "规格照：手放在旁边",
+   "img": "",
+   "tip": "定大小用"
+  },
+  {
+   "slot": "part_cable",
+   "label": "USB-C 充电线",
+   "img": "",
+   "tip": "附带才补（Q2）"
+  }
+ ]
+}

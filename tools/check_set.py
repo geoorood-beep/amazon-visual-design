@@ -29,13 +29,16 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.41"
+VERSION = "3.42"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
 POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id", "expression_id"]
 FACE_SHOWN = {"half_body", "full_body", "group"}
-V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect", "lens"} | set(POOL_FIELDS)
+V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect", "lens", "chapter", "techniques"} | set(POOL_FIELDS)
+STORYLINE_FILE = os.path.join("references", "storylines.csv")
+STORY_CHAPTERS = ("none", "time", "space", "arc", "role")
+DEFAULT_STORYLINE = "SL5"
 MAX_STORY_WORDS = 35
 MAX_FIX_WORDS = 25  # review rework note (UTA_STYLE 2.4, 4.5)
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
@@ -350,6 +353,26 @@ def load_pools(root):
             rows = list(csv.DictReader(fh))
         pools[name] = {r["id"].strip(): r for r in rows if r.get("id", "").strip()}
     return pools
+
+
+def load_storylines(root):
+    """references/storylines.csv -> {id: row}: the set-level storylines (UTA_STYLE.md 1.14)."""
+    path = os.path.join(root, STORYLINE_FILE)
+    if not os.path.exists(path):
+        return {DEFAULT_STORYLINE: {"id": DEFAULT_STORYLINE, "name": "各讲各的", "cast": "no", "chapters": "none",
+                                    "headline_voice": ""}}
+    with open(path, encoding="utf-8", newline="") as fh:
+        rows = list(csv.DictReader(fh))
+    return {r["id"].strip(): r for r in rows if r.get("id", "").strip()}
+
+
+def load_techniques(root):
+    """references/techniques.csv -> {id: dimension}."""
+    path = os.path.join(root, "references", "techniques.csv")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8", newline="") as fh:
+        return {r["id"].strip(): (r.get("dimension") or "").strip() for r in csv.DictReader(fh) if (r.get("id") or "").strip()}
 
 
 def load_evidence(root, product):
@@ -882,6 +905,8 @@ def pool_rules(ts, evidence, pools=None):
                 warns.append(("E-3", "%s 和副图 %s 讲同一事实 %s，场景都是 %s；能换就换" %
                               (c.slot, s[0], c.f("selling_point"), s[1])))
 
+    storyline = (pools or {}).get("storyline") or {}
+    cast = set((pools or {}).get("cast") or []) if storyline.get("cast", "").strip() == "yes" else set()
     pet_units = [(name, ids(cards, "pet_id")) for t, name, cards in units if ids(cards, "pet_id")]
     m = len(pet_units)
     if m >= 4:
@@ -889,10 +914,12 @@ def pool_rules(ts, evidence, pools=None):
         for name, pets in pet_units:
             for pid in pets:
                 count.setdefault(pid, []).append(name)
-        if len(count) < 2:
+        if len(count) < 2 and not set(count) <= cast:
             fails.append(("K-1", "%d 张有宠物的图全是同一只宠物 %s" % (m, ", ".join(count))))
         cap = ceil_half(m)
         for pid, names in sorted(count.items()):
+            if pid in cast:
+                continue
             if len(names) > cap:
                 fails.append(("K-1", "宠物 %s 出现在 %d 张图里（%s），最多 %d 张" % (pid, len(names), ", ".join(names), cap)))
 
@@ -1028,6 +1055,58 @@ def usage_warnings(ts, usage):
     return warns
 
 
+def card_techniques(card):
+    return [] if card.is_none("techniques") else split_list(card.f("techniques"), ";")
+
+
+def storyline_rules(ts, pools):
+    """L-1 to L-5 (2.6): the set follows one storyline from references/storylines.csv (1.14)."""
+    fails, warns = [], []
+    row = pools.get("storyline") or {}
+    sid = pools.get("storyline_id", DEFAULT_STORYLINE)
+    name = row.get("name", "")
+    techniques = pools.get("techniques") or {}
+    story_cards = [c for c in ts.cards if c.is_image and c.f("card_version") == "2"
+                   and "story" in c.fields and not c.is_none("story")]
+    if (row.get("chapters") or "none").strip() != "none":
+        seen = {}
+        for c in story_cards:
+            chapter = c.f("chapter").strip()
+            if not chapter or chapter.lower() == "none":
+                fails.append(("L-1", "%s 有故事，没写 chapter：主线 %s「%s」里每张有故事的图都是其中一章" % (c.slot, sid, name)))
+            else:
+                seen.setdefault(chapter, []).append(c.slot)
+        for chapter, slots in sorted(seen.items()):
+            if len(slots) > 1:
+                fails.append(("L-2", "chapter「%s」用在 %s：一章只给一张图" % (chapter, ", ".join(slots))))
+    if (row.get("cast") or "").strip() == "yes":
+        cast = set(pools.get("cast") or [])
+        if not cast:
+            fails.append(("L-3", "主线 %s「%s」要固定角色：头部写 cast:（宠物池、人物池的编号）" % (sid, name)))
+        else:
+            for c in story_cards:
+                outside = [v for v in pool_ids(c, "pet_id") + pool_ids(c, "person_id")
+                           if v not in cast and v.lower() not in ("hands", "custom")]
+                if outside:
+                    warns.append(("L-3", "%s 的 %s 不在 cast 里：主线讲的是同一批角色" % (c.slot, ", ".join(outside))))
+    used = []
+    for c in ts.cards:
+        for t in card_techniques(c):
+            if t not in techniques:
+                fails.append(("L-4", "%s 写的手法 %s 不在 references/techniques.csv 里" % (c.slot, t)))
+            elif t not in used:
+                used.append(t)
+    if pools.get("storyline_declared") and len(used) < 3:
+        warns.append(("L-4", "整套只借用了 %d 条品牌手法（%s）：至少 3 条（1.14）" % (len(used), ", ".join(used) or "无")))
+    voice = split_list(row.get("headline_voice", ""), ";")
+    if voice:
+        for c in ts.cards:
+            off = [t for t in card_techniques(c) if techniques.get(t) == "headline" and t not in voice]
+            if off:
+                warns.append(("L-5", "%s 的标题手法 %s 不是主线 %s 的语气（%s）" % (c.slot, ", ".join(off), sid, " / ".join(voice))))
+    return fails, warns
+
+
 def set_rules(ts, views, strict, evidence=None, pools=False):
     """Return (fails, warns). Each item is (rule_id, message)."""
     fails, warns = [], []
@@ -1039,6 +1118,10 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         f2, w2 = pool_rules(ts, evidence, pools if isinstance(pools, dict) else None)
         fails += f2
         warns += w2
+    if strict and isinstance(pools, dict) and pools.get("storyline"):
+        f3, w3 = storyline_rules(ts, pools)
+        fails += f3
+        warns += w3
     out = fails if strict else warns
 
     def get(card, key):
@@ -1433,6 +1516,18 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
         return 2
     pools["persona"] = persona
     pools["accent"] = header.get("accent", "").strip() or DEFAULT_ACCENT
+    storylines = load_storylines(root)
+    sid = header.get("storyline", "").strip() or DEFAULT_STORYLINE
+    if sid not in storylines:
+        p("TASK ERROR: 头部 storyline 要写 references/storylines.csv 里的编号（1.14），现在是「%s」" % sid)
+        return 2
+    pools["storyline_id"] = sid
+    pools["storyline"] = storylines[sid]
+    pools["storyline_declared"] = bool(header.get("storyline", "").strip())
+    pools["cast"] = [v for v in re.split(r"[;,+\s]+", header.get("cast", "")) if v]
+    pools["techniques"] = load_techniques(root)
+    if pools["storyline_declared"]:
+        p("storyline=%s %s  cast=%s" % (sid, storylines[sid].get("name", ""), " ".join(pools["cast"]) or "-"))
     pools["usage"] = load_usage(root, product)
     pools["views"] = views
     if not pools["usage"]["understanding"].startswith("已确认"):
