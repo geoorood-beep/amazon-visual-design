@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.42"
+VERSION = "3.43"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
