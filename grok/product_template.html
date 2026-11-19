@@ -7,9 +7,11 @@
 <!--
   产品资料表（选填，UTA_STYLE.md 1.15）。写卡方只替换下面 id 为 sheet 的 JSON，其余原样照抄。
   样式和脚本从仓库加载；加载不出来时，最下面那段小脚本把要点列成纯文字，不挡流程。
+  链接固定在某个提交号上：jsDelivr 不给超过 50 MB 的仓库按分支取文件。改了 grok/product_form.css 或 .js，
+  先提交，再把下面两个链接里的提交号换成那次提交（tools/test_product_form.py 会查两边是否一致）。
   tools/product_form.py build 生成的文件会把样式和脚本嵌进页面，单独发出去也能用。
 -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geoorood-beep/amazon-visual-design@main/grok/product_form.css" data-inline="grok/product_form.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geoorood-beep/amazon-visual-design@5bc126e908ef4308d3a3fb7effde48db7aadcd04/grok/product_form.css" data-inline="grok/product_form.css">
 </head>
 <body>
 <div class="wrap" id="app"></div>
@@ -179,7 +181,7 @@
  ]
 }
 </script>
-<script src="https://cdn.jsdelivr.net/gh/geoorood-beep/amazon-visual-design@main/grok/product_form.js" data-inline="grok/product_form.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/geoorood-beep/amazon-visual-design@5bc126e908ef4308d3a3fb7effde48db7aadcd04/grok/product_form.js" data-inline="grok/product_form.js"></script>
 <script>
 window.addEventListener("load", function () {
   if (window.__utaProductFormLoaded) return;

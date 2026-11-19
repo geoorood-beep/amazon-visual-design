@@ -10,6 +10,7 @@
 - 确认单页面：表头显示主线和角色，每张图的故事前面标章；角色里的宠物反复出现不再标红。
 - 产品资料表拆成很短的外壳 `grok/product_template.html`（5 KB，含示例）和 `grok/product_form.css`、`grok/product_form.js`。Grok 只抄外壳、换 JSON；样式和脚本从仓库加载（jsDelivr），加载不了时页面退成纯文字要点，不挡流程。`product_form.py build` 生成的文件把样式和脚本嵌进页面，单独发出去照样能用。完整的 pw002_s 示例挪到 `tools/fixtures/product_form_pw002_s.json`。
 - 测试 `tools/test_storyline.py`；`tools/test_product_form.py` 补了外壳和嵌入的测试。
+- 发布后发现：jsDelivr 不给超过 50 MB 的仓库按分支（`@main`）取文件，这个仓库有 137 MB。外壳里的两个链接改成固定提交号；改了样式或脚本，先提交，再把链接里的提交号换成那次提交，`tools/test_product_form.py` 会查两边是否一致。
 
 ## v3.41 — 2026-11-19 独立核对
 
