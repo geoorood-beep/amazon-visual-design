@@ -5,6 +5,7 @@
 import base64
 import io
 import json
+import re
 import os
 import shutil
 import tempfile
@@ -284,9 +285,28 @@ class WiringTest(unittest.TestCase):
         self.assertLess(len(html.encode("utf-8")), 8000)
         for asset in ("grok/product_form.css", "grok/product_form.js"):
             self.assertIn('data-inline="%s"' % asset, html)
-            self.assertIn("cdn.jsdelivr.net/gh/geoorood-beep/amazon-visual-design@main/" + asset, html)
+            self.assertRegex(html, r"cdn\.jsdelivr\.net/gh/geoorood-beep/amazon-visual-design@[0-9a-f]{40}/" + re.escape(asset))
+        self.assertNotIn("amazon-visual-design@main/", html)
         self.assertIn("__utaProductFormLoaded", html)
         self.assertIn("window.__utaProductFormLoaded = true", self.read("grok", "product_form.js"))
+
+    def test_pinned_commit_serves_the_current_files(self):
+        """jsDelivr will not serve this repo by branch (over 50 MB), so the shell pins a commit.
+        That commit must hold the same style and script as the working tree."""
+        import subprocess
+        html = self.read("grok", "product_template.html")
+        shas = set(re.findall(r"amazon-visual-design@([0-9a-f]{40})/", html))
+        self.assertEqual(len(shas), 1, shas)
+        sha = shas.pop()
+        if not shutil.which("git") or not os.path.exists(os.path.join(ROOT, ".git")):
+            self.skipTest("no git checkout here")
+        for asset in ("grok/product_form.css", "grok/product_form.js"):
+            proc = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (sha, asset)], capture_output=True)
+            if proc.returncode != 0:
+                self.skipTest("commit %s is not in this checkout" % sha[:7])
+            with open(os.path.join(ROOT, asset), "rb") as fh:
+                self.assertEqual(proc.stdout, fh.read(),
+                                 "%s changed since %s: commit it, then put the new commit id in the template links" % (asset, sha[:7]))
 
     def test_full_example_still_fits_the_form(self):
         with open(os.path.join(ROOT, "tools", "fixtures", "product_form_pw002_s.json"), encoding="utf-8") as fh:
