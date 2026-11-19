@@ -1,0 +1,5 @@
+id,question,options,expect,may_hide,states,status,source,fix_en,ref
+G1,画面里的宠物身体有没有明显错误？比如腿或爪子数量不对、两个头、身体和物体穿插在一起。,没有;有;画面里没有宠物,没有;画面里没有宠物,no,,已确认,通用：1.8 硬禁区,"the pet has natural anatomy: four legs, one head, five toes per front paw, nothing passing through its body",
+G2,画面里的人手有没有明显错误？比如手指数量不对、手和物体融在一起。,没有;有;画面里没有人手,没有;画面里没有人手,no,,已确认,通用：1.8 硬禁区,"hands have five fingers each and hold objects naturally, not merged with them",
+G3,画面里一共有几台主角产品（同一款）？,1;2 台或更多;0,1,no,,已确认,通用：一张图一台产品,exactly one unit of the product appears in the picture,
+G4,产品机身上有没有品牌名或 logo 图案？（后期加在画面上的标题文字不算）,没有;有,没有,no,,已确认,通用：没提供品牌时不画品牌,"no brand name, logo or badge on the product body",
