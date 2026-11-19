@@ -1,0 +1,107 @@
+{
+  "id": "pet_fountain",
+  "name": "宠物饮水机",
+  "version": 1,
+  "updated": "2026-11-19",
+  "form": "立体",
+  "basis": "依据仓库里 pw002_s、round10l、clover_square、filter_pad 四张产品卡和造型参考，加饮水机品类常识。全部是品类常识（推定），不是某个产品的事实。",
+  "aliases": ["宠物饮水机", "猫咪饮水机", "狗狗饮水机", "猫饮水机", "循环饮水机", "自动饮水机", "智能饮水机", "无线饮水机", "流动饮水机", "活水机", "喂水器", "饮水器", "pet water fountain", "cat water fountain", "dog water fountain", "pet fountain", "cat fountain", "water fountain for cats", "drinking fountain", "fountain", "water fountain"],
+  "cues": ["一个装水的盆或桶，顶部或正面有出水口、水流面", "盆体常见透明塑料、陶瓷或不锈钢，有的正面有水位窗", "水泵平时藏在盆里看不见", "有电源线或 USB 线；无线款机身或泵头上有充电口", "常见出水造型：花朵盖、龙头、涌泉、瀑布、平流"],
+  "variants": [
+    {"id": "wireless_battery", "name": "无线电池款", "cue": "看不到电源线，泵头或机身上有充电口和按键", "adds": ["pump_head", "charge_port"]},
+    {"id": "faucet", "name": "龙头出水", "cue": "顶上立着一个龙头，水从龙头口流下", "adds": ["faucet"]},
+    {"id": "flower_top", "name": "花朵盖出水", "cue": "顶上是一个花朵形或圆盘形的盖子，水从盖子上漫出", "adds": ["flower_cover"]},
+    {"id": "sensor", "name": "感应出水", "cue": "产品卡写了感应；机身上可能有感应窗", "adds": ["sensor_window"]}
+  ],
+  "parts": [
+    {"key": "basin", "name": "盆体/水箱", "en": "water basin", "type": "组成部件", "parent": "", "where": "整机主体，装水", "visible": "一直看得见", "detach": "整体可以冲洗，带电部分先拿掉", "variant": "", "pitfall": "斜角时被拉高拉窄，变成方块", "refs": ["whole", "basin", "rim"]},
+    {"key": "top_tray", "name": "顶盘/上盖", "en": "top tray or lid", "type": "可拆件", "parent": "basin", "where": "盖在盆上，出水口通常在它上面", "visible": "一直看得见", "detach": "多数能拿下来洗", "variant": "", "pitfall": "和盆画成一体，或缝隙位置对不上", "refs": ["tray", "top_tray", "lid"]},
+    {"key": "water_window", "name": "水位窗", "en": "water level window", "type": "组成部件", "parent": "basin", "where": "盆体的某一面，看产品卡", "visible": "那一面朝镜头时看得见", "detach": "不能拆", "variant": "", "pitfall": "画到没有窗的那一面", "refs": ["water_window"]},
+    {"key": "pump_head", "name": "泵头/控制头", "en": "pump head with buttons on top", "type": "可拆件", "parent": "basin", "where": "插在顶盘上，按键朝上，水泵挂在它下面", "visible": "装好时只露出上面一截", "detach": "能，连水泵一起提出来", "variant": "wireless_battery", "pitfall": "水泵被画成另一个零件放在盆外", "refs": ["control_head", "pump_head", "keys"]},
+    {"key": "pump", "name": "水泵", "en": "submerged water pump", "type": "可拆件", "parent": "basin", "where": "在盆底，或挂在泵头下面", "visible": "装好时在水下，看不见", "detach": "能取出清洗", "variant": "", "pitfall": "装好时画在盆外", "refs": ["pump", "stem"]},
+    {"key": "pump_cover", "name": "泵罩/滤网盒", "en": "pump cover or intake cage", "type": "可拆件", "parent": "pump", "where": "套在水泵进水口", "visible": "装好时看不见", "detach": "能拆", "variant": "", "pitfall": "漏画，或画成外露", "refs": ["pump_cover", "filter_cage"]},
+    {"key": "filter", "name": "滤芯", "en": "filter cartridge", "type": "耗材", "parent": "basin", "where": "出水口下面或水泵前面", "visible": "装好时多数看不见", "detach": "能取出，定期更换", "variant": "", "pitfall": "装好时画在外面，或画出没确认的分层", "refs": ["filter", "filter_sponge"]},
+    {"key": "sponge", "name": "前置海绵", "en": "pre-filter sponge", "type": "耗材", "parent": "pump_cover", "where": "包在水泵进水口外面", "visible": "装好时看不见", "detach": "能取出，定期更换", "variant": "", "pitfall": "主图里摆在台面上", "refs": ["sponge", "filter_sponge"]},
+    {"key": "spout", "name": "出水口", "en": "water outlet", "type": "组成部件", "parent": "top_tray", "where": "顶盘上或泵头正面", "visible": "看得见", "detach": "不能拆", "variant": "", "pitfall": "水从没有开口的地方流出", "refs": ["spout", "front_opening", "outlet"]},
+    {"key": "faucet", "name": "龙头", "en": "faucet spout", "type": "可拆件", "parent": "top_tray", "where": "立在顶盘上", "visible": "看得见", "detach": "常能拔下来洗", "variant": "faucet", "pitfall": "龙头方向和水流方向不一致", "refs": ["faucet"]},
+    {"key": "flower_cover", "name": "花朵盖", "en": "flower-shaped top cover", "type": "可拆件", "parent": "top_tray", "where": "盖在出水口上", "visible": "看得见", "detach": "能拿下来", "variant": "flower_top", "pitfall": "花瓣数量和形状乱画", "refs": ["flower_cover"]},
+    {"key": "sensor_window", "name": "感应窗", "en": "sensor window", "type": "组成部件", "parent": "basin", "where": "机身或泵头上，看产品卡", "visible": "看得见", "detach": "不能拆", "variant": "sensor", "pitfall": "画出光束、射线来表示感应", "refs": ["sensor", "sensor_window"]},
+    {"key": "charge_port", "name": "充电口", "en": "charging port", "type": "组成部件", "parent": "pump_head", "where": "泵头或机身上，看参考图", "visible": "那一面朝镜头时看得见", "detach": "不能拆", "variant": "wireless_battery", "pitfall": "位置和形状自己编", "refs": ["usb_c", "charge_port"]},
+    {"key": "cable", "name": "电源线/充电线", "en": "power or charging cable", "type": "随附配件", "parent": "", "where": "插在机身或泵头的接口上", "visible": "只在插线、充电的画面出现", "detach": "能拔", "variant": "", "pitfall": "接头形态自己编；无线款画成插着线", "refs": ["cable"]},
+    {"key": "adapter", "name": "电源适配器", "en": "power adapter", "type": "随附配件", "parent": "cable", "where": "线的另一端插墙", "visible": "多数画面不拍", "detach": "能拔", "variant": "", "pitfall": "没随附时画出来", "refs": ["adapter"]},
+    {"key": "spare_filter", "name": "备用滤芯", "en": "spare filter cartridges", "type": "耗材", "parent": "", "where": "包装里另附", "visible": "只在开箱或换滤芯的画面出现", "detach": "—", "variant": "", "pitfall": "数量乱画", "refs": ["spare_filter"]},
+    {"key": "water", "name": "水", "en": "water", "type": "外部物品", "parent": "", "where": "在盆里和出水口", "visible": "日常使用时看得见", "detach": "—", "variant": "", "pitfall": "盆里没水却在出水", "refs": []},
+    {"key": "pet", "name": "宠物", "en": "cat or dog", "type": "外部物品", "parent": "", "where": "在盆边喝水", "visible": "按场景", "detach": "—", "variant": "", "pitfall": "宠物和饮水机大小关系不对", "refs": []}
+  ],
+  "states": [
+    {"id": "assembled", "name": "日常使用（出水）", "keywords": ["出水", "循环", "流动", "活水", "喝水", "感应", "定时", "安静", "静音"], "show": "盆里有水，水从出水口流出，宠物在旁边喝", "hide": "水泵、泵罩、滤芯、海绵都在里面，看不见", "never": "在盆外另画水泵或零件；水从没有开口的地方流出"},
+    {"id": "disassembled", "name": "拆洗", "keywords": ["拆洗", "清洗", "洗碗机", "可拆", "取出", "拆卸", "水池"], "show": "可拆的部分拿下来放在台面上，带电部分离开水，只洗盆体", "hide": "", "never": "带电部分泡在水里；整机连同水泵放进洗碗机"},
+    {"id": "refill", "name": "加水", "keywords": ["加水", "补水", "容量", "大容量"], "show": "水壶往盆里倒水，水位在窗里看得见", "hide": "", "never": "水倒在盆外；水位超过最高线"},
+    {"id": "filter_change", "name": "换滤芯", "keywords": ["滤芯", "过滤", "更换", "海绵", "滤网"], "show": "旧滤芯拿出来，新滤芯放进原来的位置", "hide": "", "never": "滤芯装在没确认的位置；画出没确认的过滤分层"},
+    {"id": "plugged", "name": "插线/充电", "keywords": ["插线", "充电", "电池", "续航", "持续出水"], "show": "线插在参考图里的那个接口上", "hide": "", "never": "自己编插头、线和适配器的样子"}
+  ],
+  "questions": [
+    {"key": "q_pump_place", "text": "水泵装在哪？", "why": "决定拆洗图里拿出来的是一个水泵，还是连着顶部的一整个组件", "options": ["在盆底，是单独一个", "挂在顶部泵头下面，一起提出来", "不确定，拆洗先不拍"], "rec": 2},
+    {"key": "q_spout", "decides": ["faucet", "flower_top"], "text": "水从哪里出来？", "why": "决定出水画面的水流位置和形状", "options": ["花朵盖", "龙头", "泵头正面的开口", "涌泉/平流", "不确定，出水口不特写"], "rec": 4},
+    {"key": "q_cable", "text": "随附电源线或充电线吗？", "why": "插线、充电的画面要按实物画线", "options": ["随附，在照片区补一张", "不随附", "无线款，平时不插线", "不确定，插线画面先不拍"], "rec": 3},
+    {"key": "q_filter", "text": "有滤芯吗？随附几个？", "why": "决定换滤芯和开箱画面", "options": ["有，随附", "有，需要另买", "没有滤芯", "不确定，滤芯先不拍"], "rec": 3},
+    {"key": "q_wash", "text": "哪些部分能洗、能不能泡水？", "why": "决定拆洗图里什么能碰水", "options": ["盆、盖、滤网能洗，带电部分不能泡水", "全部能洗", "不确定，拆洗先不拍"], "rec": 0}
+  ],
+  "photo_slots": [
+    {"slot": "pump_out", "label": "水泵（或泵头组件）拿出来", "tip": "拍拿出来以后完整的样子，放在素色台面上"},
+    {"slot": "filter_parts", "label": "滤芯和海绵", "tip": "平铺拍，能看清有几层"},
+    {"slot": "water_on", "label": "装水出水的样子", "tip": "装上水通电，拍水流的形状"},
+    {"slot": "cable_plugged", "label": "插线的样子", "tip": "拍线插在接口上的近景"},
+    {"slot": "in_box", "label": "包装里全部东西", "tip": "全部摊开拍一张"}
+  ],
+  "size": {
+    "hint": "量外轮廓，连外翻的盆沿一起量。高从桌面量到盆沿，不算出水口或控制头。",
+    "dims": {
+      "L": {"short": "长", "label": "长：左右最宽处", "en": "long", "noun": "length", "unit": "mm"},
+      "W": {"short": "宽", "label": "宽：前后最深处", "en": "deep", "noun": "depth", "unit": "mm"},
+      "H": {"short": "高", "label": "高：桌面到盆沿", "en": "tall to the rim", "noun": "height", "unit": "mm"}
+    },
+    "ratios": [["L", "H"], ["W", "H"]],
+    "extra": [
+      {"key": "capacity", "label": "容量", "short": "容量", "unit": "L", "en": "holds about {v} liters"},
+      {"key": "top_rise", "label": "出水口或控制头高出盆沿", "short": "高出盆沿", "unit": "mm", "en": "the top part rises about {v} mm above the rim"}
+    ]
+  },
+  "pitfalls": [
+    "装好时把水泵、滤芯或海绵画在盆外",
+    "水从没有出水口的地方流出，或水流方向和出水口不一致",
+    "水位窗画到没有窗的那一面",
+    "拆洗时带电部分（泵头、充电口）泡在水里",
+    "无线款画出电源线，或有线款画成没有线",
+    "自己编插头、接口、按键和指示灯",
+    "斜角时盆体被拉高拉窄，变成方块",
+    "盆里没有水却画成在出水"
+  ],
+  "forbidden": [
+    "抗菌、除菌、杀菌（没有检测报告）",
+    "净化水质、软化水、去除重金属（没有检测）",
+    "FDA、BPA-free 或其他认证（没有证书）",
+    "无噪音、0 分贝或没有来源的分贝数",
+    "让宠物多喝水、预防肾病等健康功效",
+    "防漏、防倒、防干烧（没有测试）"
+  ],
+  "selling_visuals": [
+    {"point": "大容量", "proof": "加水的那一刻，或和大家都知道大小的东西放在一起"},
+    {"point": "流动活水", "proof": "出水口的水流特写，宠物正在喝"},
+    {"point": "安静", "proof": "产品在出水，旁边的宠物照样睡"},
+    {"point": "好清洗", "proof": "拆开摆好，空盆在水槽里冲"},
+    {"point": "过滤", "proof": "滤芯放进原来的位置；只画确认过的结构"},
+    {"point": "无线摆放", "proof": "放在够不着插座的地方，没有线"}
+  ],
+  "learned": [
+    {"product": "pw002_s", "date": "2026-11-19", "status": "待确认", "note": "水泵可以挂在控制头下面组成一个整体，装好时只露出控制头；拆洗时整个组件一起提出来。等 pw002_s 的产品资料表回来再转正"},
+    {"product": "round10l", "date": "2026-11-19", "status": "已确认", "note": "龙头座加龙头的款式：产品卡写明滤垫、海绵、电源线、包装盒都不入画"},
+    {"product": "filter_pad", "date": "2026-11-19", "status": "待确认", "note": "替换滤垫本身就是耗材，可能配 round10l，关系没确认；它当主角时，饮水机只当背景"}
+  ],
+  "sources": [
+    {"url": "products/pw002_s/PRODUCT.md", "used_for": "无线款结构、配件参考 05–09", "opened": true},
+    {"url": "products/round10l/PRODUCT.md", "used_for": "龙头款部件清单", "opened": true},
+    {"url": "products/filter_pad/PRODUCT.md", "used_for": "耗材类产品", "opened": true},
+    {"url": "docs/PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md", "used_for": "第 6 节喂水器卖点（历史文档，只作参考）", "opened": true}
+  ]
+}

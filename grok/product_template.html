@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>产品资料（选填）</title>
+<!--
+  UTA style 产品资料表（选填）。和 review_template.html、confirm_template.html 是姊妹模板。
+  不是闸门：用户不打开这张表，流程照样往下走，AI 草稿按「推定」使用。
+  写卡方（或 Codex）只替换下面 id 为 sheet 的 JSON：先由 AI 根据产品卡、实拍和造型参考把能推的都填好，
+  每条标「确定 / 推定 / 不确定」；用户只改不对的、补知道的，没动的按 AI 草稿。
+  点「生成产品资料」得到一段 UTA-PRODUCT v1，连同新照片原样发给 Grok。
+  图片字段可以写仓库相对路径（前面拼 base），也可以直接写 data: URI（单独发出去也能看）。
+-->
+<style>
+:root{
+  --bg:#f6f2ec; --card:#fffdf9; --ink:#1f2630; --sub:#5d6673; --line:#e4ddd2;
+  --chip:#efe8dc; --accent:#b4572e; --accent-soft:#f6e3d8; --ok:#2f7a4f; --ok-soft:#e3f2e8;
+  --warn:#a15c00; --warn-soft:#fbefd9; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#16181c; --card:#1f2228; --ink:#eceae6; --sub:#a3a9b3; --line:#30343c;
+    --chip:#2a2e35; --accent:#e58a5c; --accent-soft:#3a2a22; --ok:#6fcf97; --ok-soft:#1f3328;
+    --warn:#f2b94b; --warn-soft:#3a3020; --shadow:none;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 160px}
+header h1{font-size:26px;margin:0 0 4px}
+header .meta{color:var(--sub);display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px}
+.how{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:14px 0 6px;font-size:14px}
+.how b{color:var(--accent)}
+.how .legend{color:var(--sub);font-size:13px;margin-top:4px}
+header .summary{font-size:15px;margin:0 0 4px}
+ol.flow{margin:0;padding-left:1.4em;font-size:14px}
+section.sec{margin:26px 0 8px}
+section.sec>h2{font-size:19px;margin:0 0 2px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+section.sec>h2 small{font-size:13px;color:var(--sub);font-weight:400}
+.secnote{color:var(--sub);font-size:13.5px;margin:0 0 6px}
+.box{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;margin:10px 0}
+.box.bad{border-color:var(--warn);box-shadow:0 0 0 2px var(--warn-soft)}
+.pid{display:inline-block;min-width:2.4em;font-weight:800;color:var(--accent)}
+.en{color:var(--sub);font-size:12.5px;margin-left:6px}
+.badge{border-radius:999px;padding:1px 10px;font-size:12px;font-weight:700;margin-left:8px;white-space:nowrap}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.badge.none{background:var(--chip);color:var(--sub)}
+.why{background:var(--bg);border-radius:8px;padding:6px 10px;font-size:13.5px;margin:6px 0}
+.row{font-size:14px;margin:3px 0}
+.row i{font-style:normal;color:var(--sub);display:inline-block;min-width:4.8em}
+.opts{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.opt{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 12px;font:inherit;font-size:13.5px;cursor:pointer}
+.opt.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+.opt .star{color:var(--accent);margin-right:3px}
+.ths{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.th{width:84px;height:84px;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:8px;cursor:zoom-in}
+.nb{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:start}
+@media (max-width:700px){.nb{grid-template-columns:1fr}}
+.tree .d1{margin-left:28px}
+.tree .d2{margin-left:56px}
+.tree .d1::before,.tree .d2::before{content:"";position:absolute;left:-16px;top:-11px;height:34px;width:12px;border-left:2px solid var(--line);border-bottom:2px solid var(--line);border-bottom-left-radius:8px}
+.tag{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:2px 10px;font-size:12.5px;cursor:pointer;font-family:inherit}
+.tag.on{background:var(--warn-soft);border-color:var(--warn);color:var(--warn);font-weight:700}
+.tsel{margin-left:8px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;font:inherit;font-size:12px;background:var(--chip);color:var(--ink);cursor:pointer}
+.tsel.on{background:var(--warn-soft);border-color:var(--warn);color:var(--warn);font-weight:700}
+details.types{font-size:13px;color:var(--sub);margin:4px 0 6px}
+details.types summary{cursor:pointer}
+.fixbox{margin-top:8px}
+.fixbox textarea{display:none;margin-top:6px}
+.fixbox.on textarea{display:block}
+textarea{width:100%;min-height:56px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;background:var(--bg);color:var(--ink);resize:vertical}
+textarea:focus,input:focus{outline:2px solid var(--accent);border-color:transparent}
+input[type=number],input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:7px 10px;font:inherit;background:var(--bg);color:var(--ink)}
+.size{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;align-items:end}
+.size label,.lbl{font-size:13px;color:var(--sub);display:block;margin-bottom:2px}
+.chk{display:flex;align-items:center;gap:6px;font-size:14px;margin-top:10px;cursor:pointer}
+.tip{font-size:12.5px;color:var(--sub)}
+.warnline{color:var(--warn);font-size:13px;margin-top:6px}
+.ratio{font-size:14px;margin-top:10px}
+pre.geo{background:var(--bg);border-radius:10px;padding:8px 10px;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;margin:6px 0 0}
+.phs{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px}
+.ph{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.ph.drag{outline:2px dashed var(--accent);outline-offset:2px}
+.ph.new{border-color:var(--ok);box-shadow:0 0 0 2px var(--ok-soft)}
+.ph.miss .phimg{border-style:dashed}
+.phimg{aspect-ratio:1/1;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line)}
+.phimg img{width:100%;height:100%;object-fit:contain;cursor:zoom-in}
+.phimg .empty{color:#8a8f98;font-size:12.5px;text-align:center;padding:8px}
+.ph .src{font-size:12px;color:var(--sub)}
+.pick{align-self:flex-start;border:1px solid var(--line);border-radius:999px;padding:1px 10px;font-size:12.5px;cursor:pointer}
+.pick:hover,.tag:hover,.opt:hover{border-color:var(--accent)}
+.addrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;gap:8px;margin:8px 0}
+@media (max-width:700px){.addrow{grid-template-columns:1fr}}
+a{color:var(--accent)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(0,0,0,.06)}
+.bar .in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.bar .count{flex:1;min-width:220px;font-size:14px}
+button.main{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer}
+#out{display:none;max-width:1100px;margin:0 auto;padding:0 16px 12px}
+#out textarea{min-height:170px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+#out .tip{margin:6px 0 4px}
+.zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+.zoom img{max-width:96vw;max-height:94vh;background:#fff}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="bar">
+  <div id="out">
+    <div class="tip">复制下面整段，原样发给 Grok；新补的照片原件一起发。没写到的按 AI 草稿记成「你看过没改」。</div>
+    <textarea id="result" readonly></textarea>
+  </div>
+  <div class="in">
+    <div class="count" id="count"></div>
+    <button class="ghost" id="clear" type="button">清空我的修改</button>
+    <button class="main" id="make" type="button">生成产品资料</button>
+  </div>
+</div>
+<div class="zoom" id="zoom"><img alt=""></div>
+<script id="sheet" type="application/json">
+{
+  "product": "pw002_s",
+  "title": "PW002-S · 产品资料（选填）",
+  "form": "outputs/pw002_s/product_form_v01.html",
+  "generated": "2026-11-19",
+  "by": "AI 草稿：依据产品卡、5 张主机实拍和 9 张造型参考",
+  "categories": [
+    {
+      "id": "pet_fountain",
+      "name": "宠物饮水机",
+      "version": 1
+    }
+  ],
+  "variants": [
+    "wireless_battery",
+    "sensor"
+  ],
+  "types": [
+    "组成部件",
+    "可拆件",
+    "耗材",
+    "随附配件",
+    "宿主产品",
+    "外部物品"
+  ],
+  "base": "../",
+  "summary": "无线 10L 不锈钢宠物饮水机：放在家里哪里都行，宠物靠近就出水，也能定时出水或插线持续出水。",
+  "questions": [
+    {
+      "id": "Q1",
+      "text": "控制头正面那条横向开口，是出水口吗？",
+      "why": "AI 的理解：白色水泵 → 灰色立管 → 黑色部分 → 从控制头正面这条开口流出。是的话，所有出水的画面，水都从这里出来。",
+      "options": [
+        "是出水口",
+        "不是（写一句）",
+        "不确定，出水画面不特写这里"
+      ],
+      "rec": 0,
+      "write": [
+        1
+      ],
+      "imgs": [
+        "products/pw002_s/ref/baseline_detail_6.png",
+        "products/pw002_s/ref/user_20261118_09_accessory_side.jpg"
+      ]
+    },
+    {
+      "id": "Q2",
+      "text": "USB-C 充电线随产品附带吗？",
+      "why": "控制头背面有一个 USB-C 口（造型参考 05、08 看得到）。F4「插线后可持续出水」那张图要画一根线插在这里，但线长什么样还没有照片，AI 不编。",
+      "options": [
+        "附带（在下面照片区补一张线的照片）",
+        "不附带",
+        "不确定，插线画面先不拍"
+      ],
+      "rec": -1,
+      "write": [],
+      "imgs": [
+        "products/pw002_s/ref/user_20261118_05_connection.jpg",
+        "products/pw002_s/ref/user_20261118_08_accessory_back.jpg"
+      ]
+    },
+    {
+      "id": "Q3",
+      "text": "顶上的不锈钢盘面能和桶身分开吗？",
+      "why": "照片里看不出来。影响拆洗那张图：分得开画两件，分不开画一整只。",
+      "options": [
+        "能分开",
+        "不能，是一整只",
+        "不确定，按一整只画"
+      ],
+      "rec": 2,
+      "write": [],
+      "imgs": [
+        "products/pw002_s/ref/baseline_top_down.png"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "P1",
+      "parent": "",
+      "conf": "确定",
+      "name": "不锈钢桶身（含顶盘）",
+      "en": "brushed 304 stainless steel basin with its top tray",
+      "where": "整机主体，只有正面有水位窗",
+      "detach": "桶身本身不拆；盘面能不能分开见 Q3",
+      "visible": "一直看得见",
+      "basis": "5 张主机实拍",
+      "imgs": [
+        "products/pw002_s/ref/baseline_front.png"
+      ],
+      "type": "组成部件"
+    },
+    {
+      "id": "P2",
+      "parent": "",
+      "conf": "推定",
+      "name": "水泵头组件（一个整体）",
+      "en": "pump head assembly that lifts out as one unit",
+      "where": "从顶盘后端中央插进桶里，下半截泡在水里",
+      "detach": "能，整个向上提出来",
+      "visible": "装好时只露出最上面的黑色控制头，其余都在桶里",
+      "basis": "造型参考 08、09：黑色控制头、黑色圆柱、灰色立管、白色水泵连成一个整体；05 是它们的连接处",
+      "imgs": [
+        "products/pw002_s/ref/user_20261118_08_accessory_back.jpg",
+        "products/pw002_s/ref/user_20261118_09_accessory_side.jpg"
+      ],
+      "type": "可拆件"
+    },
+    {
+      "id": "P3",
+      "parent": "P2",
+      "conf": "确定",
+      "name": "黑色控制头",
+      "en": "black control head, the top of the pump head",
+      "where": "组件最上面，装好后高出盘面",
+      "detach": "跟着组件一起提出来",
+      "visible": "看得见：顶面 M 键和电源键，正面横向开口（Q1），背面 USB-C 口",
+      "basis": "主机实拍和造型参考 05、07、08",
+      "imgs": [
+        "products/pw002_s/ref/user_20261118_07_button_panel.jpg",
+        "products/pw002_s/ref/user_20261118_05_connection.jpg"
+      ],
+      "type": "组成部件"
+    },
+    {
+      "id": "P4",
+      "parent": "P2",
+      "conf": "推定",
+      "name": "黑色圆柱（上宽下窄）",
+      "en": "tapered black cylindrical body under the head",
+      "where": "控制头下面，伸进桶里",
+      "detach": "跟着组件一起提出来",
+      "visible": "装好时看不见。拆洗时和控制头一起不碰水：F10 说的「上半部分」，AI 推定就是控制头加这一段",
+      "basis": "造型参考 08、09。里面装的是什么不知道，不画内部",
+      "imgs": [
+        "products/pw002_s/ref/user_20261118_09_accessory_side.jpg"
+      ],
+      "type": "组成部件"
+    },
+    {
+      "id": "P5",
+      "parent": "P2",
+      "conf": "推定",
+      "name": "灰色立管",
+      "en": "grey riser tube from the pump up to the black body",
+      "where": "从水泵通到黑色圆柱底下",
+      "detach": "跟着组件一起提出来",
+      "visible": "装好时在水下，看不见",
+      "basis": "造型参考 05、08、09",
+      "imgs": [
+        "products/pw002_s/ref/user_20261118_05_connection.jpg"
+      ],
+      "type": "组成部件"
+    },
+    {
+      "id": "P6",
+      "parent": "P2",
+      "conf": "推定",
+      "name": "白色小水泵",
+      "en": "small white pump at the bottom end",
+      "where": "组件最下面，坐在桶底",
+      "detach": "跟着组件一起提出来",
+      "visible": "装好时在水下，看不见",
+      "basis": "造型参考 06、08",
+      "imgs": [
+        "products/pw002_s/ref/user_20261118_06_pump_exploded.jpg"
+      ],
+      "type": "组成部件"
+    },
+    {
+      "id": "P7",
+      "parent": "P6",
+      "conf": "推定",
+      "name": "白色格栅滤罩＋黑色过滤海绵",
+      "en": "white slotted filter cage holding a black sponge on the pump inlet",
+      "where": "套在水泵进水的一面",
+      "detach": "造型参考 06 是拆开摆的；用户能不能自己拆，没确认",
+      "visible": "装好时在水下，看不见",
+      "basis": "造型参考 06、09",
+      "imgs": [
+        "products/pw002_s/ref/user_20261118_06_pump_exploded.jpg"
+      ],
+      "type": "可拆件"
+    },
+    {
+      "id": "P8",
+      "parent": "P2",
+      "conf": "推定",
+      "name": "水泵电源线（白色细线）",
+      "en": "thin white pump wire running up to the bottom of the black body",
+      "where": "从水泵接到黑色部分的下端，小圆插头",
+      "detach": "组件内部的线，不单独拿出来画",
+      "visible": "装好时看不见；拆洗时跟着组件出现",
+      "basis": "造型参考 05 右上、06",
+      "imgs": [
+        "products/pw002_s/ref/user_20261118_05_connection.jpg"
+      ],
+      "type": "组成部件"
+    },
+    {
+      "id": "P9",
+      "parent": "",
+      "conf": "不确定",
+      "name": "USB-C 充电线",
+      "en": "USB-C charging cable",
+      "where": "插在控制头背面的 USB-C 口",
+      "detach": "—",
+      "visible": "只在插线持续出水（F4）时出现",
+      "basis": "只看到接口，没见过线；附不附带见 Q2",
+      "imgs": [],
+      "type": "随附配件"
+    }
+  ],
+  "states": [
+    {
+      "id": "assembled",
+      "conf": "推定",
+      "name": "装好（日常使用）",
+      "for": "F2 F3 F5 F6 F7 F8 F11 F12",
+      "show": "不锈钢桶身；黑色控制头高出盘面；出水时水从控制头正面开口流出（Q1）",
+      "hide": "黑色圆柱、灰色立管、白色水泵、滤罩和海绵、电线都在桶里，看不见",
+      "never": "在桶外另画一个水泵或零件"
+    },
+    {
+      "id": "disassembled",
+      "conf": "推定",
+      "name": "拆洗",
+      "for": "F9 F10",
+      "show": "水泵头组件整个提出来，按造型参考 08、09 的样子放在台面上、离开水；空的不锈钢桶身在水槽里冲，或放进洗碗机",
+      "hide": "",
+      "never": "组件或黑色部分泡在水里；整机连同组件放进洗碗机；把滤罩和海绵也拆散（那是造型参考 06 的样子，比拆洗拆得多）"
+    },
+    {
+      "id": "plugged",
+      "conf": "不确定",
+      "name": "插线持续出水",
+      "for": "F4",
+      "show": "装好的样子，加一根线插在控制头背面的 USB-C 口",
+      "hide": "",
+      "never": "自己编的插头、线、适配器样子",
+      "cond": "Q2 答「附带」并补了线的照片才拍；否则 F4 先用别的画面讲"
+    }
+  ],
+  "functions": [
+    {
+      "fact": "F2",
+      "text": "无线感应出水",
+      "how": "感应方式没给出，不写传感器名称",
+      "proof": "宠物走近的那一刻，水从控制头正面开口流出",
+      "state": "装好",
+      "angle": "前侧 45° 低机位近景",
+      "effect": "",
+      "conf": "推定"
+    },
+    {
+      "fact": "F3",
+      "text": "定时出水，每 15 分钟一次",
+      "how": "按设定的间隔出水",
+      "proof": "旁边没有宠物时水照样在流",
+      "state": "装好",
+      "angle": "平视中景",
+      "effect": "",
+      "conf": "推定"
+    },
+    {
+      "fact": "F4",
+      "text": "插线后可持续出水",
+      "how": "插线后一直出水",
+      "proof": "线插在控制头背面的接口上，水在流（线的样子见 Q2）",
+      "state": "插线",
+      "angle": "后侧 45° 近景",
+      "effect": "",
+      "conf": "不确定"
+    },
+    {
+      "fact": "F7",
+      "text": "无线移动，放哪都行",
+      "how": "不受电源线长度限制",
+      "proof": "放在离插座很远的地方，周围没有线",
+      "state": "装好",
+      "angle": "广角全景",
+      "effect": "",
+      "conf": "推定"
+    },
+    {
+      "fact": "F9",
+      "text": "取出水泵后，钢桶可进洗碗机或水池",
+      "how": "水泵头组件整个提出来",
+      "proof": "组件放在台面上离开水，空钢桶在水槽里冲",
+      "state": "拆洗",
+      "angle": "俯拍 45° 中景",
+      "effect": "",
+      "conf": "推定"
+    },
+    {
+      "fact": "F12",
+      "text": "流水安静，低于 25 分贝（用户声明）",
+      "how": "用户声明，不是测试结果",
+      "proof": "水在流，旁边的猫照样睡",
+      "state": "装好",
+      "angle": "低机位中景",
+      "effect": "",
+      "conf": "推定"
+    }
+  ],
+  "flow": [
+    "盆里加水，把水泵头组件插回顶盘后端中央",
+    "选模式：感应出水、定时出水（每 15 分钟一次）或插线持续出水",
+    "日常让宠物自己喝；电池续航 15–21 天，多宠或频繁感应会缩短",
+    "清洗时把水泵头组件整个提出来，不锈钢桶身放进水槽或洗碗机"
+  ],
+  "internal": [],
+  "updates": [
+    {
+      "id": "C1",
+      "text": "产品卡把「水泵」记成来历不明的配件，Geometry 还写着 do not add a separate pump, cable…",
+      "fix": "水泵是水泵头组件（P2）的一部分。改成分状态写：装好时不画在外面；拆洗时整个组件照造型参考 08、09 画出来。"
+    },
+    {
+      "id": "C2",
+      "text": "F4、F10 写着「参考图中未见充电口，不得自绘接口形态」",
+      "fix": "造型参考 05、08 已经看得到控制头背面的 USB-C 口。画面照参考图画这个口；文案在你确认前不写接口类型。"
+    },
+    {
+      "id": "C3",
+      "text": "产品卡没有「产品理解」和「产品状态」两节（规范 1.15），拆洗卡现在会先挑到造型参考 06",
+      "fix": "用上面的部件表和状态表补上这两节。拆洗卡的产品参考点名 08、09（整个组件），不用 06（06 连滤罩和海绵都拆散了）。"
+    }
+  ],
+  "size": {
+    "why": "量了：比例写进提示词，验收能量长宽比，宠物和产品的大小关系能统一。不量：照参考图的比例画，总览标「比例推定」，照样往下做。",
+    "hint": "量外轮廓，连外翻的盆沿一起量。高从桌面量到盆沿，不算控制头。",
+    "dims": {
+      "L": {
+        "short": "长",
+        "label": "长：左右最宽处",
+        "en": "long",
+        "noun": "length",
+        "unit": "mm"
+      },
+      "W": {
+        "short": "宽",
+        "label": "宽：前后最深处",
+        "en": "deep",
+        "noun": "depth",
+        "unit": "mm"
+      },
+      "H": {
+        "short": "高",
+        "label": "高：桌面到盆沿",
+        "en": "tall to the rim",
+        "noun": "height",
+        "unit": "mm"
+      }
+    },
+    "extra": [
+      {
+        "key": "head",
+        "label": "控制头高出盆沿",
+        "short": "控制头高出盆沿",
+        "en": "the control head rises about {v} mm above the rim",
+        "unit": "mm"
+      }
+    ],
+    "ratios": [
+      [
+        "L",
+        "H"
+      ],
+      [
+        "W",
+        "H"
+      ]
+    ]
+  },
+  "photos": [
+    {
+      "slot": "front",
+      "label": "正面平视",
+      "img": "products/pw002_s/photos/01_front.png",
+      "src": "实拍"
+    },
+    {
+      "slot": "side_left",
+      "label": "左侧平视",
+      "img": "products/pw002_s/photos/02_side_head_left.png",
+      "src": "实拍"
+    },
+    {
+      "slot": "side_right",
+      "label": "右侧平视",
+      "img": "products/pw002_s/photos/03_side_head_right.png",
+      "src": "实拍"
+    },
+    {
+      "slot": "top_down",
+      "label": "正俯拍",
+      "img": "products/pw002_s/photos/04_top.png",
+      "src": "实拍"
+    },
+    {
+      "slot": "three_quarter_left",
+      "label": "左前 45°",
+      "img": "products/pw002_s/ref/baseline_three_quarter.png",
+      "src": "AI 生成（推定）",
+      "tip": "现在这张是生成的，没有实拍。斜角最容易画变形，最值得补拍"
+    },
+    {
+      "slot": "three_quarter_right",
+      "label": "右前 45°",
+      "img": "",
+      "tip": "S2 那种右前偏低的机位，现在没有参考"
+    },
+    {
+      "slot": "low_angle",
+      "label": "低机位（宠物视角）",
+      "img": "",
+      "tip": "镜头放在桌面高度往上拍"
+    },
+    {
+      "slot": "rear",
+      "label": "背面平视（单张）",
+      "img": "",
+      "tip": "现在只有五视图拼图里的小格"
+    },
+    {
+      "slot": "spec_ruler_top",
+      "label": "规格照：正俯拍＋尺子",
+      "img": "",
+      "tip": "素色底，尺子放在旁边"
+    },
+    {
+      "slot": "spec_side_flat",
+      "label": "规格照：贴着台面拍侧面",
+      "img": "",
+      "tip": "镜头贴着桌面，看厚度和边缘"
+    },
+    {
+      "slot": "spec_hand",
+      "label": "规格照：手放在旁边",
+      "img": "",
+      "tip": "定大小用"
+    },
+    {
+      "slot": "part_cable",
+      "label": "USB-C 充电线",
+      "img": "",
+      "tip": "附带才补（Q2）"
+    }
+  ]
+}
+</script>
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById("sheet").textContent);
+  var KEY = "uta-product:" + data.product + ":" + (data.form || "") + ":" + (data.generated || "");
+  var size = data.size || {};
+  var dims = size.dims || {L: {short: "长", label: "长", en: "long"}, W: {short: "宽", label: "宽", en: "deep"}, H: {short: "高", label: "高", en: "tall"}};
+  var extras = size.extra || [];
+  var app = document.getElementById("app");
+  var previews = {};
+  var UNIT_CN = {mm: "毫米", cm: "厘米", m: "米", "in": "英寸", ft: "英尺", L: "升", ml: "毫升", g: "克", kg: "千克"};
+  var TO_MM = {mm: 1, cm: 10, m: 1000, "in": 25.4, ft: 304.8};
+  var NOUN = {L: "length", W: "depth", H: "height"};
+  var RATIOS = size.ratios || [["L", "H"], ["W", "H"]];
+  var TYPES = data.types || ["组成部件", "可拆件", "耗材", "随附配件", "宿主产品", "外部物品"];
+  var TYPE_TIP = {"组成部件": "长在产品上，跟着产品的状态走", "可拆件": "用户会拆下来洗、加东西的", "耗材": "定期更换的",
+    "随附配件": "包装里另附的，只在用到它的画面出现", "宿主产品": "卖的是配件时，它要装上去的那台产品，只当背景",
+    "外部物品": "水、粮、宠物、手这类道具，不算产品"};
+  function unit(o) { return (o && o.unit) || "mm"; }
+  function ucn(o) { return UNIT_CN[unit(o)] || unit(o); }
+  function mm(k) { var v = num(st.size[k]); return v && TO_MM[unit(dims[k])] ? v * TO_MM[unit(dims[k])] : null; }
+
+  function blank() { return {q: {}, x: {}, t: {}, add: [], size: {L: "", W: "", H: "", extra: {}, ref: "", cant: false}, photos: {}, notes: ""}; }
+  var st = null;
+  try { st = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { st = null; }
+  if (!st || typeof st !== "object") st = blank();
+  var b0 = blank();
+  Object.keys(b0).forEach(function (k) { if (st[k] == null) st[k] = b0[k]; });
+  if (!st.size.extra) st.size.extra = {};
+
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} refresh(); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c];
+    });
+  }
+  function has(s) { return s != null && String(s).trim() !== ""; }
+  function one(s) { return String(s == null ? "" : s).trim().replace(/\s*\n+\s*/g, "；"); }
+  function src(p) { return !p ? "" : (/^(data:|blob:|https?:|\/)/.test(p) ? p : (data.base || "") + p); }
+  function num(v) { var n = parseFloat(String(v == null ? "" : v).replace(/[^\d.]/g, "")); return isFinite(n) && n > 0 ? n : null; }
+  function r2(x) { return Math.round(x * 100) / 100; }
+  function ths(list) {
+    list = (list || []).filter(has);
+    return list.length ? '<div class="ths">' + list.map(function (p) {
+      return '<img class="th" src="' + esc(src(p)) + '" alt="" data-zoom="1">';
+    }).join("") + '</div>' : "";
+  }
+  function badge(c) {
+    if (!has(c)) return "";
+    return '<span class="badge ' + (c === "确定" ? "ok" : (c === "推定" ? "warn" : "none")) + '">AI ' + esc(c) + '</span>';
+  }
+  function row(k, v) { return has(v) ? '<div class="row"><i>' + esc(k) + '</i>' + esc(v) + '</div>' : ""; }
+  function fixbox(id, label) {
+    var x = st.x[id] || {};
+    return '<div class="fixbox' + (x.bad ? " on" : "") + '"><button type="button" class="tag' + (x.bad ? " on" : "") +
+      '" data-act="bad" data-id="' + esc(id) + '">' + esc(label) + '</button>' +
+      '<textarea data-act="badtext" data-id="' + esc(id) + '" placeholder="哪里不对、应该是什么，写一句">' + esc(x.text || "") + '</textarea></div>';
+  }
+  function findQ(id) { return (data.questions || []).filter(function (q) { return q.id === id; })[0] || {}; }
+  function findPhoto(slot) { return (data.photos || []).filter(function (p) { return p.slot === slot; })[0] || {}; }
+
+  var byId = {};
+  (data.parts || []).forEach(function (p) { byId[p.id] = p; });
+  function depth(p) {
+    var d = 0, cur = p, guard = 0;
+    while (cur && cur.parent && byId[cur.parent] && guard++ < 6) { d++; cur = byId[cur.parent]; }
+    return Math.min(d, 2);
+  }
+
+  function photoSlot(p) {
+    var mine = st.photos[p.slot];
+    var img = previews[p.slot] || (mine ? "" : src(p.img));
+    var inner = img ? '<img src="' + esc(img) + '" alt="" data-zoom="1">'
+      : '<div class="empty">' + (mine ? "已选 " + esc(mine.name) + "<br>（刷新后不显示预览）" : "把照片拖到这里<br>或点下面「补一张」") + '</div>';
+    var tag = mine ? (mine.replace ? "新照片（替换）" : "新照片") : (p.img ? (p.src || "") : "还没有");
+    return '<div class="ph' + (mine ? " new" : "") + (!p.img && !mine ? " miss" : "") + '" data-slot="' + esc(p.slot) + '">' +
+      '<div class="phimg">' + inner + '</div>' +
+      '<div><b>' + esc(p.label) + '</b> <span class="src">' + esc(tag) + '</span></div>' +
+      (has(p.tip) ? '<div class="tip">' + esc(p.tip) + '</div>' : "") +
+      (mine ? '<div class="tip">文件：' + esc(mine.name) + '　<a href="#" data-act="unphoto" data-slot="' + esc(p.slot) + '">撤回</a></div>' : "") +
+      '<label class="pick">' + (p.img || mine ? "换一张" : "补一张") +
+      '<input type="file" accept="image/*" data-act="file" data-slot="' + esc(p.slot) + '" hidden></label></div>';
+  }
+
+  function render() {
+    var h = [];
+    var nMiss = (data.photos || []).filter(function (p) { return !p.img; }).length;
+    h.push('<header><h1>' + esc(data.title || (data.product + " · 产品资料（选填）")) + '</h1>' +
+      (has(data.summary) ? '<div class="summary">' + esc(data.summary) + '</div>' : "") +
+      '<div class="meta"><span>' + esc(data.product) + '</span>' +
+      (has(data.by) ? '<span>' + esc(data.by) + '</span>' : "") +
+      ((data.categories || []).length ? '<span>品类 ' + esc(data.categories.map(function (c) { return c.name; }).join(" + ")) + '</span>' : "") +
+      ((data.variant_names || []).length ? '<span>款式 ' + esc(data.variant_names.join(" + ")) + '（AI 从照片或需求里看出来的，不对写在最下面）</span>' : "") +
+      (has(data.generated) ? '<span>草稿日期 ' + esc(data.generated) + '</span>' : "") + '</div></header>');
+    h.push('<div class="how">这张表<b>不填也能往下做</b>。下面的内容 AI 已经根据产品卡、实拍和造型参考先填好了，每条标着「AI 确定 / 推定 / 不确定」。' +
+      '你只改不对的、补你知道的，<b>没动的就按 AI 草稿</b>。填得越多，后面越少返工。改完点底部「生成产品资料」，把结果原样发给 Grok。' +
+      '<div class="legend">谁说了算：你改过、填过的 ＞ 你看过没改的 ＞ AI 推定。AI 推定的东西可以照参考图画，但不会当成事实写进文案。</div></div>');
+
+    var qs = data.questions || [];
+    if (qs.length) {
+      h.push('<section class="sec"><h2>需要你判断<small>' + qs.length + ' 个，只列 AI 拿不准、又会影响画面的。不选就按 ★；没有 ★ 的保持不确定</small></h2>');
+      qs.forEach(function (q) {
+        var a = st.q[q.id] || {};
+        var write = (q.write || []).indexOf(a.i) >= 0;
+        h.push('<div class="box" id="q-' + esc(q.id) + '"><div><span class="pid">' + esc(q.id) + '</span><b>' + esc(q.text) + '</b></div>' +
+          (has(q.why) ? '<div class="why">' + esc(q.why) + '</div>' : "") +
+          '<div class="opts">' + (q.options || []).map(function (o, i) {
+            return '<button type="button" class="opt' + (a.i === i ? " on" : "") + '" data-act="opt" data-q="' + esc(q.id) + '" data-i="' + i + '">' +
+              (q.rec === i ? '<span class="star">★</span>' : "") + esc(o) + '</button>';
+          }).join("") + '</div>' +
+          '<textarea class="qwrite" data-act="qtext" data-q="' + esc(q.id) + '" placeholder="写一句" style="display:' + (write ? "block" : "none") + '">' + esc(a.text || "") + '</textarea>' +
+          ths(q.imgs) + '</div>');
+      });
+      h.push('</section>');
+    }
+
+    var parts = data.parts || [];
+    if (parts.length) {
+      h.push('<section class="sec tree"><h2>部件和它们的关系<small>AI 从照片推的结构。不对的点「不对」写一句；关系类型不对直接改；漏了的在最下面加</small></h2>' +
+        '<details class="types"><summary>关系类型是什么意思（决定这个部件在哪些画面出现）</summary>' +
+        TYPES.map(function (t) { return '<div class="row"><i>' + esc(t) + '</i>' + esc(TYPE_TIP[t] || "") + '</div>'; }).join("") + '</details>');
+      parts.forEach(function (p) {
+        var x = st.x[p.id] || {};
+        var d = depth(p);
+        var parent = p.parent && byId[p.parent] ? p.parent + " " + byId[p.parent].name : "";
+        var ty = st.t[p.id] || p.type || "";
+        var typeSel = has(p.type) ? '<select class="tsel' + (st.t[p.id] ? " on" : "") + '" data-act="ptype" data-id="' + esc(p.id) + '" title="关系类型">' +
+          TYPES.map(function (t) { return '<option' + (t === ty ? " selected" : "") + '>' + esc(t) + '</option>'; }).join("") + '</select>' : "";
+        h.push('<div class="box d' + d + (x.bad || st.t[p.id] ? " bad" : "") + '"><div class="nb"><div>' +
+          '<div><span class="pid">' + esc(p.id) + '</span><b>' + esc(p.name) + '</b>' + typeSel + badge(p.conf) + '<span class="en">' + esc(p.en || "") + '</span></div>' +
+          row("属于", parent) + row("在哪", p.where) + row("能拆吗", p.detach) + row("看得见吗", p.visible) + row("依据", p.basis) + row("画图易错", p.pitfall) +
+          '</div><div>' + ths(p.imgs) + '</div></div>' + fixbox(p.id, "不对") + '</div>');
+      });
+      h.push('<div class="box"><b>漏了部件？</b><div class="tip">写名称和它装在哪、跟谁连着。</div>');
+      st.add.forEach(function (a, i) {
+        h.push('<div class="addrow"><input type="text" data-act="addname" data-i="' + i + '" placeholder="名称" value="' + esc(a.name) + '">' +
+          '<input type="text" data-act="addtext" data-i="' + i + '" placeholder="装在哪、跟谁连着、装好时看不看得见" value="' + esc(a.text) + '">' +
+          '<button type="button" class="ghost" data-act="deladd" data-i="' + i + '">删掉</button></div>');
+      });
+      h.push('<button type="button" class="ghost" data-act="add" style="margin-top:6px">＋ 加一件</button></div></section>');
+    }
+
+    var states = data.states || [];
+    if (states.length) {
+      h.push('<section class="sec"><h2>产品有几种样子<small>每张图用哪一种，脚本照这里挑产品参考、写「必须看得见」和「不能出现」</small></h2>');
+      states.forEach(function (s) {
+        var x = st.x[s.id] || {};
+        h.push('<div class="box' + (x.bad ? " bad" : "") + '"><div><span class="pid" style="min-width:auto;margin-right:8px">' + esc(s.id) + '</span><b>' + esc(s.name) + '</b>' + badge(s.conf) + '</div>' +
+          row("讲哪几条", s["for"]) + row("看得见", s.show) + row("看不见", s.hide) + row("不能出现", s.never) + row("条件", s.cond) +
+          fixbox(s.id, "不对") + '</div>');
+      });
+      h.push('</section>');
+    }
+
+    var fns = data.functions || [];
+    if (fns.length) {
+      h.push('<section class="sec"><h2>每个卖点怎么做到、画面里用什么证明<small>AI 推的，拍图时照这里；不对的点一下写一句</small></h2>');
+      fns.forEach(function (f) {
+        var x = st.x[f.fact] || {};
+        h.push('<div class="box' + (x.bad ? " bad" : "") + '"><div><span class="pid">' + esc(f.fact) + '</span>' + esc(f.text || "") +
+          badge(f.conf || f.confidence) + '</div>' +
+          row("怎么做到", f.how) + row("画面证据", f.proof) + row("产品样子", f.state) + row("推荐拍法", f.angle) + row("特效", f.effect) +
+          fixbox(f.fact, "不对") + '</div>');
+      });
+      h.push('</section>');
+    }
+
+    var flow = data.flow || [];
+    if (flow.length) {
+      var fx = st.x.flow || {};
+      h.push('<section class="sec"><h2>怎么用<small>从拿到手到日常打理</small></h2><div class="box' + (fx.bad ? " bad" : "") + '"><ol class="flow">' +
+        flow.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join("") + '</ol>' + fixbox("flow", "不对") + '</div></section>');
+    }
+
+    var inner = data.internal || [];
+    if (inner.length) {
+      h.push('<section class="sec"><h2>内部结构<small>只列确认过的；透视、剖视特效只能画这里有的</small></h2><div class="box">' +
+        inner.map(function (r) { return row(r.name || r.part || "", [r.en, r.where, r.source].filter(has).join("；")); }).join("") + '</div></section>');
+    }
+
+    var ups = data.updates || [];
+    if (ups.length) {
+      h.push('<section class="sec"><h2>AI 发现产品卡要跟着改的地方<small>写入产品卡时一起改；不同意的点一下</small></h2>');
+      ups.forEach(function (u) {
+        var x = st.x[u.id] || {};
+        h.push('<div class="box' + (x.bad ? " bad" : "") + '"><div><span class="pid">' + esc(u.id) + '</span>' + esc(u.text) + '</div>' +
+          '<div class="why">' + esc(u.fix) + '</div>' + fixbox(u.id, "不同意") + '</div>');
+      });
+      h.push('</section>');
+    }
+
+    h.push('<section class="sec"><h2>尺寸和大小参照<small>选填</small></h2>' + (has(size.why) ? '<p class="secnote">' + esc(size.why) + '</p>' : "") + '<div class="box"><div class="size">' +
+      ["L", "W", "H"].map(function (k) {
+        return '<div><label>' + esc(dims[k].label) + '（' + esc(ucn(dims[k])) + '）</label><input type="number" min="0" step="1" inputmode="decimal" data-act="dim" data-k="' + k + '" value="' + esc(st.size[k]) + '"></div>';
+      }).join("") +
+      extras.map(function (e) {
+        return '<div><label>' + esc(e.label) + '（' + esc(ucn(e)) + '，选填）</label><input type="number" min="0" step="1" inputmode="decimal" data-act="extra" data-k="' + esc(e.key) + '" value="' + esc(st.size.extra[e.key] || "") + '"></div>';
+      }).join("") + '</div>' +
+      (has(size.hint) ? '<div class="tip" style="margin-top:6px">' + esc(size.hint) + '</div>' : "") +
+      '<div style="margin-top:10px"><span class="lbl">大小参照：和一样大家都知道大小的东西比，一句话</span>' +
+      '<input type="text" data-act="sizeref" placeholder="例如：高度大约到成年猫站着时的肩膀（按实物写）" value="' + esc(st.size.ref) + '"></div>' +
+      '<label class="chk"><input type="checkbox" data-act="cant"' + (st.size.cant ? " checked" : "") + '> 暂时量不了：照参考图比例画，总览标「比例推定」</label>' +
+      '<div id="geo"></div></div></section>');
+
+    var photos = data.photos || [];
+    if (photos.length) {
+      h.push('<section class="sec"><h2>照片<small>选填补拍；现有 ' + (photos.length - nMiss) + ' 格，建议补 ' + nMiss + ' 格</small></h2>' +
+        '<p class="secnote">拖进对应的格子，或点「补一张」。照片原件和生成的文字一起发；Codex 按格子名给照片改名入库。</p><div class="phs">' +
+        photos.map(photoSlot).join("") + '</div></section>');
+    }
+
+    h.push('<section class="sec"><h2>还要补充的<small>选填：卖点或参数有变化、有不能写的、其他想说的</small></h2>' +
+      '<div class="box"><textarea data-act="notes" placeholder="写在这里">' + esc(st.notes) + '</textarea></div></section>');
+
+    app.innerHTML = h.join("");
+    updGeo();
+    refresh();
+  }
+
+  function ratios() {
+    var r = [];
+    RATIOS.forEach(function (pair) {
+      var a = mm(pair[0]), b = mm(pair[1]);
+      if (a && b) r.push(dims[pair[0]].short + "/" + dims[pair[1]].short + " " + r2(a / b));
+    });
+    return r;
+  }
+  function geo() {
+    var s = st.size, g = [], bits = [], rs = [];
+    ["L", "W", "H"].forEach(function (k) {
+      var v = num(s[k]);
+      if (v) bits.push((bits.length ? "" : "about ") + v + " " + unit(dims[k]) + " " + dims[k].en);
+    });
+    if (bits.length) g.push(bits.join(", "));
+    RATIOS.forEach(function (pair) {
+      var a = mm(pair[0]), b = mm(pair[1]);
+      if (a && b) rs.push((dims[pair[0]].noun || NOUN[pair[0]]) + " about " + r2(a / b) + " times the " + (dims[pair[1]].noun || NOUN[pair[1]]));
+    });
+    if (rs.length) g.push(rs.join("; "));
+    extras.forEach(function (e) { var v = num(s.extra[e.key]); if (v && e.en) g.push(e.en.replace("{v}", v)); });
+    return g;
+  }
+  function human(k) {
+    var v = num(st.size[k]), u = unit(dims[k]);
+    if (!v) return "";
+    var alt = u === "mm" ? "（约 " + r2(v / 10) + " 厘米）" : (u === "cm" ? "（约 " + r2(v / 100) + " 米）" : "");
+    return dims[k].short + " " + v + " " + ucn(dims[k]) + alt;
+  }
+  function updGeo() {
+    var el = document.getElementById("geo");
+    if (!el) return;
+    var odd = ["L", "W", "H"].some(function (k) { var v = mm(k); return v && (v < 1 || v > 20000); });
+    var said = ["L", "W", "H"].map(human).filter(has);
+    var r = ratios(), g = geo(), h = "";
+    if (said.length) h += '<div class="ratio">你填的是：' + esc(said.join("，")) + '</div>';
+    if (r.length) h += '<div class="ratio">比例（自动算）：' + esc(r.join("　")) + '</div>';
+    if (odd) h += '<div class="warnline">有个数小于 1 毫米或大于 20 米，确认一下单位。</div>';
+    if (g.length) h += '<div class="tip" style="margin-top:8px">写进提示词的英文（自动生成，不用改）：</div><pre class="geo">' + esc(g.map(function (l) { return "- " + l; }).join("\n")) + '</pre>';
+    el.innerHTML = h;
+  }
+
+  function changes() {
+    var n = 0;
+    Object.keys(st.q).forEach(function (k) { var a = st.q[k]; if (a && (a.i != null || has(a.text))) n++; });
+    Object.keys(st.x).forEach(function (k) { if (st.x[k] && st.x[k].bad) n++; });
+    Object.keys(st.t).forEach(function (k) { if (st.t[k]) n++; });
+    st.add.forEach(function (a) { if (has(a.name) || has(a.text)) n++; });
+    var s = st.size;
+    if (has(s.L) || has(s.W) || has(s.H) || has(s.ref) || s.cant || Object.keys(s.extra).some(function (k) { return has(s.extra[k]); })) n++;
+    n += Object.keys(st.photos).length;
+    if (has(st.notes)) n++;
+    return n;
+  }
+  function refresh() {
+    var n = changes();
+    document.getElementById("count").innerHTML = n ? "你改了 <b>" + n + "</b> 处，其余按 AI 草稿。" : "还没改任何地方。<b>一处不改也能往下做</b>，全部按 AI 草稿。";
+  }
+
+  function grp(label, list, word) {
+    var ok = [], bad = [];
+    (list || []).forEach(function (it) {
+      var x = st.x[it.id], t = st.t[it.id], lines = [];
+      if (t && t !== it.type) lines.push("  " + it.id + ": 类型 " + (it.type || "未写") + " → " + t);
+      if (x && x.bad) lines.push("  " + it.id + ": " + word + " → " + (has(x.text) ? one(x.text) : "（只点了「" + word + "」）"));
+      if (lines.length) bad.push(lines.join("\n")); else ok.push(it.id);
+    });
+    return [label + ": 同意 " + (ok.join(" ") || "无") + (bad.length ? "；要改 " + bad.length : "")].concat(bad);
+  }
+  function sizeVal(o, v) { return v + " " + unit(o); }
+  function buildOut() {
+    var n = changes();
+    var lines = ["UTA-PRODUCT v1", "product: " + data.product, "form: " + (data.form || ""), "draft: " + (data.generated || ""),
+      "changed: " + n + (n ? "" : "（全部按 AI 草稿）"), ""];
+    (data.questions || []).forEach(function (q) {
+      var a = st.q[q.id] || {}, line;
+      if (a.i != null && q.options[a.i] != null) line = String(q.options[a.i]).replace("（写一句）", "") + (has(a.text) ? " → " + one(a.text) : "");
+      else if (q.rec != null && q.rec >= 0) line = q.options[q.rec] + "（未答，按推荐）";
+      else line = "未答（保持不确定）";
+      lines.push(q.id + ": " + line);
+    });
+    if ((data.parts || []).length) {
+      lines = lines.concat(grp("parts", data.parts, "不对"));
+      st.add.forEach(function (a) {
+        if (has(a.name) || has(a.text)) lines.push("  新增: " + (has(a.name) ? one(a.name) : "（没写名称）") + (has(a.text) ? " → " + one(a.text) : ""));
+      });
+    }
+    if ((data.states || []).length) lines = lines.concat(grp("states", data.states, "不对"));
+    if ((data.functions || []).length) lines = lines.concat(grp("functions", data.functions.map(function (f) { return {id: f.fact}; }), "不对"));
+    if ((data.flow || []).length) {
+      var fl = st.x.flow;
+      lines.push("flow: " + (fl && fl.bad ? "要改 → " + (has(fl.text) ? one(fl.text) : "（只点了「不对」）") : "同意"));
+    }
+    if ((data.updates || []).length) lines = lines.concat(grp("card_updates", data.updates, "不同意"));
+
+    var s = st.size, L = num(s.L), W = num(s.W), H = num(s.H);
+    var ex = extras.filter(function (e) { return num(s.extra[e.key]); });
+    var exText = ex.map(function (e) { return (e.short || e.label) + " " + sizeVal(e, num(s.extra[e.key])); }).join("；");
+    if (L || W || H) {
+      lines.push("size: " + ["L", "W", "H"].map(function (k) { var v = num(s[k]); return dims[k].short + " " + (v ? sizeVal(dims[k], v) : "未填"); }).join(" × ") +
+        (ex.length ? "；" + exText : ""));
+      var r = ratios();
+      if (r.length) lines.push("ratio: " + r.join("；"));
+    } else if (ex.length) {
+      lines.push("size: " + ["L", "W", "H"].map(function (k) { return dims[k].short; }).join("") + "未填；" + exText);
+    } else {
+      lines.push("size: " + (s.cant ? "暂时量不了" : "未填") + "（照参考图比例画，总览标「比例推定」）");
+    }
+    if (has(s.ref)) lines.push("size_ref: " + one(s.ref));
+    var g = geo();
+    if (g.length) { lines.push("geometry_prompt:"); g.forEach(function (l) { lines.push("- " + l); }); }
+
+    var ph = Object.keys(st.photos);
+    lines.push("photos: " + (ph.length ? ph.map(function (k) {
+      return k + "=" + st.photos[k].name + (st.photos[k].replace ? "（替换）" : "（新增）");
+    }).join("；") : "没有新照片"));
+    if (has(st.notes)) lines.push("notes: " + one(st.notes));
+    return lines.join("\n");
+  }
+
+  function setPhoto(slot, f) {
+    var p = findPhoto(slot);
+    st.photos[slot] = {name: f.name, replace: !!p.img};
+    try { previews[slot] = URL.createObjectURL(f); } catch (e) {}
+    save();
+    render();
+  }
+
+  document.addEventListener("click", function (ev) {
+    var t = ev.target.closest ? ev.target.closest("[data-act],[data-zoom]") : null;
+    if (!t) return;
+    if (t.tagName === "IMG" && t.getAttribute("data-zoom")) {
+      var z = document.getElementById("zoom");
+      z.querySelector("img").src = t.src;
+      z.style.display = "flex";
+      return;
+    }
+    var act = t.getAttribute("data-act");
+    if (act === "opt") {
+      var qid = t.getAttribute("data-q"), i = +t.getAttribute("data-i"), a = st.q[qid] || {};
+      if (a.i === i) delete a.i; else a.i = i;
+      st.q[qid] = a;
+      var box = document.getElementById("q-" + qid);
+      box.querySelectorAll(".opt").forEach(function (o) { o.classList.toggle("on", +o.getAttribute("data-i") === a.i); });
+      box.querySelector(".qwrite").style.display = (findQ(qid).write || []).indexOf(a.i) >= 0 ? "block" : "none";
+      save();
+    } else if (act === "bad") {
+      var id = t.getAttribute("data-id"), x = st.x[id] || {};
+      x.bad = !x.bad;
+      st.x[id] = x;
+      t.classList.toggle("on", x.bad);
+      t.parentNode.classList.toggle("on", x.bad);
+      var card = t.closest(".box");
+      if (card) card.classList.toggle("bad", x.bad || !!st.t[id]);
+      if (x.bad) t.parentNode.querySelector("textarea").focus();
+      save();
+    } else if (act === "add") {
+      st.add.push({name: "", text: ""});
+      save();
+      render();
+    } else if (act === "deladd") {
+      st.add.splice(+t.getAttribute("data-i"), 1);
+      save();
+      render();
+    } else if (act === "unphoto") {
+      ev.preventDefault();
+      var slot = t.getAttribute("data-slot");
+      delete st.photos[slot];
+      delete previews[slot];
+      save();
+      render();
+    }
+  });
+  document.addEventListener("input", function (ev) {
+    var t = ev.target, act = t.getAttribute && t.getAttribute("data-act");
+    if (!act || act === "cant" || act === "file") return;
+    if (act === "qtext") { var qid = t.getAttribute("data-q"), a = st.q[qid] || {}; a.text = t.value; st.q[qid] = a; }
+    else if (act === "badtext") { var id = t.getAttribute("data-id"), x = st.x[id] || {}; x.text = t.value; st.x[id] = x; }
+    else if (act === "addname") st.add[+t.getAttribute("data-i")].name = t.value;
+    else if (act === "addtext") st.add[+t.getAttribute("data-i")].text = t.value;
+    else if (act === "dim") { st.size[t.getAttribute("data-k")] = t.value; updGeo(); }
+    else if (act === "extra") { st.size.extra[t.getAttribute("data-k")] = t.value; updGeo(); }
+    else if (act === "sizeref") st.size.ref = t.value;
+    else if (act === "notes") st.notes = t.value;
+    else return;
+    save();
+  });
+  document.addEventListener("change", function (ev) {
+    var t = ev.target, act = t.getAttribute && t.getAttribute("data-act");
+    if (act === "cant") { st.size.cant = t.checked; updGeo(); save(); }
+    else if (act === "ptype") {
+      var pid = t.getAttribute("data-id"), part = byId[pid] || {};
+      if (t.value === part.type) delete st.t[pid]; else st.t[pid] = t.value;
+      t.classList.toggle("on", !!st.t[pid]);
+      var pbox = t.closest(".box");
+      if (pbox) pbox.classList.toggle("bad", !!st.t[pid] || !!(st.x[pid] && st.x[pid].bad));
+      save();
+    }
+    else if (act === "file" && t.files && t.files[0]) setPhoto(t.getAttribute("data-slot"), t.files[0]);
+  });
+  window.addEventListener("dragover", function (ev) {
+    ev.preventDefault();
+    var ph = ev.target.closest ? ev.target.closest(".ph") : null;
+    document.querySelectorAll(".ph.drag").forEach(function (el) { if (el !== ph) el.classList.remove("drag"); });
+    if (ph) ph.classList.add("drag");
+  });
+  window.addEventListener("drop", function (ev) {
+    ev.preventDefault();
+    var ph = ev.target.closest ? ev.target.closest(".ph") : null;
+    document.querySelectorAll(".ph.drag").forEach(function (el) { el.classList.remove("drag"); });
+    var f = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (ph && f) setPhoto(ph.getAttribute("data-slot"), f);
+  });
+  document.getElementById("zoom").addEventListener("click", function () { this.style.display = "none"; });
+  document.getElementById("clear").addEventListener("click", function () {
+    if (!window.confirm("清空你在这张表里的全部修改？AI 草稿不受影响。")) return;
+    st = blank();
+    previews = {};
+    save();
+    render();
+    document.getElementById("out").style.display = "none";
+  });
+  document.getElementById("make").addEventListener("click", function () {
+    var out = document.getElementById("result");
+    out.value = buildOut();
+    document.getElementById("out").style.display = "block";
+    out.focus();
+    out.select();
+    try { navigator.clipboard.writeText(out.value); document.getElementById("make").textContent = "已复制，再生成一次"; } catch (e) {}
+  });
+  window.__utaProductOut = buildOut;
+  render();
+})();
+</script>
+</body>
+</html>

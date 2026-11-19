@@ -12,6 +12,7 @@
   - Grok 交来「新建产品 <产品> 并做造型基准」，带着产品卡全文、视角定位表和实拍：按 3.5 第 0 步先建卡，按视角定位表给实拍起名存好，再做造型基准。之后在同一个任务里追加的任务单，直接用这次建好的卡和参考图。
 - 一轮成图之后按 `UTA_STYLE.md` 4.5 生成验收表单：`python tools/review_form.py --task outputs/task.md --report outputs/report.md`，把它和回报一起交给用户，回报最后加一行「验收表单：<路径>」。用户发回 `UTA-REVIEW` 时，写卡方会把要改的卡带着 `fix` 行重新发来，按 3.2 重出这几张、版本号加一，再生成新一轮表单。
 - 用户说「更新产品理解 <产品>」，或 Grok 交来用户确认过的产品理解：按 `UTA_STYLE.md` 3.8 只改产品卡的「产品理解」「产品状态」「事实的画面要求」「内部结构」四节，「已确认事实」不动。
+- Grok 交来「写入产品资料 <产品>」并附 `UTA-PRODUCT`，或用户说「打开 <产品> 的产品资料表」：按 `UTA_STYLE.md` 3.9 做。表单用 `tools/product_form.py` 生成（先 `detect` 定品类，再 `skeleton` 出草稿、对照照片改，最后 `build`）；表单是选填的，不等用户填完。写入时「已确认事实」一个字不改，`notes` 原样写进回报。
 - 用户说「入库产品视频」：按 `UTA_STYLE.md` 3.7 抽帧、按状态和朝向挑图登记，起草产品卡的「产品状态」「事实的画面要求」两节，等用户确认。视频本身不放进仓库。
 - 用户说「入库新案例」：按 `UTA_STYLE.md` 3.6 做，逐张打开 `references/inbox/` 里的图，写好拆解再登记进 `references/INDEX.csv`。这一节可以写 `docs/uta_style_v3/assets/key/`。
 - 「UTA style」「Uta Style」「Youta style」「有它风格」指的都是 `UTA_STYLE.md`，不是 `docs/UTA_STYLE_STANDARD.md`。

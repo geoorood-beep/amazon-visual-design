@@ -1,6 +1,6 @@
 # 亚马逊美工设计
 
-规则版本 **3.39**（2026-11-19）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
+规则版本 **3.40**（2026-11-19）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
 
 出图只有一份指引：**[UTA_STYLE.md](UTA_STYLE.md)**。写任务的 Grok 和出图的 Codex 读的是同一份。
 
@@ -41,6 +41,8 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | 新增或修改产品事实 | `products/<产品>/PRODUCT.md` |
 | 给某个卖点增加或修改证明画面 | `products/<产品>/evidence_options.csv`（列的含义见 `UTA_STYLE.md` 1.10） |
 | 补产品参考图 | 放进 `products/<产品>/ref/`，在产品卡和 [references/INDEX.csv](references/INDEX.csv) 各加一行 |
+| 补尺寸、规格照、部件关系 | 打开产品资料表（选填）填好，把生成的 `UTA-PRODUCT` 发给 Grok；或对 Codex 说「打开 <产品> 的产品资料表」 |
+| 加一个新品类 | 在 [references/categories/](references/categories/README.md) 加一份品类文件，运行 `python tools/product_form.py check` |
 | 把认可的成图设为锚图 | 对 Codex 说「这张做锚图」 |
 | 多张图有同一个毛病 | 改 [tools/prompt_base.txt](tools/prompt_base.txt) 里的固定提示词段落 |
 | 调整画面规则、文字规则、验收 | 改 [UTA_STYLE.md](UTA_STYLE.md) |
@@ -60,6 +62,8 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | `cards/` | 图位卡。`_TEMPLATE.md` 是空白模板 | 数据 |
 | `tools/check_card.py` | 校验任务单和图位卡，拼出提示词 | 机制 |
 | `tools/review_form.py` | 出图之后生成验收表单 `outputs/<产品>/review_vNN.html`（4.5） | 机制 |
+| `tools/product_form.py` | 选填的产品资料表：定品类、出草稿、生成 `outputs/<产品>/product_form_vNN.html`（1.15、3.9） | 机制 |
+| `references/categories/` | 品类库：每个品类通常有哪些部件和关系、产品有几种样子、要问什么、要补哪些照片（1.15） | 数据 |
 | `tools/prompt_base.txt` | 提示词的固定段落 | 机制 |
 | `docs/` | 案例图库和旧版标准 | 出图时不读 |
 | `archive/` | 2.11 版规则和旧技能 | 出图时不读 |
@@ -73,9 +77,11 @@ python tools/check_card.py --task outputs/task.md
 python tools/check_card.py cards/round10l/S5_clean.md
 python tools/check_card.py --set cards/round10l
 python -m unittest discover -s tools -p "test_check_card.py" -v
+python tools/product_form.py check
+python -m unittest discover -s tools -p "test_*.py"
 ```
 
-第一条接收 Grok 的任务单：拆成图位卡并逐张校验。第二条校验单张卡，通过时打印要附带的图片、提示词和排版说明。第三条检查一个目录下的整套卡。第四条是脚本自身的测试，改过 `tools/`、`UTA_STYLE.md`、产品卡或索引之后运行一次。
+第一条接收 Grok 的任务单：拆成图位卡并逐张校验。第二条校验单张卡，通过时打印要附带的图片、提示词和排版说明。第三条检查一个目录下的整套卡。第四条是脚本自身的测试，改过 `tools/`、`UTA_STYLE.md`、产品卡或索引之后运行一次。第五条校验品类库，第六条跑全部测试。
 
 ## 当前状态
 

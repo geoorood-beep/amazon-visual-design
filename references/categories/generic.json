@@ -1,0 +1,40 @@
+{
+  "id": "generic",
+  "name": "通用（没对上已有品类）",
+  "version": 1,
+  "updated": "2026-11-19",
+  "form": "立体",
+  "basis": "没有对上任何品类时用。部件全部由 AI 看照片自己列，确认后再沉淀成新的品类卡。",
+  "aliases": [],
+  "cues": [],
+  "variants": [],
+  "parts": [],
+  "states": [
+    {"id": "assembled", "name": "装好", "keywords": ["使用", "日常"], "show": "全部部件装在原位，产品在工作", "hide": "", "never": "多出或少了部件"},
+    {"id": "disassembled", "name": "拆开", "keywords": ["可拆", "拆洗", "取出", "拆卸", "洗碗机", "清洗"], "show": "能拆的部分拿下来放在一边，带电部分离开水和脏东西", "hide": "", "never": "装着拆不下来的部分去洗"},
+    {"id": "loading", "name": "正在装东西", "keywords": ["加水", "加粮", "补充", "装入", "容量"], "show": "打开了，正在往里装东西", "hide": "", "never": "盖着就在装"}
+  ],
+  "questions": [
+    {"key": "q_box", "text": "包装里除了主机还有什么？", "why": "没附带的东西不能画", "options": ["只有主机", "还有配件（在照片区补照片）", "不确定，配件先不拍"], "rec": 2},
+    {"key": "q_detach", "text": "哪些部分能拆下来？", "why": "决定拆开的画面", "options": ["写在补充里", "都不能拆", "不确定，拆开的画面先不拍"], "rec": 2}
+  ],
+  "photo_slots": [
+    {"slot": "in_box", "label": "包装里全部东西", "tip": "全部摊开拍一张"},
+    {"slot": "in_use", "label": "实际使用", "tip": "拍真实使用的样子"}
+  ],
+  "size": {
+    "hint": "量外轮廓。",
+    "dims": {
+      "L": {"short": "长", "label": "长：左右最宽处", "en": "long", "noun": "length", "unit": "mm"},
+      "W": {"short": "宽", "label": "宽：前后最深处", "en": "deep", "noun": "depth", "unit": "mm"},
+      "H": {"short": "高", "label": "高：最高点", "en": "tall", "noun": "height", "unit": "mm"}
+    },
+    "ratios": [["L", "H"], ["W", "H"]],
+    "extra": []
+  },
+  "pitfalls": ["多画或少画部件", "比例被拉长、压扁", "自己编按键、屏幕、接口"],
+  "forbidden": ["没有证书的认证", "没有检测的功效", "没有来源的数字"],
+  "selling_visuals": [],
+  "learned": [],
+  "sources": []
+}

@@ -1,0 +1,111 @@
+{
+  "id": "smart_feeder",
+  "name": "智能宠物喂食器",
+  "version": 1,
+  "updated": "2026-11-19",
+  "form": "立体",
+  "basis": "2026-11-19 联网整理：完整打开了 1 个品牌的拆洗说明页，其余来自搜索摘要和品类常识。全部是品类常识（推定），不是某个产品的事实。",
+  "aliases": ["智能喂食器", "自动喂食器", "宠物喂食器", "猫粮喂食器", "狗粮喂食器", "定时喂食器", "wifi喂食器", "投食器", "automatic pet feeder", "smart pet feeder", "automatic cat feeder", "automatic dog feeder", "timed feeder", "programmable feeder", "cat food dispenser", "dry food dispenser", "feeder with camera", "dual bowl feeder", "feeder", "cat feeder", "dog feeder"],
+  "cues": ["上方是大容量粮桶，常为透明或半透明", "粮桶下方是底座主机，前面伸出出粮口和食盆", "食盆多为不锈钢盆，放在托盘上", "底座正面常有小屏幕或按键", "带摄像头的款式前面板上有镜头", "桶盖下常有一个干燥剂仓"],
+  "variants": [
+    {"id": "camera", "name": "带摄像头", "cue": "前面板或桶顶有圆形镜头", "adds": ["camera"]},
+    {"id": "dual_bowl", "name": "双盆（带分流出粮）", "cue": "出粮口分成两路，前面有两个食盆", "adds": ["splitter", "bowl_2"]},
+    {"id": "battery_backup", "name": "电池备用供电", "cue": "底座底部有电池仓，或说明书写有备用电池", "adds": ["battery_bay"]},
+    {"id": "display", "name": "带屏幕/按键", "cue": "底座正面有屏幕和按键", "adds": ["control_panel"]},
+    {"id": "app", "name": "带 App 联网", "cue": "包装或页面有 Wi-Fi/App 标识", "adds": []}
+  ],
+  "parts": [
+    {"key": "base", "name": "底座主机", "en": "feeder base unit", "type": "组成部件", "parent": "", "where": "最下方，装有电机和电路，上接粮桶，前接食盆", "visible": "一直看得见", "detach": "不能拆，不能进水", "variant": "", "pitfall": "画成能整体水洗或泡在水里", "refs": ["whole", "base"]},
+    {"key": "hopper", "name": "粮桶", "en": "transparent food hopper", "type": "可拆件", "parent": "base", "where": "立在底座上方", "visible": "装好时看得见，透明时能看到粮", "detach": "能拆，向上提起", "variant": "", "pitfall": "透明桶画成不透明，或画成空桶", "refs": ["hopper", "tank"]},
+    {"key": "lid", "name": "桶盖", "en": "hopper lid", "type": "可拆件", "parent": "hopper", "where": "盖在粮桶最上面", "visible": "装好时看得见", "detach": "能打开，用来加粮", "variant": "", "pitfall": "加粮时桶盖还盖着", "refs": ["lid"]},
+    {"key": "desiccant", "name": "干燥剂包", "en": "desiccant pack", "type": "耗材", "parent": "lid", "where": "桶盖下面的小仓里（看产品）", "visible": "装好时看不见", "detach": "能取出，定期更换", "variant": "", "pitfall": "画成粮里随便放一包", "refs": ["desiccant"]},
+    {"key": "hopper_base", "name": "桶底座（出粮盘）", "en": "hopper base with dispensing wheel", "type": "可拆件", "parent": "base", "where": "粮桶下方，卡在底座上", "visible": "被粮桶挡住，拆开后看得见", "detach": "能拆", "variant": "", "pitfall": "拆洗图里漏画，或和底座画成一体", "refs": ["hopper_base", "rotor"]},
+    {"key": "chute", "name": "出粮口", "en": "food outlet chute", "type": "组成部件", "parent": "base", "where": "底座前方，粮从这里落进食盆", "visible": "装好时部分看得见", "detach": "不能拆", "variant": "", "pitfall": "粮落在盆外，或从桶侧面掉出", "refs": ["chute", "outlet"]},
+    {"key": "bowl_tray", "name": "食盆托盘", "en": "bowl tray", "type": "可拆件", "parent": "base", "where": "底座前方，托着食盆", "visible": "盆下面看得见", "detach": "能拆，可水洗", "variant": "", "pitfall": "漏画托盘，盆悬空", "refs": ["bowl_tray", "tray"]},
+    {"key": "bowl", "name": "食盆", "en": "stainless steel bowl", "type": "可拆件", "parent": "bowl_tray", "where": "放在托盘上，正对出粮口", "visible": "一直看得见", "detach": "能拆，可水洗", "variant": "", "pitfall": "盆的位置偏离出粮口，或太小太浅", "refs": ["bowl"]},
+    {"key": "bowl_2", "name": "第二个食盆", "en": "second bowl", "type": "可拆件", "parent": "bowl_tray", "where": "和第一个盆并排，各对一个出口", "visible": "一直看得见", "detach": "能拆，可水洗", "variant": "dual_bowl", "pitfall": "两个盆大小不一或离得太远", "refs": ["bowl_2"]},
+    {"key": "splitter", "name": "分流出粮件", "en": "dual-outlet splitter", "type": "随附配件", "parent": "chute", "where": "装在出粮口，把粮分到两个盆", "visible": "装好时看得见", "detach": "能拆", "variant": "dual_bowl", "pitfall": "单盆图里画出来", "refs": ["splitter"]},
+    {"key": "control_panel", "name": "屏幕与按键", "en": "display and buttons", "type": "组成部件", "parent": "base", "where": "底座正面或顶部", "visible": "一直看得见", "detach": "不能拆", "variant": "display", "pitfall": "编造屏幕上的文字、时间和界面", "refs": ["control_panel", "keys", "display"]},
+    {"key": "camera", "name": "摄像头", "en": "built-in camera", "type": "组成部件", "parent": "base", "where": "前面板或桶身上方，朝向食盆", "visible": "一直看得见", "detach": "不能拆", "variant": "camera", "pitfall": "画成外置摄像头，或镜头朝后", "refs": ["camera"]},
+    {"key": "battery_bay", "name": "电池仓", "en": "battery compartment", "type": "组成部件", "parent": "base", "where": "底座底部，有盖板", "visible": "装好时看不见", "detach": "盖板能打开", "variant": "battery_backup", "pitfall": "电池露在外面", "refs": ["battery"]},
+    {"key": "adapter", "name": "电源适配器", "en": "power adapter and cable", "type": "随附配件", "parent": "base", "where": "线从底座背面接到插座", "visible": "按场景，可以入镜", "detach": "能拔下", "variant": "", "pitfall": "线从错误位置伸出", "refs": ["cable", "adapter"]},
+    {"key": "food", "name": "猫粮/狗粮", "en": "dry kibble", "type": "外部物品", "parent": "", "where": "粮桶里和食盆里", "visible": "按状态", "detach": "—", "variant": "", "pitfall": "粮粒比出粮口还大，或飘在空中", "refs": []},
+    {"key": "pet", "name": "宠物", "en": "cat or dog", "type": "外部物品", "parent": "", "where": "站在食盆前", "visible": "按场景", "detach": "—", "variant": "", "pitfall": "宠物比喂食器还小，或头比盆小", "refs": []}
+  ],
+  "states": [
+    {"id": "assembled", "name": "日常使用", "keywords": ["日常", "摆放", "使用", "home", "daily"], "show": "完整装好的喂食器，粮桶有粮，食盆在位", "hide": "桶盖下的干燥剂、电池仓、桶底座内部", "never": "缺部件，飘在空中的粮，编造的屏幕界面"},
+    {"id": "dispensing", "name": "定时出粮", "keywords": ["定时", "出粮", "喂食", "定量", "dispense", "schedule", "meal"], "show": "粮从出粮口落进食盆，宠物在旁边等", "hide": "桶内转轮和电机", "never": "粮从桶侧面或盆外落出，盆里堆得过满"},
+    {"id": "refill", "name": "加粮", "keywords": ["加粮", "添粮", "大容量", "容量", "refill", "capacity"], "show": "桶盖打开，往粮桶里倒粮", "hide": "底座内部", "never": "盖子还盖着，粮倒在桶外"},
+    {"id": "disassembled", "name": "拆洗", "keywords": ["拆洗", "清洗", "可拆", "水洗", "洗碗机", "dishwasher", "washable"], "show": "桶盖、粮桶、桶底座、食盆、托盘分开摆，底座单独放在干的地方", "hide": "宠物", "never": "底座泡在水里或被冲洗，部件缺失"},
+    {"id": "desiccant_change", "name": "换干燥剂", "keywords": ["干燥剂", "防潮", "保鲜", "desiccant", "moisture"], "show": "桶盖打开，取出旧干燥剂，旁边是新的一包", "hide": "宠物", "never": "干燥剂混进粮里"},
+    {"id": "backup", "name": "断电备用", "keywords": ["断电", "备用电池", "停电", "backup", "battery", "power outage"], "show": "电池仓打开装进电池，或插头拔开示意", "hide": "宠物", "never": "电池露在粮桶或食盆里"}
+  ],
+  "questions": [
+    {"key": "q_camera", "decides": ["camera"], "text": "带摄像头吗？", "why": "决定前面板有没有镜头", "options": ["带摄像头", "不带", "不确定，摄像头先不拍"], "rec": 2},
+    {"key": "q_bowl", "decides": ["dual_bowl"], "text": "单盆还是双盆？", "why": "决定食盆数量和有没有分流件", "options": ["单盆", "双盆", "不确定，只拍单盆"], "rec": 2},
+    {"key": "q_hopper", "text": "粮桶是透明的吗？", "why": "决定能不能看到桶里的粮", "options": ["透明", "半透明", "不透明", "不确定，不拍桶里"], "rec": 3},
+    {"key": "q_battery", "decides": ["battery_backup"], "text": "有备用电池吗？电池随附吗？", "why": "决定画不画电池仓和电池", "options": ["有，随附电池", "有，需要自备电池", "没有", "不确定，断电备用先不拍"], "rec": 3},
+    {"key": "q_desiccant", "text": "桶盖下有干燥剂仓吗？", "why": "决定画不画干燥剂和更换场景", "options": ["有，随附干燥剂", "有，需要另买", "没有", "不确定，先不拍"], "rec": 3},
+    {"key": "q_display", "decides": ["display"], "text": "底座有屏幕或按键吗？", "why": "决定控制面板长什么样", "options": ["有屏幕", "只有按键", "都没有，靠 App", "不确定，面板先不特写"], "rec": 3},
+    {"key": "q_wash", "text": "哪些部件可以水洗？", "why": "决定拆洗图里什么能碰水", "options": ["桶、盆、托盘可水洗，底座不能", "全部可水洗", "不确定，拆洗先不拍"], "rec": 0},
+    {"key": "q_food", "text": "适用什么粮？", "why": "决定画面里粮的样子", "options": ["只用干粮", "干粮和冻干", "不确定，只画干粮"], "rec": 2}
+  ],
+  "photo_slots": [
+    {"slot": "hopper_open", "label": "打开桶盖看里面", "tip": "拍桶盖打开后桶内和干燥剂仓"},
+    {"slot": "outlet_closeup", "label": "出粮口和食盆", "tip": "拍出粮口到食盆的位置关系"},
+    {"slot": "disassembled_set", "label": "全部拆开摆好", "tip": "桶盖、粮桶、桶底座、食盆、托盘平摆"},
+    {"slot": "panel_closeup", "label": "屏幕或按键", "tip": "正面拍清楚，不要反光"},
+    {"slot": "underside", "label": "底部和电池仓", "tip": "翻过来拍底部，打开电池仓盖"},
+    {"slot": "back_ports", "label": "背面电源口", "tip": "拍电源线接口的位置"},
+    {"slot": "in_box", "label": "包装里全部东西", "tip": "全部摊开拍一张"}
+  ],
+  "size": {
+    "hint": "长和宽连前面伸出的食盆一起量；高从桌面量到桶盖顶。",
+    "dims": {
+      "L": {"short": "长", "label": "长：左右最宽处", "en": "wide", "noun": "width", "unit": "mm"},
+      "W": {"short": "宽", "label": "宽：前后最深处，含食盆", "en": "deep", "noun": "depth", "unit": "mm"},
+      "H": {"short": "高", "label": "高：桌面到桶盖顶", "en": "tall", "noun": "height", "unit": "mm"}
+    },
+    "ratios": [["H", "L"], ["W", "L"]],
+    "extra": [
+      {"key": "capacity", "label": "粮桶容量", "short": "容量", "unit": "L", "en": "a {v} liter food hopper"},
+      {"key": "bowl_diameter", "label": "食盆直径", "short": "盆径", "unit": "cm", "en": "the bowl is about {v} cm across"}
+    ]
+  },
+  "pitfalls": [
+    "粮的落点不对：必须从出粮口落进食盆，不能从桶侧面或盆外落",
+    "透明粮桶画成不透明，或看不出桶里有多少粮",
+    "食盆偏离出粮口，或盆太小、太浅",
+    "编造屏幕和 App 界面上的文字、数字、时间",
+    "单盆画成双盆，或双盆漏画分流件",
+    "加粮时桶盖还盖着",
+    "宠物和喂食器比例失真，头比盆还小",
+    "拆洗图里底座和可水洗部件一起冲洗，或漏画桶底座",
+    "电池、干燥剂画在不对的位置",
+    "粮粒比出粮口还大，或飘在空中"
+  ],
+  "forbidden": [
+    "永不卡粮",
+    "控制体重、治疗肥胖或改善宠物健康",
+    "保证宠物不会偷吃、不会把它弄倒",
+    "整机可水洗或可进洗碗机（没有证明）",
+    "断电后能用多少天（没有测试）",
+    "兽医推荐或认证",
+    "保鲜多少天、粮不会变质（没有检测）",
+    "精准出粮到克（没有实测数据）"
+  ],
+  "selling_visuals": [
+    {"point": "大容量，少加粮", "proof": "装满粮的透明粮桶，配尺寸标注"},
+    {"point": "定时定量，出门也放心", "proof": "粮落进食盆；设置界面只用卖家给的真实截图"},
+    {"point": "防潮保鲜", "proof": "桶盖打开，露出干燥剂仓和密封圈"},
+    {"point": "好拆洗", "proof": "全部部件拆开平摆，标出能水洗的"},
+    {"point": "断电备用", "proof": "电池仓打开装电池的特写"},
+    {"point": "摄像头看宠物", "proof": "镜头特写；App 画面只用卖家给的真实截图"},
+    {"point": "双盆多宠", "proof": "两只宠物各在一个盆前，分流件特写"}
+  ],
+  "learned": [],
+  "sources": [
+    {"url": "https://petlibro.com/pages/how-do-i-disassemble-and-clean-the-granary-smart-feeder-af103-plaf103", "used_for": "拆洗步骤、部件名称、哪些能水洗", "opened": true},
+    {"url": "docs/PET_APPLIANCE_SELLING_POINT_VISUAL_STANDARD_v1.0.md", "used_for": "第 5 节喂食器卖点（历史文档，只作参考）", "opened": true}
+  ]
+}

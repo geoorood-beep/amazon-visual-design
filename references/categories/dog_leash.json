@@ -1,0 +1,122 @@
+{
+  "id": "dog_leash",
+  "name": "狗牵引绳",
+  "version": 1,
+  "updated": "2026-11-19",
+  "form": "扁平",
+  "basis": "2026-11-19 联网整理：品牌页面都没能完整打开，内容来自说明书和产品页的搜索摘要，加品类常识。全部是品类常识（推定），不是某个产品的事实。",
+  "aliases": ["狗牵引绳", "牵引绳", "狗绳", "遛狗绳", "牵狗绳", "宠物牵引绳", "伸缩牵引绳", "自动伸缩牵引绳", "免提牵引绳", "弹力牵引绳", "防爆冲牵引绳", "P绳", "dog leash", "dog lead", "retractable leash", "retractable dog leash", "hands free dog leash", "bungee leash", "slip lead", "traffic handle leash", "reflective dog leash", "rope leash", "leash", "lead for dogs"],
+  "cues": ["一条细长的扁带或圆绳，一头是手柄环，另一头是金属扣", "金属扣用来扣在狗项圈或胸背带的 D 环上", "伸缩款有一个手握的塑料壳，带出绳口和刹车按钮", "免提款带腰带和弹力段，靠近狗的一端常有第二个短手柄", "常见反光缝线，织带或编织圆绳"],
+  "variants": [
+    {"id": "flat", "name": "标准扁带/圆绳", "cue": "一整条织带或编织绳，两头分别是手柄和扣", "adds": []},
+    {"id": "retractable", "name": "伸缩款", "cue": "手握塑料壳，带刹车按钮，绳或带从壳里伸出来", "adds": ["housing", "brake_button", "lock_slider", "retract_cord", "belt_clip"], "form": "立体"},
+    {"id": "bungee", "name": "弹力减震款", "cue": "绳中间有一段弹力芯或松紧段", "adds": ["bungee_section"]},
+    {"id": "hands_free", "name": "免提腰带款", "cue": "带可调腰带或斜挎带，绳连在腰带上", "adds": ["waist_belt", "bungee_section"]},
+    {"id": "slip", "name": "P 绳（套绳）", "cue": "没有扣，一头是能滑动的圈，直接套在狗脖子上", "adds": ["slip_ring"]},
+    {"id": "set", "name": "含项圈或胸背带的套装", "cue": "详情页同时卖牵引绳和项圈或胸背带", "adds": []}
+  ],
+  "parts": [
+    {"key": "lead_body", "name": "绳身", "en": "leash webbing or rope", "type": "组成部件", "parent": "", "where": "连接手柄和金属扣的那一整条", "visible": "全程看得见", "detach": "不能拆", "variant": "", "pitfall": "全长粗细、花纹和颜色变来变去，或自己打结", "refs": ["whole", "webbing", "rope", "lead_body"]},
+    {"key": "handle", "name": "手柄", "en": "loop handle", "type": "组成部件", "parent": "lead_body", "where": "人手那一头缝成的环，可能带软垫", "visible": "看得见", "detach": "不能拆", "variant": "", "pitfall": "手柄和手融在一起，或变成两个手柄", "refs": ["handle"]},
+    {"key": "padding", "name": "手柄软垫", "en": "padded handle grip", "type": "组成部件", "parent": "handle", "where": "手柄里面的泡棉或网布", "visible": "看得见（有软垫时）", "detach": "不能拆", "variant": "", "pitfall": "没有软垫的款画成厚软垫", "refs": ["padding"]},
+    {"key": "traffic_handle", "name": "近狗端短手柄", "en": "traffic handle near the clip", "type": "组成部件", "parent": "lead_body", "where": "靠近金属扣的小环，临时收短用", "visible": "看得见（有这个设计时）", "detach": "多数不能拆", "variant": "", "pitfall": "画成两个手柄挤在同一处，或悬在绳中间", "refs": ["traffic_handle"]},
+    {"key": "snap_hook", "name": "金属扣", "en": "metal snap hook", "type": "组成部件", "parent": "lead_body", "where": "狗那一头，扣在项圈或胸背带的 D 环上", "visible": "看得见", "detach": "不能拆", "variant": "", "pitfall": "扣在毛或脖子上而不是 D 环上，或画成两个扣", "refs": ["snap_hook", "hook", "clip"]},
+    {"key": "swivel", "name": "旋转头", "en": "swivel", "type": "组成部件", "parent": "snap_hook", "where": "扣和绳身之间，能转，减少拧绞", "visible": "看款式", "detach": "不能拆", "variant": "", "pitfall": "画成很粗的一整块金属", "refs": ["swivel"]},
+    {"key": "d_ring", "name": "绳上配件环", "en": "accessory D-ring", "type": "组成部件", "parent": "lead_body", "where": "靠近手柄的小环，挂便便袋盒用", "visible": "看款式", "detach": "不能拆", "variant": "", "pitfall": "和项圈上的 D 环搞混", "refs": ["d_ring"]},
+    {"key": "reflective_stitch", "name": "反光缝线", "en": "reflective stitching", "type": "组成部件", "parent": "lead_body", "where": "沿绳身缝进去的反光线", "visible": "看款式", "detach": "不能拆", "variant": "", "pitfall": "白天画成荧光发亮", "refs": ["reflective"]},
+    {"key": "bungee_section", "name": "弹力段", "en": "bungee shock-absorbing section", "type": "组成部件", "parent": "lead_body", "where": "绳身中间一段弹力芯，拉紧时变长", "visible": "看得见", "detach": "不能拆", "variant": "bungee", "pitfall": "松和紧的时候长度一样", "refs": ["bungee"]},
+    {"key": "waist_belt", "name": "腰带", "en": "adjustable waist belt", "type": "组成部件", "parent": "lead_body", "where": "免提款系在人腰上，绳连在上面", "visible": "看得见", "detach": "有的能拆", "variant": "hands_free", "pitfall": "画成手里握着绳同时又系着腰带", "refs": ["waist_belt", "belt"]},
+    {"key": "slip_ring", "name": "滑动圈", "en": "sliding slip ring", "type": "组成部件", "parent": "lead_body", "where": "P 绳一头的圈，绳穿过它形成活套", "visible": "看得见", "detach": "不能拆", "variant": "slip", "pitfall": "P 绳又画上金属扣", "refs": ["slip_ring"]},
+    {"key": "housing", "name": "伸缩壳", "en": "retractable handle housing", "type": "组成部件", "parent": "", "where": "伸缩款手握的塑料壳，里面是弹簧和线轮", "visible": "看得见", "detach": "不能拆", "variant": "retractable", "pitfall": "出绳口位置错，或画出两个出绳口", "refs": ["housing"]},
+    {"key": "brake_button", "name": "刹车按钮", "en": "brake button", "type": "组成部件", "parent": "housing", "where": "壳上拇指的位置，按住绳就停", "visible": "看得见", "detach": "不能拆", "variant": "retractable", "pitfall": "画到壳背面或消失", "refs": ["brake", "button"]},
+    {"key": "lock_slider", "name": "锁定滑钮", "en": "lock slider", "type": "组成部件", "parent": "housing", "where": "刹车按钮旁边，推上去锁住绳长", "visible": "看得见", "detach": "不能拆", "variant": "retractable", "pitfall": "和刹车按钮画成一个", "refs": ["lock"]},
+    {"key": "retract_cord", "name": "伸缩绳/带", "en": "retractable cord or tape", "type": "组成部件", "parent": "housing", "where": "从壳的出绳口伸出，末端接金属扣", "visible": "拉出来的部分看得见", "detach": "不能拆", "variant": "retractable", "pitfall": "从壳的侧面或顶上伸出，或粗细不一", "refs": ["cord", "tape"]},
+    {"key": "belt_clip", "name": "挂腰夹", "en": "belt clip", "type": "随附配件", "parent": "housing", "where": "部分伸缩款壳上的小夹子", "visible": "看款式", "detach": "看款式", "variant": "retractable", "pitfall": "没有这个部件时凭空加上", "refs": ["belt_clip"]},
+    {"key": "poop_bag_dispenser", "name": "便便袋盒", "en": "poop bag dispenser", "type": "随附配件", "parent": "d_ring", "where": "挂在手柄附近的环上或壳上，里面是卷装袋", "visible": "看款式", "detach": "能拆", "variant": "", "pitfall": "卖家没附带却画上", "refs": ["dispenser"]},
+    {"key": "poop_bags", "name": "便便袋", "en": "poop bags", "type": "耗材", "parent": "poop_bag_dispenser", "where": "卷在袋盒里", "visible": "通常看不见", "detach": "用完补", "variant": "", "pitfall": "没附带却画出来", "refs": []},
+    {"key": "collar_harness", "name": "项圈/胸背带", "en": "collar or harness with a D-ring", "type": "宿主产品", "parent": "", "where": "穿在狗身上，牵引绳扣在它的 D 环上", "visible": "看得见", "detach": "单独的东西", "variant": "", "pitfall": "绳直接绕在脖子上没有项圈；没附带却抢了主角", "refs": ["collar", "harness"]},
+    {"key": "dog", "name": "狗", "en": "dog", "type": "外部物品", "parent": "", "where": "绳的另一头", "visible": "按场景", "detach": "—", "variant": "", "pitfall": "绳穿过狗的身体", "refs": []},
+    {"key": "walker_hand", "name": "人手", "en": "walker's hand", "type": "外部物品", "parent": "", "where": "握着手柄", "visible": "按场景", "detach": "—", "variant": "", "pitfall": "手指数量不对，或绳穿过手掌", "refs": []}
+  ],
+  "states": [
+    {"id": "assembled", "name": "日常使用", "keywords": ["使用", "日常", "遛狗", "walking", "use"], "show": "绳一头在人手里，另一头扣在狗项圈或胸背带的 D 环上", "hide": "壳里面和弹簧", "never": "绳穿过狗的身体；出现两个扣"},
+    {"id": "walking_slack", "name": "松绳散步", "keywords": ["散步", "松绳", "舒适", "slack", "walk"], "show": "绳自然下垂成弧线，狗在身边", "hide": "手心细节", "never": "绳绷得笔直或打结"},
+    {"id": "under_tension", "name": "拉紧受力", "keywords": ["拉紧", "爆冲", "减震", "拉力", "结实", "pull", "tension"], "show": "绳绷直，弹力款能看出拉长，狗往前冲", "hide": "", "never": "绳穿过狗的身体；手柄脱手"},
+    {"id": "retractable_states", "name": "伸缩：放出、锁住、收回", "keywords": ["伸缩", "锁定", "收回", "一键", "extend", "lock", "retract"], "show": "放出时绳从出绳口伸出；锁住时长度固定；收回时只露出扣", "hide": "壳里面", "never": "绳从壳的错误位置伸出"},
+    {"id": "hands_free_worn", "name": "腰带佩戴", "keywords": ["免提", "腰带", "跑步", "hands free", "waist", "running"], "show": "人腰上系着带子，绳从腰带连到狗", "hide": "", "never": "人手又握着绳"},
+    {"id": "clip_closeup", "name": "扣到项圈的特写", "keywords": ["金属扣", "卡扣", "D环", "扣", "clip", "hook", "carabiner"], "show": "金属扣扣在项圈或胸背带的 D 环上，扣门是关上的", "hide": "", "never": "扣在毛上；扣门没关"},
+    {"id": "stored", "name": "收纳", "keywords": ["收纳", "便携", "挂", "stored", "coiled"], "show": "整齐盘起来或挂在挂钩上，手柄和扣露在外面", "hide": "", "never": "绳打结；塞进盒子"}
+  ],
+  "questions": [
+    {"key": "q_type", "decides": ["flat", "retractable", "bungee", "hands_free", "slip"], "text": "是哪种牵引绳？", "why": "不同类型的部件和用法完全不同", "options": ["标准扁带/圆绳", "伸缩款", "弹力减震款", "免提腰带款", "P 绳（套绳）", "不确定，先按照片画"], "rec": 5},
+    {"key": "q_length", "text": "绳长大概多少？", "why": "决定绳在画面里的长度，和狗的大小对得上", "options": ["约 1.2 米（4 英尺）", "约 1.8 米（6 英尺）", "长度可调", "不确定，长度先按照片"], "rec": 3},
+    {"key": "q_handle", "text": "手柄是什么样的？", "why": "决定手柄数量和有没有软垫", "options": ["单手柄，带软垫", "单手柄，没软垫", "还有一个近狗端短手柄", "不确定，手柄先按照片"], "rec": 3},
+    {"key": "q_hook", "text": "金属扣是哪种？", "why": "扣的形状决定特写和扣在 D 环上的画法", "options": ["弹簧钩", "带旋转头的钩", "带锁的登山扣", "不确定，扣不特写"], "rec": 3},
+    {"key": "q_reflective", "text": "有反光缝线吗？", "why": "决定能不能拍夜间反光", "options": ["有，整条都有", "有，只有一段", "没有", "不确定，夜景先不拍"], "rec": 3},
+    {"key": "q_collar", "text": "附带项圈或胸背带吗？", "why": "决定狗身上穿的是不是你卖的东西", "options": ["含项圈", "含胸背带", "不含，狗戴普通项圈", "不确定，项圈不特写"], "rec": 2},
+    {"key": "q_dispenser", "text": "带便便袋盒或其他附件吗？", "why": "没附带的东西不能画", "options": ["带便便袋盒", "带别的附件（写在补充里）", "都不带", "不确定，附件先不画"], "rec": 2},
+    {"key": "q_dog", "text": "适合多大的狗？", "why": "决定画面里狗的大小和绳的粗细比例", "options": ["小型犬", "中型犬", "大型犬", "不确定，先画中型犬"], "rec": 3}
+  ],
+  "photo_slots": [
+    {"slot": "full_length", "label": "整条拉直平铺", "tip": "平放拉直，手柄和扣都露出来，旁边放一把尺子"},
+    {"slot": "hook_closeup", "label": "金属扣特写", "tip": "拍清扣的形状和旋转头"},
+    {"slot": "handle_closeup", "label": "手柄特写", "tip": "拍软垫和缝线"},
+    {"slot": "clipped_on_dring", "label": "扣在项圈 D 环上", "tip": "拍真实的 D 环，扣门关上"},
+    {"slot": "webbing_detail", "label": "绳身材质特写", "tip": "拍编织纹理和反光线"},
+    {"slot": "in_hand", "label": "手握着的样子", "tip": "定大小用，看手柄和手的比例"},
+    {"slot": "retractable_housing", "label": "伸缩壳和按钮", "tip": "伸缩款才拍：刹车按钮和出绳口"},
+    {"slot": "worn_waist", "label": "系在腰上", "tip": "免提款才拍"},
+    {"slot": "coiled", "label": "盘起来收纳", "tip": "拍盘好的样子"}
+  ],
+  "size": {
+    "hint": "绳长从手柄末端量到金属扣末端，拉直量。圆绳的宽填直径，厚不用填。",
+    "dims": {
+      "L": {"short": "绳长", "label": "绳长：手柄末端到扣末端", "en": "long", "noun": "length", "unit": "cm"},
+      "W": {"short": "绳宽", "label": "绳宽：带子最宽处", "en": "wide", "noun": "width", "unit": "mm"},
+      "H": {"short": "厚", "label": "厚：压平后的厚度", "en": "thick", "noun": "thickness", "unit": "mm"}
+    },
+    "ratios": [["L", "W"], ["W", "H"]],
+    "extra": [
+      {"key": "handle_loop", "label": "手柄环长度", "short": "手柄", "unit": "cm", "en": "the handle loop is about {v} cm long"},
+      {"key": "hook_len", "label": "金属扣长度", "short": "扣长", "unit": "cm", "en": "the snap hook is about {v} cm long"},
+      {"key": "max_cord", "label": "伸缩款最长能放出", "short": "最长", "unit": "m", "en": "the cord extends up to {v} m"}
+    ]
+  },
+  "pitfalls": [
+    "金属扣扣在狗毛或脖子上，而不是项圈或胸背带的 D 环上",
+    "绳穿过狗的身体或项圈，和项圈缠在一起",
+    "画出两个扣，或扣长在绳的中间",
+    "整条绳的粗细、颜色、花纹不一致",
+    "手柄和手融在一起，手指数量不对，或绳穿过手掌",
+    "绳打结或乱缠，出现不可能的缠绕",
+    "绳长和狗的大小对不上，比如大狗配很短的绳",
+    "伸缩款的绳从壳的侧面或顶上伸出，或有两个出绳口",
+    "弹力段松和紧的时候看不出区别",
+    "免提款里人既系着腰带又握着绳"
+  ],
+  "forbidden": [
+    "不会断、扯不断",
+    "保证不打结",
+    "能纠正或阻止狗拉扯",
+    "防咬、咬不坏",
+    "没有来源的拉力、承重数字",
+    "适合任何体型的狗（没有依据）",
+    "防水、能用多少年（没有测试）"
+  ],
+  "selling_visuals": [
+    {"point": "手柄舒服", "proof": "手柄特写，手握着的状态"},
+    {"point": "夜间反光", "proof": "夜里灯光下反光线亮起来（卖家确认有反光）"},
+    {"point": "弹力减震", "proof": "拉紧时弹力段变长，和放松时对比"},
+    {"point": "单手就能扣上", "proof": "扣到 D 环上的特写"},
+    {"point": "近狗端短手柄", "proof": "过马路时手握短手柄把狗收近"},
+    {"point": "伸缩能锁定", "proof": "伸缩壳特写，按钮在拇指位置"},
+    {"point": "免提跑步", "proof": "人系着腰带跑步，狗在旁边"},
+    {"point": "绳身耐磨", "proof": "编织纹理近景，不夸大数据"}
+  ],
+  "learned": [],
+  "sources": [
+    {"url": "https://flexi.de/us/flexi-us/wp-content/uploads/2021/07/USA_bpz_cord_000719.pdf", "used_for": "伸缩款部件名称（仅搜索摘要）", "opened": false},
+    {"url": "https://cdn-shopkit.com/usercontent/k9master/media/files/3547022-flat-out-leash-product-sheet.pdf", "used_for": "标准款的软垫手柄、第二手柄、旋转扣、配件环（仅搜索摘要）", "opened": false},
+    {"url": "https://www.amazon.com/Fida-Zipper-Bungee-Reflective-Straps/dp/B0DT92296F", "used_for": "免提款的腰带、弹力段、可拆短手柄（仅搜索摘要）", "opened": false}
+  ]
+}
