@@ -79,9 +79,10 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
 .blind{background:var(--warn-soft);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:13.5px;margin:6px 0}
 .blind b{color:var(--warn)}
 .blind .sub,.blindsum .sub{color:var(--sub);font-size:12.5px}
+.blindhint{background:var(--chip);color:var(--sub);border-radius:8px;padding:5px 10px;font-size:12.5px;margin:6px 0}
 .blindsum{border-color:var(--warn)}
 .blindsum.ok{border-color:var(--ok)}
-.blindsum a{font-weight:800;margin-right:6px}
+.blindsum a{font-weight:800;margin-right:6px;color:var(--accent)}
 .zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
 .zoom img{max-width:96vw;max-height:94vh}
 </style>
@@ -187,7 +188,10 @@ button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line
       (b.fail.length ? '<div class="blind">' + b.fail.map(function (x) {
         return '<div><b>' + esc(x.id) + '</b> ' + esc(x.question) + '<br>它看到「' + esc(x.answer) + '」，产品应该是「' +
           esc((x.expect || []).join("」或「")) + '」' + (x.image ? '<span class="sub">（' + esc(x.image) + '）</span>' : "") + '</div>';
-      }).join("") + '</div>' : ""));
+      }).join("") + '</div>' : "")) +
+      ((b.hints || []).length && !b.unseen ? '<div class="blindhint">提示（不算不合格）：' + b.hints.map(function (x) {
+        return esc(x.question) + '它看到「' + esc(x.answer) + '」';
+      }).join("；") + '</div>' : "");
     var mine = saved[it.slot] || {text: "", tags: []};
     h.push('<section class="item" id="item-' + i + '"><div class="media">' + media + '</div><div class="body">' +
       '<div class="top"><span class="slot">' + esc(it.slot) + '</span><span class="kind">' + esc(it.kind || "") +

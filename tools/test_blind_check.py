@@ -131,6 +131,19 @@ class ScoreTest(unittest.TestCase):
         self.assertFalse(entry["passed"])
         self.assertEqual(entry["fix"], "the window is opposite the head")
 
+    def test_hint_questions_are_shown_but_never_fail(self):
+        checks = [{"id": "K0", "question": "像不像参考图？", "options": ["像", "不像"], "expect": ["像"], "may_hide": False,
+                   "states": [], "status": "提示", "source": "s", "fix_en": "copy it", "ref": ""}]
+        entry = bc.score(checks, {"K0": "不像"})
+        self.assertTrue(entry["passed"])
+        self.assertEqual(entry["summary"]["提示"], 1)
+        self.assertEqual(entry["fix"], "")
+        out = io.StringIO()
+        entry.update(image="x.png", slot="S1", seen=True)
+        bc.report(entry, out)
+        self.assertIn("! K0（提示，不算不合格）", out.getvalue())
+        self.assertNotIn("V1 FAIL", out.getvalue())
+
     def test_answers_are_found_in_chatty_output(self):
         self.assertEqual(bc.parse_answers('好的。\n{"K1": "对"}\n'), {"K1": "对"})
         self.assertEqual(bc.parse_answers('{"answers": {"K1": "对"}}'), {"K1": "对"})

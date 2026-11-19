@@ -14,7 +14,9 @@ the story. This script compares its answers with what the product card says.
 
 Questions: references/checks_common.csv (every product) + products/<product>/checks.csv.
 A product row with the same id replaces the common one; status 不用 drops it. Only rows with
-status 已确认 decide pass or fail; 待确认 rows are shown for reference.
+status 已确认 decide pass or fail. 提示 rows (subjective ones such as "same as the reference?",
+which in trials also flagged near-perfect images) are shown on the review form but never fail
+an image; 待确认 rows (from unconfirmed guesses) are shown for reference.
 
 Results go to outputs/<product>/blind_check.json (merged by image file name). An image with
 any 已确认 answer wrong is a V1 failure: redo it with the printed FIX line (4.3).
@@ -34,7 +36,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 COMMON = os.path.join("references", "checks_common.csv")
 COLUMNS = ["id", "question", "options", "expect", "may_hide", "states", "status", "source", "fix_en", "ref"]
-STATUSES = ("已确认", "待确认", "不用")
+STATUSES = ("已确认", "提示", "待确认", "不用")
 HIDE_PREFIX = ("看不到", "看不清")
 DEFAULT_STATE = "assembled"
 CODEX = ("codex", "exec", "--skip-git-repo-check", "-s", "read-only")
@@ -255,11 +257,13 @@ def score(checks, answers):
         v = verdict(c, answers.get(c["id"]))
         counts = c["status"] == "已确认"
         results.append({"id": c["id"], "question": c["question"], "answer": answers.get(c["id"]),
-                        "expect": c["expect"], "verdict": v, "counts": counts, "fix_en": c["fix_en"]})
+                        "expect": c["expect"], "verdict": v, "counts": counts, "hint": c["status"] == "提示",
+                        "fix_en": c["fix_en"]})
         if counts and v in ("错", "无效", "没答"):
             fails.append(c)
     summary = {k: sum(1 for r in results if r["counts"] and r["verdict"] == k) for k in ("对", "错", "看不到", "无效", "没答")}
     summary["参考"] = sum(1 for r in results if not r["counts"])
+    summary["提示"] = sum(1 for r in results if r["hint"] and r["verdict"] == "错")
     fix = "; ".join(c["fix_en"] for c in fails if c["fix_en"])
     return {"results": results, "summary": summary, "passed": not fails, "fix": fix}
 
@@ -294,6 +298,8 @@ def report(entry, out):
     for r in entry["results"]:
         if r["counts"] and r["verdict"] in ("错", "无效", "没答"):
             out.write("  ✗ %s %s\n    答「%s」，应为「%s」\n" % (r["id"], r["question"], r["answer"], "」或「".join(r["expect"])))
+        elif r.get("hint") and r["verdict"] == "错":
+            out.write("  ! %s（提示，不算不合格）答「%s」\n" % (r["id"], r["answer"]))
         elif not r["counts"] and r["verdict"] == "错":
             out.write("  ? %s（待确认，不算）答「%s」\n" % (r["id"], r["answer"]))
     if not entry["passed"] and entry["fix"]:

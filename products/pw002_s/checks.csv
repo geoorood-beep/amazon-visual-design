@@ -1,5 +1,5 @@
 id,question,options,expect,may_hide,states,status,source,fix_en,ref
-K0,第二张图是这款产品的参考照片。第一张图里的饮水机和它是同一款吗？只看产品本身的形状、比例和部件，不看场景和颜色明暗。,是同一款，形状和部件都对得上;像，但形状、比例或部件有明显不同;不是同一款;看不到产品,是同一款，形状和部件都对得上,yes,,已确认,外形识别点（2026-11-18 造型基准整体确认）,"copy the fountain exactly from the product reference: same rounded-rectangle steel basin, same proportions, same black control head",products/pw002_s/ref/baseline_front.png
+K0,第二张图是这款产品的参考照片。第一张图里的饮水机和它是同一款吗？只看产品本身的形状、比例和部件，不看场景和颜色明暗。,是同一款，形状和部件都对得上;像，但形状、比例或部件有明显不同;不是同一款;看不到产品,是同一款，形状和部件都对得上,yes,,提示,外形识别点（2026-11-18 造型基准整体确认）,"copy the fountain exactly from the product reference: same rounded-rectangle steel basin, same proportions, same black control head",products/pw002_s/ref/baseline_front.png
 K1,饮水机顶上有一个黑色的控制头，机身外壁有一条竖着的深色水位窗。它们在产品的哪两侧？,相对的两侧（一前一后）;同一侧;相邻的两侧（一个在侧面）;看不到水位窗;看不到控制头,相对的两侧（一前一后）,yes,,已确认,外形识别点 2、4：水位窗只在正面；控制头在顶盘后端中央,"the water-level window is only on the front wall, on the side opposite the black control head; the side and back walls are plain brushed steel",
 K2,黑色控制头在顶部盘面的什么位置？,一条长边的中间;一个角上;盘面正中间;一条短边的中间;看不到控制头,一条长边的中间,yes,,已确认,外形识别点 3：控制头固定在顶盘后端中央，左右不顶到外沿,"the black control head sits at the middle of the rear long edge of the tray, never at a corner or in the center",
 K3,机身外壁上看得见几条竖着的水位窗？,0;1;2 条或更多,0;1,no,,已确认,外形识别点 2：只有正面有一条水位窗,the basin has exactly one vertical water-level window and it is on the front wall,

@@ -207,11 +207,14 @@ def blind_summary(blind, paths):
     found = [blind[os.path.basename(p)] for p in paths if os.path.basename(p) in blind]
     if not found:
         return {}
-    fails, right, unseen = [], 0, False
+    fails, hints, right, unseen = [], [], 0, False
     for e in found:
         if e.get("seen") is False:
             unseen = True
         for r in e.get("results", []):
+            if r.get("hint") and r.get("verdict") == "错":
+                hints.append({"image": os.path.basename(e.get("image", "")), "id": r.get("id"), "question": r.get("question"),
+                              "answer": r.get("answer"), "expect": r.get("expect", [])})
             if not r.get("counts"):
                 continue
             if r.get("verdict") in ("错", "无效", "没答"):
@@ -219,7 +222,7 @@ def blind_summary(blind, paths):
                               "answer": r.get("answer"), "expect": r.get("expect", [])})
             elif r.get("verdict") == "对":
                 right += 1
-    return {"ran": True, "fail": fails, "right": right, "unseen": unseen}
+    return {"ran": True, "fail": fails, "hints": hints, "right": right, "unseen": unseen}
 
 
 def entry(card, facts, blocks, folder, out_path, mode, blind=None):
