@@ -344,6 +344,18 @@ class FastPathTest(unittest.TestCase):
         self.assertIn("卡片以外的文字最多三行", skill)
         self.assertIn("正常情况下用户只点两次", skill)
 
+    def test_first_message_never_drops_a_choice(self):
+        """Eight cards at most: all-recommended + five kinds = six, so at most two judgment cards (v3.43)."""
+        guide = self.read("UTA_STYLE.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        for text in (guide, skill):
+            self.assertIn("一张都不能少", text)
+            self.assertIn("判断题最多再发两张", text)
+            self.assertNotIn("判断题（最多三张", text)
+        self.assertIn("第 1 条  ★全部按推荐 + 判断题（最多两张）+ 范围、卖点分配、故事、情绪基调、风格各一张卡", skill)
+        kinds = ("范围", "卖点分配", "故事", "情绪基调", "风格")
+        self.assertLessEqual(1 + len(kinds) + 2, 8)
+
     def test_read_check_is_one_line(self):
         skill = self.read("grok", "grok-UTAstyle-skill.md")
         self.assertIn("已读取：规范 <版本句原文>", skill)
