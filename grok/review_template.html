@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>验收表单</title>
+<!--
+  UTA style 验收表单（出图之后给人看、给人填的版本）。
+  不手改这个文件：Codex 运行 tools/review_form.py，脚本只替换下面 id 为 sheet 的 JSON，
+  图片直接嵌进网页，单独一个文件在哪都能打开。规则见 UTA_STYLE.md 4.5。
+  用户只给不满意的图写建议，不写的默认通过；点「生成验收结果」，把结果原样发给 Grok。
+-->
+<style>
+:root{
+  --bg:#f6f2ec; --card:#fffdf9; --ink:#1f2630; --sub:#5d6673; --line:#e4ddd2;
+  --chip:#efe8dc; --accent:#b4572e; --accent-soft:#f6e3d8; --ok:#2f7a4f; --ok-soft:#e3f2e8;
+  --warn:#a15c00; --warn-soft:#fbefd9; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#16181c; --card:#1f2228; --ink:#eceae6; --sub:#a3a9b3; --line:#30343c;
+    --chip:#2a2e35; --accent:#e58a5c; --accent-soft:#3a2a22; --ok:#6fcf97; --ok-soft:#1f3328;
+    --warn:#f2b94b; --warn-soft:#3a3020; --shadow:none;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 140px}
+header h1{font-size:26px;margin:0 0 4px}
+header .meta{color:var(--sub);display:flex;flex-wrap:wrap;gap:6px 16px}
+.how{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:14px 0 6px;font-size:14px}
+.how b{color:var(--accent)}
+.item{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin:16px 0;overflow:hidden;
+  display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+.item.fix{border-color:var(--warn);box-shadow:0 0 0 2px var(--warn-soft)}
+@media (max-width:820px){.item{grid-template-columns:1fr}}
+.media{background:var(--chip);padding:12px;display:flex;flex-direction:column;gap:10px}
+.media figure{margin:0}
+.media img{width:100%;border-radius:10px;display:block;cursor:zoom-in;background:#ddd}
+.media figcaption{font-size:12px;color:var(--sub);margin-top:3px}
+.noimg{min-height:220px;border-radius:10px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--sub);text-align:center;padding:12px}
+.body{padding:16px 18px 18px;display:flex;flex-direction:column}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.slot{font-weight:800;font-size:22px}
+.kind{color:var(--sub);font-size:13px}
+.badge{border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:700}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.badge.none{background:var(--chip);color:var(--sub)}
+.state{margin-left:auto}
+.fact{margin:8px 0 2px;font-weight:700}
+.fact span{font-weight:400;color:var(--sub)}
+.row{font-size:14px;margin:4px 0}
+.row i{font-style:normal;color:var(--sub);display:inline-block;min-width:5.5em}
+.seen{background:var(--bg);border-radius:8px;padding:6px 10px;font-size:13.5px;margin:6px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{background:var(--chip);border-radius:8px;padding:2px 9px;font-size:12.5px}
+.chip i{font-style:normal;color:var(--sub);margin-right:4px}
+.copy{border-left:4px solid var(--accent);background:var(--bg);border-radius:0 10px 10px 0;padding:8px 12px;margin:8px 0}
+.copy .eyebrow{font-size:11px;letter-spacing:2px;color:var(--accent);font-weight:700;text-transform:uppercase}
+.copy .headline{font-size:19px;font-weight:800;line-height:1.25}
+.copy .subtitle{color:var(--sub)}
+.copy .hero{color:var(--accent);font-weight:800}
+details.checks{font-size:12.5px;color:var(--sub);margin:4px 0}
+.review{margin-top:auto;padding-top:10px;border-top:1px dashed var(--line)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.tag{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:2px 10px;font-size:12.5px;cursor:pointer}
+.tag.on{background:var(--warn-soft);border-color:var(--warn);color:var(--warn);font-weight:700}
+textarea{width:100%;min-height:68px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;background:var(--bg);color:var(--ink);resize:vertical}
+textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(0,0,0,.06)}
+.bar .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.bar .count{flex:1;min-width:220px}
+button.main{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer}
+#out{display:none;max-width:1180px;margin:0 auto;padding:0 16px 12px}
+#out textarea{min-height:150px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+#out .tip{font-size:13px;color:var(--sub);margin:4px 0}
+.zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+.zoom img{max-width:96vw;max-height:94vh}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="bar">
+  <div id="out">
+    <div class="tip">复制下面整段，原样发给 Grok。Grok 会把建议改进卡里，只把要改的图交给 Codex 返工。</div>
+    <textarea id="result" readonly></textarea>
+  </div>
+  <div class="in">
+    <div class="count" id="count"></div>
+    <button class="ghost" id="clear" type="button">清空建议</button>
+    <button class="main" id="make" type="button">生成验收结果</button>
+  </div>
+</div>
+<div class="zoom" id="zoom"><img alt=""></div>
+
+<script id="sheet" type="application/json">
+{
+  "product": "round10l",
+  "round": 1,
+  "form": "outputs/round10l/review_v01.html",
+  "task": "outputs/task.md",
+  "generated": "",
+  "items": [
+    {
+      "slot": "S5", "card": "cards/round10l/S5_clean.md", "kind": "副图", "module": "",
+      "fact": "F3", "fact_text": "示例事实", "story": "示例故事", "evidence": "hands rinse the steel bowl in the sink",
+      "scene": "", "pet": "", "person": "", "lens": "",
+      "shot": {"size": "medium", "camera": "down_45", "view": "front", "light": "side"},
+      "eyebrow": "", "headline": "Headline", "subtitle": "Subtitle", "hero": "", "label": "", "fix": "",
+      "codex": {"result": "通过", "seen": "", "checks": []},
+      "images": []
+    }
+  ]
+}
+</script>
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById("sheet").textContent);
+  var TAGS = ["产品不对", "卖点看不懂", "画面瑕疵", "换场景", "换宠物或人物", "表情动作", "镜头角度", "光线", "文案", "文字位置"];
+  var KEY = "uta-review:" + data.product + ":" + data.form + ":" + (data.generated || "");
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { saved = {}; }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c];
+    });
+  }
+  function has(s) { return s && String(s).trim() && String(s).trim().toLowerCase() !== "none"; }
+  function chip(k, v) { return has(v) ? '<span class="chip"><i>' + esc(k) + '</i>' + esc(v) + '</span>' : ""; }
+  function row(k, v) { return has(v) ? '<div class="row"><i>' + esc(k) + '</i>' + esc(v) + '</div>' : ""; }
+
+  var items = data.items || [];
+  var h = [];
+  h.push('<header><h1>' + esc(data.product) + ' 验收表单 · 第 ' + esc(data.round || 1) + ' 轮</h1><div class="meta">' +
+    '<span>共 ' + items.length + ' 张</span>' + (data.task ? '<span>任务单 ' + esc(data.task) + '</span>' : "") +
+    (data.generated ? '<span>生成于 ' + esc(data.generated) + '</span>' : "") + '</div></header>');
+  h.push('<div class="how">左边是成图，右边是这张卡要它拍的内容，对照着看。<b>满意的不用动，默认通过</b>；不满意的点一下问题类型，再写一句要怎么改。全部看完点底部的「生成验收结果」，把结果发给 Grok。</div>');
+
+  items.forEach(function (it, i) {
+    var imgs = it.images || [];
+    var media = imgs.length ? imgs.map(function (m) {
+      return '<figure><img src="' + esc(m.src) + '" alt="' + esc(it.slot + " " + (m.label || "")) + '" loading="lazy">' +
+        '<figcaption>' + esc(m.label || "") + (m.name ? ' · ' + esc(m.name) : "") + '</figcaption></figure>';
+    }).join("") : '<div class="noimg">这张没有成图<br>（校验退回或还在重做，见 Codex 回报）</div>';
+    var c = it.codex || {};
+    var cls = !imgs.length ? "none" : (c.result && c.result.indexOf("通过") < 0 ? "warn" : "ok");
+    var res = !imgs.length ? "没有成图" : (c.result || "已出图");
+    var s = it.shot || {};
+    var shot = [s.size, s.camera, s.view, s.light].filter(has).join(" · ");
+    var copy = "";
+    if (has(it.headline) || has(it.label) || has(it.hero)) {
+      copy = '<div class="copy">' + (has(it.eyebrow) ? '<div class="eyebrow">' + esc(it.eyebrow) + '</div>' : "") +
+        (has(it.headline) ? '<div class="headline">' + esc(it.headline) + '</div>' : "") +
+        (has(it.subtitle) ? '<div class="subtitle">' + esc(it.subtitle) + '</div>' : "") +
+        (has(it.hero) ? '<div class="hero">' + esc(it.hero) + '</div>' : "") +
+        (has(it.label) ? '<div class="subtitle">小格标签：' + esc(it.label) + '</div>' : "") + '</div>';
+    }
+    var checks = (c.checks || []).length ? '<details class="checks"><summary>Codex 自检明细</summary>' +
+      c.checks.map(function (x) { return esc(x); }).join("<br>") + '</details>' : "";
+    var mine = saved[it.slot] || {text: "", tags: []};
+    h.push('<section class="item" id="item-' + i + '"><div class="media">' + media + '</div><div class="body">' +
+      '<div class="top"><span class="slot">' + esc(it.slot) + '</span><span class="kind">' + esc(it.kind || "") +
+      (has(it.module) ? ' · ' + esc(it.module) : "") + '</span><span class="badge ' + cls + '">Codex：' + esc(res) + '</span>' +
+      '<span class="badge state" data-state="' + i + '"></span></div>' +
+      (has(it.fact) ? '<div class="fact">' + esc(it.fact) + ' <span>' + esc(it.fact_text || "") + '</span></div>' : "") +
+      row("故事", it.story) + row("画面证据", it.evidence) +
+      (has(c.seen) ? '<div class="seen">Codex 看到的：' + esc(c.seen) + '</div>' : "") +
+      '<div class="chips">' + chip("场景", it.scene) + chip("宠物", it.pet) + chip("人物", it.person) +
+      chip("镜头", shot) + chip("特殊镜头", it.lens) + '</div>' + copy + checks +
+      (has(it.fix) ? row("上轮返工", it.fix) : "") +
+      '<div class="review"><div class="tags">' + TAGS.map(function (t) {
+        return '<button type="button" class="tag' + (mine.tags.indexOf(t) >= 0 ? " on" : "") + '" data-i="' + i + '" data-tag="' + esc(t) + '">' + esc(t) + '</button>';
+      }).join("") + '</div><textarea data-i="' + i + '" placeholder="不写 = 通过。不满意就写要怎么改，例如：猫换成金毛；标题太长；手指不自然">' +
+      esc(mine.text) + '</textarea></div></div></section>');
+  });
+  document.getElementById("app").innerHTML = h.join("");
+  document.title = (data.product || "") + " 验收表单";
+
+  function state(i) {
+    var it = items[i], mine = saved[it.slot] || {text: "", tags: []};
+    return {text: (mine.text || "").trim(), tags: mine.tags || [], hasImage: (it.images || []).length > 0};
+  }
+  function refresh() {
+    var fix = 0, pass = 0, none = 0;
+    items.forEach(function (it, i) {
+      var st = state(i), el = document.querySelector('[data-state="' + i + '"]'), sec = document.getElementById("item-" + i);
+      var needs = st.text || st.tags.length;
+      if (needs) { fix++; el.className = "badge state warn"; el.textContent = "要改"; sec.classList.add("fix"); }
+      else if (!st.hasImage) { none++; el.className = "badge state none"; el.textContent = "没有成图"; sec.classList.remove("fix"); }
+      else { pass++; el.className = "badge state ok"; el.textContent = "通过"; sec.classList.remove("fix"); }
+    });
+    document.getElementById("count").innerHTML = "通过 <b>" + pass + "</b> · 要改 <b>" + fix + "</b>" + (none ? " · 没有成图 " + none : "");
+    try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+  }
+  function mineOf(i) {
+    var slot = items[i].slot;
+    if (!saved[slot]) saved[slot] = {text: "", tags: []};
+    return saved[slot];
+  }
+  document.addEventListener("input", function (e) {
+    if (e.target.matches("textarea[data-i]")) { mineOf(+e.target.dataset.i).text = e.target.value; refresh(); }
+  });
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (t.matches(".tag")) {
+      var m = mineOf(+t.dataset.i), k = m.tags.indexOf(t.dataset.tag);
+      if (k >= 0) m.tags.splice(k, 1); else m.tags.push(t.dataset.tag);
+      t.classList.toggle("on", k < 0); refresh();
+    } else if (t.matches(".media img")) {
+      var z = document.getElementById("zoom"); z.querySelector("img").src = t.src; z.style.display = "flex";
+    } else if (t.closest("#zoom")) {
+      document.getElementById("zoom").style.display = "none";
+    }
+  });
+  document.getElementById("clear").addEventListener("click", function () {
+    if (!confirm("清空这张表单上所有建议？")) return;
+    saved = {}; document.querySelectorAll("textarea[data-i]").forEach(function (a) { a.value = ""; });
+    document.querySelectorAll(".tag.on").forEach(function (b) { b.classList.remove("on"); }); refresh();
+  });
+  document.getElementById("make").addEventListener("click", function () {
+    var pass = [], fixes = [], none = [];
+    items.forEach(function (it, i) {
+      var st = state(i);
+      if (st.text || st.tags.length) {
+        var note = st.text.replace(/\s*\n+\s*/g, "；");
+        fixes.push(it.slot + ": " + (st.tags.length ? "[" + st.tags.join("][") + "] " : "") + (note || "（只选了问题类型）"));
+      } else if (!st.hasImage) none.push(it.slot);
+      else pass.push(it.slot);
+    });
+    var lines = ["UTA-REVIEW v1", "product: " + data.product, "round: " + (data.round || 1), "form: " + (data.form || ""),
+      "pass: " + (pass.join(", ") || "none"), "fix: " + fixes.length];
+    if (none.length) lines.push("no_image: " + none.join(", "));
+    lines.push("");
+    if (fixes.length) lines = lines.concat(fixes); else lines.push("全部通过");
+    var out = document.getElementById("result");
+    out.value = lines.join("\n");
+    document.getElementById("out").style.display = "block";
+    out.focus(); out.select();
+    try { navigator.clipboard.writeText(out.value); document.getElementById("make").textContent = "已复制，再生成一次"; } catch (e) {}
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>

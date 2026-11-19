@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.37"
+VERSION = "3.38"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -37,6 +37,7 @@ POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id
 FACE_SHOWN = {"half_body", "full_body", "group"}
 V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect", "lens"} | set(POOL_FIELDS)
 MAX_STORY_WORDS = 35
+MAX_FIX_WORDS = 25  # review rework note (UTA_STYLE 2.4, 4.5)
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
 POOL_FILES = {"scenes": "scenes.csv", "pets": "pets.csv", "people": "people.csv",
               "expressions": "expressions.csv", "styles": "styles.csv", "moods": "moods.csv"}
@@ -543,6 +544,13 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
     if kind == "unknown":
         errs.append("slot 看不懂：%s" % card.slot)
         return errs
+    if not card.is_none("fix"):
+        if CJK_RE.search(card.f("fix")):
+            errs.append("fix 要写英文（它会进提示词）")
+        if len(card.f("fix").split()) > MAX_FIX_WORDS:
+            errs.append("fix 最多 %d 个英文词" % MAX_FIX_WORDS)
+        if kind == "screen" and card.module != "scene":
+            errs.append("模块卡不写 fix（写在要改的那张小格卡上，2.4）")
     if kind == "main":
         for key in V2_IMAGE_FIELDS:
             if key in card.fields and not card.is_none(key):
