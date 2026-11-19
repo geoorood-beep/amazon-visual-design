@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.43"
+VERSION = "3.44"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -434,6 +434,29 @@ def product_ref_path(card):
 
 def card_state(card):
     return card.f("product_state", "assembled").strip() or "assembled"
+
+
+DEFAULT_PRODUCT_PURPOSE = "product structure, proportions and finish only; not the scene, light or pose"
+
+
+def chosen_ref(card, views):
+    """The product reference to attach (1.4). The writer's own wins when it is registered and in the card's
+    state: they may have named one part or accessory on purpose (a product card can require that). Only a
+    missing, unregistered or wrong-state reference is replaced by the registered one closest to the card."""
+    if not views:
+        return None
+    own, state = product_ref_path(card), card_state(card)
+    for r in views:
+        if r["path"] == own and r["state"] == state:
+            return r
+    return nearest_ref(card, views)
+
+
+def product_ref_line(card, ref):
+    """refs.product for check_card: always 'path | purpose'; the writer's purpose is kept."""
+    raw = card.refs.get("product", "")
+    purpose = raw.split("|", 1)[1].strip() if "|" in raw else ""
+    return "  product: %s | %s" % (ref["path"], purpose or DEFAULT_PRODUCT_PURPOSE)
 
 
 def nearest_ref(card, views):
@@ -1388,7 +1411,7 @@ def compile_card(card, pools=None):
                     bits.append(LENS_TEXT[lens])
                 if card.refs.get("anchor", "").strip():
                     bits.append(CASE_CAMERA_TEXT)
-                ref = nearest_ref(card, (pools or {}).get("views"))
+                ref = chosen_ref(card, (pools or {}).get("views"))
                 if ref and ref["view"] != f["product_view"] and f["product_view"] in VIEW_LABEL:
                     bits.append("The product reference shows the product from %s; turn it to the view "
                                 "described here and keep every part identical." % VIEW_LABEL[ref["view"]])
@@ -1415,9 +1438,9 @@ def compile_card(card, pools=None):
                     tag = "Expression (anthropomorphic on purpose, still real fur and anatomy)"                         if expression_level(card, pools, "拟人") else "Expression"
                     val = join_sentence(val, "%s: %s." % (tag, "; ".join(looks)))
         if image and key == "refs":
-            ref = nearest_ref(card, (pools or {}).get("views"))
+            ref = chosen_ref(card, (pools or {}).get("views"))
             if ref:
-                extra = [("  product: %s" % ref["path"]) if l.strip().startswith("product:") else l for l in extra]
+                extra = [product_ref_line(card, ref) if l.strip().startswith("product:") else l for l in extra]
         out.append("%s: %s" % (key, val) if val else "%s:" % key)
         out.extend(extra)
     return out
