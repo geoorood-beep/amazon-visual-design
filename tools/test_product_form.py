@@ -25,7 +25,8 @@ class Repo:
         case.addCleanup(shutil.rmtree, self.root)
         shutil.copytree(os.path.join(ROOT, pf.CATEGORY_REL), os.path.join(self.root, pf.CATEGORY_REL))
         os.makedirs(os.path.join(self.root, "grok"))
-        shutil.copy(os.path.join(ROOT, pf.TEMPLATE_REL), os.path.join(self.root, pf.TEMPLATE_REL))
+        for name in (pf.TEMPLATE_REL, os.path.join("grok", "product_form.css"), os.path.join("grok", "product_form.js")):
+            shutil.copy(os.path.join(ROOT, name), os.path.join(self.root, name))
 
     def product(self, pid, card="", photos=(), ref_views=None):
         folder = os.path.join(self.root, "products", pid)
@@ -216,6 +217,9 @@ class BuildTest(unittest.TestCase):
             html = fh.read()
         self.assertIn('"form": "outputs/feeder_x/product_form_v02.html"', html)
         self.assertIn("data:image/", html)
+        self.assertIn("window.__utaProductFormLoaded = true", html)
+        self.assertNotIn('src="https://cdn.jsdelivr', html)
+        self.assertNotIn('href="https://cdn.jsdelivr', html)
 
     def test_text_cannot_break_out_of_the_sheet(self):
         repo = Repo(self)
@@ -227,7 +231,8 @@ class BuildTest(unittest.TestCase):
         out_path, _, missing = pf.build(repo.root, path)
         with open(out_path, encoding="utf-8") as fh:
             html = fh.read()
-        self.assertEqual(html.count("</script>"), 2)
+        self.assertNotIn("</script><b>", html)
+        self.assertIn("<\\/script><b>x<\\/b>", html)
         self.assertEqual(missing, [])
 
     def test_missing_images_are_reported_not_fatal(self):
@@ -272,7 +277,22 @@ class WiringTest(unittest.TestCase):
         for key in ("product", "summary", "questions", "parts", "states", "functions", "flow", "size", "photos"):
             self.assertIn(key, sheet)
         self.assertTrue(all(p["type"] in pf.TYPES for p in sheet["parts"]))
-        self.assertIn("UTA-PRODUCT v1", html)
+        self.assertIn("UTA-PRODUCT v1", self.read("grok", "product_form.js"))
+
+    def test_grok_copies_a_short_shell(self):
+        html = self.read("grok", "product_template.html")
+        self.assertLess(len(html.encode("utf-8")), 8000)
+        for asset in ("grok/product_form.css", "grok/product_form.js"):
+            self.assertIn('data-inline="%s"' % asset, html)
+            self.assertIn("cdn.jsdelivr.net/gh/geoorood-beep/amazon-visual-design@main/" + asset, html)
+        self.assertIn("__utaProductFormLoaded", html)
+        self.assertIn("window.__utaProductFormLoaded = true", self.read("grok", "product_form.js"))
+
+    def test_full_example_still_fits_the_form(self):
+        with open(os.path.join(ROOT, "tools", "fixtures", "product_form_pw002_s.json"), encoding="utf-8") as fh:
+            sheet = json.load(fh)
+        self.assertEqual(sheet["product"], "pw002_s")
+        self.assertTrue(all(p["type"] in pf.TYPES for p in sheet["parts"]))
 
 
 if __name__ == "__main__":

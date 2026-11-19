@@ -77,11 +77,14 @@ h2{font-size:17px;margin:28px 0 10px}
   "title": "确认表",
   "step": "第 3 步 · 确认表",
   "style": "ST01 纪实电影风",
+  "storyline": "SL1 一天里的几个瞬间",
+  "cast": "PT01;PT07;HP05",
   "images": [
     {
       "slot": "S1", "kind": "副图", "fact": "F1", "selling": "示例卖点",
       "state": "装好", "lens": "标准", "effect": "", "must_show": "水从出水口流出，水面有波纹",
       "route": "R2 家庭生活时刻",
+      "chapter": "清晨",
       "story": "一句中文故事：谁、什么时刻、什么情绪、卖点怎么被看见。",
       "learn": "学自 <案例文件名>，裂变：<改了什么>",
       "technique": "",
@@ -117,7 +120,8 @@ h2{font-size:17px;margin:28px 0 10px}
   var imgs = data.images || [];
   // count repeats of scene and pet across the set so the human sees them at a glance
   var count = {};
-  imgs.forEach(function (m) { ["scene", "pet"].forEach(function (k) { var c = code(m[k]); if (c && c !== "无") count[k + c] = (count[k + c] || 0) + 1; }); });
+  var cast = String(data.cast || "").split(/[;,+\s]+/).filter(Boolean);
+  imgs.forEach(function (m) { ["scene", "pet"].forEach(function (k) { var c = code(m[k]); if (c && c !== "无" && !(k === "pet" && cast.indexOf(c) >= 0)) count[k + c] = (count[k + c] || 0) + 1; }); });
   function isDup(k, v) { var c = code(v); return c && count[k + c] > 1; }
   function chip(label, v, k) {
     if (!v) return "";
@@ -128,11 +132,14 @@ h2{font-size:17px;margin:28px 0 10px}
   h.push('<header><h1>' + esc(data.product) + ' · ' + esc(data.title || "确认表") + '</h1><div class="meta">');
   h.push('<span class="pill">' + esc(data.step || "") + '</span>');
   if (data.style) h.push('<span>风格 <b>' + esc(data.style) + '</b></span>');
+  if (data.storyline) h.push('<span>主线 <b>' + esc(data.storyline) + '</b></span>');
+  if (data.cast) h.push('<span>角色 <b>' + esc(data.cast) + '</b>（主线里反复出现，不算重复）</span>');
   h.push('<span>共 ' + imgs.length + ' 张</span><span>红框 = 整套里重复的场景或宠物</span></div></header>');
 
   h.push('<h2>整套一览</h2><div class="strip">');
   imgs.forEach(function (m, i) {
     h.push('<a class="mini" href="#c' + i + '"><b>' + esc(m.slot) + '</b> ' + esc(m.selling || "") + '<br>' +
+      (m.chapter ? '<span>' + esc(m.chapter) + '</span><br>' : "") +
       '<span class="' + (isDup("scene", m.scene) ? "dup" : "") + '">' + esc(m.scene || "—") + '</span><br>' +
       '<span class="' + (isDup("pet", m.pet) ? "dup" : "") + '">' + esc(m.pet || "无宠物") + '</span><br>' +
       esc(m.route || "") + '</a>');
@@ -152,7 +159,7 @@ h2{font-size:17px;margin:28px 0 10px}
     h.push('<div class="body"><div class="top"><span class="slot">' + esc(m.slot) + '</span><span class="kind">' + esc(m.kind || "") +
       (m.fact ? " · " + esc(m.fact) : "") + (m.selling ? " · " + esc(m.selling) : "") + '</span>' +
       (m.route ? '<span class="route">' + esc(m.route) + '</span>' : "") + '</div>');
-    if (m.story) h.push('<div class="story">' + esc(m.story) + '</div>');
+    if (m.story) h.push('<div class="story">' + (m.chapter ? '【' + esc(m.chapter) + '】' : "") + esc(m.story) + '</div>');
     var learn = [m.learn, m.technique ? "手法 " + m.technique : ""].filter(Boolean).join("；");
     if (learn) h.push('<div class="learn">' + esc(learn) + '</div>');
     if (m.must_show) h.push('<div class="must"><b>必须看得见：</b>' + esc(m.must_show) + '</div>');
