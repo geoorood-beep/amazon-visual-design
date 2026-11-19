@@ -140,6 +140,21 @@ class CheckCardTest(unittest.TestCase):
         for view in ("front", "back", "side", "top_down"):
             self.assertNotIn(f"=== {view} ===", text)
 
+    def test_photos_named_from_the_view_table_are_not_regenerated(self):
+        """Photos named after Grok's view-positioning table cover those views in the fast route."""
+        with tempfile.TemporaryDirectory() as folder:
+            for name in ("01_front.png", "02_side.png", "05_three_quarter.png", "IMG_0645.jpg"):
+                (Path(folder) / name).write_bytes(b"x")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = check_card.print_baseline("round10l", photos_dir=folder)
+        text = out.getvalue()
+        self.assertEqual(code, 0, text)
+        fast = text.split("== FAST")[1].split("2. Generate")[0]
+        self.assertIn("three_quarter: 05_three_quarter.png", fast)
+        self.assertIn("front: 01_front.png", fast)
+        self.assertNotIn("IMG_0645", fast, "a camera number is not a 45-degree view")
+
     def test_unknown_form_fails(self):
         original = check_card.baseline_field
         check_card.baseline_field = lambda product, key: "圆的" if key == "形态" else original(product, key)

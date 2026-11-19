@@ -126,10 +126,10 @@ class NewProductFlowTest(unittest.TestCase):
 
     def test_skill_keeps_going_after_the_card(self):
         skill = self.read("grok", "grok-UTAstyle-skill.md")
-        self.assertIn("## 新产品：建卡之后接着往下", skill)
+        self.assertIn("## 新产品：素材一到先做造型基准", skill)
         self.assertNotIn("确认后再来。不进入第 1 步", skill)
         self.assertIn("新建产品 <产品> 并做造型基准", skill)
-        self.assertIn("同一条消息里接着进入第 1 步", skill)
+        self.assertIn("同一条消息里接着发第 1 步的卡", skill)
 
     def test_guide_and_agents_accept_the_handoff(self):
         guide = self.read("UTA_STYLE.md")
@@ -309,7 +309,7 @@ class UnderstandingTest(unittest.TestCase):
 
     def test_wiring(self):
         guide = self.read("UTA_STYLE.md")
-        for marker in ("**先理解产品（所有产品通用，每个产品一次）。**", "**第零轮：先理解产品", "### 3.8 更新产品理解",
+        for marker in ("**先理解产品（所有产品通用，每个产品一次）。**", "**产品理解（每个产品一次）。**", "### 3.8 更新产品理解",
                        "`disassembled`", "`loading`", "grok/understand_template.html"):
             self.assertIn(marker, guide)
         self.assertNotIn("top_removed", guide)
@@ -328,7 +328,7 @@ class UnderstandingTest(unittest.TestCase):
 
 
 class FastPathTest(unittest.TestCase):
-    """Normal path is three clicks; no batching by image; light reading (v3.28)."""
+    """Normal path is two clicks; one card per kind of choice; light reading (v3.28, v3.37)."""
 
     def read(self, *parts):
         with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
@@ -337,11 +337,12 @@ class FastPathTest(unittest.TestCase):
     def test_fast_path_is_the_default(self):
         guide = self.read("UTA_STYLE.md")
         skill = self.read("grok", "grok-UTAstyle-skill.md")
-        self.assertIn("**快速通道：正常情况下用户只点三次。**", guide)
+        self.assertIn("**快速通道：正常情况下用户只点两次。**", guide)
         self.assertNotIn("按图分批", guide + skill)
+        self.assertNotIn("只点三次", guide + skill)
         self.assertIn("「★ 全部按推荐」", skill)
         self.assertIn("卡片以外的文字最多三行", skill)
-        self.assertIn("正常情况下用户只点三次", skill)
+        self.assertIn("正常情况下用户只点两次", skill)
 
     def test_read_check_is_one_line(self):
         skill = self.read("grok", "grok-UTAstyle-skill.md")
@@ -356,10 +357,12 @@ class FastPathTest(unittest.TestCase):
         guide = self.read("UTA_STYLE.md")
         skill = self.read("grok", "grok-UTAstyle-skill.md")
         for text in (guide, skill):
-            self.assertIn("情绪卡", text)
+            self.assertIn("情绪基调", text)
             self.assertIn("逐项选", text)
+            self.assertIn("一类一张卡", text)
         self.assertIn("**改某一张。**", guide)
-        self.assertIn("★ 剩下的全部按推荐", skill)
+        self.assertNotIn("情绪卡", guide + skill)
+        self.assertNotIn("故事卡", guide + skill)
 
     def test_vivid_expressions_and_lenses_are_wired(self):
         import csv
@@ -539,6 +542,44 @@ class ImageBaselineDisambiguationTest(unittest.TestCase):
         self.assertIn("主图 1 张、副图 6 张、高级版 A+ 7 屏", plan)
         sample = self.read("tools", "fixtures", "round10l_v2_task.md")
         self.assertIn("cards: 23", sample)
+
+
+
+class AutoAdvanceTest(unittest.TestCase):
+    """Grok decides layout-type items itself, asks one card per kind, and never stalls (v3.37)."""
+
+    def read(self, *parts):
+        with open(os.path.join(ROOT, *parts), encoding="utf-8") as fh:
+            return fh.read()
+
+    def test_guide_lists_what_is_not_asked(self):
+        guide = self.read("UTA_STYLE.md")
+        self.assertIn("**只问五类，其余你定。**", guide)
+        decided = guide.split("**只问五类，其余你定。**")[1].split("**一类一张卡，管整套。**")[0]
+        for item in ("`text_area`", "字体", "A+ 版本", "冲击力", "视角定位"):
+            self.assertIn(item, decided)
+        self.assertIn("**一类一张卡，管整套。**", guide)
+
+    def test_auto_advance_rules(self):
+        guide = self.read("UTA_STYLE.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("**自动推进：不卡住。**", guide)
+        for text in (guide, skill):
+            for marker in ("没回答的按★", "两次不成就跳过", "推定"):
+                self.assertIn(marker, text)
+        self.assertIn("## 自动推进", skill)
+
+    def test_baseline_is_stage_one(self):
+        guide = self.read("UTA_STYLE.md")
+        skill = self.read("grok", "grok-UTAstyle-skill.md")
+        self.assertIn("第一段：造型基准", guide)
+        self.assertIn("**视角定位。**", guide)
+        self.assertNotIn("用一张提问卡请用户确认草稿", guide)
+        self.assertIn("视角定位", skill)
+        self.assertIn("视角定位", self.read("AGENTS.md"))
+        self.assertNotIn("★ 对，按这份建卡并做造型基准", skill)
+        confirm = self.read("grok", "confirm_template.html")
+        self.assertIn('"decided"', confirm)
 
 
 if __name__ == "__main__":

@@ -255,6 +255,9 @@ PHOTO_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 PHOTO_VIEW_HINTS = {
     "front": ("front", "正面", "正视"), "back": ("back", "rear", "背面", "背视"), "side": ("side", "侧面", "侧视", "left", "right"),
     "top_down": ("top", "俯视", "俯拍"), "top": ("top", "俯视", "俯拍"), "bottom": ("bottom", "底面"),
+    # Names written from Grok's view-positioning table (UTA_STYLE 1.12), e.g. 05_three_quarter.png.
+    "three_quarter": ("three_quarter", "45deg", "45度", "斜角"),
+    "long_edge": ("long_edge", "长边"), "short_edge": ("short_edge", "短边"),
 }
 ALL_VIEW_HINTS = ("five_view", "five-view", "五视", "multi_view", "三视", "turnaround")
 MIN_BASELINE = {"立体": ["front", "three_quarter", "side"], "扁平": ["top", "three_quarter", "long_edge"]}
