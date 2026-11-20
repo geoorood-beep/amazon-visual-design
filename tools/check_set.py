@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.50"
+VERSION = "3.51"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -1185,6 +1185,24 @@ def lens_anchor_warnings(ts, pools):
     return warns
 
 
+def core_rules(ts, pools):
+    """C-2: every core selling point is shown: in the subs when there are subs, in the A+ when there is A+ (2.2)."""
+    out = []
+    core = (pools or {}).get("core") or []
+    if not core:
+        return out
+    groups = []
+    if ts.subs:
+        groups.append(("副图", ts.subs))
+    if ts.screens:
+        groups.append(("A+", ts.screens + ts.aplus_images()))
+    for fact in core:
+        for label, cards in groups:
+            if not any(c.f("selling_point", "").strip() == fact for c in cards):
+                out.append(("C-2", "主推卖点 %s 在%s里一张图都没讲（2.2）" % (fact, label)))
+    return out
+
+
 def impact_rules(ts, pools):
     """S-11 / A-16 special lenses, K-6 exaggerated expressions, by the task's impact level (1.17)."""
     out = []
@@ -1298,6 +1316,7 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         warns += usage_warnings(ts, pools["usage"])
     if strict and isinstance(pools, dict):
         fails += impact_rules(ts, pools)
+        fails += core_rules(ts, pools)
         warns += lens_anchor_warnings(ts, pools)
     if strict and pools:
         f2, w2 = pool_rules(ts, evidence, pools if isinstance(pools, dict) else None)
@@ -1756,6 +1775,15 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
     if pools["storyline_declared"]:
         p("storyline=%s %s  cast=%s" % (sid, storylines[sid].get("name", ""), " ".join(pools["cast"]) or "-"))
     pools["usage"] = load_usage(root, product)
+    core = [v for v in re.split(r"[;,+\s]+", header.get("core", "")) if v]
+    unknown = [f for f in core if f not in pools["usage"]["facts"]]
+    if len(core) > 2 or unknown or len(set(core)) != len(core):
+        p("TASK ERROR [C-1]: 头部 core 最多写两个主推卖点，每个都要是产品卡里的事实编号（2.2），现在是「%s」"
+          % header.get("core", "").strip())
+        return 2
+    pools["core"] = core
+    if core:
+        p("core=%s" % ";".join(core))
     pools["views"] = views
     if not pools["usage"]["understanding"].startswith("已确认"):
         p("WARN [1.15] 产品卡的「产品理解」还不是已确认（现在：%s）：画面要求按通用推断规则，建议先做产品理解，让用户确认（2.2 第零轮）"

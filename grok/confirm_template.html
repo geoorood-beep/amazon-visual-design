@@ -80,6 +80,7 @@ h2{font-size:17px;margin:28px 0 10px}
   "storyline": "SL1 一天里的几个瞬间",
   "cast": "PT01;PT07;HP05",
   "aplus_recipe": "A 痛点解决",
+  "core": "F7 无线 · F3 静音",
   "images": [
     {
       "slot": "S1", "kind": "副图", "fact": "F1", "selling": "示例卖点",
@@ -136,6 +137,7 @@ h2{font-size:17px;margin:28px 0 10px}
   if (data.storyline) h.push('<span>主线 <b>' + esc(data.storyline) + '</b></span>');
   if (data.cast) h.push('<span>角色 <b>' + esc(data.cast) + '</b>（主线里反复出现，不算重复）</span>');
   if (data.aplus_recipe) h.push('<span>A+ 套路 <b>' + esc(data.aplus_recipe) + '</b></span>');
+  if (data.core) h.push('<span>主推卖点 <b>' + esc(data.core) + '</b>（镜头和故事由你在表达卡里选）</span>');
   h.push('<span>共 ' + imgs.length + ' 张</span><span>红框 = 整套里重复的场景或宠物</span></div></header>');
 
   h.push('<h2>整套一览</h2><div class="strip">');
@@ -159,7 +161,7 @@ h2{font-size:17px;margin:28px 0 10px}
     h.push(img(m.case, "机位和构图参考（案例）", "无案例，自拟"));
     h.push('<div class="small">' + img(m.product_ref, "产品参考", "无产品参考") + '</div></div>');
     h.push('<div class="body"><div class="top"><span class="slot">' + esc(m.slot) + '</span><span class="kind">' + esc(m.kind || "") +
-      (m.fact ? " · " + esc(m.fact) : "") + (m.selling ? " · " + esc(m.selling) : "") + '</span>' +
+      (m.fact ? " · " + esc(m.fact) : "") + (m.selling ? " · " + esc(m.selling) : "") + (m.core ? ' · <b>主推</b>' : "") + '</span>' +
       (m.route ? '<span class="route">' + esc(m.route) + '</span>' : "") + '</div>');
     if (m.story) h.push('<div class="story">' + (m.chapter ? '【' + esc(m.chapter) + '】' : "") + esc(m.story) + '</div>');
     var learn = [m.learn, m.technique ? "手法 " + m.technique : ""].filter(Boolean).join("；");
