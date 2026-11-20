@@ -540,7 +540,7 @@ M1 和 S 位按生图工具的原生尺寸出图，如实记录实际像素，�
 
 什么时候出现：每个产品一次，和第一批选择卡在同一条消息里（2.2「产品理解」）；同一张卡因为产品不对返工两次仍不过时（4.6 第 5 步），附上表单并指出缺的那一格；用户说「打开 <产品> 的产品资料表」时。用户填完点「生成产品资料」，页面给出一段 `UTA-PRODUCT v1`，用户原样发给写卡方，按 2.9 处理。表单只收文字；新补的照片原件和这段文字一起发。
 
-**照片尺寸表（选填）。** 产品资料表是给看屏幕的人填的；量尺寸、拍照片要拿着实物，交给手边有产品的人更方便。Codex 用 `tools/photo_sheet.py build` 把同一份草稿做成一张 Excel 表（3.9）：每个角度一行，旁边放已有的示例图，留一格贴实拍；主机尺寸几行，比例自动算；每个部件一行，贴照片、量长宽高和线长，关系类型可以改，包装里没有的整行删掉，漏的写进空行。Excel、WPS 怎么贴图都行。填完的表发回来，Codex 用 `tools/photo_sheet.py read` 读出照片和尺寸，得到同样一段 `UTA-PRODUCT v1`，照产品资料表的规则写进产品卡。它也不是闸门：不填、只填一半，流程照样往下走。
+**参考图和尺寸表（选填）。** 产品资料表是给看屏幕的人填的；拍照、量尺寸要拿着实物，交给手边有产品的人更方便。Codex 用 `tools/photo_sheet.py build` 把同一份草稿做成一张 Excel 表（3.9）：只有一页，主体一行、每个部件一行，每行贴前、后、左、右、上五面照片，再写长、宽、高；其他角度不拍，由 AI 按这五面推。部件的名称和关系类型可以改，包装里没有的整行删掉，漏的写进空行。Excel、WPS 怎么贴图都行。表里的格子全部选填，填多少用多少。填完的表发回来，Codex 用 `tools/photo_sheet.py read` 读出照片和尺寸，得到同样一段 `UTA-PRODUCT v1`，照产品资料表的规则写进产品卡。它也不是闸门：不发、只填一半，流程照样往下走。
 
 **每张卡先答五个问题。**
 
@@ -1240,15 +1240,15 @@ python tools/product_form.py build --sheet outputs/<产品>/product_form_draft.j
 python tools/photo_sheet.py build --form outputs/<产品>/product_form_vNN.json
 ```
 
-`detect` 列出候选品类和每个品类的外观特征，看照片定品类和款式；`skeleton` 出草稿以后，照草稿里的 `ai_todo` 对照照片改；`build` 生成 `outputs/<产品>/product_form_vNN.html`（图片压缩嵌入，不覆盖旧版，旁边存一份同名 JSON）。把路径交给用户：可以填，也可以不填。用户要量尺寸、补实拍，或说「出 <产品> 的照片尺寸表」时，用 `photo_sheet.py build` 把同一份表单（JSON 或 HTML 都行）做成 `outputs/<产品>/photo_sheet_vNN.xlsx`（照片尺寸表，1.15），同样不覆盖旧版。
+`detect` 列出候选品类和每个品类的外观特征，看照片定品类和款式；`skeleton` 出草稿以后，照草稿里的 `ai_todo` 对照照片改；`build` 生成 `outputs/<产品>/product_form_vNN.html`（图片压缩嵌入，不覆盖旧版，旁边存一份同名 JSON）。把路径交给用户：可以填，也可以不填。用户要量尺寸、补实拍，或说「出 <产品> 的参考图和尺寸表」时，用 `photo_sheet.py build` 把同一份表单（JSON 或 HTML 都行）做成 `outputs/<产品>/photo_sheet_vNN.xlsx`（参考图和尺寸表，1.15），同样不覆盖旧版。
 
-**读照片尺寸表。** 用户发回填好的 xlsx 时，先运行 `python tools/photo_sheet.py read <文件>`：表里贴的照片按格子存进 `outputs/<产品>/photo_sheet_in_NN/`（文件名是角度编号，配件是 `part_<编号>`），屏幕上打出一段 `UTA-PRODUCT v1`，同一段也存在那个文件夹的 `uta_product.txt`。然后照下面「写入」处理这段文字；`form:` 指的是这张表，没有同名 JSON，部件编号已经在文字里。`warnings` 里列的格子（不是数字、单位看起来不对）不写进产品卡，在回报里列出。
+**读参考图和尺寸表。** 用户发回填好的 xlsx 时，先运行 `python tools/photo_sheet.py read <文件>`：表里贴的照片按格子存进 `outputs/<产品>/photo_sheet_in_NN/`（主体是 `front`、`rear`、`side_left`、`side_right`、`top_down`，部件是 `part_<编号>_<朝向>`），屏幕上打出一段 `UTA-PRODUCT v1`，同一段也存在那个文件夹的 `uta_product.txt`。然后照下面「写入」处理这段文字；`form:` 指的是这张表，没有同名 JSON，部件编号已经在文字里。`warnings` 里列的格子（不是数字、单位看起来不对）不写进产品卡，在回报里列出。
 
 **写入。** 收到 `UTA-PRODUCT v1` 时，先打开 `form:` 那一行指的表单旁边的同名 JSON，按里面的编号对照每一行：
 
 1. 判断题（`Q1:` 这些）、`parts`、`states`、`functions`、`flow`：按 3.8 写进「产品理解」「产品状态」「事实的画面要求」「内部结构」；`parts` 同时写进「Parts (prompt)」，每个随附配件、可拆件一行英文。写「同意」的条目照表单原样写，去掉「推定」；写了「不对 → …」或「类型 … → …」的照用户的话改。
-2. `size`、`size_ref`、`geometry_prompt`：写进「物理边界」的尺寸、比例、大小参照；`geometry_prompt` 的英文行原样写进「Geometry (prompt)」。写「未填」的项不动，仍是「未确认」。`part_sizes`（照片尺寸表才有）：每个部件的长宽高、线长和件数写进「物理边界」的部件清单；部件照片按第 3 步存。
-3. `photos`（照片尺寸表读出来的，路径已经指向存好的文件）：用户发来的照片按格子名改名存进 `photos/`（`06_three_quarter_right.jpg` 这样，编号接着现有的往下排），在 `ref_views.csv` 各加一行，`checked` 写 `no`。
+2. `size`、`size_ref`、`geometry_prompt`：写进「物理边界」的尺寸、比例、大小参照；`geometry_prompt` 的英文行原样写进「Geometry (prompt)」。写「未填」的项不动，仍是「未确认」。`part_sizes`（参考图和尺寸表才有）：每个部件的长宽高写进「物理边界」的部件清单；部件照片按第 3 步存，`ref_views.csv` 的 `parts` 写这个部件。
+3. `photos`（参考图和尺寸表读出来的，路径已经指向存好的文件）：用户发来的照片按格子名改名存进 `photos/`（`06_three_quarter_right.jpg` 这样，编号接着现有的往下排），在 `ref_views.csv` 各加一行，`checked` 写 `no`。
 4. `card_updates`：写「同意」的，照表单里的修改说明改；写「不同意」的不改，在回报里列出。
 5. `notes`：不改产品卡，原样写进回报，交写卡方处理。「已确认事实」一个字不改。
 6. 运行 `python tools/check_card.py --baseline <产品>` 和测试，确认产品卡还能读。
