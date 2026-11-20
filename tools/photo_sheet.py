@@ -1,13 +1,14 @@
-"""Photo and size sheet (xlsx) for the person holding the product: angle photos, body size, accessory photos and sizes.
+"""Photo and size sheet (xlsx): one sheet, one row for the product body and one row per part.
 
     python tools/photo_sheet.py build --form outputs/<产品>/product_form_vNN.json   (or the form's .html, or a draft)
     python tools/photo_sheet.py read <filled.xlsx>
 
-build makes outputs/<产品>/photo_sheet_vNN.xlsx from a product form (UTA_STYLE.md 1.15): one row per photo slot,
-the body's size rows, one row per part. read takes the filled sheet back: it pulls out every pasted photo
-(floating pictures, Excel "place in cell", WPS "embed in cell"), saves them in outputs/<产品>/photo_sheet_in_NN/
-and prints a UTA-PRODUCT v1 block that 3.9 writes into the product card, exactly like the form's.
-Rows carry their slot or part id in a hidden "key" column, so deleted or added rows are read correctly.
+Each row takes five photos (front, back, left, right, top); other angles are left to the AI. The body row and
+every part row also take length, width and height. Everything is optional. build makes
+outputs/<产品>/photo_sheet_vNN.xlsx from a product form (UTA_STYLE.md 1.15). read takes the filled sheet back:
+it pulls out every pasted photo (floating pictures, Excel "place in cell", WPS "embed in cell"), saves them in
+outputs/<产品>/photo_sheet_in_NN/ and prints a UTA-PRODUCT v1 block that 3.9 writes into the product card,
+exactly like the form's. Rows carry their id in a hidden "key" column, so deleted or added rows read correctly.
 """
 import argparse
 import base64
@@ -30,25 +31,22 @@ from openpyxl.worksheet.datavalidation import DataValidation
 import product_form as pf
 
 ROOT = pf.ROOT
-MAGIC = "UTA-PHOTO-SHEET v1"
-GUIDE, PHOTOS, SIZE, PARTS, META = "填写说明", "多角度照片", "主机尺寸", "配件", "_uta"
-PHOTO_COLS = ["序号", "角度", "怎么拍", "示例（已有的照片或参考图）", "你的照片（贴在这里）", "拍了吗", "照片文件名", "备注", "key"]
-PART_COLS = ["序号", "配件名", "关系类型", "包装里几件", "示例（已有的参考图）", "你的照片（贴在这里）", "长", "宽", "高或直径",
-             "线长（有线的填）", "单位", "装在哪、跟谁连着", "照片文件名", "备注", "key"]
-SIZE_COLS = ["项目", "怎么量", "数值", "单位", "示例值（别的产品，只看格式）", "备注", "key"]
-EXTRA_SLOTS = [("flatlay", "包装里全部东西平铺", "把包装里所有东西摊开拍一张")]
+MAGIC = "UTA-PHOTO-SHEET v2"
+SHEET, META = "填写表", "_uta"
+VIEWS = [("正面", "front"), ("背面", "rear"), ("左侧", "side_left"), ("右侧", "side_right"), ("俯视（上）", "top_down")]
+COLS = ["序号", "名称", "关系类型", "现有参考", *[v[0] for v in VIEWS], "长", "宽", "高", "单位", "备注", "key"]
+WIDTHS = [6, 20, 10, 15, 15, 15, 15, 15, 15, 7, 7, 7, 7, 24, 8]
 TYPES = ["组成部件", "可拆件", "耗材", "随附配件", "宿主产品", "外部物品"]
 NOUN = {"L": "length", "W": "depth", "H": "height"}
 TO_MM = {"mm": 1, "cm": 10, "m": 1000, "in": 25.4, "ft": 304.8}
-EXAMPLE = {"mm": (300, 220, 180), "cm": (30, 22, 18), "m": (1.5, 1.2, 1)}
 NEW_ROWS = 5
-HEADER_ROW = 3
+HEADER_ROW = 4
+BODY_KEY = "body"
 
 FONT = "Arial"
 INPUT = PatternFill("solid", fgColor="FFF2CC")
 NOTE = PatternFill("solid", fgColor="EEEEEE")
 HEAD = PatternFill("solid", fgColor="1F2630")
-SUB = PatternFill("solid", fgColor="DDE5EE")
 BOX = Border(*(Side(style="thin", color="BBBBBB"),) * 4)
 WRAP = Alignment(wrap_text=True, vertical="center")
 CENTER = Alignment(wrap_text=True, vertical="center", horizontal="center")
@@ -88,6 +86,10 @@ def col_letter(i):
     return s
 
 
+def col_of(label):
+    return COLS.index(label) + 1
+
+
 # ---------- build ----------
 
 def load_form(path):
@@ -108,11 +110,11 @@ def normalize_size(size):
     """Older forms leave out units, nouns and ratios; fill them the way the form's script does."""
     size = json.loads(json.dumps(size or {}))
     dims = size.setdefault("dims", {})
+    if not dims:
+        dims.update({k: {"short": s, "en": e} for k, s, e in (("L", "长", "long"), ("W", "宽", "deep"), ("H", "高", "tall"))})
     for k, d in dims.items():
         d.setdefault("unit", "mm")
         d.setdefault("noun", NOUN.get(k, k))
-    for e in size.setdefault("extra", []):
-        e.setdefault("unit", "mm")
     if not size.get("ratios"):
         size["ratios"] = [r for r in (["L", "H"], ["W", "H"]) if r[0] in dims and r[1] in dims]
     return size
@@ -130,7 +132,7 @@ def image_bytes(root, src):
         return fh.read()
 
 
-def thumb(root, src, edge=118):
+def thumb(root, src, edge=100):
     """A small JPEG for the sheet, or None when the image is missing or unreadable."""
     data = image_bytes(root, src)
     if not data:
@@ -150,276 +152,112 @@ def thumb(root, src, edge=118):
     return img
 
 
-def style(c, font=BODY, fill=None, align=WRAP):
+def put(ws, row, col, value=None, font=BODY, fill=None, align=WRAP):
+    c = ws.cell(row=row, column=col)
+    if value is not None:
+        c.value = value
     c.font, c.alignment, c.border = font, align, BOX
     if fill:
         c.fill = fill
     return c
 
 
-def put(ws, row, col, value=None, font=BODY, fill=None, align=WRAP):
-    c = ws.cell(row=row, column=col)
-    if value is not None:
-        c.value = value
-    return style(c, font, fill, align)
+def body_of(form):
+    """(name, reference image, parts) where parts leaves out the body itself and props."""
+    parts = form.get("parts") or []
+    body = parts[0] if parts and not parts[0].get("parent") else None
+    rest = [p for p in (parts[1:] if body else parts) if p.get("type") != "外部物品"]
+    front = next((s.get("img") for s in form.get("photos", []) if s.get("slot") == "front" and s.get("img")), "")
+    name = (body or {}).get("name") or (form.get("title") or form["product"]).split(" · ")[0]
+    return name, front or ((body or {}).get("imgs") or [""])[0], rest
 
 
-def table(ws, title, sub, cols, widths):
-    ws["A1"], ws["A2"] = title, sub
-    ws["A1"].font = Font(name=FONT, size=15, bold=True)
-    ws["A2"].font = Font(name=FONT, size=10, color="555555")
-    for i, label in enumerate(cols, 1):
+def item_row(ws, root, r, n, key, name, kind, ref, unit, guess=True):
+    put(ws, r, 1, n, BODY, NOTE, CENTER)
+    put(ws, r, 2, name, GUESS if guess else BOLD, INPUT if key != BODY_KEY else NOTE)
+    put(ws, r, 3, kind, GUESS if key != BODY_KEY else BOLD, INPUT if key != BODY_KEY else NOTE, CENTER)
+    img = thumb(root, ref)
+    put(ws, r, 4, None if img or not name else "暂无", GREY, NOTE, CENTER)
+    for c in range(5, 5 + len(VIEWS) + 3):
+        put(ws, r, c, None, BODY, INPUT, CENTER)
+    put(ws, r, col_of("单位"), unit, BODY, INPUT, CENTER)
+    put(ws, r, col_of("备注"), None, BODY, INPUT)
+    put(ws, r, len(COLS), key)
+    if img:
+        ws.add_image(img, "D%d" % r)
+    ws.row_dimensions[r].height = 80
+
+
+def build_sheet(wb, root, form):
+    ws = wb.active
+    ws.title = SHEET
+    size = form["size"]
+    title = (form.get("title") or form["product"]).split(" · ")[0]
+    last = col_letter(len(COLS) - 1)
+    lines = [
+        ("%s 参考图和尺寸填写表" % title, Font(name=FONT, size=15, bold=True), 24),
+        ("全部选填，填多少用多少。黄色格子是能填的地方：每行贴前、后、左、右、上五面照片（只拍这五面，其他角度 AI 推），"
+         "再写长、宽、高。主体那一行：%s配件平放量最长、最宽、最厚。" % (size.get("hint", "量外轮廓。") + " "),
+         BODY, 32),
+        ("贴照片：新版 Excel 插入 → 图片 → 放置在单元格中；WPS 插入 → 图片 → 嵌入单元格；或直接把照片拖到格子上。"
+         "灰色斜体是 AI 推的，不对直接改；包装里没有的配件整行删掉，漏的写进下面空行。蓝字是示例，可以删。原始照片请一起发。",
+         Font(name=FONT, size=10, color="555555"), 32),
+    ]
+    for i, (text, font, height) in enumerate(lines, 1):
+        ws.merge_cells("A%d:%s%d" % (i, last, i))
+        ws["A%d" % i] = text
+        ws["A%d" % i].font, ws["A%d" % i].alignment = font, WRAP
+        ws.row_dimensions[i].height = height
+    for i, label in enumerate(COLS, 1):
         put(ws, HEADER_ROW, i, label, Font(name=FONT, size=10, bold=True, color="FFFFFF"), HEAD, CENTER)
-        ws.column_dimensions[col_letter(i)].width = widths[i - 1]
-    ws.column_dimensions[col_letter(len(cols))].hidden = True
+        ws.column_dimensions[col_letter(i)].width = WIDTHS[i - 1]
+    ws.column_dimensions[col_letter(len(COLS))].hidden = True
     ws.freeze_panes = "C%d" % (HEADER_ROW + 1)
 
-
-def guide_sheet(wb, form):
-    ws = wb.active
-    ws.title = GUIDE
-    ws.column_dimensions["A"].width = 110
-    hint = (form.get("size") or {}).get("hint", "量外轮廓；高从桌面量到最高的固定部分。")
-    lines = [
-        ("%s 多角度照片和尺寸填写表" % (form.get("title") or form["product"]).split(" · ")[0], "title"),
-        ("给拿着实物、卷尺和手机的人填。填完把这个文件和原始照片一起发回；没填完也可以先发，填了多少用多少。", "sub"),
-        ("", None), ("颜色说明", "h"),
-        ("黄色格子：要你填的。照片贴在这里，数字和文字写在这里。", "input"),
-        ("灰色格子：说明和示例图，不用改。", "note"),
-        ("蓝字那一行：示例，只是让你看格式，可以删。", "blue"),
-        ("灰色斜体字：AI 先推的内容（比如配件名），不对直接改；整行不对就删掉这一行。", "guess"),
-        ("", None), ("怎么拍", "h"),
-        ("· 白色或浅灰的素色背景，柔光，避开直射灯：亮面和金属很容易反光。", None),
-        ("· 平视：手机和产品中间一样高，正对那一面。俯拍：手机在产品正上方。", None),
-        ("· 一张只拍一个角度，产品放在画面中间，四周留一点空。", None),
-        ("· 规格照（旁边放尺子、旁边放一只手）是给 AI 定大小用的，拍清楚比拍好看重要。", None),
-        ("", None), ("怎么量", "h"),
-        ("· 单位看「单位」那一格，可以改；拿不准就量两次，写中间的数。", None),
-        ("· " + hint, None),
-        ("· 配件平放量最长、最宽、最厚；有线的，把线拉直量长度。", None),
-        ("", None), ("怎么把照片贴进格子", "h"),
-        ("· 新版 Excel：点黄色格子 → 插入 → 图片 → 放置在单元格中。", None),
-        ("· WPS：插入 → 图片 → 嵌入单元格。", None),
-        ("· 旧版 Excel 或 Numbers：把照片拖到黄色格子上面，左上角落在格子里就行。", None),
-        ("· 表里的照片可能被压缩，原始照片请一起发，文件名写在「照片文件名」那一列。", None),
-        ("", None), ("填完以后", "h"),
-        ("· 把这个文件和原始照片一起发给 Grok 或 Codex：照片按角度存进产品的 photos 文件夹，尺寸写进产品卡的「物理边界」"
-         "和 Geometry，配件写进部件清单。", None),
-        ("· 不要改最右边隐藏的那一列，也不要改表名：读表靠它们。", None),
-    ]
-    looks = {"title": Font(name=FONT, size=16, bold=True), "sub": Font(name=FONT, size=10, color="555555"),
-             "h": Font(name=FONT, size=12, bold=True), "blue": BLUE, "guess": GUESS}
-    fills = {"h": SUB, "input": INPUT, "note": NOTE}
-    for i, (text, kind) in enumerate(lines, 1):
-        c = ws.cell(row=i, column=1, value=text)
-        c.alignment, c.font = WRAP, looks.get(kind, BODY)
-        if kind in fills:
-            c.fill = fills[kind]
-        if kind in ("input", "note", "blue", "guess"):
-            c.border = BOX
-
-
-def photo_sheet(wb, root, form):
-    ws = wb.create_sheet(PHOTOS)
-    table(ws, "多角度照片", "每个角度一张。有示例图的照着拍；没有示例的看「怎么拍」那一列。", PHOTO_COLS,
-          [6, 18, 34, 22, 24, 9, 18, 26, 8])
-    slots = [dict(s) for s in form.get("photos", [])]
-    have = set(s["slot"] for s in slots)
-    slots += [{"slot": k, "label": label, "img": "", "tip": tip} for k, label, tip in EXTRA_SLOTS if k not in have]
-    sample = next((s for s in slots if thumb(root, s.get("img"))), None)
     r = HEADER_ROW + 1
-    if sample:
-        shown = "IMG_0001.jpg" if sample["img"].startswith("data:") else os.path.basename(sample["img"])
-        values = ["示例", sample["label"], "（这一行是示例，看格式用，可以删）", None, None, "✓",
-                  shown, "照片贴进「你的照片」，文件名写在旁边"]
-        for i, v in enumerate(values, 1):
-            put(ws, r, i, v, BLUE, INPUT if i >= 5 else NOTE, CENTER if i in (1, 6) else WRAP)
-        put(ws, r, len(PHOTO_COLS), "example")
-        for col in (4, 5):
-            ws.add_image(thumb(root, sample["img"]), "%s%d" % (col_letter(col), r))
-        ws.row_dimensions[r].height = 96
-        r += 1
-    for n, s in enumerate(slots, 1):
-        src = s.get("src") or ""
-        if s.get("img") and src == "实拍":
-            how = "已经有实拍（左边那张）。想换一张更清楚的就重拍，不换就空着"
-        elif s.get("tip"):
-            how = s["tip"]
-        elif s.get("img"):
-            how = "现在只有%s，没有实拍：照这个角度补拍一张" % (src or "参考图")
-        else:
-            how = "没有这个角度的照片：补拍一张"
-        put(ws, r, 1, n, BODY, NOTE, CENTER)
-        put(ws, r, 2, s["label"], BOLD, NOTE)
-        put(ws, r, 3, how, BODY, NOTE)
-        img = thumb(root, s.get("img"))
-        put(ws, r, 4, None if img else "暂无示例", GREY, NOTE, CENTER)
-        for col in range(5, 9):
-            put(ws, r, col, None, BODY, INPUT, CENTER if col == 6 else WRAP)
-        put(ws, r, len(PHOTO_COLS), s["slot"])
-        if img:
-            ws.add_image(img, "D%d" % r)
-        ws.row_dimensions[r].height = 96
-        r += 1
-    dv = DataValidation(type="list", formula1='"✓,✗,不适用"', allow_blank=True)
-    ws.add_data_validation(dv)
-    dv.add("F%d:F%d" % (HEADER_ROW + 1, r - 1))
-    return slots
-
-
-def unit_factor(cell):
-    return 'IF(%s="cm",10,IF(%s="m",1000,IF(%s="in",25.4,1)))' % (cell, cell, cell)
-
-
-def size_sheet(wb, form):
-    ws = wb.create_sheet(SIZE)
-    size = form.get("size") or {}
-    dims, extras = size.get("dims") or {}, size.get("extra") or []
-    table(ws, "主机尺寸", size.get("hint", "") + " 只填黄色格子；下面「自动算」的部分不用填。", SIZE_COLS,
-          [16, 34, 12, 8, 18, 34, 8])
-    r, rows = HEADER_ROW + 1, {}
-    units = DataValidation(type="list", formula1='"mm,cm,m"', allow_blank=False)
-    ws.add_data_validation(units)
-    for i, (k, d) in enumerate(dims.items()):
-        u = d.get("unit", "mm")
-        how = d.get("label", "").split("：", 1)[-1]
-        put(ws, r, 1, d.get("short", k) + " " + k, BOLD, NOTE)
-        put(ws, r, 2, how, BODY, NOTE)
-        put(ws, r, 3, None, BODY, INPUT, CENTER)
-        put(ws, r, 4, u, BODY, INPUT, CENTER)
-        units.add("D%d" % r)
-        put(ws, r, 5, EXAMPLE.get(u, EXAMPLE["mm"])[min(i, 2)], BLUE, NOTE, CENTER)
-        put(ws, r, 6, None, BODY, INPUT)
-        put(ws, r, 7, "dim:" + k)
-        rows[k] = r
-        r += 1
-    for e in extras:
-        u = e.get("unit", "mm")
-        put(ws, r, 1, e.get("short") or e.get("label"), BOLD, NOTE)
-        put(ws, r, 2, e.get("label", "") + "（选填）", BODY, NOTE)
-        put(ws, r, 3, None, BODY, INPUT, CENTER)
-        put(ws, r, 4, u, BODY, NOTE, CENTER)
-        put(ws, r, 5, None, BLUE, NOTE, CENTER)
-        put(ws, r, 6, None, BODY, INPUT)
-        put(ws, r, 7, "extra:" + e["key"])
-        r += 1
-    put(ws, r, 1, "大小参照", BOLD, NOTE)
-    put(ws, r, 2, "和一样大家都知道大小的东西比，一句话", BODY, NOTE)
-    put(ws, r, 3, None, BODY, INPUT)
-    put(ws, r, 4, None, BODY, NOTE)
-    put(ws, r, 5, "高度大约到成年猫站着时的肩膀", BLUE, NOTE, CENTER)
-    put(ws, r, 6, None, BODY, INPUT)
-    put(ws, r, 7, "size_ref")
+    example = {"序号": "示例", "名称": "清洁刷（示例，不是这款的配件）", "关系类型": "随附配件", "长": 150, "宽": 20, "高": 20,
+               "单位": "mm", "备注": "这一行是示例，可以删"}
+    for i, label in enumerate(COLS[:-1], 1):
+        put(ws, r, i, example.get(label), BLUE, INPUT if i > 4 else NOTE, WRAP if label in ("名称", "备注") else CENTER)
+    put(ws, r, len(COLS), "example")
     ws.row_dimensions[r].height = 30
-    r += 2
-    put(ws, r, 1, "自动算（不用填）", Font(name=FONT, size=11, bold=True), SUB)
-    for col in range(2, 7):
-        put(ws, r, col, None, BODY, SUB)
+
+    name, ref, parts = body_of(form)
+    dims = list(size["dims"].values())
     r += 1
-    for a, b in size.get("ratios") or []:
-        if a not in rows or b not in rows:
-            continue
-        ca, cb = "C%d" % rows[a], "C%d" % rows[b]
-        fa, fb = unit_factor("D%d" % rows[a]), unit_factor("D%d" % rows[b])
-        put(ws, r, 1, "%s / %s" % (dims[a].get("short", a), dims[b].get("short", b)), BOLD, NOTE)
-        put(ws, r, 2, "换算成同一单位再除", BODY, NOTE)
-        c = put(ws, r, 3, '=IF(AND(ISNUMBER(%s),ISNUMBER(%s),N(%s)>0),ROUND(%s*%s/(%s*%s),2),"")'
-                % (ca, cb, cb, ca, fa, cb, fb), BODY, None, CENTER)
-        c.number_format = "0.00"
-        for col in (4, 5, 6):
-            put(ws, r, col, None, BODY, NOTE)
-        r += 1
-    if rows:
-        tests = ['AND(ISNUMBER(C{0}),OR(C{0}*{1}<10,C{0}*{1}>5000))'.format(rows[k], unit_factor("D%d" % rows[k]))
-                 for k in rows]
-        first, last = min(rows.values()), max(rows.values())
-        put(ws, r, 1, "单位检查", BOLD, NOTE)
-        put(ws, r, 2, "数字明显太小或太大时提醒", BODY, NOTE)
-        put(ws, r, 3, '=IF(COUNT(C%d:C%d)=0,"",IF(OR(%s),"有个数看起来不对：看看单位，再量一次","看起来正常"))'
-            % (first, last, ",".join(tests)), BODY)
-        ws.merge_cells("C%d:F%d" % (r, r))
-    return ws
-
-
-def parts_sheet(wb, root, form):
-    ws = wb.create_sheet(PARTS)
-    table(ws, "配件", "每件一行：贴照片、量尺寸。配件名和关系类型是 AI 推的（灰色斜体），不对直接改；包装里没有的整行删掉，"
-          "漏了的写进下面的空行。", PART_COLS, [6, 22, 11, 9, 22, 22, 8, 8, 9, 10, 7, 30, 16, 22, 8])
-    parts = form.get("parts") or []
-    if parts and not parts[0].get("parent"):
-        parts = parts[1:]
-    parts = [p for p in parts if p.get("type") != "外部物品"]
-    r = HEADER_ROW + 1
-    example = ["示例", "清洁刷（示例，不是这款的配件）", "随附配件", 1, None, None, 150, 20, 20, None, "mm",
-               "单独放在包装里", "IMG_0801.jpg", "这一行是示例，可以删"]
-    for i, v in enumerate(example, 1):
-        put(ws, r, i, v, BLUE, INPUT if i >= 3 else NOTE, CENTER if i in (1, 3, 4, 7, 8, 9, 10, 11) else WRAP)
-    put(ws, r, len(PART_COLS), "example")
-    ws.row_dimensions[r].height = 30
+    item_row(ws, root, r, "主体", BODY_KEY, name, "主体", ref, dims[0].get("unit", "mm") if dims else "mm", guess=False)
+    ws.cell(row=r, column=col_of("长")).comment = Comment(
+        "；".join(d.get("label", "") for d in dims[:3]) or "长宽高量外轮廓", "UTA")
     rows = [(p["id"], p) for p in parts] + [("new%d" % k, None) for k in range(1, NEW_ROWS + 1)]
     for n, (key, p) in enumerate(rows, 1):
         r += 1
-        put(ws, r, 1, n, BODY, NOTE, CENTER)
-        put(ws, r, 2, p and p.get("name"), GUESS, INPUT)
-        put(ws, r, 3, p and p.get("type"), GUESS, INPUT, CENTER)
-        put(ws, r, 4, None, BODY, INPUT, CENTER)
-        img = thumb(root, (p.get("imgs") or [""])[0], 110) if p else None
-        put(ws, r, 5, "暂无示例" if p and not img else None, GREY, NOTE, CENTER)
-        for col in range(6, 11):
-            put(ws, r, col, None, BODY, INPUT, CENTER)
-        put(ws, r, 11, "mm", BODY, INPUT, CENTER)
-        put(ws, r, 12, p and p.get("where"), GUESS, INPUT)
-        put(ws, r, 13, None, BODY, INPUT)
-        put(ws, r, 14, None, BODY, INPUT)
-        put(ws, r, len(PART_COLS), key)
-        if img:
-            ws.add_image(img, "E%d" % r)
-        ws.row_dimensions[r].height = 90
+        item_row(ws, root, r, n, key, p and p.get("name"), p and p.get("type"), (p.get("imgs") or [""])[0] if p else "", "mm")
     kinds = DataValidation(type="list", formula1='"%s"' % ",".join(TYPES), allow_blank=True)
     units = DataValidation(type="list", formula1='"mm,cm,m"', allow_blank=True)
-    for dv, col in ((kinds, "C"), (units, "K")):
+    for dv, col, first in ((kinds, "C", HEADER_ROW + 3), (units, col_letter(col_of("单位")), HEADER_ROW + 1)):
         ws.add_data_validation(dv)
-        dv.add("%s%d:%s%d" % (col, HEADER_ROW + 1, col, r))
-    ws["C%d" % HEADER_ROW].comment = Comment(
+        dv.add("%s%d:%s%d" % (col, first, col, r))
+    ws.cell(row=HEADER_ROW, column=3).comment = Comment(
         "组成部件：长在产品上；可拆件：会拆下来洗、加东西；耗材：定期换；随附配件：包装里另附；"
         "宿主产品：卖配件时它要装上去的那台产品；外部物品：水、粮、宠物这类道具。", "UTA")
+    ws.page_setup.orientation = "landscape"
     return parts
 
 
-def meta_sheet(wb, form, slots, parts, form_path):
+def meta_sheet(wb, form, parts, form_path):
     ws = wb.create_sheet(META)
     ws.sheet_state = "hidden"
-    size = form.get("size") or {}
+    have = {s.get("slot") for s in form.get("photos", []) if s.get("img")}
     rows = [
         ("magic", MAGIC), ("product", form["product"]), ("form", form_path),
         ("generated", datetime.date.today().isoformat()),
-        ("slots", json.dumps([{"slot": s["slot"], "label": s["label"], "replace": bool(s.get("img"))} for s in slots],
-                             ensure_ascii=False)),
-        ("parts", json.dumps([{k: p.get(k, "") for k in ("id", "name", "type", "where")} for p in parts],
-                             ensure_ascii=False)),
-        ("size", json.dumps({k: size.get(k) for k in ("dims", "extra", "ratios")}, ensure_ascii=False)),
+        ("have", json.dumps(sorted(v for _l, v in VIEWS if v in have))),
+        ("parts", json.dumps([{k: p.get(k, "") for k in ("id", "name", "type")} for p in parts], ensure_ascii=False)),
+        ("size", json.dumps({k: form["size"].get(k) for k in ("dims", "ratios")}, ensure_ascii=False)),
     ]
     for i, (k, v) in enumerate(rows, 1):
         ws.cell(row=i, column=1, value=k)
         ws.cell(row=i, column=2, value=v)
-
-
-def cache_blank_formulas(path, sheet_title):
-    """Previewers that do not recalculate show a formula's cached value; give the empty sheet blanks, not 0."""
-    tmp = path + ".tmp"
-    with zipfile.ZipFile(path) as zin:
-        target = sheet_parts(zin).get(sheet_title)
-        with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
-            for item in zin.infolist():
-                data = zin.read(item.filename)
-                if item.filename == target:
-                    xml = data.decode("utf-8")
-                    xml = re.sub(r'<c ([^>]*?)(?: t="[^"]*")?([^>]*)><f>(.*?)</f>(?:<v>.*?</v>|<v\s*/>)?</c>',
-                                 lambda m: '<c %s%s t="str"><f>%s</f><v></v></c>' % (m.group(1), m.group(2), m.group(3)),
-                                 xml, flags=re.S)
-                    data = xml.encode("utf-8")
-                zout.writestr(item, data)
-    os.replace(tmp, path)
 
 
 def next_path(root, product, stem, ext):
@@ -437,18 +275,11 @@ def build(root, form_path, out_path=None):
     if os.path.exists(out_path):
         raise SheetError("%s exists; sheets are never overwritten" % out_path)
     wb = Workbook()
-    wb.calculation.fullCalcOnLoad = True
-    guide_sheet(wb, form)
-    slots = photo_sheet(wb, root, form)
-    size_sheet(wb, form)
-    parts = parts_sheet(wb, root, form)
-    meta_sheet(wb, form, slots, parts, pf.shown_path(form_path, root))
-    for ws in wb.worksheets:
-        ws.page_setup.orientation = "landscape"
+    parts = build_sheet(wb, root, form)
+    meta_sheet(wb, form, parts, pf.shown_path(form_path, root))
     os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
     wb.save(out_path)
-    cache_blank_formulas(out_path, SIZE)
-    return out_path, len(slots), len(parts)
+    return out_path, len(parts)
 
 
 # ---------- read: pictures ----------
@@ -613,21 +444,21 @@ def pictures_at(pictures, row, col):
 
 
 def read_meta(wb):
-    if META not in wb.sheetnames:
+    if META not in wb.sheetnames or SHEET not in wb.sheetnames:
         raise SheetError("not a photo sheet: no %s sheet (make one with photo_sheet.py build)" % META)
     ws = wb[META]
     meta = {text(ws.cell(row=r, column=1).value): ws.cell(row=r, column=2).value for r in range(1, ws.max_row + 1)}
     if meta.get("magic") != MAGIC:
-        raise SheetError("not a %s sheet" % MAGIC)
-    for k in ("slots", "parts", "size"):
-        meta[k] = json.loads(meta.get(k) or "null") or ({} if k == "size" else [])
+        raise SheetError("not a %s sheet; build a new one with photo_sheet.py build" % MAGIC)
+    for k, empty in (("have", []), ("parts", []), ("size", {})):
+        meta[k] = json.loads(meta.get(k) or "null") or empty
     return meta
 
 
-def geometry(dims, ratios, extras, got):
+def geometry(dims, ratios, got):
     """The form's geo(): the same English lines the product form writes."""
     lines, bits, rs = [], [], []
-    mm = {k: got[k][0] * TO_MM.get(got[k][1], 1) for k in got if k in dims and got[k][1] in TO_MM}
+    mm = {k: got[k][0] * TO_MM[got[k][1]] for k in got if got[k][1] in TO_MM}
     for k, d in dims.items():
         if k in got:
             bits.append(("" if bits else "about ") + "%s %s %s" % (num_text(got[k][0]), got[k][1], d.get("en", "")))
@@ -638,9 +469,6 @@ def geometry(dims, ratios, extras, got):
             rs.append("%s about %s times the %s" % (dims[a].get("noun", a), num_text(mm[a] / mm[b]), dims[b].get("noun", b)))
     if rs:
         lines.append("; ".join(rs))
-    for e in extras:
-        if e["key"] in got and e.get("en"):
-            lines.append(e["en"].replace("{v}", num_text(got[e["key"]][0])))
     return lines, mm
 
 
@@ -656,85 +484,62 @@ def save_pictures(out_dir, name, pics, root):
     return saved
 
 
+def row_photos(pictures, r, cols, out_dir, prefix, root):
+    """{view: [saved paths]} for the five photo cells of one row."""
+    found = {}
+    for label, view in VIEWS:
+        pics = pictures_at(pictures, r, cols[label])
+        if pics:
+            found[view] = save_pictures(out_dir, prefix + view, pics, root)
+    return found
+
+
+def row_size(v, unit, name, warnings):
+    """[(value, unit)] for 长 宽 高; a unit typed into one cell applies to that cell only."""
+    return [number(v.get(col), unit, "%s 的%s" % (name, col), warnings) for col in ("长", "宽", "高")]
+
+
+def size_text(vals):
+    units = set(u for x, u in vals if x)
+    if len(units) == 1:
+        return "%s %s" % (" × ".join(num_text(x) if x else "?" for x, _ in vals), units.pop())
+    return " × ".join("%s %s" % (num_text(x), u) if x else "?" for x, u in vals)
+
+
 def read(root, xlsx, out_dir=None):
     wb = load_workbook(xlsx)
     meta = read_meta(wb)
     product = meta["product"]
-    pictures = sheet_pictures(xlsx)
+    pictures = sheet_pictures(xlsx).get(SHEET, [])
     out_dir = out_dir or next_path(root, product, "photo_sheet_in_", "")
-    warnings, notes, changed = [], [], 0
-
-    # photos
-    labels = {s["slot"]: s for s in meta["slots"]}
-    cols, rows = rows_by_key(wb[PHOTOS])
-    photos, missing = [], []
-    for key, r, v in rows:
-        label = labels.get(key, {}).get("label", key)
-        pics = pictures_at(pictures.get(PHOTOS, []), r, cols["你的照片（贴在这里）"])
-        name = text(v.get("照片文件名"))
-        how = "（替换）" if labels.get(key, {}).get("replace") else "（新增）"
-        if pics:
-            saved = save_pictures(out_dir, key, pics, root)
-            photos.append("%s=%s%s%s" % (key, saved[0], how, "；原图 " + name if name else ""))
-            photos += ["%s=%s（同一角度的另一张）" % (key, p) for p in saved[1:]]
-        elif name:
-            photos.append("%s=%s%s（表里没贴图，原图另发）" % (key, name, how))
-        elif text(v.get("拍了吗")) in ("✗", "不适用"):
-            missing.append("%s %s" % (label, text(v.get("拍了吗"))))
-        if text(v.get("备注")):
-            notes.append("%s 备注：%s" % (label, text(v.get("备注"))))
-    changed += len(photos)
-
-    # size
+    warnings, notes = [], []
     size = meta["size"]
-    dims, extras = size.get("dims") or {}, size.get("extra") or []
-    cols, rows = rows_by_key(wb[SIZE])
-    got, size_ref = {}, ""
-    for key, r, v in rows:
-        if key == "size_ref":
-            size_ref = text(v.get("数值"))
-        elif ":" in key:
-            kind, k = key.split(":", 1)
-            unit = text(v.get("单位")) or "mm"
-            val, unit = number(v.get("数值"), unit, text(v.get("项目")) or k, warnings)
-            if val:
-                got[k] = (val, unit)
-        if text(v.get("备注")):
-            notes.append("%s 备注：%s" % (text(v.get("项目")) or key, text(v.get("备注"))))
-    geo, mm = geometry(dims, size.get("ratios"), extras, got)
-    for k, v in mm.items():
-        if not 10 <= v <= 5000:
-            warnings.append("%s %s %s 看起来不对：单位是不是填错了" % (dims[k].get("short", k), num_text(got[k][0]), got[k][1]))
-    ex = ["%s %s %s" % (e.get("short") or e.get("label"), num_text(got[e["key"]][0]), got[e["key"]][1])
-          for e in extras if e["key"] in got]
-    if any(k in got for k in dims):
-        size_line = "size: " + " × ".join(
-            "%s %s" % (d.get("short", k), "%s %s" % (num_text(got[k][0]), got[k][1]) if k in got else "未填")
-            for k, d in dims.items()) + ("；" + "；".join(ex) if ex else "")
-    elif ex:
-        size_line = "size: %s未填；%s" % ("".join(d.get("short", k) for k, d in dims.items()), "；".join(ex))
-    else:
-        size_line = "size: 未填（照参考图比例画，总览标「比例推定」）"
-    ratio = ["%s/%s %s" % (dims[a].get("short", a), dims[b].get("short", b), num_text(mm[a] / mm[b]))
-             for a, b in size.get("ratios") or [] if mm.get(a) and mm.get(b)]
-    changed += len(got) + bool(size_ref)
+    dims = size.get("dims") or {}
+    labels = dict((v, l) for l, v in VIEWS)
+    cols, rows = rows_by_key(wb[SHEET])
 
-    # parts
-    cols, rows = rows_by_key(wb[PARTS])
+    photos, got, body_seen = [], {}, False
     seen, agree, edits, sizes = set(), [], [], []
     original = {p["id"]: p for p in meta["parts"]}
     for key, r, v in rows:
-        name, kind, where = text(v.get("配件名")), text(v.get("关系类型")), text(v.get("装在哪、跟谁连着"))
-        pics = pictures_at(pictures.get(PARTS, []), r, cols["你的照片（贴在这里）"])
+        name, kind = text(v.get("名称")), text(v.get("关系类型"))
         unit = text(v.get("单位")) or "mm"
-        dim_vals = []
-        for col in ("长", "宽", "高或直径"):
-            val, unit = number(v.get(col), unit, "%s 的%s" % (name or key, col), warnings)
-            dim_vals.append(val)
-        cable, _ = number(v.get("线长（有线的填）"), unit, "%s 的线长" % (name or key), warnings)
-        count = text(v.get("包装里几件"))
+        if text(v.get("备注")):
+            notes.append("%s 备注：%s" % (name or key, text(v.get("备注"))))
+        if key == BODY_KEY:
+            body_seen = True
+            for view, saved in row_photos(pictures, r, cols, out_dir, "", root).items():
+                how = "（替换）" if view in meta["have"] else "（新增）"
+                photos.append("%s=%s%s" % (view, saved[0], how))
+                photos += ["%s=%s（同一面的另一张）" % (view, p) for p in saved[1:]]
+            for k, (val, u) in zip(dims, row_size(v, unit, name or "主体", warnings)):
+                if val:
+                    got[k] = (val, u)
+            continue
+        shots = row_photos(pictures, r, cols, out_dir, "part_%s_" % key, root)
+        vals = row_size(v, unit, name or key, warnings)
         p = original.get(key)
-        if p is None and not (name or kind or where or pics or any(dim_vals) or cable or count):
+        if p is None and not (name or kind or shots or any(x for x, _ in vals)):
             continue
         seen.add(key)
         label = "%s %s" % (key, name) if p else "新增 %s" % (name or "（没写名称）")
@@ -746,39 +551,41 @@ def read(root, xlsx, out_dir=None):
                 lines.append("  %s: 不对 → 名称被清空了（原来是「%s」），按包装里没有处理" % (key, p.get("name")))
             elif name != text(p.get("name")):
                 lines.append("  %s: 不对 → 名称改成「%s」" % (key, name))
-            if where and where != text(p.get("where")):
-                lines.append("  %s: 不对 → 装在哪改成「%s」" % (key, where))
             if lines:
                 edits.append("\n".join(lines))
             else:
                 agree.append(key)
         else:
-            edits.append("  新增: %s → %s" % (name or "（没写名称）", "；".join(
-                x for x in (kind or "类型没选", where) if x)))
+            edits.append("  新增: %s → %s" % (name or "（没写名称）", kind or "类型没选"))
         bits = []
-        if any(dim_vals):
-            bits.append("%s %s" % (" × ".join(num_text(x) if x else "?" for x in dim_vals), unit))
-        if cable:
-            bits.append("线长 %s %s" % (num_text(cable), unit))
-        if count:
-            bits.append("包装里 %s 件" % count)
-        if pics:
-            fname = "part_%s" % key
-            saved = save_pictures(out_dir, fname, pics, root)
-            bits.append("照片 " + "、".join(saved))
-        elif text(v.get("照片文件名")):
-            bits.append("照片 %s（原图另发）" % text(v.get("照片文件名")))
+        if any(x for x, _ in vals):
+            bits.append(size_text(vals))
+        if shots:
+            bits.append("照片 " + "、".join("%s %s" % (labels[view], "、".join(paths)) for view, paths in shots.items()))
         if bits:
             sizes.append("- %s: %s" % (label, "；".join(bits)))
-        if text(v.get("备注")):
-            notes.append("%s 备注：%s" % (label, text(v.get("备注"))))
+    if not body_seen:
+        warnings.append("主体那一行被删掉了，主机的照片和尺寸没读到")
     for key, p in original.items():
         if key not in seen:
             edits.append("  %s: 不对 → 表里删掉了这一行（原来是「%s」），按包装里没有处理" % (key, p.get("name")))
-    changed += len(edits) + len(sizes)
+
+    geo, mm = geometry(dims, size.get("ratios"), got)
+    for k, val in mm.items():
+        if not 10 <= val <= 5000:
+            warnings.append("%s %s %s 看起来不对：单位是不是填错了" % (dims[k].get("short", k), num_text(got[k][0]), got[k][1]))
+    if got:
+        size_line = "size: " + " × ".join(
+            "%s %s" % (d.get("short", k), "%s %s" % (num_text(got[k][0]), got[k][1]) if k in got else "未填")
+            for k, d in dims.items())
+    else:
+        size_line = "size: 未填（照参考图比例画，总览标「比例推定」）"
+    ratio = ["%s/%s %s" % (dims[a].get("short", a), dims[b].get("short", b), num_text(mm[a] / mm[b]))
+             for a, b in size.get("ratios") or [] if mm.get(a) and mm.get(b)]
+    changed = len(photos) + len(got) + len(edits) + len(sizes)
 
     lines = ["UTA-PRODUCT v1", "product: " + product, "form: " + pf.shown_path(os.path.abspath(xlsx), root),
-             "draft: " + text(meta.get("generated")), "source: photo_sheet（照片尺寸表，只有尺寸、照片和配件）",
+             "draft: " + text(meta.get("generated")), "source: photo_sheet（参考图和尺寸表：五面照片、尺寸、配件）",
              "changed: %d%s" % (changed, "" if changed else "（全部按 AI 草稿）"), ""]
     if original or edits:
         lines.append("parts: 同意 %s%s" % (" ".join(agree) or "无", "；要改 %d" % len(edits) if edits else ""))
@@ -789,14 +596,10 @@ def read(root, xlsx, out_dir=None):
     lines.append(size_line)
     if ratio:
         lines.append("ratio: " + "；".join(ratio))
-    if size_ref:
-        lines.append("size_ref: " + size_ref)
     if geo:
         lines.append("geometry_prompt:")
         lines += ["- " + g for g in geo]
     lines.append("photos: " + ("；".join(photos) if photos else "没有新照片"))
-    if missing:
-        lines.append("photos_missing: " + "；".join(missing))
     if notes:
         lines.append("notes: " + "；".join(notes))
     if warnings:
@@ -822,9 +625,9 @@ def main(argv=None, root=ROOT, out=sys.stdout):
     args = parser.parse_args(argv)
     try:
         if args.cmd == "build":
-            path, n_slots, n_parts = build(root, args.form, args.out)
-            out.write("SHEET %s  photo rows %d  part rows %d\n" % (pf.shown_path(path, root), n_slots, n_parts))
-            out.write("Send it to whoever has the product; nothing waits on it.\n")
+            path, n_parts = build(root, args.form, args.out)
+            out.write("SHEET %s  part rows %d\n" % (pf.shown_path(path, root), n_parts))
+            out.write("Send it to whoever has the product; everything in it is optional and nothing waits on it.\n")
         else:
             block, folder, _ = read(root, args.xlsx, args.out_dir)
             out.write(block + "\n\nSAVED %s\n" % pf.shown_path(folder, root))
