@@ -30,11 +30,15 @@ CAMERAS = {
     "close_up": "close-up, product detail fills most of the frame",
     "wide": "wide view showing the whole room and the whole product",
 }
-MODULES = ("scene", "grid", "steps", "specs", "number", "contrast")
-PREMIUM_MODULES = {"number", "contrast"}
-ONE_FACT_MODULES = {"steps", "number", "contrast"}
-LABELLED_MODULES = {"grid", "steps", "contrast"}
-PANEL_COUNT = {"grid": (2, 4), "steps": (2, 4), "specs": (1, 1), "number": (1, 1), "contrast": (2, 2)}
+MODULES = ("scene", "grid", "steps", "specs", "number", "contrast", "overview", "bento", "split", "cards3", "fit", "trust")
+PREMIUM_MODULES = {"number", "contrast", "overview", "bento", "split", "cards3", "fit", "trust"}
+ONE_FACT_MODULES = {"steps", "number", "contrast", "split", "fit"}
+LABELLED_MODULES = {"grid", "steps", "contrast", "overview", "bento", "cards3", "fit"}
+DISTINCT_FACT_MODULES = {"grid", "overview", "bento", "cards3"}
+LINE_MODULES = {"specs": (2, 4), "trust": (2, 4), "split": (0, 3)}
+SEAM_MODULES = {"scene", "number"}
+PANEL_COUNT = {"grid": (2, 4), "steps": (2, 4), "specs": (1, 1), "number": (1, 1), "contrast": (2, 2),
+               "overview": (4, 8), "bento": (4, 4), "split": (1, 1), "cards3": (3, 3), "fit": (2, 4), "trust": (1, 1)}
 EDITIONS = ("standard", "premium")
 TONES = ("light", "dark")
 FORMAT_TEXT = {
@@ -86,7 +90,7 @@ MODULE_KEYS = [
     "card_version", "product", "slot", "canvas", "module", "selling_point",
     "headline", "subtitle", "hero_number", "panels", "lines", "refs",
 ]
-OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow", "fix"]
+OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow", "fix", "seam"]
 ALL_KEYS = set(IMAGE_KEYS) | set(MODULE_KEYS) | set(OPTIONAL_KEYS)
 ENGLISH_FIELDS = [
     "evidence", "human_action", "pet", "pet_action", "scene", "light",
@@ -505,6 +509,17 @@ def validate(path, index):
     elif not is_none(fields.get("edition")) or not is_none(fields.get("tone")):
         errors.append("'edition' and 'tone' are only for P1-P8 cards, not for panels, M1 or S cards")
     look = {"edition": edition, "tone": tone}
+    seam = (fields.get("seam") or "none").strip().lower()
+    if not is_none(seam):
+        if kind != "P" or is_panel:
+            errors.append("'seam' is only for P1-P8 screen cards")
+        elif seam != "next":
+            errors.append("seam must be 'next' (this screen joins the next one), or left out")
+        elif edition != "premium":
+            errors.append("seam: only the premium edition joins two screens")
+        elif module not in SEAM_MODULES:
+            errors.append("seam: only a scene or number screen joins the screen below it")
+    look["seam"] = seam if seam == "next" else ""
     if not is_none(fields.get("eyebrow")):
         if kind != "P" or is_panel:
             errors.append("'eyebrow' is only for P1-P8 screen cards, not for panels, M1 or S cards")
@@ -639,9 +654,11 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
 
 def panel_canvas(module, edition, count, position):
     """The frame each panel image must be generated in."""
-    if module == "number":
+    if module in ("number", "split"):
         return "3:2"
     if module == "grid" and edition == "premium" and count == 3 and position == 0:
+        return "3:2"
+    if module == "bento" and position < 2:
         return "3:2"
     return "1:1"
 
@@ -685,7 +702,7 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
     if module == "grid" and edition == "premium":
         high = 3
     names = [name.strip() for name in fields["panels"].split(",") if name.strip()]
-    expected = [slot + letter for letter in "abcd"[: len(names)]]
+    expected = [slot + letter for letter in "abcdefgh"[: len(names)]]
     if not low <= len(names) <= high:
         count = str(low) if low == high else f"{low} to {high}"
         errors.append(f"a {module} module needs {count} panel(s), got {len(names)}")
@@ -730,16 +747,17 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
     else:
         if not is_none(module_fact):
             errors.append(f"selling_point must be none on a {module} module card")
-        if module == "grid" and len(set(panel_facts)) != len(panel_facts):
-            errors.append("each panel of a grid module must show a different fact")
+        if module in DISTINCT_FACT_MODULES and len(set(panel_facts)) != len(panel_facts):
+            errors.append(f"each panel of a {module} module must show a different fact")
 
     # Spec lines: 'F1 | 10 L ; F2 | 304 Stainless Steel'
     lines = []
-    if module == "specs":
-        parts = [part.strip() for part in fields["lines"].split(";") if part.strip()]
-        if is_none(fields["lines"]) or not 2 <= len(parts) <= 4:
-            errors.append("a specs module needs 2 to 4 lines, written 'F1 | text ; F2 | text'")
-        for part in parts if not is_none(fields["lines"]) else []:
+    if module in LINE_MODULES:
+        parts = [part.strip() for part in fields["lines"].split(";") if part.strip()] if not is_none(fields["lines"]) else []
+        low, high = LINE_MODULES[module]
+        if not low <= len(parts) <= high:
+            errors.append(f"a {module} module needs {low} to {high} lines, written 'F1 | text ; F2 | text'")
+        for part in parts:
             if "|" not in part:
                 errors.append(f"line '{part}' must be 'fact id | text'")
                 continue
@@ -755,10 +773,13 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
             )
             used_facts.add(fact_id)
             lines.append((fact_id, text))
-        if len({fact_id for fact_id, _text in lines}) != len(lines):
-            errors.append("each line of a specs module must use a different fact")
+        if module == "split":
+            if any(fact_id != module_fact for fact_id, _text in lines):
+                errors.append(f"every line of a split module must use its fact {module_fact}")
+        elif len({fact_id for fact_id, _text in lines}) != len(lines):
+            errors.append(f"each line of a {module} module must use a different fact")
     elif not is_none(fields["lines"]):
-        errors.append("'lines' is only for a specs module")
+        errors.append("'lines' is only for a specs, trust or split module")
 
     copy = " ".join(fields[k] for k in ("eyebrow", "headline", "subtitle", "hero_number") if not is_none(fields.get(k)))
     allowed_texts = [facts[f]["allowed"] for f in sorted(used_facts) if f in facts]
@@ -840,6 +861,20 @@ def output_stem(context):
     return f"outputs/{context['fields']['product']}/{path.stem}"
 
 
+SEAM_NOTE = ("seam: next -> this screen and the one below are one design (UTA_STYLE.md 1.9): "
+             "carry the bottom strip of this base image down as the next screen's background, "
+             "fading to its colour within its top 30%; keep 40 px on both sides of the seam free of "
+             "product, faces, action and text")
+MODULE_NOTES = {
+    "overview": "overview: square cells in one row (4 or 6) or two rows of 4; label in each cell's lower left",
+    "bento": "bento: big cell a on the left, wide cell b top right, c and d below it; titles on cell a",
+    "split": "split: text on the left 44% (headline, subtitle, lines with amber dots), scene cell on the right",
+    "cards3": "cards3: three tall cards; picture on top, a light data strip below with the label",
+    "fit": "fit: laid out like a grid; one kind of pet, household or space per cell",
+    "trust": "trust: laid out like specs; one product-and-box cell, an outline icon before each line",
+}
+
+
 def print_copy(fields):
     if not is_none(fields.get("eyebrow")):
         print(f"eyebrow (amber, all caps): {fields['eyebrow']}")
@@ -877,6 +912,8 @@ def print_package(context, blocks):
         if context["edition"] == "premium":
             print(f"desktop {stem}_desktop_1464x600_v01.png : full bleed, white text on a gradient on the {fields['text_area']}")
             print(f"mobile  {stem}_mobile_600x450_v01.png  : full bleed, text on the image at the lower {fields['text_area']}")
+            if context.get("seam"):
+                print(SEAM_NOTE)
         else:
             print(f"desktop {stem}_desktop_1464x600_v01.png : crop the middle band, text on the {fields['text_area']}")
             print(f"mobile  {stem}_mobile_600x450_v01.png  : text band on top, image below")
@@ -903,6 +940,10 @@ def print_module(context):
     print()
     print("== CONTENT ==")
     print(f"edition: {context['edition']}   tone: {context['tone']}")
+    if module in MODULE_NOTES:
+        print(MODULE_NOTES[module])
+    if context.get("seam"):
+        print(SEAM_NOTE)
     print_copy(fields)
     for number, panel in enumerate(context["panels"], start=1):
         panel_fields = panel["fields"]

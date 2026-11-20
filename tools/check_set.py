@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.45"
+VERSION = "3.46"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -62,9 +62,15 @@ INTERACTIONS = {
 }
 LIGHT_SETUPS = ["side", "side_back", "back", "low_sun", "night_lamp"]
 BEATS = ["hook", "life", "detail", "routine", "close"]
-MODULES = ["scene", "grid", "steps", "specs", "number", "contrast"]
-COMPOSITE = {"grid", "steps", "contrast"}
-SINGLE = {"scene", "number"}
+MODULES = ["scene", "grid", "steps", "specs", "number", "contrast", "overview", "bento", "split", "cards3", "fit", "trust"]
+COMPOSITE = {"grid", "steps", "contrast", "overview", "bento", "cards3", "fit"}
+SINGLE = {"scene", "number", "split"}
+STANDARD_MODULES = {"scene", "grid", "steps", "specs"}
+CLOSING = {"specs", "trust", "fit"}
+MODULE_CAPS = (("grid", 2), ("bento", 2), ("split", 2), ("steps", 1), ("contrast", 1), ("overview", 1),
+               ("cards3", 1), ("fit", 1), ("trust", 1))
+RECIPE_FILE = os.path.join("references", "aplus_recipes.csv")
+DEFAULT_RECIPE = "free"
 
 SHOT_TEXT = {
     "extreme_close": "Extreme close-up with a macro-lens look: {focus} fills more than half of the frame, very shallow depth of field; the frame may cut off the rest of the product.",
@@ -364,6 +370,41 @@ def load_storylines(root):
     with open(path, encoding="utf-8", newline="") as fh:
         rows = list(csv.DictReader(fh))
     return {r["id"].strip(): r for r in rows if r.get("id", "").strip()}
+
+
+def load_recipes(root):
+    """references/aplus_recipes.csv -> {id: row}: the A+ page recipes (UTA_STYLE.md 1.9)."""
+    path = os.path.join(root, RECIPE_FILE)
+    if not os.path.exists(path):
+        return {DEFAULT_RECIPE: {"id": DEFAULT_RECIPE, "name": "自由组合", "skeleton": ""}}
+    with open(path, encoding="utf-8", newline="") as fh:
+        return {r["id"].strip(): r for r in csv.DictReader(fh) if (r.get("id") or "").strip()}
+
+
+def recipe_steps(row):
+    """'scene > bento|grid > specs|fit' -> [{'scene'}, {'bento', 'grid'}, {'specs', 'fit'}]."""
+    return [set(x.strip() for x in step.split("|") if x.strip())
+            for step in (row.get("skeleton") or "").split(">") if step.strip()]
+
+
+def recipe_problems(mods, steps):
+    """Where the screens leave the recipe's skeleton: first, in-order middle, last (A-17)."""
+    if not steps or not mods:
+        return []
+    out = []
+    if mods[0] not in steps[0]:
+        out.append("第一屏要是 %s，现在是 %s" % (" 或 ".join(sorted(steps[0])), mods[0]))
+    if len(steps) > 1 and mods[-1] not in steps[-1]:
+        out.append("最后一屏要是 %s，现在是 %s" % (" 或 ".join(sorted(steps[-1])), mods[-1]))
+    i = 1
+    for want in steps[1:-1]:
+        while i < len(mods) - 1 and mods[i] not in want:
+            i += 1
+        if i >= len(mods) - 1:
+            out.append("中间缺 %s（骨架要按顺序出现）" % " 或 ".join(sorted(want)))
+            break
+        i += 1
+    return out
 
 
 def load_techniques(root):
@@ -847,13 +888,13 @@ def fact_counts(ts):
 
     for s in ts.screens:
         mod = s.module
-        if mod == "scene" or mod in ("steps", "number", "contrast"):
+        if mod == "scene" or mod in ("steps", "number", "contrast", "split", "fit"):
             add(s.f("selling_point"), s.slot)
-        elif mod == "grid":
+        elif mod in ("grid", "bento", "cards3"):
             for n in ts.panels_of(s):
                 if n in ts.by_slot:
                     add(ts.by_slot[n].f("selling_point"), n)
-        elif mod == "specs":
+        elif mod in ("specs", "trust"):
             for part in s.f("lines", "none").split(";"):
                 if "|" in part:
                     add(part.split("|")[0], s.slot + " lines")
@@ -1234,8 +1275,8 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
                 fails.append(("A-1", "开场屏景别要是 close 或 medium，现在是 %s" % first.f("shot_size")))
         if first.module == "scene" and first.is_none("pet"):
             out.append(("A-1", "开场屏要有宠物"))
-        if last.module != "specs":
-            out.append(("A-2", "最后一屏要是 specs，现在是 %s" % last.module))
+        if last.module not in CLOSING:
+            out.append(("A-2", "最后一屏要是 specs、trust 或 fit，现在是 %s" % last.module))
         if strict and last.f("beat") != "close":
             fails.append(("A-2", "最后一屏的 beat 要是 close"))
         mods = [s.module for s in scr]
@@ -1243,22 +1284,21 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         for s in scr:
             run = run + 1 if s.module in SINGLE else 0
             if run == 3:
-                out.append(("A-3", "单图屏（scene、number）连续超过两屏，到 %s 为止" % s.slot))
-        for mod, cap in (("grid", 2), ("steps", 1), ("contrast", 1)):
+                out.append(("A-3", "单图屏（scene、number、split）连续超过两屏，到 %s 为止" % s.slot))
+        for mod, cap in MODULE_CAPS:
             if mods.count(mod) > cap:
                 out.append(("A-3", "%s 用了 %d 屏，最多 %d 屏" % (mod, mods.count(mod), cap)))
         if ed == "premium":
             comps = [s for s in scr if s.module in COMPOSITE]
             if len(comps) < 2:
-                out.append(("A-4", "高级版组合模块只有 %d 屏（grid/steps/contrast），至少两屏" % len(comps)))
-            strong = [s for s in comps if s.module == "contrast" or
+                out.append(("A-4", "高级版组合模块只有 %d 屏（grid、steps、contrast、overview、bento、cards3、fit），至少两屏" % len(comps)))
+            strong = [s for s in comps if s.module in ("contrast", "overview", "bento", "cards3") or
                       (s.module == "grid" and len(ts.panels_of(s)) == 3)]
             if not strong:
-                out.append(("A-4", "高级版至少要有一屏三格拼盘或前后对照"))
+                out.append(("A-4", "高级版至少要有一屏三格拼盘、前后对照、卖点总览、不等分拼盘或三张竖卡"))
         else:
-            for mod in ("number", "contrast"):
-                if mod in mods:
-                    out.append(("A-4", "标准版不能用 %s" % mod))
+            for mod in sorted(set(mods) - STANDARD_MODULES):
+                out.append(("A-4", "标准版不能用 %s" % mod))
             if mods.count("scene") * 2 < m:
                 out.append(("A-4", "标准版 scene 只有 %d 屏，至少占一半" % mods.count("scene")))
         if strict:
@@ -1273,13 +1313,18 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         if strict and m >= 4 and not any(c.f("shot_size") == "extreme_close" for c in imgs):
             fails.append(("A-7", "A+ 里没有 extreme_close"))
         if ed == "premium":
-            tones = [s.f("tone", "light") for s in scr]
-            darks = tones.count("dark")
-            if darks < 1 or darks > 2:
-                out.append(("A-8", "高级版深色屏 %d 屏，要一到两屏" % darks))
-            for a, b in zip(scr, scr[1:]):
-                if a.f("tone", "light") == "dark" and b.f("tone", "light") == "dark":
-                    out.append(("A-8", "深色屏相邻：%s 和 %s" % (a.slot, b.slot)))
+            blocks = []
+            for s in scr:
+                if blocks and blocks[-1][-1].f("seam", "none") == "next":
+                    blocks[-1].append(s)
+                else:
+                    blocks.append([s])
+            dark = [b for b in blocks if any(x.f("tone", "light") == "dark" for x in b)]
+            if len(dark) < 1 or len(dark) > 2:
+                out.append(("A-8", "高级版深色屏 %d 屏，要一到两屏（无缝拼接的两屏算一屏）" % len(dark)))
+            for a, b in zip(blocks, blocks[1:]):
+                if a in dark and b in dark:
+                    out.append(("A-8", "深色屏相邻：%s 和 %s" % (a[-1].slot, b[0].slot)))
             if not any(s.module == "number" or (s.module == "scene" and not s.is_none("hero_number")) for s in scr):
                 out.append(("A-8", "高级版至少一屏巨型数字（number，或带强调数字的 scene）"))
         if strict and imgs:
@@ -1314,6 +1359,34 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
             out.append(("A-12", "A+ 有 %d 屏，最多八屏" % m))
         elif ed == "premium" and m > 7:
             warns.append(("A-12", "高级版第 %d 屏：第三方资料称 Premium A+ 最多 7 个模块（未在 Amazon 官方页面核实）" % m))
+        recipe = (pools.get("recipe") or {}) if isinstance(pools, dict) else {}
+        if recipe.get("id", DEFAULT_RECIPE) != DEFAULT_RECIPE:
+            if ed != "premium":
+                out.append(("A-17", "套路 %s 只用于高级版；标准版写 aplus_recipe: free" % recipe["id"]))
+            for msg in recipe_problems(mods, recipe_steps(recipe)):
+                out.append(("A-17", "套路 %s「%s」：%s" % (recipe["id"], recipe.get("name", ""), msg)))
+        seams = [i for i, s in enumerate(scr) if s.f("seam", "none") == "next"]
+        for i in seams:
+            a = scr[i]
+            if ed != "premium":
+                out.append(("A-18", "%s 写了 seam：无缝拼接只用于高级版" % a.slot))
+            if i == m - 1:
+                out.append(("A-18", "%s 是最后一屏，不能写 seam: next" % a.slot))
+                continue
+            b = scr[i + 1]
+            if a.module not in ("scene", "number"):
+                out.append(("A-18", "%s 写了 seam：上面一屏要是 scene 或 number，现在是 %s" % (a.slot, a.module)))
+            if b.module not in COMPOSITE:
+                out.append(("A-18", "%s 接 %s：下面一屏要是组合模块，现在是 %s" % (a.slot, b.slot, b.module)))
+            if a.f("tone", "light") != b.f("tone", "light"):
+                out.append(("A-18", "%s 和 %s 拼接，深浅要一样" % (a.slot, b.slot)))
+            if i + 1 in seams:
+                out.append(("A-18", "%s、%s、%s 连着拼了三屏，最多两屏" % (a.slot, b.slot, scr[i + 2].slot if i + 2 < m else "?")))
+        if len(seams) > 2:
+            out.append(("A-18", "一页拼接了 %d 处，最多两处" % len(seams)))
+        for i, s in enumerate(scr):
+            if s.module == "overview" and i != 1:
+                out.append(("A-19", "%s 是卖点总览，只能放第 2 屏" % s.slot))
 
     # ---------------- G rules
     if strict:
@@ -1549,6 +1622,14 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
     pools["storyline_declared"] = bool(header.get("storyline", "").strip())
     pools["cast"] = [v for v in re.split(r"[;,+\s]+", header.get("cast", "")) if v]
     pools["techniques"] = load_techniques(root)
+    recipes = load_recipes(root)
+    rid = header.get("aplus_recipe", "").strip() or DEFAULT_RECIPE
+    if rid not in recipes:
+        p("TASK ERROR: 头部 aplus_recipe 要写 references/aplus_recipes.csv 里的编号（A、B、C、D 或 free，1.9），现在是「%s」" % rid)
+        return 2
+    pools["recipe"] = recipes[rid]
+    if rid != DEFAULT_RECIPE:
+        p("aplus_recipe=%s %s" % (rid, recipes[rid].get("name", "")))
     if pools["storyline_declared"]:
         p("storyline=%s %s  cast=%s" % (sid, storylines[sid].get("name", ""), " ".join(pools["cast"]) or "-"))
     pools["usage"] = load_usage(root, product)
