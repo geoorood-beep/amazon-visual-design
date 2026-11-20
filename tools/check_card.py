@@ -21,6 +21,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools"))
+import icons as icon_lib  # noqa: E402
 
 CAMERAS = {
     "low_angle": "low angle close to the floor or counter, camera looking slightly up",
@@ -508,7 +510,19 @@ def validate(path, index):
             errors.append(f"module: {module} is only for the premium edition")
     elif not is_none(fields.get("edition")) or not is_none(fields.get("tone")):
         errors.append("'edition' and 'tone' are only for P1-P8 cards, not for panels, M1 or S cards")
-    look = {"edition": edition, "tone": tone}
+    look = {"edition": edition, "tone": tone, "icons": {}}
+    for key, value in list(fields.items()):
+        if "{icon:" not in (value or ""):
+            continue
+        if key not in ("hero_number", "label", "lines"):
+            errors.append(f"{key}: an icon only goes before hero_number, a panel label or a spec line (UTA_STYLE.md 1.5)")
+        elif key != "lines":
+            icon, rest, problem = icon_lib.split_icon(value)
+            if problem:
+                errors.append(f"{key}: {problem}")
+            else:
+                look["icons"][key] = icon
+            fields[key] = rest
     seam = (fields.get("seam") or "none").strip().lower()
     if not is_none(seam):
         if kind != "P" or is_panel:
@@ -576,6 +590,11 @@ def validate_image(path, fields, refs, errors, warnings, kind, is_panel, look, i
         )
     else:
         fact = facts[selling_point]
+    for key, icon in look.get("icons", {}).items():
+        text = (fact["fact"] + " " + fact["allowed"]) if fact else ""
+        problem = icon_lib.icon_problem(ROOT, icon, text, key)
+        if problem:
+            errors.append(f"{key}: {problem}")
 
     if fields["camera"] not in CAMERAS:
         errors.append("camera must be one of: " + ", ".join(CAMERAS))
@@ -751,7 +770,7 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
             errors.append(f"each panel of a {module} module must show a different fact")
 
     # Spec lines: 'F1 | 10 L ; F2 | 304 Stainless Steel'
-    lines = []
+    lines, line_icons = [], []
     if module in LINE_MODULES:
         parts = [part.strip() for part in fields["lines"].split(";") if part.strip()] if not is_none(fields["lines"]) else []
         low, high = LINE_MODULES[module]
@@ -765,6 +784,15 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
             if fact_id not in facts:
                 errors.append(f"line '{part}': '{fact_id}' is not a fact id")
                 continue
+            icon, text, problem = icon_lib.split_icon(text)
+            if problem:
+                errors.append(f"line '{part}': {problem}")
+            elif icon:
+                problem = icon_lib.icon_problem(ROOT, icon, facts[fact_id]["fact"] + " " + facts[fact_id]["allowed"],
+                                                "lines", module)
+                if problem:
+                    errors.append(f"line '{part}': {problem}")
+            line_icons.append(icon)
             if len(text.split()) > MAX_LABEL_WORDS:
                 errors.append(f"line '{text}' has more than {MAX_LABEL_WORDS} words")
             check_copy(
@@ -783,6 +811,11 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
 
     copy = " ".join(fields[k] for k in ("eyebrow", "headline", "subtitle", "hero_number") if not is_none(fields.get(k)))
     allowed_texts = [facts[f]["allowed"] for f in sorted(used_facts) if f in facts]
+    if look.get("icons", {}).get("hero_number"):
+        text = " ".join(facts[f]["fact"] + " " + facts[f]["allowed"] for f in sorted(used_facts) if f in facts)
+        problem = icon_lib.icon_problem(ROOT, look["icons"]["hero_number"], text, "hero_number", module)
+        if problem:
+            errors.append(f"hero_number: {problem}")
     check_copy(copy, allowed_texts, product, product_forbidden, errors)
 
     attach = check_refs(refs, {"layout"}, product, index, errors)
@@ -791,7 +824,7 @@ def validate_module(path, fields, refs, errors, warnings, module, look, index):
         return errors, warnings, None
     context = {
         "type": "module", "fields": fields, "kind": "P", "panel": False, "module": module,
-        "panels": panels, "lines": lines, "attach": attach, "path": path, **look,
+        "panels": panels, "lines": lines, "line_icons": line_icons, "attach": attach, "path": path, **look,
     }
     return errors, warnings, context
 
@@ -875,13 +908,18 @@ MODULE_NOTES = {
 }
 
 
-def print_copy(fields):
+def icon_note(icons, key):
+    icon = (icons or {}).get(key)
+    return f"   icon before it: {icon_lib.icon_path(icon)} (same colour, about the text height, UTA_STYLE.md 1.5)" if icon else ""
+
+
+def print_copy(fields, icons=None):
     if not is_none(fields.get("eyebrow")):
         print(f"eyebrow (amber, all caps): {fields['eyebrow']}")
     print(f"headline: {fields['headline']}")
     print(f"subtitle: {fields['subtitle']}")
     if not is_none(fields["hero_number"]):
-        print(f"hero number (amber): {fields['hero_number']}")
+        print(f"hero number (amber): {fields['hero_number']}{icon_note(icons, 'hero_number')}")
 
 
 def print_package(context, blocks):
@@ -901,7 +939,7 @@ def print_package(context, blocks):
         print("== AFTER GENERATION ==")
         print(f"save the image without text as: {stem}_v01.png")
         if not is_none(fields.get("label")):
-            print(f"label, added when {fields['slot'][:2]} is composed: {fields['label']}")
+            print(f"label, added when {fields['slot'][:2]} is composed: {fields['label']}{icon_note(context.get('icons'), 'label')}")
         print(f"do not typeset this panel; compose it with its module card {fields['slot'][:2]}")
     elif kind == "M":
         print("== AFTER GENERATION ==")
@@ -918,13 +956,13 @@ def print_package(context, blocks):
             print(f"desktop {stem}_desktop_1464x600_v01.png : crop the middle band, text on the {fields['text_area']}")
             print(f"mobile  {stem}_mobile_600x450_v01.png  : text band on top, image below")
         print(f"edition: {context['edition']}   tone: {context['tone']}")
-        print_copy(fields)
+        print_copy(fields, context.get('icons'))
     else:
         print("== TYPESET AFTER GENERATION (UTA_STYLE.md 1.5) ==")
         print(f"save the image without text as: {stem}_base_v01.png")
         print(f"save the typeset image as: {stem}_v01.png")
         print(f"text area: {fields['text_area']}")
-        print_copy(fields)
+        print_copy(fields, context.get('icons'))
 
 
 def print_module(context):
@@ -944,16 +982,16 @@ def print_module(context):
         print(MODULE_NOTES[module])
     if context.get("seam"):
         print(SEAM_NOTE)
-    print_copy(fields)
+    print_copy(fields, context.get('icons'))
     for number, panel in enumerate(context["panels"], start=1):
         panel_fields = panel["fields"]
-        label = "" if is_none(panel_fields.get("label")) else f"   label: {panel_fields['label']}"
+        label = "" if is_none(panel_fields.get("label")) else f"   label: {panel_fields['label']}{icon_note(panel.get('icons'), 'label')}"
         step = f"step {number}  " if module == "steps" else ""
         if module == "contrast":
             step = "before  " if number == 1 else "after  "
         print(f"panel {panel_fields['slot']}: {step}{output_stem(panel)}_v01.png{label}")
-    for fact_id, text in context["lines"]:
-        print(f"line ({fact_id}): {text}")
+    for (fact_id, text), icon in zip(context["lines"], context.get("line_icons") or [None] * len(context["lines"])):
+        print(f"line ({fact_id}): {text}{icon_note({'l': icon}, 'l')}")
     for _slot, ref_path, purpose in context["attach"]:
         print(f"layout reference, for the arrangement only: {ref_path}   ({purpose})")
 
