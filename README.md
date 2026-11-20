@@ -1,6 +1,6 @@
 # 亚马逊美工设计
 
-规则版本 **3.52**（2026-11-20）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
+规则版本 **3.53**（2026-11-20）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
 
 出图只有一份指引：**[UTA_STYLE.md](UTA_STYLE.md)**。写任务的 Grok 和出图的 Codex 读的是同一份。
 
@@ -42,7 +42,7 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | 给某个卖点增加或修改证明画面 | `products/<产品>/evidence_options.csv`（列的含义见 `UTA_STYLE.md` 1.10） |
 | 补产品参考图 | 放进 `products/<产品>/ref/`，在产品卡和 [references/INDEX.csv](references/INDEX.csv) 各加一行 |
 | 补尺寸、规格照、部件关系 | 打开产品资料表（选填）填好，把生成的 `UTA-PRODUCT` 发给 Grok；或对 Codex 说「打开 <产品> 的产品资料表」 |
-| 产品有 3D 模型（工厂的 STP 等） | 把文件放进本机的 `products/<产品>/model/`（不会提交，仓库是公开的），对 Codex 说「用 3D 模型做 <产品>」；之后哪张渲染、哪张生成由脚本自动定（`UTA_STYLE.md` 1.18） |
+| 产品有 3D 模型（工厂的 STP 等） | 把文件放进本机的 `products/<产品>/model/`（不会提交，仓库是公开的），对 Codex 说「用 3D 模型做 <产品>」。之后每张图的产品形状都从模型里按角度拿，场景和颜色由 Codex 生成，出图后自动比对形状（`UTA_STYLE.md` 1.18） |
 | 拿着实物拍照、量尺寸 | 对 Codex 说「出 <产品> 的参考图和尺寸表」，拿到一张 Excel 表：主体和配件各一行，贴前后左右上五面照片、写长宽高（全部选填），发回给 Grok 或 Codex |
 | 改某个产品的结构核对题 | `products/<产品>/checks.csv`（列的含义见 `UTA_STYLE.md` 4.7），改完运行 `python tools/blind_check.py check` |
 | 加一个新品类 | 在 [references/categories/](references/categories/README.md) 加一份品类文件，运行 `python tools/product_form.py check` |
@@ -68,7 +68,9 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | `tools/blind_check.py` | 独立核对：另一个没看过卡片的模型只看图答结构题，脚本对照产品卡打分（4.7） | 机制 |
 | `grok/product_template.html` 和 `grok/product_form.css`、`grok/product_form.js` | 产品资料表：Grok 只抄很短的外壳，样式和脚本从仓库加载；`product_form.py build` 生成的文件把它们嵌进页面 | 机制 |
 | `tools/product_form.py` | 选填的产品资料表：定品类、出草稿、生成 `outputs/<产品>/product_form_vNN.html`（1.15、3.9） | 机制 |
-| `tools/product_model.py` | 产品来源：读 `model.json`，判断 3D 路线开没开、每张卡走渲染还是生成（1.18、3.10） | 机制 |
+| `tools/product_model.py` | 产品来源：读 `model.json`，判断 3D 路线开没开；卡上的角度换成 3D 相机的对照表（1.18、3.10） | 机制 |
+| `tools/render_refs.py`、`tools/blender_refs.py` | 从 3D 模型一次渲染整套要的形状参考图（本机 Blender）；`views` 出各角度标注图；`convert` 把 STP 转成 GLB | 机制 |
+| `tools/shape_check.py` | 形状比对：成图和同角度渲染图交给独立的模型只比形状，偏了给 FIX 一行（1.18、3.10） | 机制 |
 | `tools/photo_sheet.py` | 选填的参考图和尺寸表：`build` 把产品资料表做成一张 Excel（主体和每个配件一行，五面照片加长宽高）；`read` 读回填好的表，取出照片、打出 `UTA-PRODUCT v1`（1.15、3.9） | 机制 |
 | `references/icons/` | 图标库：34 个线条图标（Lucide，ISC 许可）、`icons.csv`（意思、要对上的词、不能暗示的东西）、`board.png` 总览（1.5） | 数据 |
 | `references/aplus_recipes.csv` | A+ 页面套路：痛点解决、功能清单、质感叙事、场景旅程、自由组合，各自学自哪个详情页、骨架和例子（1.9） | 数据 |

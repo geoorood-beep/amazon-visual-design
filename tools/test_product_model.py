@@ -1,4 +1,4 @@
-"""Product source (UTA_STYLE.md 1.18, 3.10): the 3D route, its switch, and that CAD never reaches the repo.
+"""Product source (UTA_STYLE.md 1.18, 3.10): the 3D model gives the shape at any angle, Codex the rest.
 
     python -m unittest discover -s tools -p "test_product_model.py" -v
 """
@@ -9,26 +9,47 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from pathlib import Path
 
+import check_card
 import check_set
 import product_model as pm
+import render_refs
+import shape_check
 from test_check_set import V2
 
 ROOT = pm.ROOT
-READY = {"product": "demo", "source": "demo.stp", "status": "ready", "unit": "mm",
-         "scale_check": {"dim": "L", "model_mm": 312, "measured_mm": 310}, "approved": "user 2026-11-21"}
+READY = {"product": "demo", "source": "demo.stp", "mesh": "demo.glb", "status": "ready", "unit": "mm",
+         "axes": {"front": "-Y", "up": "+Z"}, "scale_check": {"dim": "L", "model_mm": 312, "measured_mm": 310},
+         "approved": "user 2026-11-21"}
 
 
 class RouteTest(unittest.TestCase):
-    def test_routes(self):
-        self.assertEqual(pm.route("M1", ready=True), "render")
-        self.assertEqual(pm.route("S2", "product_only", ready=True), "render_composite")
-        self.assertEqual(pm.route("S3", "drink", "hero_wide", ready=True), "render_composite")
-        self.assertEqual(pm.route("S4", "drink", "surface_wide", ready=True), "render_ref")
-        self.assertEqual(pm.route("P2a", "rest", ready=True), "render_ref")
+    def test_every_card_takes_the_shape_reference_when_it_can(self):
+        for slot in ("M1", "S2", "P2a"):
+            self.assertEqual(pm.route(slot, ready=True), "render_ref")
         self.assertEqual(pm.route("M1", ready=False), "generate")
         self.assertEqual(pm.route("M1", ready=True, has_renderer=False), "generate")
         self.assertEqual(set(pm.STEPS), set(pm.ROUTES))
+
+    def test_card_to_camera_table_covers_every_value(self):
+        self.assertEqual(set(pm.VIEW_AZIMUTH), set(check_set.VIEW_TEXT))
+        self.assertEqual(set(pm.CAMERA_ELEVATION), set(check_set.CAMERA_TEXT))
+        self.assertEqual(set(pm.SHOT_FILL), set(check_set.SHOT_TEXT))
+        self.assertEqual(set(pm.LENS_MM), set(check_set.LENSES))
+        self.assertIn("1:1", pm.CANVAS_PX)
+
+    def test_jobs(self):
+        close = pm.job_for("S2", {"product_view": "front", "camera": "eye_level", "shot_size": "close",
+                                  "lens": "standard", "product_state": "assembled", "focus": "control_panel",
+                                  "canvas": "4:5"})
+        self.assertEqual((close["focus"], close["fill"]), ("control_panel", 0.72))
+        medium = pm.job_for("S3", dict(close, shot_size="medium"))
+        self.assertEqual(medium["focus"], "whole")
+        self.assertEqual(pm.job_for("M1", {})["canvas"], "1:1")
+        a, b = pm.job_id(close, READY), pm.job_id(dict(close), READY)
+        self.assertEqual(a, b)
+        self.assertNotEqual(a, pm.job_id(close, dict(READY, revision=2)))
 
 
 class ModelJsonTest(unittest.TestCase):
@@ -45,15 +66,15 @@ class ModelJsonTest(unittest.TestCase):
         self.assertIsNone(pm.load_model(self.root, "demo"))
         self.assertFalse(pm.is_ready(self.root, "demo"))
 
-    def test_ready_needs_scale_check_and_approval(self):
+    def test_ready_needs_axes_mesh_scale_and_approval(self):
         self.write(READY)
         self.assertTrue(pm.is_ready(self.root, "demo"))
-        self.write(dict(READY, approved=""))
-        self.assertFalse(pm.is_ready(self.root, "demo"))
-        self.write(dict(READY, scale_check={"model_mm": 330, "measured_mm": 310}))
-        self.assertIn("differ by more than 2%", " ".join(pm.model_problems(self.root, "demo", pm.load_model(self.root, "demo"))))
-        self.write(dict(READY, status="draft"))
-        self.assertFalse(pm.is_ready(self.root, "demo"))
+        for broken in (dict(READY, approved=""), dict(READY, axes={}), dict(READY, mesh=""),
+                       dict(READY, scale_check={"model_mm": 330, "measured_mm": 310}), dict(READY, status="draft")):
+            self.write(broken)
+            self.assertFalse(pm.is_ready(self.root, "demo"), broken)
+        self.write(dict(READY, axes={"front": "north", "up": "+Z"}))
+        self.assertIn("axes.front", " ".join(pm.model_problems(self.root, "demo", pm.load_model(self.root, "demo"))))
         out = io.StringIO()
         self.write(dict(READY, status="maybe"))
         self.assertEqual(pm.main(["check"], root=self.root, out=out), 1)
@@ -70,16 +91,122 @@ class CompileTest(unittest.TestCase):
             _, _, cards = check_set.parse_task(fh.read())
         return {c.slot: c for c in cards}
 
-    def test_route_is_written_only_when_the_model_is_ready(self):
-        cards = self.cards()
-        off = "\n".join(check_set.compile_card(cards["M1"], {}))
-        self.assertNotIn("product_source:", off)
-        on = {"model_ready": True, "renderer": "/usr/bin/blender", "expressions": {}, "people": {}, "moods": {}}
-        self.assertIn("product_source: render", check_set.compile_card(cards["M1"], on))
-        lines = "\n".join(check_set.compile_card(cards["P2a"], on))
+    def pools(self, renderer="/usr/bin/blender"):
+        return {"model_ready": True, "renderer": renderer, "model": READY, "product": "round10l",
+                "expressions": {}, "people": {}, "moods": {}}
+
+    def test_no_model_leaves_the_card_alone(self):
+        self.assertNotIn("product_source", "\n".join(check_set.compile_card(self.cards()["M1"], {})))
+
+    def test_ready_model_adds_a_shape_reference_and_a_job(self):
+        pools = self.pools()
+        lines = check_set.compile_card(self.cards()["P2a"], pools)
         self.assertIn("product_source: render_ref", lines)
-        no_blender = {"model_ready": True, "renderer": None}
-        self.assertIn("product_source: generate", check_set.compile_card(cards["M1"], no_blender))
+        ref = [l for l in lines if l.startswith("render_ref: outputs/round10l/renders/")]
+        self.assertEqual(len(ref), 1)
+        self.assertEqual(len(pools["render_jobs"]), 1)
+        job = list(pools["render_jobs"].values())[0]
+        self.assertEqual((job["view"], job["camera"], job["shot"], job["canvas"]), ("side_right", "eye_level", "full", "3:2"))
+        main = check_set.compile_card(self.cards()["M1"], pools)
+        self.assertIn("product_source: render_ref", main)
+        self.assertEqual(len(pools["render_jobs"]), 2)
+
+    def test_no_blender_falls_back(self):
+        lines = check_set.compile_card(self.cards()["M1"], self.pools(renderer=None))
+        self.assertIn("product_source: generate", lines)
+        self.assertFalse([l for l in lines if l.startswith("render_ref:")])
+
+
+class CheckCardTest(unittest.TestCase):
+    def test_shape_reference_reaches_the_prompt(self):
+        index = check_card.load_index()
+        folder = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, folder)
+        card = sorted((Path(ROOT) / "cards" / "round10l").glob("S*_*.md"))[0]
+        text = card.read_text(encoding="utf-8").replace("canvas: 4:5\n", "canvas: 4:5\nproduct_source: render_ref\n"
+                                                         "render_ref: outputs/round10l/renders/abc.png | shape only\n", 1)
+        (folder / card.name).write_text(text, encoding="utf-8")
+        errors, _w, context = check_card.validate(folder / card.name, index)
+        self.assertEqual(errors, [])
+        self.assertEqual(context["render_ref"], "outputs/round10l/renders/abc.png")
+        prompt = check_card.build_prompt(context, check_card.load_prompt_blocks())
+        self.assertIn("SHAPE: The first attached picture is a plain 3D render", prompt)
+        bad = text.replace("render_ref: outputs/round10l/renders/abc.png | shape only\n", "")
+        (folder / card.name).write_text(bad, encoding="utf-8")
+        errors, _w, _c = check_card.validate(folder / card.name, index)
+        self.assertTrue(any("needs a render_ref line" in e for e in errors), errors)
+
+
+class RenderRefsTest(unittest.TestCase):
+    def setUp(self):
+        self.root = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.root)
+        d = os.path.join(self.root, "products", "demo", "model")
+        os.makedirs(d)
+        with open(os.path.join(d, "model.json"), "w", encoding="utf-8") as fh:
+            json.dump(READY, fh)
+        open(os.path.join(d, "demo.glb"), "wb").close()
+
+    def test_only_missing_jobs_go_to_blender_once(self):
+        job = pm.job_for("M1", {})
+        jobs = {pm.job_id(job, READY): job, "old": dict(job, view="rear")}
+        pm.save_jobs(self.root, "demo", jobs)
+        folder = pm.render_dir(self.root, "demo")
+        open(os.path.join(folder, "old.png"), "wb").close()
+        calls = []
+
+        def fake(model, todo, folder_, blender=None, timeout=3600):
+            calls.append(sorted(todo))
+            return ["ALL"]
+
+        real = render_refs.blender_run
+        render_refs.blender_run = fake
+        try:
+            out = io.StringIO()
+            self.assertEqual(render_refs.main(["run", "--product", "demo"], root=self.root, out=out), 0)
+        finally:
+            render_refs.blender_run = real
+        self.assertEqual(calls, [[pm.job_id(job, READY)]])
+        self.assertIn("RENDERED 1 new, 1 reused", out.getvalue())
+
+    def test_missing_mesh_is_an_error(self):
+        os.remove(os.path.join(self.root, "products", "demo", "model", "demo.glb"))
+        out = io.StringIO()
+        self.assertEqual(render_refs.main(["run", "--product", "demo"], root=self.root, out=out), 2)
+        self.assertIn("run `convert` first", out.getvalue())
+
+
+class ShapeCheckTest(unittest.TestCase):
+    ANSWER = {"same_product": "yes", "proportion": "same", "fix_en": "",
+              "differences": [{"part": "lid", "problem": "slightly thicker", "severity": "minor"}]}
+
+    def test_verdicts(self):
+        self.assertEqual(shape_check.verdict(self.ANSWER), "PASS")
+        major = dict(self.ANSWER, differences=[{"part": "bowl", "problem": "missing", "severity": "major"}])
+        self.assertEqual(shape_check.verdict(major), "FAIL")
+        self.assertEqual(shape_check.verdict(dict(self.ANSWER, proportion="taller")), "FAIL")
+        self.assertEqual(shape_check.verdict(dict(self.ANSWER, same_product="unsure")), "UNSURE")
+        self.assertIn("bowl: missing", shape_check.fix_line(major))
+
+    def test_whole_answer_is_parsed_not_a_nested_object(self):
+        text = "noise " + json.dumps(self.ANSWER) + " trailing"
+        self.assertEqual(shape_check.parse_object(text)["same_product"], "yes")
+
+    def test_run_with_a_reviewer_command(self):
+        root = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, root)
+        img = os.path.join(root, "a.png")
+        open(img, "wb").close()
+        answer = os.path.join(root, "answer.json")
+        with open(answer, "w", encoding="utf-8") as fh:
+            json.dump(dict(self.ANSWER, same_product="no", fix_en="Make the hopper taller."), fh)
+        out = io.StringIO()
+        code = shape_check.main(["run", "--product", "demo", "--image", img, "--render", img, "--slot", "S2",
+                                 "--reviewer", "cp %s {out}" % answer], root=root, out=out)
+        self.assertEqual(code, 1)
+        self.assertIn("SHAPE FAIL S2", out.getvalue())
+        self.assertIn("FIX: Make the hopper taller.", out.getvalue())
+        self.assertTrue(os.path.exists(os.path.join(root, "outputs", "demo", "shape_check.json")))
 
 
 class RepoTest(unittest.TestCase):
@@ -87,19 +214,19 @@ class RepoTest(unittest.TestCase):
         if not os.path.exists(os.path.join(ROOT, ".git")):
             self.skipTest("not a git checkout")
         for name in ("source.stp", "part.step", "demo.glb", "scene.blend", "render.png"):
-            path = "products/pw002_s/model/%s" % name
-            code = subprocess.run(["git", "check-ignore", "-q", path], cwd=ROOT).returncode
-            self.assertEqual(code, 0, path)
-        code = subprocess.run(["git", "check-ignore", "-q", "products/pw002_s/model/model.json"], cwd=ROOT).returncode
-        self.assertEqual(code, 1)
+            code = subprocess.run(["git", "check-ignore", "-q", "products/pw002_s/model/%s" % name], cwd=ROOT).returncode
+            self.assertEqual(code, 0, name)
+        self.assertEqual(subprocess.run(["git", "check-ignore", "-q", "products/pw002_s/model/model.json"], cwd=ROOT).returncode, 1)
+        self.assertEqual(subprocess.run(["git", "check-ignore", "-q", "outputs/demo/renders/x.png"], cwd=ROOT).returncode, 0)
 
     def test_wiring(self):
         with open(os.path.join(ROOT, "UTA_STYLE.md"), encoding="utf-8") as fh:
             guide = fh.read()
-        for marker in ("### 1.18 产品来源", "### 3.10 3D 渲染路线", "`render_composite`", "模型文件不进仓库"):
+        for marker in ("### 1.18 产品来源", "### 3.10 3D 渲染路线", "tools/render_refs.py", "tools/shape_check.py",
+                       "模型文件不进仓库", "颜色只到"):
             self.assertIn(marker, guide)
         with open(os.path.join(ROOT, "AGENTS.md"), encoding="utf-8") as fh:
-            self.assertIn("PRODUCT SOURCE", fh.read())
+            self.assertIn("render_refs.py", fh.read())
 
 
 if __name__ == "__main__":

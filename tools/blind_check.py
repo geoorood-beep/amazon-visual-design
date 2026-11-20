@@ -188,7 +188,7 @@ def parse_answers(text):
     return {str(k): str(v).strip() for k, v in found.items()}
 
 
-def ask(images, prompt, schema, reviewer=None, timeout=300, model=None):
+def ask(images, prompt, schema, reviewer=None, timeout=300, model=None, parse=None):
     """Run the reviewer in an empty folder so it has nothing to read but what it is given.
 
     Image paths are made absolute first: the reviewer runs in that empty folder, and a relative
@@ -230,7 +230,7 @@ def ask(images, prompt, schema, reviewer=None, timeout=300, model=None):
             text = proc.stdout or ""
         if proc.returncode != 0 and not text.strip():
             raise CheckError("reviewer failed (exit %d): %s" % (proc.returncode, (proc.stderr or "").strip()[-300:]))
-        return parse_answers(text)
+        return (parse or parse_answers)(text)
     except subprocess.TimeoutExpired:
         raise CheckError("reviewer timed out after %ds" % timeout)
     finally:
