@@ -113,7 +113,22 @@ class BuildTest(Base):
         self.assertIn("全部选填", ws["A2"].value)
         body = row_of(ws, "body")
         self.assertEqual(ws.cell(row=body, column=2).value, "不锈钢桶身（含顶盘）")
-        self.assertEqual(body, row_of(ws, "example") + 1)
+        self.assertEqual(body, row_of(ws, "example") + 2)
+
+    def test_sizes_are_explained_by_direction(self):
+        ws = load_workbook(self.xlsx)[ps.SHEET]
+        self.assertIn("长＝从主体正面看过去的左右，宽＝前后，高＝上下", ws["A2"].value)
+        self.assertIn("长：左右最宽处；宽：前后最深处；高：桌面到盆沿", ws["A2"].value)
+        guide = row_of(ws, "guide")
+        self.assertEqual(guide, ps.HEADER_ROW + 1)
+        got = {label: ws.cell(row=guide, column=ps.col_of(label)).value for label in ("长", "宽", "高", "正面", "左侧", "俯视（上）")}
+        self.assertEqual(got, {"长": "左右", "宽": "前后", "高": "上下", "正面": "看得到 长 × 高",
+                               "左侧": "看得到 宽 × 高", "俯视（上）": "看得到 长 × 宽"})
+        self.assertEqual(ws.cell(row=guide, column=ps.col_of("备注")).value, "主体正面＝有水位窗的那一面")
+        upright, flat = guide + 1, guide + 2
+        self.assertIn("竖的那一边写在「高」", ws.cell(row=upright, column=ps.col_of("备注")).value)
+        self.assertEqual([ws.cell(row=upright, column=ps.col_of(c)).value for c in ("长", "宽", "高")], [40, 40, 120])
+        self.assertIn("平放在桌上量", ws.cell(row=flat, column=ps.col_of("备注")).value)
         self.assertRaises(AssertionError, row_of, ws, "P1")
         self.assertEqual(ws.cell(row=row_of(ws, "P2"), column=3).value, "可拆件")
         row_of(ws, "new5")
@@ -179,8 +194,8 @@ class ReadTest(Base):
         self.assertIn("  P2: 类型 可拆件 → 组成部件", block)
         self.assertIn("  P9: 不对 → 表里删掉了这一行", block)
         self.assertIn("  新增: 清洁刷 → 随附配件", block)
-        self.assertIn("- P2 水泵头组件（一个整体）: 60 mm × 5 cm × 210 mm", block)
-        self.assertIn("- 新增 清洁刷: 15 × 2 × 2 cm", block)
+        self.assertIn("- P2 水泵头组件（一个整体）: 左右 60 mm × 前后 5 cm × 上下 210 mm", block)
+        self.assertIn("- 新增 清洁刷: 左右 15 × 前后 2 × 上下 2 cm", block)
         self.assertIn("- P3 黑色控制头: 照片 左侧 ", block)
         self.assertIn("warnings: 黑色圆柱（上宽下窄） 的长 写的「约6」不是数字，没用", block)
         self.assertIn("不锈钢桶身（含顶盘） 备注：控制头高出盆沿约 55 mm", block)

@@ -42,11 +42,23 @@ TO_MM = {"mm": 1, "cm": 10, "m": 1000, "in": 25.4, "ft": 304.8}
 NEW_ROWS = 5
 HEADER_ROW = 4
 BODY_KEY = "body"
+SKIP_KEYS = ("guide", "example")
+DIRECTIONS = {"长": "左右", "宽": "前后", "高": "上下"}
+# What each photo shows of the three sizes, so a row's numbers can be checked against its own photos.
+VIEW_SHOWS = {"正面": "看得到 长 × 高", "背面": "看得到 长 × 高", "左侧": "看得到 宽 × 高", "右侧": "看得到 宽 × 高",
+              "俯视（上）": "看得到 长 × 宽"}
+EXAMPLES = [
+    {"名称": "立式滤芯（示例，不是这款的配件）", "关系类型": "可拆件", "长": 40, "宽": 40, "高": 120, "单位": "mm",
+     "备注": "装在机器上的配件，按装好时的方向量：从主体正面看左右 40、前后 40、上下 120。它竖着插，竖的那一边写在「高」"},
+    {"名称": "清洁刷（示例，不是这款的配件）", "关系类型": "随附配件", "长": 150, "宽": 20, "高": 20, "单位": "mm",
+     "备注": "不装在机器上的配件，平放在桌上量：最长那一边朝左右，写在「长」150；前后 20；上下（厚）20"},
+]
 
 FONT = "Arial"
 INPUT = PatternFill("solid", fgColor="FFF2CC")
 NOTE = PatternFill("solid", fgColor="EEEEEE")
 HEAD = PatternFill("solid", fgColor="1F2630")
+SUB = PatternFill("solid", fgColor="DDE5EE")
 BOX = Border(*(Side(style="thin", color="BBBBBB"),) * 4)
 WRAP = Alignment(wrap_text=True, vertical="center")
 CENTER = Alignment(wrap_text=True, vertical="center", horizontal="center")
@@ -162,6 +174,14 @@ def put(ws, row, col, value=None, font=BODY, fill=None, align=WRAP):
     return c
 
 
+def front_face(form):
+    """Which face counts as the front, in the user's words: the water-window side when the body has one."""
+    body = (form.get("parts") or [{}])[0]
+    if "水位窗" in body.get("where", "") + body.get("visible", ""):
+        return "有水位窗的那一面"
+    return "正面平视照片里朝镜头的那一面"
+
+
 def body_of(form):
     """(name, reference image, parts) where parts leaves out the body itself and props."""
     parts = form.get("parts") or []
@@ -170,6 +190,13 @@ def body_of(form):
     front = next((s.get("img") for s in form.get("photos", []) if s.get("slot") == "front" and s.get("img")), "")
     name = (body or {}).get("name") or (form.get("title") or form["product"]).split(" · ")[0]
     return name, front or ((body or {}).get("imgs") or [""])[0], rest
+
+
+def body_rule(size):
+    """'长：左右最宽处；宽：前后最深处；高：桌面到盆沿。量外轮廓……' from the category's size definition."""
+    labels = "；".join(d.get("label", "") for d in list((size.get("dims") or {}).values())[:3] if d.get("label"))
+    hint = size.get("hint", "量外轮廓。")
+    return ("%s。%s " % (labels, hint)) if labels else hint + " "
 
 
 def item_row(ws, root, r, n, key, name, kind, ref, unit, guess=True):
@@ -197,8 +224,10 @@ def build_sheet(wb, root, form):
     lines = [
         ("%s 参考图和尺寸填写表" % title, Font(name=FONT, size=15, bold=True), 24),
         ("全部选填，填多少用多少。黄色格子是能填的地方：每行贴前、后、左、右、上五面照片（只拍这五面，其他角度 AI 推），"
-         "再写长、宽、高。主体那一行：%s配件平放量最长、最宽、最厚。" % (size.get("hint", "量外轮廓。") + " "),
-         BODY, 32),
+         "再写长、宽、高。长宽高都按装好时的方向量：长＝从主体正面看过去的左右，宽＝前后，高＝上下（从桌面往上）。"
+         "主体那一行：%s装在主体上的配件按装好时的方向量，竖着插的那一边写在「高」；不装在主体上的配件平放着量，"
+         "最长那一边算「长」。看下面两行蓝字示例。" % body_rule(size),
+         BODY, 44),
         ("贴照片：新版 Excel 插入 → 图片 → 放置在单元格中；WPS 插入 → 图片 → 嵌入单元格；或直接把照片拖到格子上。"
          "灰色斜体是 AI 推的，不对直接改；包装里没有的配件整行删掉，漏的写进下面空行。蓝字是示例，可以删。原始照片请一起发。",
          Font(name=FONT, size=10, color="555555"), 32),
@@ -215,17 +244,27 @@ def build_sheet(wb, root, form):
     ws.freeze_panes = "C%d" % (HEADER_ROW + 1)
 
     r = HEADER_ROW + 1
-    example = {"序号": "示例", "名称": "清洁刷（示例，不是这款的配件）", "关系类型": "随附配件", "长": 150, "宽": 20, "高": 20,
-               "单位": "mm", "备注": "这一行是示例，可以删"}
+    guide = dict(VIEW_SHOWS, **DIRECTIONS)
+    guide.update({"序号": "怎么量", "名称": "长宽高按装好时的方向", "关系类型": "", "现有参考": "", "单位": "",
+                  "备注": "主体正面＝" + front_face(form)})
     for i, label in enumerate(COLS[:-1], 1):
-        put(ws, r, i, example.get(label), BLUE, INPUT if i > 4 else NOTE, WRAP if label in ("名称", "备注") else CENTER)
-    put(ws, r, len(COLS), "example")
+        put(ws, r, i, guide.get(label), Font(name=FONT, size=9, bold=label in DIRECTIONS, color="1F2630"), SUB, CENTER)
+    put(ws, r, len(COLS), "guide")
     ws.row_dimensions[r].height = 30
+    for example in EXAMPLES:
+        r += 1
+        example = dict(example, 序号="示例")
+        for i, label in enumerate(COLS[:-1], 1):
+            put(ws, r, i, example.get(label), BLUE, INPUT if i > 4 else NOTE, WRAP if label in ("名称", "备注") else CENTER)
+        put(ws, r, len(COLS), "example")
+        ws.row_dimensions[r].height = 58
+    first_example = HEADER_ROW + 2
 
     name, ref, parts = body_of(form)
     dims = list(size["dims"].values())
     r += 1
     item_row(ws, root, r, "主体", BODY_KEY, name, "主体", ref, dims[0].get("unit", "mm") if dims else "mm", guess=False)
+    body_row = r
     ws.cell(row=r, column=col_of("长")).comment = Comment(
         "；".join(d.get("label", "") for d in dims[:3]) or "长宽高量外轮廓", "UTA")
     rows = [(p["id"], p) for p in parts] + [("new%d" % k, None) for k in range(1, NEW_ROWS + 1)]
@@ -234,7 +273,7 @@ def build_sheet(wb, root, form):
         item_row(ws, root, r, n, key, p and p.get("name"), p and p.get("type"), (p.get("imgs") or [""])[0] if p else "", "mm")
     kinds = DataValidation(type="list", formula1='"%s"' % ",".join(TYPES), allow_blank=True)
     units = DataValidation(type="list", formula1='"mm,cm,m"', allow_blank=True)
-    for dv, col, first in ((kinds, "C", HEADER_ROW + 3), (units, col_letter(col_of("单位")), HEADER_ROW + 1)):
+    for dv, col, first in ((kinds, "C", body_row + 1), (units, col_letter(col_of("单位")), first_example)):
         ws.add_data_validation(dv)
         dv.add("%s%d:%s%d" % (col, first, col, r))
     ws.cell(row=HEADER_ROW, column=3).comment = Comment(
@@ -434,7 +473,7 @@ def rows_by_key(ws):
     out = []
     for r in range(HEADER_ROW + 1, ws.max_row + 1):
         key = text(ws.cell(row=r, column=cols["key"]).value)
-        if key and key != "example":
+        if key and key not in SKIP_KEYS:
             out.append((key, r, {name: ws.cell(row=r, column=c).value for name, c in cols.items()}))
     return cols, out
 
@@ -500,10 +539,13 @@ def row_size(v, unit, name, warnings):
 
 
 def size_text(vals):
+    """'左右 60 × 前后 50 × 上下 210 mm': a part's size in its installed directions (长 宽 高)."""
+    names = [DIRECTIONS[c] for c in ("长", "宽", "高")]
     units = set(u for x, u in vals if x)
     if len(units) == 1:
-        return "%s %s" % (" × ".join(num_text(x) if x else "?" for x, _ in vals), units.pop())
-    return " × ".join("%s %s" % (num_text(x), u) if x else "?" for x, u in vals)
+        return "%s %s" % (" × ".join("%s %s" % (n, num_text(x) if x else "?") for n, (x, _u) in zip(names, vals)),
+                          units.pop())
+    return " × ".join("%s %s" % (n, "%s %s" % (num_text(x), u) if x else "?") for n, (x, u) in zip(names, vals))
 
 
 def read(root, xlsx, out_dir=None):
