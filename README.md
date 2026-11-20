@@ -69,8 +69,8 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | `grok/product_template.html` 和 `grok/product_form.css`、`grok/product_form.js` | 产品资料表：Grok 只抄很短的外壳，样式和脚本从仓库加载；`product_form.py build` 生成的文件把它们嵌进页面 | 机制 |
 | `tools/product_form.py` | 选填的产品资料表：定品类、出草稿、生成 `outputs/<产品>/product_form_vNN.html`（1.15、3.9） | 机制 |
 | `tools/product_model.py` | 产品来源：读 `model.json`，判断 3D 路线开没开；卡上的角度换成 3D 相机的对照表（1.18、3.10） | 机制 |
-| `tools/render_refs.py`、`tools/blender_refs.py` | 从 3D 模型一次渲染整套要的形状参考图（本机 Blender）；`views` 出各角度标注图；`convert` 把 STP 转成 GLB | 机制 |
-| `tools/shape_check.py` | 形状比对：成图和同角度渲染图交给独立的模型只比形状，偏了给 FIX 一行（1.18、3.10） | 机制 |
+| `tools/render_refs.py`、`tools/blender_refs.py` | 从 3D 模型一次渲染整套要的形状参考图（本机 Blender，`check_set.py` 会自动调用）；`views` 出各角度标注图；`convert` 把 STP 转成 GLB | 机制 |
+| `tools/shape_check.py` | 形状比对：成图和同角度渲染图交给独立的模型只比形状，偏了给 FIX 一行；`batch` 一轮并行比完（1.18、3.10） | 机制 |
 | `tools/photo_sheet.py` | 选填的参考图和尺寸表：`build` 把产品资料表做成一张 Excel（主体和每个配件一行，五面照片加长宽高）；`read` 读回填好的表，取出照片、打出 `UTA-PRODUCT v1`（1.15、3.9） | 机制 |
 | `references/icons/` | 图标库：34 个线条图标（Lucide，ISC 许可）、`icons.csv`（意思、要对上的词、不能暗示的东西）、`board.png` 总览（1.5） | 数据 |
 | `references/aplus_recipes.csv` | A+ 页面套路：痛点解决、功能清单、质感叙事、场景旅程、自由组合，各自学自哪个详情页、骨架和例子（1.9） | 数据 |

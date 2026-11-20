@@ -954,8 +954,9 @@ def print_package(context, blocks):
             ready = (ROOT / context["render_ref"]).is_file()
             print(f"shape reference, attach it FIRST: {context['render_ref']}"
                   + ("" if ready else f"   (not rendered yet: python tools/render_refs.py run --product {fields['product']})"))
-            print(f"after generation: python tools/shape_check.py run --product {fields['product']} --image <the picture> "
-                  f"--render {context['render_ref']} --slot {fields['slot']}")
+            print(f"after the whole round: python tools/shape_check.py batch --product {fields['product']} --task <this task>"
+                  f"   (one picture: shape_check.py run --image <the picture> --render {context['render_ref']}"
+                  f" --slot {fields['slot']})")
         print()
     print("== PROMPT (use as is) ==")
     print(build_prompt(context, blocks))

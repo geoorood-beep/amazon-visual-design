@@ -145,6 +145,20 @@ def job_for(slot, fields):
     }
 
 
+def card_gaps(shot, focus, state, model):
+    """What a card asks of the model that the model cannot show yet (1.18). Without this the render would quietly
+    fall back to the whole product (an unknown focus part) or the assembled product (an unknown state)."""
+    out = []
+    if SHOT_FILL.get(shot, ("whole",))[0] == "part" and focus and focus != "whole" \
+            and focus not in (model.get("parts") or {}):
+        out.append("3D 模型的 parts 里没有 %s：这张特写会退回拍整机。在 model.json 的 parts 里写上它对应哪些零件，"
+                   "或者这张卡改写别的焦点部位（1.18）" % focus)
+    if state and state != "assembled" and state not in (model.get("states") or {}):
+        out.append("3D 模型的 states 里没有 %s：会退回渲染成组装好的样子。在 model.json 的 states 里写上这个状态要隐藏、"
+                   "移动、旋转哪些零件（1.18）" % state)
+    return out
+
+
 def job_id(job, model):
     """Stable name for a render: the same angle of the same model revision is rendered once and reused."""
     key = json.dumps({"job": job, "revision": (model or {}).get("revision", 1),

@@ -52,6 +52,26 @@ class RouteTest(unittest.TestCase):
         self.assertNotEqual(a, pm.job_id(close, dict(READY, revision=2)))
 
 
+class CardGapTest(unittest.TestCase):
+    MODEL = dict(READY, parts={"control_panel": ["08_*"]}, states={"loading": {"rotate": {}}})
+
+    def test_close_shot_on_an_unmapped_part_is_caught(self):
+        self.assertEqual(pm.card_gaps("close", "control_panel", "assembled", self.MODEL), [])
+        gaps = pm.card_gaps("extreme_close", "lid_hinge", "assembled", self.MODEL)
+        self.assertEqual(len(gaps), 1)
+        self.assertIn("lid_hinge", gaps[0])
+        # a medium or wide shot frames the whole product, so its focus part needs no mapping
+        self.assertEqual(pm.card_gaps("wide", "lid_hinge", "assembled", self.MODEL), [])
+
+    def test_unmapped_state_is_caught(self):
+        self.assertEqual(pm.card_gaps("medium", "whole", "loading", self.MODEL), [])
+        self.assertIn("disassembled", pm.card_gaps("medium", "whole", "disassembled", self.MODEL)[0])
+
+    def test_check_set_runs_it(self):
+        with open(os.path.join(ROOT, "tools", "check_set.py"), encoding="utf-8") as fh:
+            self.assertIn("product_model.card_gaps(shot, focus, card_state(card)", fh.read())
+
+
 class ModelJsonTest(unittest.TestCase):
     def setUp(self):
         self.root = tempfile.mkdtemp()
@@ -169,6 +189,23 @@ class RenderRefsTest(unittest.TestCase):
         self.assertEqual(calls, [[pm.job_id(job, READY)]])
         self.assertIn("RENDERED 1 new, 1 reused", out.getvalue())
 
+    def test_check_set_renders_the_round_itself(self):
+        job = pm.job_for("M1", {})
+        jobs = {pm.job_id(job, READY): job}
+        real = render_refs.blender_run
+        render_refs.blender_run = lambda *a, **k: ["ALL"]
+        lines = []
+        try:
+            self.assertTrue(check_set.render_now(self.root, "demo", jobs, lines.append))
+        finally:
+            render_refs.blender_run = real
+        self.assertTrue(any("RENDERED 1 new" in l for l in lines), lines)
+        os.remove(os.path.join(self.root, "products", "demo", "model", "demo.glb"))
+        lines = []
+        self.assertFalse(check_set.render_now(self.root, "demo", jobs, lines.append))
+        self.assertIn("WARN [1.18]", lines[0])
+        self.assertIn("照常生成", lines[1])
+
     def test_missing_mesh_is_an_error(self):
         os.remove(os.path.join(self.root, "products", "demo", "model", "demo.glb"))
         out = io.StringIO()
@@ -209,6 +246,45 @@ class ShapeCheckTest(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(root, "outputs", "demo", "shape_check.json")))
 
 
+class ShapeBatchTest(unittest.TestCase):
+    def test_a_whole_round_in_parallel(self):
+        root = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, root)
+        out_dir = os.path.join(root, "outputs", "demo")
+        renders = os.path.join(out_dir, "renders")
+        os.makedirs(renders)
+        for name in ("aaa.png", "bbb.png", "ccc.png"):
+            open(os.path.join(renders, name), "wb").close()
+        for name in ("S2_bowl_base_v01.png", "S2_bowl_base_v02.png", "S2_bowl_v03.png", "M1_main_v01.png",
+                     "P2a_tray_v01.png", "P2_x_desktop_1464x600_v01.png"):
+            open(os.path.join(out_dir, name), "wb").close()
+        task = os.path.join(root, "task.md")
+        with open(task, "w", encoding="utf-8") as fh:
+            fh.write("UTA-TASK v1\nproduct: demo\ncards: 4\n\n"
+                     "=== cards/demo/M1_main.md ===\nslot: M1\nrender_ref: outputs/demo/renders/aaa.png | shape\n"
+                     "=== cards/demo/S2_bowl.md ===\nslot: S2\nrender_ref: outputs/demo/renders/bbb.png | shape\n"
+                     "=== cards/demo/S3_lid.md ===\nslot: S3\nrender_ref: outputs/demo/renders/ccc.png | shape\n"
+                     "=== cards/demo/S4_text.md ===\nslot: S4\nproduct_source: generate\n")
+        answer = os.path.join(root, "answer.json")
+        with open(answer, "w", encoding="utf-8") as fh:
+            json.dump(dict(ShapeCheckTest.ANSWER, same_product="no", fix_en="Make the lid flatter."), fh)
+        self.assertEqual(shape_check.newest_picture(out_dir, "S2"), os.path.join(out_dir, "S2_bowl_base_v02.png"))
+        self.assertIsNone(shape_check.newest_picture(out_dir, "P2"))
+        out = io.StringIO()
+        code = shape_check.main(["batch", "--product", "demo", "--task", task, "--jobs", "3",
+                                 "--reviewer", "cp %s {out}" % answer], root=root, out=out)
+        text = out.getvalue()
+        self.assertEqual(code, 1)
+        self.assertIn("SHAPE FAIL M1", text)
+        self.assertIn("SHAPE FAIL S2", text)
+        self.assertIn("SHAPE SKIP S3: no picture yet", text)
+        self.assertNotIn("S4", text)
+        self.assertIn("SHAPE BATCH 2 checked: PASS 0, FAIL 2", text)
+        self.assertIn("regenerate with the FIX lines: M1 S2", text)
+        with open(os.path.join(out_dir, "shape_check.json"), encoding="utf-8") as fh:
+            self.assertEqual(len(json.load(fh)), 2)
+
+
 class RepoTest(unittest.TestCase):
     def test_cad_files_never_reach_the_repo(self):
         if not os.path.exists(os.path.join(ROOT, ".git")):
@@ -226,7 +302,7 @@ class RepoTest(unittest.TestCase):
                        "模型文件不进仓库", "颜色只到"):
             self.assertIn(marker, guide)
         with open(os.path.join(ROOT, "AGENTS.md"), encoding="utf-8") as fh:
-            self.assertIn("render_refs.py", fh.read())
+            self.assertIn("shape_check.py batch", fh.read())
 
 
 if __name__ == "__main__":

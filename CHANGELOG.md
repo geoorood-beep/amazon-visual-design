@@ -8,8 +8,10 @@
 - 卡上的角度换成 3D 相机的固定对照表（朝向→方位角、机位→仰角、景别→取景、镜头→焦距、画幅→像素）；`model.json` 加 `axes`、`hide`、`materials`（颜色只分几类）、`parts`（焦点部位对准哪些零件）、`states`（拆、开盖这些状态怎么摆）、`revision`。
 - 新工具：`tools/render_refs.py` 读 `check_set.py` 写的角度清单，打开 Blender 一次全部渲染，同角度复用；`views` 出各角度标注图给用户看；`convert` 把 STP 转成 GLB。`tools/blender_refs.py` 是在 Blender 里跑的那一半（含透明件面朝向修正）。`tools/shape_check.py` 把成图和渲染图交给独立的模型只比形状，严重差异判 FAIL 并给 FIX 一行，轻微差异不重出。
 - 3.10 改写成准备和出图两段；AGENTS.md、README 同步。
+- 一轮更连贯：`check_set.py` 列完角度当场渲染（`--no-render` 只列不渲染；渲染出错只 WARN，照常生成）；`shape_check.py batch` 读任务单，取每个图位最新的成图，几张并行比对，最后列出要带 FIX 重出的图位，所有 FAIL 一起重出。
+- 不漏角度：近景、大特写的焦点部位没登记在 `model.json` 的 `parts`，或产品状态不在 `states` 里，`check_set.py` 判这张卡 FAIL（以前会悄悄退回拍整机或组装好的样子）。
 - 双碗喂食器实测：STP 转 GLB 11 秒；7 个角度一次渲染 22 秒；5 张卡的角度（含近景对准控制面板、开盖加粮、拆碗、低机位广角、主图）16 秒，第二次全部复用；形状比对每次约 25 秒，真图判 PASS，换成别的产品判 FAIL 并列出 5 处严重差异。
-- 测试 `tools/test_product_model.py` 改写，覆盖对照表、角度清单、缓存、形状比对的判定和解析。
+- 测试 `tools/test_product_model.py` 改写，覆盖对照表、角度清单、缓存、当场渲染、模型缺项、形状比对的判定、解析和整轮并行。
 
 ## v3.52 — 2026-11-20 产品来源：生成，或用 3D 模型渲染
 
