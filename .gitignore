@@ -17,3 +17,7 @@ node_modules/
 *.zip
 *.mp4
 *.mov
+# 3D models and CAD (UTA_STYLE.md 1.18): never committed, the repository is public. Only model.json is.
+/products/*/model/*
+!/products/*/model/model.json
+!/products/*/model/README.md

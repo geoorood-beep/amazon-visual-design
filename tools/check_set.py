@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.51"
+VERSION = "3.52"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -1657,6 +1657,11 @@ def compile_card(card, pools=None):
                 extra = [product_ref_line(card, ref) if l.strip().startswith("product:") else l for l in extra]
         out.append("%s: %s" % (key, val) if val else "%s:" % key)
         out.extend(extra)
+        if key == "canvas" and (card.is_image or card.kind == "main") and (pools or {}).get("model_ready"):
+            import product_model
+            out.append("product_source: %s" % product_model.route(
+                card.slot, card.f("interaction", ""), card.f("lens", "standard").strip(), True,
+                bool((pools or {}).get("renderer"))))
     return out
 
 
@@ -1775,6 +1780,11 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
     if pools["storyline_declared"]:
         p("storyline=%s %s  cast=%s" % (sid, storylines[sid].get("name", ""), " ".join(pools["cast"]) or "-"))
     pools["usage"] = load_usage(root, product)
+    import product_model
+    pools["model_ready"] = product_model.is_ready(root, product)
+    pools["renderer"] = product_model.renderer()
+    if pools["model_ready"]:
+        p("product_source: 3D 路线开启（1.18）；渲染器 %s" % (pools["renderer"] or "没装，全部退回 generate"))
     core = [v for v in re.split(r"[;,+\s]+", header.get("core", "")) if v]
     unknown = [f for f in core if f not in pools["usage"]["facts"]]
     if len(core) > 2 or unknown or len(set(core)) != len(core):

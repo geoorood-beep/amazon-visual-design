@@ -92,7 +92,7 @@ MODULE_KEYS = [
     "card_version", "product", "slot", "canvas", "module", "selling_point",
     "headline", "subtitle", "hero_number", "panels", "lines", "refs",
 ]
-OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow", "fix", "seam"]
+OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow", "fix", "seam", "product_source"]
 ALL_KEYS = set(IMAGE_KEYS) | set(MODULE_KEYS) | set(OPTIONAL_KEYS)
 ENGLISH_FIELDS = [
     "evidence", "human_action", "pet", "pet_action", "scene", "light",
@@ -511,6 +511,12 @@ def validate(path, index):
     elif not is_none(fields.get("edition")) or not is_none(fields.get("tone")):
         errors.append("'edition' and 'tone' are only for P1-P8 cards, not for panels, M1 or S cards")
     look = {"edition": edition, "tone": tone, "icons": {}}
+    source = (fields.get("product_source") or "generate").strip()
+    if source not in ("render", "render_composite", "render_ref", "generate"):
+        errors.append("product_source must be render, render_composite, render_ref or generate (UTA_STYLE.md 1.18)")
+    elif source == "render" and fields["slot"] != "M1":
+        errors.append("product_source: render (a whole-picture render) is only for M1")
+    look["product_source"] = source
     for key, value in list(fields.items()):
         if "{icon:" not in (value or ""):
             continue
@@ -932,6 +938,11 @@ def print_package(context, blocks):
     for i, (slot, ref_path, _purpose) in enumerate(context["attach"], start=1):
         print(f"{i}. {ref_path}   ({REF_LABEL[slot]})")
     print()
+    if context.get("product_source", "generate") != "generate":
+        import product_model
+        print(f"== PRODUCT SOURCE: {context['product_source']} (UTA_STYLE.md 1.18, 3.10) ==")
+        print(product_model.STEPS[context["product_source"]])
+        print()
     print("== PROMPT (use as is) ==")
     print(build_prompt(context, blocks))
     print()
