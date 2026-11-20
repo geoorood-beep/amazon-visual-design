@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.52"
+VERSION = "3.53"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -841,6 +841,9 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
             if req and req["state"] and state != req["state"]:
                 errs.append("%s 要求产品状态 %s，这张卡写的是 %s（依据：%s；1.15）"
                             % (fact, req["state"], state, req["source"]))
+        if pools.get("model_ready") and pools.get("model"):
+            import product_model
+            errs.extend(product_model.card_gaps(shot, focus, card_state(card), pools["model"]))
     return errs
 
 
@@ -1659,9 +1662,17 @@ def compile_card(card, pools=None):
         out.extend(extra)
         if key == "canvas" and (card.is_image or card.kind == "main") and (pools or {}).get("model_ready"):
             import product_model
-            out.append("product_source: %s" % product_model.route(
-                card.slot, card.f("interaction", ""), card.f("lens", "standard").strip(), True,
-                bool((pools or {}).get("renderer"))))
+            src = product_model.route(card.slot, ready=True, has_renderer=bool(pools.get("renderer")))
+            out.append("product_source: %s" % src)
+            if src == "render_ref":
+                job = product_model.job_for(card.slot, {
+                    "product_view": card.f("product_view"), "camera": card.f("camera"),
+                    "shot_size": card.f("shot_size"), "lens": card.f("lens", "standard").strip() or "standard",
+                    "product_state": card_state(card), "focus": card.f("focus", "whole"), "canvas": card.f("canvas")})
+                jid = product_model.job_id(job, pools.get("model"))
+                out.append("render_ref: outputs/%s/renders/%s.png | the product's shape only: outline, proportions, "
+                           "every part's position and size" % (pools.get("product", ""), jid))
+                pools.setdefault("render_jobs", {})[jid] = job
     return out
 
 
@@ -1680,6 +1691,22 @@ def emit_task(path, product, cards, pools=None):
         fh.write("\n".join(lines))
 
 
+def render_now(root, product, jobs, p):
+    """Render the angles this round needs right here, so nobody has to remember a second command (3.10)."""
+    import io
+    import render_refs
+    out = io.StringIO()
+    try:
+        render_refs.render(root, product, jobs, render_refs.model_for(root, product), out)
+    except render_refs.RenderError as e:
+        p("WARN [1.18] 3D 渲染没成功：%s" % str(e).splitlines()[0])
+        p("     再试：python tools/render_refs.py run --product %s；还不行，这些卡照常生成，不停下" % product)
+        return False
+    for line in out.getvalue().splitlines():
+        p("     " + line)
+    return True
+
+
 def task_text_from(text):
     lines = text.splitlines()
     for i, line in enumerate(lines):
@@ -1690,7 +1717,7 @@ def task_text_from(text):
 
 
 # ---------------------------------------------------------------- main
-def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.stdout):
+def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.stdout, render=True):
     def p(*a):
         print(*a, file=out)
 
@@ -1782,9 +1809,11 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
     pools["usage"] = load_usage(root, product)
     import product_model
     pools["model_ready"] = product_model.is_ready(root, product)
+    pools["model"] = product_model.load_model(root, product)
+    pools["product"] = product
     pools["renderer"] = product_model.renderer()
     if pools["model_ready"]:
-        p("product_source: 3D 路线开启（1.18）；渲染器 %s" % (pools["renderer"] or "没装，全部退回 generate"))
+        p("product_source: 3D 路线开启（1.18）；渲染器 %s" % (pools["renderer"] or "没装，全部照常生成"))
     core = [v for v in re.split(r"[;,+\s]+", header.get("core", "")) if v]
     unknown = [f for f in core if f not in pools["usage"]["facts"]]
     if len(core) > 2 or unknown or len(set(core)) != len(core):
@@ -1868,6 +1897,14 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
         emit_task(emit, product, ok_cards, pools)
         p("EMIT %s（%d 张卡，已换成 card_version 1）  下一步：python tools/check_card.py --task %s"
           % (emit, len(ok_cards), emit))
+        if pools.get("render_jobs"):
+            import product_model
+            product_model.save_jobs(root, product, pools["render_jobs"])
+            p("RENDER %d 个角度要从 3D 模型拿（1.18）" % len(pools["render_jobs"]))
+            if render and pools.get("renderer"):
+                render_now(root, product, pools["render_jobs"], p)
+            else:
+                p("     运行：python tools/render_refs.py run --product %s" % product)
     p("汇总：%d 张卡，OK %d，FAIL %d，SET FAIL 0" % (len(cards), len(ok_cards), len(card_errs)))
     return 1 if card_errs else 0
 
@@ -1879,8 +1916,9 @@ def main(argv=None):
     ap.add_argument("--views", help="override products/<product>/ref_views.csv")
     ap.add_argument("--root", default=".", help="repository root (default: current directory)")
     ap.add_argument("--state", help="saved full task for scope: patch (default: <task dir>/task_full_v2.md)")
+    ap.add_argument("--no-render", action="store_true", help="list the 3D angles but do not render them now")
     args = ap.parse_args(argv)
-    return run(args.task, args.emit, args.views, args.root, args.state)
+    return run(args.task, args.emit, args.views, args.root, args.state, render=not args.no_render)
 
 
 if __name__ == "__main__":

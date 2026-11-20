@@ -92,7 +92,8 @@ MODULE_KEYS = [
     "card_version", "product", "slot", "canvas", "module", "selling_point",
     "headline", "subtitle", "hero_number", "panels", "lines", "refs",
 ]
-OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow", "fix", "seam", "product_source"]
+OPTIONAL_KEYS = ["module", "label", "panels", "lines", "edition", "tone", "eyebrow", "fix", "seam", "product_source",
+                 "render_ref"]
 ALL_KEYS = set(IMAGE_KEYS) | set(MODULE_KEYS) | set(OPTIONAL_KEYS)
 ENGLISH_FIELDS = [
     "evidence", "human_action", "pet", "pet_action", "scene", "light",
@@ -512,11 +513,13 @@ def validate(path, index):
         errors.append("'edition' and 'tone' are only for P1-P8 cards, not for panels, M1 or S cards")
     look = {"edition": edition, "tone": tone, "icons": {}}
     source = (fields.get("product_source") or "generate").strip()
-    if source not in ("render", "render_composite", "render_ref", "generate"):
-        errors.append("product_source must be render, render_composite, render_ref or generate (UTA_STYLE.md 1.18)")
-    elif source == "render" and fields["slot"] != "M1":
-        errors.append("product_source: render (a whole-picture render) is only for M1")
+    if source not in ("render_ref", "generate"):
+        errors.append("product_source must be render_ref or generate (UTA_STYLE.md 1.18)")
+    render_ref = (fields.get("render_ref") or "").split("|")[0].strip()
+    if source == "render_ref" and not render_ref:
+        errors.append("product_source: render_ref needs a render_ref line (written by check_set.py)")
     look["product_source"] = source
+    look["render_ref"] = render_ref if source == "render_ref" else ""
     for key, value in list(fields.items()):
         if "{icon:" not in (value or ""):
             continue
@@ -842,6 +845,11 @@ def build_prompt(context, blocks):
     else:
         frame = kind
     out = [f"FORMAT: {FORMAT_TEXT[frame]}."]
+    if context.get("render_ref"):
+        out.append(
+            "SHAPE: The first attached picture is a plain 3D render of this exact product from this angle. Copy its "
+            "outline, proportions and the position and size of every part exactly. Take colours, materials and finish "
+            "from the product photo, not from the render; the render's grey ground is not part of the scene.")
     if kind == "M":
         out.append(
             "Studio product photograph on a pure white background (RGB 255,255,255). "
@@ -942,6 +950,13 @@ def print_package(context, blocks):
         import product_model
         print(f"== PRODUCT SOURCE: {context['product_source']} (UTA_STYLE.md 1.18, 3.10) ==")
         print(product_model.STEPS[context["product_source"]])
+        if context.get("render_ref"):
+            ready = (ROOT / context["render_ref"]).is_file()
+            print(f"shape reference, attach it FIRST: {context['render_ref']}"
+                  + ("" if ready else f"   (not rendered yet: python tools/render_refs.py run --product {fields['product']})"))
+            print(f"after the whole round: python tools/shape_check.py batch --product {fields['product']} --task <this task>"
+                  f"   (one picture: shape_check.py run --image <the picture> --render {context['render_ref']}"
+                  f" --slot {fields['slot']})")
         print()
     print("== PROMPT (use as is) ==")
     print(build_prompt(context, blocks))
