@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.49"
+VERSION = "3.50"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -114,6 +114,10 @@ VIEW_LABEL = {"front": "the front", "front_left": "slightly left of the front",
               "side_right": "its right side", "rear": "the back", "cutaway": "a cutaway"}
 CASE_CAMERA_TEXT = ("Take the camera height, framing and composition from the style reference; "
                     "the product itself always follows the product reference.")
+# A special lens whose anchor is not one of that lens's own cases: the words decide the camera (1.17, 2.5).
+CASE_LIGHT_TEXT = ("Take only the light, colour and mood from the style reference; the camera height, lens and "
+                   "framing follow the description above, and the product follows the product reference.")
+LENS_TAG = "镜头:"
 
 POINT_RE = re.compile(r"\b(point|points|pointed|pointing)\b|\bindex finger\b", re.I)
 STRUCTURE_RE = re.compile(
@@ -124,7 +128,15 @@ EFFECTS = ["none", "xray", "cutaway", "exploded", "flow_path", "signal_wave", "g
 TECH_EFFECTS = {"signal_wave", "glow_xray", "motion_run", "energy_flow"}
 NEEDS_STRUCTURE = {"xray", "cutaway", "exploded", "flow_path", "glow_xray", "motion_run", "energy_flow"}
 DEFAULT_ACCENT = "soft blue"
-LENSES = ["standard", "wide_close", "ground_level", "action_freeze", "peek_frame", "pet_pov", "hero_low"]
+LENSES = ["standard", "wide_close", "ground_level", "action_freeze", "peek_frame", "pet_pov", "hero_low",
+          "surface_wide", "reach_in", "hero_wide"]
+# lens -> (shot sizes, cameras) it may be used with (1.17)
+LENS_RULES = {
+    "surface_wide": (("close", "extreme_close"), ("eye_level", "low_angle")),
+    "reach_in": (("close", "medium"), ("eye_level", "low_angle")),
+    "hero_wide": (("medium", "full"), ("eye_level", "low_angle")),
+}
+WIDE_PRODUCT_LENSES = {"hero_wide"}   # the product itself close to a wide lens: one per group (S-12, A-20)
 PRODUCT_SAFE = ("The product itself stays undistorted, upright and true to the product reference; keep it away "
                 "from the frame edges where a wide lens would stretch it.")
 LENS_TEXT = {
@@ -140,6 +152,20 @@ LENS_TEXT = {
                 "a soft whisker or paw edge in the near foreground. " + PRODUCT_SAFE),
     "hero_low": ("Very low camera angled up: the pet and the product stand tall and bold against a bright ceiling or "
                  "window, heroic and confident; vertical lines on the product stay straight. " + PRODUCT_SAFE),
+    "surface_wide": ("Moderate wide-angle lens (about 24 mm), camera just above the working surface at the rim, for "
+                     "example the water: the surface stretches long through the foreground with its ripples or texture "
+                     "enlarged, and the action meets the product's output near the centre of the frame, such as a "
+                     "tongue touching the water right where the stream lands; shallow depth of field behind. "
+                     "Not a fisheye. " + PRODUCT_SAFE),
+    "reach_in": ("Moderate wide-angle lens (about 24 mm) at table or floor height: a hand or a paw reaches toward "
+                 "the lens and looms large in the foreground, the action happening right at the point of touch, "
+                 "the person or pet behind it shrinking quickly with distance; the arm or body line leads the eye "
+                 "into the frame. Not a fisheye. " + PRODUCT_SAFE),
+    "hero_wide": ("Moderate wide-angle lens (about 24 mm), camera low and close to the product, which stands whole "
+                  "in the exact centre of the frame and dominates it, with clear space around it; one leading line "
+                  "(a stream of water, a cable, a path on the floor) runs from the product to a small person or pet "
+                  "in the soft background. Keep the product's verticals straight and its proportions exactly as in "
+                  "the product reference; no barrel distortion, not a fisheye. " + PRODUCT_SAFE),
 }
 IMPACT = {"calm": (0, 0, 1), "balanced": (2, 1, 2), "bold": (-1, 2, 4)}
 PERSONAS = ["natural", "anthro"]
@@ -405,6 +431,30 @@ def recipe_problems(mods, steps):
             break
         i += 1
     return out
+
+
+def load_lens_cases(root):
+    """{lens: [case paths]} from references/INDEX.csv rows whose key carries 镜头:<lens> (1.17)."""
+    path = os.path.join(root, "references", "INDEX.csv")
+    out = {}
+    if not os.path.exists(path):
+        return out
+    with open(path, encoding="utf-8-sig", newline="") as fh:
+        for r in csv.DictReader(fh):
+            for part in (r.get("key") or "").split("/"):
+                if part.startswith(LENS_TAG) and (r.get("grade") or "") in ("A", "B"):
+                    out.setdefault(part[len(LENS_TAG):].strip(), []).append(r["path"].strip())
+    return out
+
+
+def lens_anchor(card, pools):
+    """(lens, its cases, whether the card's anchor is one of them) for a special lens; None for standard."""
+    lens = card.f("lens", "standard").strip() or "standard"
+    if lens == "standard":
+        return None
+    cases = ((pools or {}).get("lens_cases") or {}).get(lens, [])
+    anchor = card.refs.get("anchor", "").split("|")[0].strip()
+    return lens, cases, bool(anchor) and anchor in cases
 
 
 def load_techniques(root):
@@ -744,6 +794,14 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
     lens = card.f("lens", "standard").strip() or "standard"
     if lens not in LENSES:
         errs.append("lens 要写 %s 之一（1.17）" % " / ".join(LENSES))
+    elif lens in LENS_RULES:
+        shots, cams = LENS_RULES[lens]
+        if shot not in shots:
+            errs.append("lens=%s 要配景别 %s，现在是 %s（1.17）" % (lens, " 或 ".join(shots), shot))
+        if card.f("camera") not in cams:
+            errs.append("lens=%s 要配机位 %s，现在是 %s（1.17）" % (lens, " 或 ".join(cams), card.f("camera")))
+        if lens == "reach_in" and card.is_none("human_action") and card.is_none("pet"):
+            errs.append("lens=reach_in 要有伸向镜头的手（human_action）或宠物的爪子（pet）（1.17）")
     effect = card.f("effect", "none").strip() or "none"
     if effect not in EFFECTS:
         errs.append("effect 要写 %s 之一（1.16）" % " / ".join(EFFECTS))
@@ -1116,6 +1174,17 @@ def is_vivid(card, pools):
     return any((rows.get(e, {}).get("level") or "").strip() == "夸张" for e in pool_ids(card, "expression_id"))
 
 
+def lens_anchor_warnings(ts, pools):
+    """A special lens with an anchor that does not show that lens: the words win, but say which case would (1.17)."""
+    warns = []
+    for c in ts.subs + ts.aplus_images():
+        own = lens_anchor(c, pools)
+        if own and own[1] and not own[2]:
+            warns.append(("1.17", "%s 用了镜头 %s，锚图不是这种镜头的示范图：提示词只从锚图取光和情绪；想要这种构图，锚图换成 %s"
+                          % (c.slot, own[0], " 或 ".join(p.split("/")[-1] for p in own[1]))))
+    return warns
+
+
 def impact_rules(ts, pools):
     """S-11 / A-16 special lenses, K-6 exaggerated expressions, by the task's impact level (1.17)."""
     out = []
@@ -1129,6 +1198,11 @@ def impact_rules(ts, pools):
         out.append(("S-11", "冲击力 %s：副图里特殊镜头（lens 不是 standard）只有 %d 张，至少 %d 张" % (level, len(special(subs)), need)))
     if len(imgs) >= 4 and len(special(imgs)) < min_aplus:
         out.append(("A-16", "冲击力 %s：A+ 里特殊镜头只有 %d 张，至少 %d 张" % (level, len(special(imgs)), min_aplus)))
+    for rule, label, cs in (("S-12", "主图和副图", subs), ("A-20", "A+", imgs)):
+        close_wide = [c.slot for c in cs if (c.f("lens", "standard").strip() or "standard") in WIDE_PRODUCT_LENSES]
+        if len(close_wide) > 1:
+            out.append((rule, "%s里产品英雄广角 hero_wide 用了 %d 张：%s；最多一张（产品贴近广角最容易变形）"
+                        % (label, len(close_wide), ", ".join(close_wide))))
     for label, cs in (("主图和副图", subs), ("A+", imgs)):
         anthro = [c.slot for c in cs if expression_level(c, pools, "拟人")]
         if len(anthro) > MAX_ANTHRO:
@@ -1224,6 +1298,7 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         warns += usage_warnings(ts, pools["usage"])
     if strict and isinstance(pools, dict):
         fails += impact_rules(ts, pools)
+        warns += lens_anchor_warnings(ts, pools)
     if strict and pools:
         f2, w2 = pool_rules(ts, evidence, pools if isinstance(pools, dict) else None)
         fails += f2
@@ -1528,8 +1603,9 @@ def compile_card(card, pools=None):
                 lens = card.f("lens", "standard").strip() or "standard"
                 if lens in LENS_TEXT:
                     bits.append(LENS_TEXT[lens])
-                if card.refs.get("anchor", "").strip():
-                    bits.append(CASE_CAMERA_TEXT)
+                if card.refs.get("anchor", "").split("|")[0].strip().lower() not in ("", "none"):
+                    own = lens_anchor(card, pools)
+                    bits.append(CASE_LIGHT_TEXT if own and not own[2] else CASE_CAMERA_TEXT)
                 ref = chosen_ref(card, (pools or {}).get("views"))
                 if ref and ref["view"] != f["product_view"] and f["product_view"] in VIEW_LABEL:
                     bits.append("The product reference shows the product from %s; turn it to the view "
@@ -1668,6 +1744,7 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
     pools["storyline_declared"] = bool(header.get("storyline", "").strip())
     pools["cast"] = [v for v in re.split(r"[;,+\s]+", header.get("cast", "")) if v]
     pools["techniques"] = load_techniques(root)
+    pools["lens_cases"] = load_lens_cases(root)
     recipes = load_recipes(root)
     rid = header.get("aplus_recipe", "").strip() or DEFAULT_RECIPE
     if rid not in recipes:
