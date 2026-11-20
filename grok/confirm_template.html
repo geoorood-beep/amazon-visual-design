@@ -79,6 +79,7 @@ h2{font-size:17px;margin:28px 0 10px}
   "style": "ST01 纪实电影风",
   "storyline": "SL1 一天里的几个瞬间",
   "cast": "PT01;PT07;HP05",
+  "aplus_recipe": "A 痛点解决",
   "images": [
     {
       "slot": "S1", "kind": "副图", "fact": "F1", "selling": "示例卖点",
@@ -134,6 +135,7 @@ h2{font-size:17px;margin:28px 0 10px}
   if (data.style) h.push('<span>风格 <b>' + esc(data.style) + '</b></span>');
   if (data.storyline) h.push('<span>主线 <b>' + esc(data.storyline) + '</b></span>');
   if (data.cast) h.push('<span>角色 <b>' + esc(data.cast) + '</b>（主线里反复出现，不算重复）</span>');
+  if (data.aplus_recipe) h.push('<span>A+ 套路 <b>' + esc(data.aplus_recipe) + '</b></span>');
   h.push('<span>共 ' + imgs.length + ' 张</span><span>红框 = 整套里重复的场景或宠物</span></div></header>');
 
   h.push('<h2>整套一览</h2><div class="strip">');

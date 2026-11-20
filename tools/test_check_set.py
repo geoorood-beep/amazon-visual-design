@@ -62,7 +62,7 @@ class LegacyV1(Base):
         self.assertEqual(code, 0, out)
         self.assertIn("LEGACY v1", out)
         for expect in ("[S-6] 文字位置 top_left 用了 6 张",
-                       "[A-3] 单图屏（scene、number）连续超过两屏",
+                       "[A-3] 单图屏（scene、number、split）连续超过两屏",
                        "[A-4] 高级版组合模块只有 1 屏",
                        "[G-1] 同一种互动和宠物组合出现 4 次：S1, S2, P1, P2a",
                        "[A-1] 开场屏 P1 是远景 wide",
@@ -248,7 +248,7 @@ class SetRules(Base):
                             "module: steps\nedition: premium\ntone: light\nbeat: detail")
         code, out, _ = self.run_task(self.write("t.md", text))
         self.assertIn("[A-3] steps 用了 2 屏，最多 1 屏", out)
-        self.assertIn("[A-4] 高级版至少要有一屏三格拼盘或前后对照", out)
+        self.assertIn("[A-4] 高级版至少要有一屏三格拼盘、前后对照、卖点总览、不等分拼盘或三张竖卡", out)
 
     def test_dark_screens(self):
         text = self.mutate("module: grid\nedition: premium\ntone: light",
