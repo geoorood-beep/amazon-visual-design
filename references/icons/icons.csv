@@ -1,0 +1,35 @@
+id,name,means,source,match,only,avoid
+cord-free,无线,不插电、不用电源线,lucide:unplug,无线;wireless;cordless;cord-free;不受电源线,,不暗示防水、续航时长
+battery,电池,有内置电池,lucide:battery-full,电池;battery;mAh,,不写产品卡没有的续航时长
+charging,充电,充电、插线供电,lucide:battery-charging,充电;charg;插线,,
+usb-c,USB-C,USB-C 接口,lucide:usb,USB;Type-C,,
+power,功率,功率、快充,lucide:zap,功率;watt;瓦;快充,,不画闪电特效；不暗示产品发光
+travel,出差旅行,带着走、出差旅行,lucide:luggage,旅行;出差;travel;trip;便携;portable,,
+outdoor,户外,可以放户外,lucide:trees,户外;outdoor,,不暗示防雨防水耐晒
+place-anywhere,随处放,摆放位置不受限,lucide:move,随处;任何空间;anywhere;place,,
+capacity,容量,容量大,lucide:droplets,容量;升;capacity;liter;litre,,
+water,水,出水、饮水,lucide:droplet,水;water,,
+flow,循环流动,水在循环流动,lucide:refresh-cw,循环;流动;circulat;flow,,
+quiet,静音,安静、不吵,lucide:volume-x,静音;安静;quiet;silent;分贝;dB,,
+night,夜里,夜间、睡眠时段,lucide:moon,夜;night;睡;sleep,,不画夜灯（产品没有灯时）
+timer,定时,定时工作,lucide:timer,定时;timer;schedul,,
+sensor,感应,靠近就感应,lucide:radar,感应;sensor;induction;motion,,
+modes,多模式,几种模式可切换,lucide:sliders-horizontal,模式;mode,,
+clean,好清洁,容易清洗,lucide:sparkles,清洗;清洁;洗;clean;wash;rinse,,不暗示除菌、抗菌（1.8 健康功效）
+filter,过滤,有过滤,lucide:filter,过滤;滤;filter,,不暗示净化、除菌
+material,材质,材质、做工,lucide:layers,不锈钢;钢;steel;材质;material,,不暗示食品级、无毒等安全功效
+window,水位可见,一眼看到余量,lucide:eye,水位窗;可视;window;visible;余量,,
+pets,宠物,猫狗都能用、多宠,lucide:paw-print,宠;猫;狗;pet;cat;dog,,
+cat,猫,猫,lucide:cat,猫;cat,,
+dog,狗,狗,lucide:dog,狗;dog,,
+size,尺寸,尺寸,lucide:ruler,尺寸;mm;cm;size,,数字只能来自产品卡
+weight,重量,重量,lucide:weight,重量;克;weight;kg,,
+compact,小巧,体积小、省空间,lucide:minimize-2,小巧;compact;mini;省空间;体积小,,
+app,App,手机 App 控制,lucide:smartphone,app;手机;APP,,不画 Wi-Fi 图标（1.8）
+home,家里,室内、家里,lucide:house,,,
+food,喂食,出粮、喂食,lucide:utensils,粮;喂食;food;feed,,
+leash,牵引,牵引绳,lucide:link,牵引;leash,,
+grooming,美容,修剪、梳毛,lucide:scissors,美容;修剪;梳;groom;clipper,,
+suction,吸毛,吸走毛发,lucide:wind,吸;vacuum;suction,,
+litter,猫砂,猫砂盆,lucide:box,猫砂;litter,,
+warranty,质保,质保、保修,lucide:badge-check,质保;保修;warranty,trust,只放在信任收尾屏，产品卡登记了才用（1.8、1.9）

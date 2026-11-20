@@ -1,6 +1,6 @@
 # UTA Style
 
-版本 3.48（2026-11-20）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
+版本 3.49（2026-11-20）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
 
 「UTA style」「Uta Style」「Youta style」「有它风格」指的都是本文件。它与 `docs/`、`archive/` 里的任何旧文字冲突时，以本文件为准；那两个目录出图时不读。
 
@@ -128,6 +128,7 @@ Grok：按 2.9 处理回报
 - 文字放在图位卡指定的留白区，不压住产品、宠物的脸或正在发生的动作。
 - 文字直接排在画面留白上，不加底框、色块或卡片（高级版规定的渐变除外）。卡的 `light_setup` 是 `night_lamp` 时，副图的主标题和副标题用白色 `#FFFFFF`，强调数字仍是琥珀色。
 - 有强调数字时，主标题不再写同一个数字：数字交给强调数字，主标题写它带来的好处。
+- **图标（选填）。** 小线条图标从图标库 `references/icons/` 选：`icons.csv` 写了每个图标的意思、要对上的词（`match`）和不能暗示的东西，`board.png` 是总览。卡上把 `{icon:编号}` 写在强调数字、小格标签或某一行参数的最前面，例如 `hero_number: {icon:capacity} 10 L`、`label: {icon:cord-free} Cord-Free`、`lines: F7 | {icon:place-anywhere} Place Anywhere`。主标题、副标题、眉题不放图标；每行最多一个。图标和后面的文字同色（强调数字前的图标是琥珀色），高度约等于这一行的字高，和文字隔约 0.4 个字宽，垂直居中，线条粗细不改。图标背后的事实（这张卡或这一行的 `selling_point`）要提到这个图标的任一个 `match` 词，否则脚本退回：产品卡没写电池，就不能放电池图标。`warranty`（质保）只能放在 `trust` 屏的参数行。图标是排版时加上的矢量图，图像模型不画；图标库里没有 Wi‑Fi 图标（1.8）。一张图里图标不要多过三个，同一套图里同一个卖点用同一个图标。
 - 白底主图（M1）不加任何文字。
 
 ### 1.6 画幅
@@ -959,7 +960,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 - `slot` 是模块图位加字母：`P6a`、`P6b`。文件名以它开头。
 - `canvas` 填 `1:1`。高级版三格拼盘的第一格、`number` 和 `split` 的场景格、`bento` 的前两格（大格和宽格）填 `3:2`。
 - `headline`、`subtitle`、`hero_number`、`text_area` 都写 `none`。
-- 多一个字段 `label`：这一格的标签，最多 4 个词，可以带一个数字（数字同样只能来自这一格的事实）。`specs`、`trust`、`number`、`split` 的小格写 `none`。
+- 多一个字段 `label`：这一格的标签，最多 4 个词，可以带一个数字（数字同样只能来自这一格的事实），前面可以加一个图标（1.5）。`specs`、`trust`、`number`、`split` 的小格写 `none`。
 - `refs` 里 `layout` 写 `none`。
 
 `grid`、`overview`、`bento`、`cards3` 的每格讲一个不同的事实；`steps`、`number`、`contrast`、`split`、`fit` 的每格都是模块卡上的那个事实。`number` 的模块卡必须有 `hero_number`。`contrast` 的两格依次是前和后，地点和机位写成一样的。

@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.48"
+VERSION = "3.49"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -571,8 +571,54 @@ def report_copy_limits(text, fact_id, grants, errs, where, claims=None):
             where, ", ".join(sorted(set(words)))))
 
 
-def check_copy(card, errs, grants=None, claims=None):
+def icon_checks(card, errs, facts=None):
+    """{icon:id} only opens hero_number, a label or a spec line, and its fact must back it (1.5)."""
+    import icons as icon_lib
+
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    fact = bound_fact(card)
+
+    def check(icon, fact_id, field, where):
+        text = None if facts is None else facts.get(fact_id, "")
+        problem = icon_lib.icon_problem(root, icon, text, field, module)
+        if problem:
+            errs.append("%s 的图标不对：%s（1.5）" % (where, problem))
+
+    fields = getattr(card, "fields", None)
+    if fields is None:
+        fields = {k: card.f(k) for k in ("eyebrow", "headline", "subtitle", "hero_number", "label", "lines")}
+    module = getattr(card, "module", "")
+    for key, value in fields.items():
+        if "{icon:" not in (value or ""):
+            continue
+        if key not in icon_lib.ICON_FIELDS:
+            errs.append("%s 不能放图标：图标只放在 hero_number、小格 label 或参数行前面（1.5）" % key)
+        elif key == "lines":
+            from copy_exceptions import line_bindings
+            for line_fact, body in line_bindings(value):
+                icon, _rest, problem = icon_lib.split_icon(body)
+                if problem:
+                    errs.append("lines「%s」：%s（1.5）" % (body, problem))
+                elif icon:
+                    check(icon, line_fact, "lines", "lines「%s」" % body)
+        else:
+            icon, _rest, problem = icon_lib.split_icon(value)
+            if problem:
+                errs.append("%s：%s（1.5）" % (key, problem))
+            elif icon:
+                if fact:
+                    check(icon, fact, key, key)
+                elif facts is not None:
+                    problem = icon_lib.icon_problem(root, icon, None, key, module)
+                    if problem:
+                        errs.append("%s 的图标不对：%s（1.5）" % (key, problem))
+
+
+def check_copy(card, errs, grants=None, claims=None, facts=None):
     from copy_exceptions import line_bindings
+    from icons import strip_icons
+
+    icon_checks(card, errs, facts)
 
     head = card.f("headline", "none")
     hero = card.f("hero_number", "none")
@@ -585,9 +631,9 @@ def check_copy(card, errs, grants=None, claims=None):
         text = card.f(key)
         if key == "lines":
             for line_fact, body in line_bindings(text):
-                report_copy_limits(body, line_fact, grants, errs, "lines", claims)
+                report_copy_limits(strip_icons(body), line_fact, grants, errs, "lines", claims)
         else:
-            report_copy_limits(text, fact, grants, errs, key, claims)
+            report_copy_limits(strip_icons(text), fact, grants, errs, key, claims)
 
 
 def norm_word(w):
@@ -655,7 +701,7 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
             present = [k for k in V2_IMAGE_FIELDS if k in card.fields]
             if present:
                 errs.append("模块卡不写 %s（写在小格卡里）" % ", ".join(present))
-            check_copy(card, errs, grants, claims)
+            check_copy(card, errs, grants, claims, (pools or {}).get("usage", {}).get("facts") if isinstance(pools, dict) else None)
             return errs
     if kind == "panel" and "beat" in card.fields:
         errs.append("小格卡不写 beat")
@@ -718,7 +764,7 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
     if need == "none" and not (card.is_none("pet") and card.is_none("human_action")):
         errs.append("interaction=product_only 时 pet 和 human_action 都写 none")
     check_scene_words(card, errs)
-    check_copy(card, errs, grants, claims)
+    check_copy(card, errs, grants, claims, (pools or {}).get("usage", {}).get("facts") if isinstance(pools, dict) else None)
     if pools is not None:
         check_pool_fields(card, pools, evidence, errs)
         check_story(card, errs, grants, claims)

@@ -1,6 +1,6 @@
 # 亚马逊美工设计
 
-规则版本 **3.48**（2026-11-20）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
+规则版本 **3.49**（2026-11-20）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
 
 出图只有一份指引：**[UTA_STYLE.md](UTA_STYLE.md)**。写任务的 Grok 和出图的 Codex 读的是同一份。
 
@@ -68,6 +68,7 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | `grok/product_template.html` 和 `grok/product_form.css`、`grok/product_form.js` | 产品资料表：Grok 只抄很短的外壳，样式和脚本从仓库加载；`product_form.py build` 生成的文件把它们嵌进页面 | 机制 |
 | `tools/product_form.py` | 选填的产品资料表：定品类、出草稿、生成 `outputs/<产品>/product_form_vNN.html`（1.15、3.9） | 机制 |
 | `tools/photo_sheet.py` | 选填的参考图和尺寸表：`build` 把产品资料表做成一张 Excel（主体和每个配件一行，五面照片加长宽高）；`read` 读回填好的表，取出照片、打出 `UTA-PRODUCT v1`（1.15、3.9） | 机制 |
+| `references/icons/` | 图标库：34 个线条图标（Lucide，ISC 许可）、`icons.csv`（意思、要对上的词、不能暗示的东西）、`board.png` 总览（1.5） | 数据 |
 | `references/aplus_recipes.csv` | A+ 页面套路：痛点解决、功能清单、质感叙事、场景旅程、自由组合，各自学自哪个详情页、骨架和例子（1.9） | 数据 |
 | `references/storylines.csv` | 整套主线：一天里的几个瞬间、一个家的几个角落、先乱后静、一家人各有各的需要、各讲各的（1.14） | 数据 |
 | `references/categories/` | 品类库：每个品类通常有哪些部件和关系、产品有几种样子、要问什么、要补哪些照片（1.15） | 数据 |
