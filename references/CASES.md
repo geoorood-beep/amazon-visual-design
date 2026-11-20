@@ -1,4 +1,4 @@
-案例摘要：A 级 36 张、B 级 60 张（C 级 60 张只留档，不列出）。
+案例摘要：A 级 36 张、B 级 62 张（C 级 60 张只留档，不列出）。
 
 由 `tools/check_index.py --digest` 从 `references/INDEX.csv` 生成，不要手改。路径和索引完全一致，写卡时照抄路径。
 每行：路径｜等级｜能学什么｜画面结构｜光型｜风格｜故事｜不能学。
@@ -37,6 +37,7 @@
 - `docs/uta_style_v3/assets/key/L_oneisall_app_EaseS1.jpg`｜B｜emotion;light;composition｜none｜low_sun｜ST06｜午后窗边，女人坐在桌前看手机，笑得很放松，咖啡和笔记本在旁边；暖色窗光｜远程管理和 App 我方没有，不能用在功能上；只学人物放松的情绪和窗光
 - `docs/uta_style_v3/assets/key/L_petlibro_darkcat_FKT2J6PV.jpg`｜B｜light;composition｜none｜side｜ST01｜暗场里一只猫坐在机器开口里，侧光只照亮猫的脸｜Wirecutter、红点奖等徽章绝对不学
 - `docs/uta_style_v3/assets/key/L_petlibro_woman_FKT2J6PV.jpg`｜B｜emotion;composition;light｜none｜side｜ST03｜客厅餐桌边，女人一手看手机一手摸着三花猫，机器在背景里；留白很大｜尿液监测、App 数据面板绝对不学；只学人宠同桌的松弛感和留白
+- `docs/uta_style_v3/assets/key/ST07_cordfree_patio.webp`｜B｜light;scene;composition｜none｜low_sun｜ST07｜阳光下的庭院，橘猫凑到盘边舔水，饮水机放在没有插座的石砖地上照常出水；「哪儿都能放」｜户外只说明摆放不受线长限制，不暗示防雨防水耐晒（产品卡 F7）；水位窗里发亮的蓝水；画面上的文字和白底圆角信息卡
 - `docs/uta_style_v3/assets/key/XHS_003.jpg`｜B｜expression;composition;light｜converge｜side｜ST04｜林间小路上，柯基低头从一只手递来的水瓶槽里舔水，眯着眼；喝水瞬间抓拍，手从前景伸入｜户外和随行水瓶是对方场景，我方户外未确认；被样例用了 4 次，要换着用
 - `docs/uta_style_v3/assets/key/XHS_004.jpg`｜B｜expression;composition;light｜none｜side｜ST02｜厨房地板上，杰克罗素一只前爪抬着、斜眼盯着嗅闻垫找零食，专注又心虚｜嗅闻垫不是我方产品
 - `docs/uta_style_v3/assets/key/XHS_005.jpg`｜B｜expression;composition;light｜none｜low_sun｜ST04｜比格在草坪上冲向低机位广角镜头，耳朵飞起来、嘴大张；贴地机位、产品占比大｜GPS 项圈和户外不学；广角变形不能用在饮水机上
@@ -99,6 +100,7 @@
 - `docs/uta_style_v3/assets/key/EXP_014.jpg`｜B｜expression;emotion;light｜unnoticed｜side｜ST03｜无故事｜斗牛犬穿衣戴帽瘫在沙发上半睁眼；衣服帽子是拟人道具不学，只学慵懒瘫软的神态
 - `docs/uta_style_v3/assets/key/F_quiet_curve_DPMNQJ2N.jpg`｜B｜composition;light;layout｜none｜night_lamp｜ST01｜入夜的走廊地板上，一只虎斑猫走过来低头闻水，地毯和墙角压暗，只有饮水机一侧被照亮｜80/60/30 dB 曲线、品牌不学；水窗蓝光不能发亮
 - `docs/uta_style_v3/assets/key/L_neakasa_m9_safe_g02.jpg`｜B｜light;layout｜none｜back｜ST01｜无故事｜暗金轮廓光和旋转箭头；传感器、旋转安全是对方功能，我方不写
+- `docs/uta_style_v3/assets/key/ST07_quiet_sleep.webp`｜B｜light;scene;composition;emotion｜unnoticed｜side_back｜ST07｜午后阳光斜照进客厅，斗牛犬在毛绒窝里咧嘴睡得正香，前景的饮水机安静出水，水面只有一圈细纹；「它在出水，狗照样睡」｜水位窗里的水画成发亮的蓝色（1.8）；MAX、MIN 以外的字；画面上的标题和白底圆角信息卡；狗吐舌头的睡姿不要夸张成拟人
 - `docs/uta_style_v3/assets/key/XHS_007.jpg`｜B｜expression;composition;light｜unnoticed｜side｜ST03｜米色客厅里，英斗瘫在宠物床上闭眼吐舌，贴地低机位、产品占比大｜Orthopedic、Deeper Sleep 等功效文案不学
 
 ## 清洁
