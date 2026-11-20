@@ -1,6 +1,6 @@
 # UTA Style
 
-版本 3.49（2026-11-20）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
+版本 3.50（2026-11-20）。这是出图的唯一指引。写任务的一方（Grok）和出图的一方（Codex）读的是同一份文档，各看自己的那一节。
 
 「UTA style」「Uta Style」「Youta style」「有它风格」指的都是本文件。它与 `docs/`、`archive/` 里的任何旧文字冲突时，以本文件为准；那两个目录出图时不读。
 
@@ -713,8 +713,11 @@ M1 和 S 位按生图工具的原生尺寸出图，如实记录实际像素，�
 | `peek_frame` | 前景窥视 | 隔着虚化的门框、沙发边、桌沿看过去，像偷看到的一刻 | EXP_011、用户截图（猫肉泥的桌沿） |
 | `pet_pov` | 宠物视角 | 从宠物眼睛的高度看产品，近处有一点虚化的胡须或爪子 | — |
 | `hero_low` | 仰拍英雄 | 相机很低往上拍，宠物和产品高大、有气势，背景是亮的天花板或窗 | 用户截图（猫砂盆、喂食器） |
+| `surface_wide` | 水面广角 | 中等广角（约 24mm）贴着产品的工作面（水面、粮碗、砂面），前景的水面和水纹被拉长放大，宠物的嘴和出水口在画面中间相遇。景别 `close` 或 `extreme_close`，机位 `eye_level` 或 `low_angle` | 用户截图（猫舔水面） |
+| `reach_in` | 伸手入镜 | 中等广角在桌面或地面高度，一只手或一只爪子伸向镜头、在前景很大，动作就发生在接触的那一点，后面的人或宠物很快变小。要有手（`human_action`）或宠物。景别 `close` 或 `medium`，机位 `eye_level` 或 `low_angle` | 用户截图（35W 充电头） |
+| `hero_wide` | 产品英雄广角 | 中等广角低机位贴近产品，产品完整地站在画面正中、占主导，一条引导线（水流、线、地面的路径）把它和后面虚化的、小小的人或宠物连起来。景别 `medium` 或 `full`，机位 `eye_level` 或 `low_angle`；主图副图一组、A+ 一组各最多一张（S-12、A-20） | 用户截图（伸缩线充电头） |
 
-**产品不变形。** 用特殊镜头时，产品仍然照产品参考图：直立、不拉伸、离画面边缘远一点（广角在边缘最会拉变形）。脚本把这句写进提示词；成图仍按 V1 验收。
+**产品不变形。** 用特殊镜头时，产品仍然照产品参考图：直立、不拉伸、离画面边缘远一点（广角在边缘最会拉变形）。三种新广角（`surface_wide`、`reach_in`、`hero_wide`）只用中等广角（约 24mm），不用鱼眼；产品要完整、在画面中间，不能像案例那样贴边或被边缘切掉。水面上的透视字、浮在画面上的信息胶囊不学：字仍按 1.5 平排。脚本把这句写进提示词；成图仍按 V1 验收。
 
 **冲击力。** 任务单头部写 `impact:`，整套一个，写卡方按选中的情绪基调定（「惊喜活泼」配 `bold`，其余配 `balanced`），不单独弹卡问；用户在确认单上可以改，不写时是 `balanced`：
 
@@ -905,7 +908,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 | `light_setup` | 光型 | 1.3 的五个取值之一。`light` 里写的方向要和它一致 |
 | `foreground` | 前景 | 英文，画面最前面一层虚化的东西，例如 the cat's whiskers；没有写 `none` |
 | `product_state` | 产品状态 | 这张图里产品的样子（1.15）：产品卡「产品状态」的编号，没有那一节时用 `assembled`、`disassembled`、`loading`。不写时是 `assembled`。事实要求的状态和这里不一样，脚本退回 |
-| `lens` | 镜头 | `standard`、`wide_close`、`ground_level`、`action_freeze`、`peek_frame`、`pet_pov`、`hero_low` 之一（1.17）。不写时是 `standard`。特殊镜头下产品仍不能变形 |
+| `lens` | 镜头 | `standard`、`wide_close`、`ground_level`、`action_freeze`、`peek_frame`、`pet_pov`、`hero_low`、`surface_wide`、`reach_in`、`hero_wide` 之一（1.17）。不写时是 `standard`。特殊镜头下产品仍不能变形 |
 | `effect` | 特效 | 写实：`xray`、`cutaway`、`exploded`、`flow_path`；科技：`signal_wave`、`glow_xray`、`motion_run`、`energy_flow`；或 `none`（1.16）。不写时是 `none`。除 `signal_wave` 外都要产品卡有「内部结构」或真实结构图；`signal_wave` 只用于无线、感应这类卖点 |
 | `chapter` | 主线里的一章 | 选了 SL1–SL4 时有故事的图必填，几个字，例如「清晨」「玄关」「麻烦」；一章只给一张图（1.14） |
 | `techniques` | 借用的品牌手法 | `references/techniques.csv` 的编号，用 `;` 隔开，例如 `T01;T47`；故事、卖点、场景、标题手法都算（1.14） |
@@ -1014,6 +1017,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 - S-9 同一个角度加同一个景别（`product_view` + `shot_size`），主图和副图里最多两次（1.16）。
 - S-10 主图和副图里特效图最多一张，冲击力是强冲击时两张（1.16）。
 - S-11 副图 5 张及以上时，特殊镜头（`lens` 不是 `standard`）至少按冲击力的下限（1.17）。
+- S-12 主图和副图里产品英雄广角（`hero_wide`）最多一张（1.17）。
 - 场景轮换见 E-3。
 
 **A+（P 位）：**
@@ -1037,6 +1041,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 - A-17 头部写了 `aplus_recipe:`（A–D）时，各屏要按套路的骨架出现：第一屏是骨架第一项，最后一屏是收尾，中间的骨架按顺序出现，骨架之间可以插别的屏。四个套路只用于高级版。
 - A-18 `seam: next` 只在高级版用：上一屏是 `scene` 或 `number`，下一屏是组合模块，两屏深浅相同；最后一屏不写；一页最多两处，不连着拼三屏。
 - A-19 `overview` 只能放第 2 屏，每格一个不同的事实。
+- A-20 A+ 里产品英雄广角（`hero_wide`）最多一张（1.17）。
 - U-1 卡的朝向、机位、景别不在这个功能的推荐范围里时给警告，不退回（1.16）。
 - 整页一条线：先讲宠物用起来怎么样，再讲产品本身，最后讲怎么打理和参数（不由脚本查）。
 

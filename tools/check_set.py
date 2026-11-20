@@ -29,7 +29,7 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.49"
+VERSION = "3.50"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
@@ -124,7 +124,15 @@ EFFECTS = ["none", "xray", "cutaway", "exploded", "flow_path", "signal_wave", "g
 TECH_EFFECTS = {"signal_wave", "glow_xray", "motion_run", "energy_flow"}
 NEEDS_STRUCTURE = {"xray", "cutaway", "exploded", "flow_path", "glow_xray", "motion_run", "energy_flow"}
 DEFAULT_ACCENT = "soft blue"
-LENSES = ["standard", "wide_close", "ground_level", "action_freeze", "peek_frame", "pet_pov", "hero_low"]
+LENSES = ["standard", "wide_close", "ground_level", "action_freeze", "peek_frame", "pet_pov", "hero_low",
+          "surface_wide", "reach_in", "hero_wide"]
+# lens -> (shot sizes, cameras) it may be used with (1.17)
+LENS_RULES = {
+    "surface_wide": (("close", "extreme_close"), ("eye_level", "low_angle")),
+    "reach_in": (("close", "medium"), ("eye_level", "low_angle")),
+    "hero_wide": (("medium", "full"), ("eye_level", "low_angle")),
+}
+WIDE_PRODUCT_LENSES = {"hero_wide"}   # the product itself close to a wide lens: one per group (S-12, A-20)
 PRODUCT_SAFE = ("The product itself stays undistorted, upright and true to the product reference; keep it away "
                 "from the frame edges where a wide lens would stretch it.")
 LENS_TEXT = {
@@ -140,6 +148,20 @@ LENS_TEXT = {
                 "a soft whisker or paw edge in the near foreground. " + PRODUCT_SAFE),
     "hero_low": ("Very low camera angled up: the pet and the product stand tall and bold against a bright ceiling or "
                  "window, heroic and confident; vertical lines on the product stay straight. " + PRODUCT_SAFE),
+    "surface_wide": ("Moderate wide-angle lens (about 24 mm), camera just above the working surface at the rim, for "
+                     "example the water: the surface stretches long through the foreground with its ripples or texture "
+                     "enlarged, and the action meets the product's output near the centre of the frame, such as a "
+                     "tongue touching the water right where the stream lands; shallow depth of field behind. "
+                     "Not a fisheye. " + PRODUCT_SAFE),
+    "reach_in": ("Moderate wide-angle lens (about 24 mm) at table or floor height: a hand or a paw reaches toward "
+                 "the lens and looms large in the foreground, the action happening right at the point of touch, "
+                 "the person or pet behind it shrinking quickly with distance; the arm or body line leads the eye "
+                 "into the frame. Not a fisheye. " + PRODUCT_SAFE),
+    "hero_wide": ("Moderate wide-angle lens (about 24 mm), camera low and close to the product, which stands whole "
+                  "in the exact centre of the frame and dominates it, with clear space around it; one leading line "
+                  "(a stream of water, a cable, a path on the floor) runs from the product to a small person or pet "
+                  "in the soft background. Keep the product's verticals straight and its proportions exactly as in "
+                  "the product reference; no barrel distortion, not a fisheye. " + PRODUCT_SAFE),
 }
 IMPACT = {"calm": (0, 0, 1), "balanced": (2, 1, 2), "bold": (-1, 2, 4)}
 PERSONAS = ["natural", "anthro"]
@@ -744,6 +766,14 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
     lens = card.f("lens", "standard").strip() or "standard"
     if lens not in LENSES:
         errs.append("lens 要写 %s 之一（1.17）" % " / ".join(LENSES))
+    elif lens in LENS_RULES:
+        shots, cams = LENS_RULES[lens]
+        if shot not in shots:
+            errs.append("lens=%s 要配景别 %s，现在是 %s（1.17）" % (lens, " 或 ".join(shots), shot))
+        if card.f("camera") not in cams:
+            errs.append("lens=%s 要配机位 %s，现在是 %s（1.17）" % (lens, " 或 ".join(cams), card.f("camera")))
+        if lens == "reach_in" and card.is_none("human_action") and card.is_none("pet"):
+            errs.append("lens=reach_in 要有伸向镜头的手（human_action）或宠物的爪子（pet）（1.17）")
     effect = card.f("effect", "none").strip() or "none"
     if effect not in EFFECTS:
         errs.append("effect 要写 %s 之一（1.16）" % " / ".join(EFFECTS))
@@ -1129,6 +1159,11 @@ def impact_rules(ts, pools):
         out.append(("S-11", "冲击力 %s：副图里特殊镜头（lens 不是 standard）只有 %d 张，至少 %d 张" % (level, len(special(subs)), need)))
     if len(imgs) >= 4 and len(special(imgs)) < min_aplus:
         out.append(("A-16", "冲击力 %s：A+ 里特殊镜头只有 %d 张，至少 %d 张" % (level, len(special(imgs)), min_aplus)))
+    for rule, label, cs in (("S-12", "主图和副图", subs), ("A-20", "A+", imgs)):
+        close_wide = [c.slot for c in cs if (c.f("lens", "standard").strip() or "standard") in WIDE_PRODUCT_LENSES]
+        if len(close_wide) > 1:
+            out.append((rule, "%s里产品英雄广角 hero_wide 用了 %d 张：%s；最多一张（产品贴近广角最容易变形）"
+                        % (label, len(close_wide), ", ".join(close_wide))))
     for label, cs in (("主图和副图", subs), ("A+", imgs)):
         anthro = [c.slot for c in cs if expression_level(c, pools, "拟人")]
         if len(anthro) > MAX_ANTHRO:
