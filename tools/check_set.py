@@ -114,6 +114,10 @@ VIEW_LABEL = {"front": "the front", "front_left": "slightly left of the front",
               "side_right": "its right side", "rear": "the back", "cutaway": "a cutaway"}
 CASE_CAMERA_TEXT = ("Take the camera height, framing and composition from the style reference; "
                     "the product itself always follows the product reference.")
+# A special lens whose anchor is not one of that lens's own cases: the words decide the camera (1.17, 2.5).
+CASE_LIGHT_TEXT = ("Take only the light, colour and mood from the style reference; the camera height, lens and "
+                   "framing follow the description above, and the product follows the product reference.")
+LENS_TAG = "镜头:"
 
 POINT_RE = re.compile(r"\b(point|points|pointed|pointing)\b|\bindex finger\b", re.I)
 STRUCTURE_RE = re.compile(
@@ -427,6 +431,30 @@ def recipe_problems(mods, steps):
             break
         i += 1
     return out
+
+
+def load_lens_cases(root):
+    """{lens: [case paths]} from references/INDEX.csv rows whose key carries 镜头:<lens> (1.17)."""
+    path = os.path.join(root, "references", "INDEX.csv")
+    out = {}
+    if not os.path.exists(path):
+        return out
+    with open(path, encoding="utf-8-sig", newline="") as fh:
+        for r in csv.DictReader(fh):
+            for part in (r.get("key") or "").split("/"):
+                if part.startswith(LENS_TAG) and (r.get("grade") or "") in ("A", "B"):
+                    out.setdefault(part[len(LENS_TAG):].strip(), []).append(r["path"].strip())
+    return out
+
+
+def lens_anchor(card, pools):
+    """(lens, its cases, whether the card's anchor is one of them) for a special lens; None for standard."""
+    lens = card.f("lens", "standard").strip() or "standard"
+    if lens == "standard":
+        return None
+    cases = ((pools or {}).get("lens_cases") or {}).get(lens, [])
+    anchor = card.refs.get("anchor", "").split("|")[0].strip()
+    return lens, cases, bool(anchor) and anchor in cases
 
 
 def load_techniques(root):
@@ -1146,6 +1174,17 @@ def is_vivid(card, pools):
     return any((rows.get(e, {}).get("level") or "").strip() == "夸张" for e in pool_ids(card, "expression_id"))
 
 
+def lens_anchor_warnings(ts, pools):
+    """A special lens with an anchor that does not show that lens: the words win, but say which case would (1.17)."""
+    warns = []
+    for c in ts.subs + ts.aplus_images():
+        own = lens_anchor(c, pools)
+        if own and own[1] and not own[2]:
+            warns.append(("1.17", "%s 用了镜头 %s，锚图不是这种镜头的示范图：提示词只从锚图取光和情绪；想要这种构图，锚图换成 %s"
+                          % (c.slot, own[0], " 或 ".join(p.split("/")[-1] for p in own[1]))))
+    return warns
+
+
 def impact_rules(ts, pools):
     """S-11 / A-16 special lenses, K-6 exaggerated expressions, by the task's impact level (1.17)."""
     out = []
@@ -1259,6 +1298,7 @@ def set_rules(ts, views, strict, evidence=None, pools=False):
         warns += usage_warnings(ts, pools["usage"])
     if strict and isinstance(pools, dict):
         fails += impact_rules(ts, pools)
+        warns += lens_anchor_warnings(ts, pools)
     if strict and pools:
         f2, w2 = pool_rules(ts, evidence, pools if isinstance(pools, dict) else None)
         fails += f2
@@ -1563,8 +1603,9 @@ def compile_card(card, pools=None):
                 lens = card.f("lens", "standard").strip() or "standard"
                 if lens in LENS_TEXT:
                     bits.append(LENS_TEXT[lens])
-                if card.refs.get("anchor", "").strip():
-                    bits.append(CASE_CAMERA_TEXT)
+                if card.refs.get("anchor", "").split("|")[0].strip().lower() not in ("", "none"):
+                    own = lens_anchor(card, pools)
+                    bits.append(CASE_LIGHT_TEXT if own and not own[2] else CASE_CAMERA_TEXT)
                 ref = chosen_ref(card, (pools or {}).get("views"))
                 if ref and ref["view"] != f["product_view"] and f["product_view"] in VIEW_LABEL:
                     bits.append("The product reference shows the product from %s; turn it to the view "
@@ -1703,6 +1744,7 @@ def run(task_path, emit=None, views_path=None, root=".", state=None, out=sys.std
     pools["storyline_declared"] = bool(header.get("storyline", "").strip())
     pools["cast"] = [v for v in re.split(r"[;,+\s]+", header.get("cast", "")) if v]
     pools["techniques"] = load_techniques(root)
+    pools["lens_cases"] = load_lens_cases(root)
     recipes = load_recipes(root)
     rid = header.get("aplus_recipe", "").strip() or DEFAULT_RECIPE
     if rid not in recipes:

@@ -70,12 +70,40 @@ class TaskTest(Base):
         self.assertIn("[S-12] 主图和副图里产品英雄广角 hero_wide 用了 2 张：S2, S3", out)
 
 
+class LensAnchorTest(Base):
+    def test_every_lens_case_exists(self):
+        cases = check_set.load_lens_cases(ROOT)
+        for lens in NEW:
+            self.assertTrue(cases.get(lens), lens)
+        for lens, paths in cases.items():
+            self.assertIn(lens, check_set.LENSES)
+            for p in paths:
+                self.assertTrue(os.path.isfile(os.path.join(ROOT, p)), p)
+
+    def test_anchor_that_does_not_show_the_lens(self):
+        code, out, emit = self.run_task(V2)
+        self.assertIn("P1 用了镜头 wide_close，锚图不是这种镜头的示范图", out)
+        self.assertIn("EXP_013.jpg", out)
+        p1 = self.card_block(read(emit), "P1_together.md")
+        self.assertIn(check_set.CASE_LIGHT_TEXT, p1)
+        self.assertNotIn(check_set.CASE_CAMERA_TEXT, p1)
+
+    def test_anchor_that_shows_the_lens(self):
+        text = read(V2).replace(
+            "  anchor: docs/uta_style_v3/assets/key/D_multipet_C5X2G933.jpg | two pets sharing one product only; not the product, the spacing marks, numbers or any text",
+            "  anchor: docs/uta_style_v3/assets/key/EXP_013.jpg | the wide lens close to the face only; not the product, the dog or any text", 1)
+        code, out, emit = self.run_task(self.write("t.md", text))
+        self.assertNotIn("P1 用了镜头 wide_close", out)
+        p1 = self.card_block(read(emit), "P1_together.md")
+        self.assertIn(check_set.CASE_CAMERA_TEXT, p1)
+
+
 class WiringTest(unittest.TestCase):
     def test_guide(self):
         guide = open(os.path.join(ROOT, "UTA_STYLE.md"), encoding="utf-8").read()
         for lens in NEW:
             self.assertIn("| `%s` |" % lens, guide)
-        for marker in ("- S-12 ", "- A-20 ", "不用鱼眼"):
+        for marker in ("- S-12 ", "- A-20 ", "不用鱼眼", "**锚图按镜头挑。**", "LENS_hero_wide_cable.webp"):
             self.assertIn(marker, guide)
 
 

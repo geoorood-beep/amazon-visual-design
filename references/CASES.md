@@ -1,4 +1,4 @@
-案例摘要：A 级 36 张、B 级 62 张（C 级 60 张只留档，不列出）。
+案例摘要：A 级 36 张、B 级 65 张（C 级 60 张只留档，不列出）。
 
 由 `tools/check_index.py --digest` 从 `references/INDEX.csv` 生成，不要手改。路径和索引完全一致，写卡时照抄路径。
 每行：路径｜等级｜能学什么｜画面结构｜光型｜风格｜故事｜不能学。
@@ -34,6 +34,9 @@
 - `docs/uta_style_v3/assets/key/EXP_017.jpg`｜B｜layout;expression｜none｜side｜-｜无故事｜同 EXP_016 换银虎斑做系列；只学同一构图换品种
 - `docs/uta_style_v3/assets/key/F_places_3panel_GYZQ79CY.jpg`｜B｜layout;scene;composition｜none｜low_sun｜ST02｜同一只布偶猫在三个地方用同一台机器：客厅地毯、厨房岛台、喂食角｜无线随处放是对方卖点；我方要插电时不暗示随便放
 - `docs/uta_style_v3/assets/key/F_snaplid_C89MMFW1.jpg`｜B｜composition;story;light｜before_after｜side｜ST02｜暹罗猫坐在窗边伸爪按在盆沿上，产品纹丝不动；小图对照别家被扒翻洒水｜锁扣是对方结构；橙色虚线框和别家被扒翻的小图不学
+- `docs/uta_style_v3/assets/key/LENS_hero_wide_cable.webp`｜B｜composition;light｜converge｜side_back｜-｜书桌上，男人从桌面插座上的充电头里拉出线，线从前景的产品一路连到他手上；「线随时拉出来就能用」｜别家产品的外形和品牌；鱼眼的桶形变形，我方产品必须照参考图、竖线保持竖直；圆弧画框；图上的文字
+- `docs/uta_style_v3/assets/key/LENS_reach_in_phone.webp`｜B｜composition;light｜simultaneous｜side｜-｜男人一边走一边伸手把手机放到桌上，墙上的充电头一直插着，手机已经满电；「插着不用管，拿起就走」｜别家产品（充电头、手机）的外形和品牌；浮在画面上的信息胶囊和电量数字；图上的文字
+- `docs/uta_style_v3/assets/key/LENS_surface_wide_cat.webp`｜B｜composition｜macro_proof｜side_back｜-｜猫凑到盘边低头舔水，舌头正点在出水口落下的水柱旁，一圈圈水纹向镜头铺开；「水在流，它就爱喝」｜别家产品的外形；产品贴边、被画面边缘切掉；图上的标题、Sale 标签、透视数字；把水画成发亮的蓝色
 - `docs/uta_style_v3/assets/key/L_oneisall_app_EaseS1.jpg`｜B｜emotion;light;composition｜none｜low_sun｜ST06｜午后窗边，女人坐在桌前看手机，笑得很放松，咖啡和笔记本在旁边；暖色窗光｜远程管理和 App 我方没有，不能用在功能上；只学人物放松的情绪和窗光
 - `docs/uta_style_v3/assets/key/L_petlibro_darkcat_FKT2J6PV.jpg`｜B｜light;composition｜none｜side｜ST01｜暗场里一只猫坐在机器开口里，侧光只照亮猫的脸｜Wirecutter、红点奖等徽章绝对不学
 - `docs/uta_style_v3/assets/key/L_petlibro_woman_FKT2J6PV.jpg`｜B｜emotion;composition;light｜none｜side｜ST03｜客厅餐桌边，女人一手看手机一手摸着三花猫，机器在背景里；留白很大｜尿液监测、App 数据面板绝对不学；只学人宠同桌的松弛感和留白
