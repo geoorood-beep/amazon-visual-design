@@ -1,6 +1,6 @@
 # 亚马逊美工设计
 
-规则版本 **3.44**（2026-11-20）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
+规则版本 **3.45**（2026-11-20）。这个仓库保存 Amazon 主图、副图和 A+ 的出图指引、产品事实、参考图索引和图位卡。
 
 出图只有一份指引：**[UTA_STYLE.md](UTA_STYLE.md)**。写任务的 Grok 和出图的 Codex 读的是同一份。
 
@@ -42,6 +42,7 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | 给某个卖点增加或修改证明画面 | `products/<产品>/evidence_options.csv`（列的含义见 `UTA_STYLE.md` 1.10） |
 | 补产品参考图 | 放进 `products/<产品>/ref/`，在产品卡和 [references/INDEX.csv](references/INDEX.csv) 各加一行 |
 | 补尺寸、规格照、部件关系 | 打开产品资料表（选填）填好，把生成的 `UTA-PRODUCT` 发给 Grok；或对 Codex 说「打开 <产品> 的产品资料表」 |
+| 拿着实物拍照、量尺寸 | 对 Codex 说「出 <产品> 的照片尺寸表」，拿到 Excel 表贴照片、填尺寸，发回给 Grok 或 Codex |
 | 改某个产品的结构核对题 | `products/<产品>/checks.csv`（列的含义见 `UTA_STYLE.md` 4.7），改完运行 `python tools/blind_check.py check` |
 | 加一个新品类 | 在 [references/categories/](references/categories/README.md) 加一份品类文件，运行 `python tools/product_form.py check` |
 | 把认可的成图设为锚图 | 对 Codex 说「这张做锚图」 |
@@ -66,6 +67,7 @@ Codex 最后还会生成一张验收表单（一图一格，成图和这张卡�
 | `tools/blind_check.py` | 独立核对：另一个没看过卡片的模型只看图答结构题，脚本对照产品卡打分（4.7） | 机制 |
 | `grok/product_template.html` 和 `grok/product_form.css`、`grok/product_form.js` | 产品资料表：Grok 只抄很短的外壳，样式和脚本从仓库加载；`product_form.py build` 生成的文件把它们嵌进页面 | 机制 |
 | `tools/product_form.py` | 选填的产品资料表：定品类、出草稿、生成 `outputs/<产品>/product_form_vNN.html`（1.15、3.9） | 机制 |
+| `tools/photo_sheet.py` | 选填的照片尺寸表：`build` 把产品资料表做成 Excel（每个角度、主机尺寸、每个配件一行）；`read` 读回填好的表，取出照片、打出 `UTA-PRODUCT v1`（1.15、3.9） | 机制 |
 | `references/storylines.csv` | 整套主线：一天里的几个瞬间、一个家的几个角落、先乱后静、一家人各有各的需要、各讲各的（1.14） | 数据 |
 | `references/categories/` | 品类库：每个品类通常有哪些部件和关系、产品有几种样子、要问什么、要补哪些照片（1.15） | 数据 |
 | `tools/prompt_base.txt` | 提示词的固定段落 | 机制 |
