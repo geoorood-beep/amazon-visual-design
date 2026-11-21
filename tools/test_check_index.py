@@ -487,8 +487,11 @@ class ImageBaselineDisambiguationTest(unittest.TestCase):
         self.assertIn("白底", card)
         for view in ("正面", "背面", "俯视", "斜角"):
             self.assertIn(view, card)
-        self.assertIn("不继续 A+ 重做", card)
-        self.assertIn("主横幅重做", card)
+        self.assertIn("2026-11-19 08:29", card)
+        self.assertIn("不再阻断本轮 A+ 和主横幅", card)
+        self.assertIn("M1、S1–S8 和高级版 A+ 的 P1–P7", card)
+        self.assertNotIn("不继续 A+ 重做", card)
+        self.assertNotIn("当前配件的唯一参考集", card)
         with open(os.path.join(ROOT, "products", "pw002_s", "ref_views.csv"), encoding="utf-8", newline="") as fh:
             rows = list(csv.DictReader(fh))
         confirmed = [
