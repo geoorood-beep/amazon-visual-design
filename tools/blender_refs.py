@@ -3,8 +3,10 @@
     blender -b --python tools/blender_refs.py -- <jobs.json>
 
 jobs.json: {"model": {model.json with "_dir"}, "jobs": {id: job}, "out": folder}. Each job: view, camera,
-shot, lens, state, focus, canvas, elevation, fill (see tools/product_model.py). Output <id>_rgba.png per job
-(transparent background) and <id>.json (camera facts). Shape only: approximate materials, no food or water.
+shot, lens, state, focus, canvas, elevation, fill, and when the card wrote camera numbers also azimuth, focal_mm
+and res_scale (see tools/product_model.py). Output <id>_rgba.png per job (transparent background) and <id>.json
+(camera facts, with the azimuth and elevation actually used). Shape only: approximate materials, no food or water.
+A negative azimuth moves the camera to the left of a person standing in front of the product.
 """
 import fnmatch
 import json
@@ -197,17 +199,20 @@ def setup_scene():
 
 def place(sc, cam, lights, objs, job):
     w, h = CANVAS_PX[job["canvas"]]
-    sc.render.resolution_x, sc.render.resolution_y = w, h
-    cam.data.lens = LENS_MM[job["lens"]]
+    scale = job.get("res_scale", 1)
+    sc.render.resolution_x, sc.render.resolution_y = w * scale, h * scale
+    cam.data.lens = job.get("focal_mm") or LENS_MM[job["lens"]]
     cam.data.sensor_fit = "AUTO"
     pts = corners(objs)
     lo = mathutils.Vector([min(p[i] for p in pts) for i in range(3)])
     hi = mathutils.Vector([max(p[i] for p in pts) for i in range(3)])
     target = (lo + hi) / 2
-    a, e = math.radians(VIEW_AZIMUTH[job["view"]]), math.radians(job["elevation"])
-    direction = mathutils.Vector((-math.sin(a) * math.cos(e), -math.cos(a) * math.cos(e), math.sin(e)))
+    azimuth = job["azimuth"] if "azimuth" in job else VIEW_AZIMUTH[job["view"]]
+    a, e = math.radians(azimuth), math.radians(job["elevation"])
+    # the product faces -Y; a negative azimuth puts the camera at -X, the left of a person facing the product
+    direction = mathutils.Vector((math.sin(a) * math.cos(e), -math.cos(a) * math.cos(e), math.sin(e)))
     if abs(direction.z) > 0.999:
-        direction = mathutils.Vector((-math.sin(a) * 0.02, -math.cos(a) * 0.02, 1)).normalized()
+        direction = mathutils.Vector((math.sin(a) * 0.02, -math.cos(a) * 0.02, 1)).normalized()
 
     def put(dist):
         loc = target + direction * dist
@@ -231,7 +236,7 @@ def place(sc, cam, lights, objs, job):
             hi_d = mid
     put(hi_d)
     for l, offset in zip(lights, ((-0.9, -1.1, 1.2), (1.2, -0.7, 0.5), (0.4, 1.2, 1.0))):
-        l.location = target + mathutils.Matrix.Rotation(-a, 3, "Z") @ mathutils.Vector(offset) * max(1.0, hi_d / 1.5)
+        l.location = target + mathutils.Matrix.Rotation(a, 3, "Z") @ mathutils.Vector(offset) * max(1.0, hi_d / 1.5)
         l.rotation_euler = (target - l.location).to_track_quat("-Z", "Y").to_euler()
     return hi_d, target
 
@@ -251,8 +256,12 @@ def main():
         dist, target = place(sc, cam, lights, objs, job)
         sc.render.filepath = os.path.join(OUT, jid + "_rgba.png")
         bpy.ops.render.render(write_still=True)
+        d = cam.location - target
         facts = dict(job, id=jid, distance_m=round(dist, 4), focal_mm=cam.data.lens,
-                     target=[round(v, 4) for v in target], focus_found=found)
+                     target=[round(v, 4) for v in target], focus_found=found,
+                     azimuth_used=round(math.degrees(math.atan2(d.x, -d.y)), 1),
+                     elevation_used=round(math.degrees(math.atan2(d.z, math.hypot(d.x, d.y))), 1),
+                     pixels=[sc.render.resolution_x, sc.render.resolution_y])
         with open(os.path.join(OUT, jid + ".json"), "w", encoding="utf-8") as fh:
             json.dump(facts, fh, indent=1)
         print("RENDERED %s %.1fs %s" % (jid, time.time() - t, json.dumps(job, sort_keys=True)))

@@ -29,13 +29,15 @@ import sys
 
 from usage_model import load_usage, requirement
 
-VERSION = "3.53"
+VERSION = "3.54"
 
 V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
                    "light_setup", "foreground"]
 POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id", "expression_id"]
 FACE_SHOWN = {"half_body", "full_body", "group"}
-V2_ONLY_FIELDS = set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect", "lens", "chapter", "techniques"} | set(POOL_FIELDS)
+CAM_FIELDS = ("cam_az", "cam_el", "cam_focal")  # the same as product_model.CAM_FIELDS (1.18)
+V2_ONLY_FIELDS = (set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect", "lens", "chapter", "techniques"}
+                  | set(POOL_FIELDS) | set(CAM_FIELDS))
 STORYLINE_FILE = os.path.join("references", "storylines.csv")
 STORY_CHAPTERS = ("none", "time", "space", "arc", "role")
 DEFAULT_STORYLINE = "SL5"
@@ -740,6 +742,8 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
                 errs.append("M1 的 %s 要写 none" % key)
         if "beat" in card.fields:
             errs.append("M1 不写 beat")
+        import product_model
+        errs.extend(product_model.cam_errors(card.fields))
         return errs
     if kind == "screen":
         mod = card.module
@@ -748,7 +752,7 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
         if card.f("beat") not in BEATS:
             errs.append("beat 要写 %s 之一" % " / ".join(BEATS))
         if mod != "scene":
-            present = [k for k in V2_IMAGE_FIELDS if k in card.fields]
+            present = [k for k in V2_IMAGE_FIELDS + list(CAM_FIELDS) if k in card.fields]
             if present:
                 errs.append("模块卡不写 %s（写在小格卡里）" % ", ".join(present))
             check_copy(card, errs, grants, claims, (pools or {}).get("usage", {}).get("facts") if isinstance(pools, dict) else None)
@@ -802,6 +806,8 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
             errs.append("lens=%s 要配机位 %s，现在是 %s（1.17）" % (lens, " 或 ".join(cams), card.f("camera")))
         if lens == "reach_in" and card.is_none("human_action") and card.is_none("pet"):
             errs.append("lens=reach_in 要有伸向镜头的手（human_action）或宠物的爪子（pet）（1.17）")
+    import product_model
+    errs.extend(product_model.cam_errors(card.fields, card.f("product_view"), card.f("camera")))
     effect = card.f("effect", "none").strip() or "none"
     if effect not in EFFECTS:
         errs.append("effect 要写 %s 之一（1.16）" % " / ".join(EFFECTS))
@@ -1668,7 +1674,8 @@ def compile_card(card, pools=None):
                 job = product_model.job_for(card.slot, {
                     "product_view": card.f("product_view"), "camera": card.f("camera"),
                     "shot_size": card.f("shot_size"), "lens": card.f("lens", "standard").strip() or "standard",
-                    "product_state": card_state(card), "focus": card.f("focus", "whole"), "canvas": card.f("canvas")})
+                    "product_state": card_state(card), "focus": card.f("focus", "whole"), "canvas": card.f("canvas"),
+                    "cam_az": card.f("cam_az"), "cam_el": card.f("cam_el"), "cam_focal": card.f("cam_focal")})
                 jid = product_model.job_id(job, pools.get("model"))
                 out.append("render_ref: outputs/%s/renders/%s.png | the product's shape only: outline, proportions, "
                            "every part's position and size" % (pools.get("product", ""), jid))

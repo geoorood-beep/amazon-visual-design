@@ -19,6 +19,7 @@ Standard library only.
 import argparse
 import hashlib
 import json
+import math
 import os
 import shutil
 import sys
@@ -33,7 +34,8 @@ REQUIRED = ("product", "source", "status", "unit")
 AXES = ("+X", "-X", "+Y", "-Y", "+Z", "-Z")
 
 # ---- the card -> camera table (1.18): the same for every product -------------------------------------------
-# azimuth: degrees around the product from its front; negative = the product's left side seen by the camera
+# azimuth: degrees around the product from its front; negative = the camera moves to the left of a person standing
+# in front of the product (check_set.VIEW_TEXT: "the camera a little to the left of centre")
 VIEW_AZIMUTH = {"front": 0, "front_left": -20, "front_right": 20, "three_quarter_left": -40,
                 "three_quarter_right": 40, "side_left": -90, "side_right": 90, "rear": 180, "cutaway": 0}
 # elevation: degrees above the aim point; low_angle sits near the floor and looks slightly up
@@ -47,6 +49,11 @@ CANVAS_PX = {"1:1": (1024, 1024), "4:5": (1024, 1280), "3:2": (1200, 800), "2.44
 # M1 has no shot fields: a calm front three-quarter, standard lens, product filling the square
 MAIN_JOB = {"view": "front_left", "camera": "eye_level", "shot": "medium", "lens": "standard",
             "state": "assembled", "focus": "whole", "canvas": "1:1", "elevation": 12, "fill": 0.86}
+# optional camera numbers on a card (1.18): all three replace the table's azimuth, elevation and focal length
+CAM_FIELDS = ("cam_az", "cam_el", "cam_focal")
+CAM_RANGE = {"cam_az": (-180, 180), "cam_el": (-15, 88), "cam_focal": (14, 135)}
+RES_SCALE = 2     # a card with camera numbers renders at twice its canvas pixels, so Codex can crop and zoom
+RENDER_RIG = 2    # bump when the renderer changes what a job looks like; every older render is redone once
 
 
 def model_dir(root, product):
@@ -125,24 +132,98 @@ STEPS = {
 }
 
 
+def _written(fields, key):
+    value = str(fields.get(key) or "").strip()
+    return bool(value) and value.lower() != "none"
+
+
+def _number(value):
+    try:
+        x = float(str(value).strip())
+    except ValueError:
+        return None
+    if not math.isfinite(x):
+        return None
+    return int(x) if x.is_integer() else x
+
+
+def _nearest(value, table, circular=False):
+    """The rows of table nearest to value (several when they tie)."""
+    gaps = {}
+    for key, row in table.items():
+        d = abs(value - row)
+        gaps[key] = min(d, 360 - d) if circular else d
+    best = min(gaps.values())
+    return sorted(k for k, g in gaps.items() if g - best < 1e-6)
+
+
+def cam_errors(fields, view=None, camera=None):
+    """What is wrong with a card's camera numbers (1.18); [] when the card writes none of them or they are fine.
+    view and camera are the card's product_view and camera: each must be the row nearest to its number."""
+    written = [k for k in CAM_FIELDS if _written(fields, k)]
+    if not written:
+        return []
+    if len(written) < len(CAM_FIELDS):
+        return ["cam_az、cam_el、cam_focal 要三个一起写，或者都不写；现在只写了 %s（1.18）" % "、".join(written)]
+    out, nums = [], {}
+    for key in CAM_FIELDS:
+        x, (lo, hi) = _number(fields[key]), CAM_RANGE[key]
+        if x is None:
+            out.append("%s 要写数字，现在是 %s（1.18）" % (key, fields[key]))
+        elif not lo <= x <= hi:
+            out.append("%s 要在 %d 到 %d 之间，现在是 %s（1.18）" % (key, lo, hi, fields[key]))
+        else:
+            nums[key] = x
+    if out:
+        return out
+    if view in VIEW_AZIMUTH:
+        near = _nearest(nums["cam_az"], VIEW_AZIMUTH, circular=True)
+        if view not in near:
+            out.append("cam_az=%s 时 product_view 要写离它最近的一档 %s，现在是 %s（1.18）"
+                       % (fields["cam_az"], " 或 ".join(near), view))
+    if camera in CAMERA_ELEVATION:
+        near = _nearest(nums["cam_el"], CAMERA_ELEVATION)
+        if camera not in near:
+            out.append("cam_el=%s 时 camera 要写离它最近的一档 %s，现在是 %s（1.18）"
+                       % (fields["cam_el"], " 或 ".join(near), camera))
+    return out
+
+
+def cam_numbers(fields):
+    """{'azimuth', 'elevation', 'focal_mm'} from a card's camera numbers, or None when it writes none of them
+    (or they are wrong: check_set.py reports that and the card does not get this far)."""
+    if not any(_written(fields, k) for k in CAM_FIELDS) or cam_errors(fields):
+        return None
+    return {"azimuth": _number(fields["cam_az"]), "elevation": _number(fields["cam_el"]),
+            "focal_mm": _number(fields["cam_focal"])}
+
+
 def job_for(slot, fields):
-    """The render job a card needs. fields: product_view, camera, shot_size, lens, product_state, focus, canvas."""
+    """The render job a card needs. fields: product_view, camera, shot_size, lens, product_state, focus, canvas,
+    and optionally cam_az, cam_el, cam_focal (all three or none). The numbers replace the table's azimuth,
+    elevation and focal length; the camera distance still follows the shot size, a close shot still aims at its
+    focus part, and the render is twice the canvas pixels so Codex can crop and zoom (1.18)."""
     if slot == "M1":
-        return dict(MAIN_JOB)
-    shot = fields.get("shot_size") or "medium"
-    aim, fill = SHOT_FILL.get(shot, SHOT_FILL["medium"])
-    focus = fields.get("focus") or "whole"
-    return {
-        "view": fields.get("product_view") or "front",
-        "camera": fields.get("camera") or "eye_level",
-        "shot": shot,
-        "lens": fields.get("lens") or "standard",
-        "state": fields.get("product_state") or "assembled",
-        "focus": focus if aim == "part" else "whole",
-        "canvas": fields.get("canvas") or "1:1",
-        "elevation": CAMERA_ELEVATION.get(fields.get("camera") or "eye_level", 8),
-        "fill": fill,
-    }
+        job = dict(MAIN_JOB)
+    else:
+        shot = fields.get("shot_size") or "medium"
+        aim, fill = SHOT_FILL.get(shot, SHOT_FILL["medium"])
+        focus = fields.get("focus") or "whole"
+        job = {
+            "view": fields.get("product_view") or "front",
+            "camera": fields.get("camera") or "eye_level",
+            "shot": shot,
+            "lens": fields.get("lens") or "standard",
+            "state": fields.get("product_state") or "assembled",
+            "focus": focus if aim == "part" else "whole",
+            "canvas": fields.get("canvas") or "1:1",
+            "elevation": CAMERA_ELEVATION.get(fields.get("camera") or "eye_level", 8),
+            "fill": fill,
+        }
+    nums = cam_numbers(fields)
+    if nums:
+        job.update(nums, res_scale=RES_SCALE)
+    return job
 
 
 def card_gaps(shot, focus, state, model):
@@ -162,7 +243,7 @@ def card_gaps(shot, focus, state, model):
 def job_id(job, model):
     """Stable name for a render: the same angle of the same model revision is rendered once and reused."""
     key = json.dumps({"job": job, "revision": (model or {}).get("revision", 1),
-                      "mesh": (model or {}).get("mesh", "")}, sort_keys=True)
+                      "mesh": (model or {}).get("mesh", ""), "rig": RENDER_RIG}, sort_keys=True)
     return hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
 
 

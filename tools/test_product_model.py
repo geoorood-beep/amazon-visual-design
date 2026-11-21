@@ -305,5 +305,64 @@ class RepoTest(unittest.TestCase):
             self.assertIn("shape_check.py batch", fh.read())
 
 
+class CameraNumbersTest(unittest.TestCase):
+    """Optional camera numbers on a card (UTA_STYLE.md 1.18, 2.4, v3.54)."""
+
+    CARD = {"product_view": "three_quarter_right", "camera": "low_angle", "shot_size": "full", "lens": "hero_low",
+            "product_state": "assembled", "focus": "whole", "canvas": "4:5"}
+
+    def test_numbers_replace_the_table_but_not_the_distance(self):
+        plain = pm.job_for("S2", self.CARD)
+        self.assertNotIn("azimuth", plain)
+        job = pm.job_for("S2", dict(self.CARD, cam_az="55", cam_el="-12", cam_focal="24"))
+        self.assertEqual((job["azimuth"], job["elevation"], job["focal_mm"], job["res_scale"]),
+                         (55, -12, 24, pm.RES_SCALE))
+        self.assertEqual((job["fill"], job["focus"], job["view"]), (plain["fill"], plain["focus"], plain["view"]))
+        self.assertNotEqual(pm.job_id(plain, READY), pm.job_id(job, READY))
+        main = pm.job_for("M1", {"cam_az": "-30", "cam_el": "20", "cam_focal": "70"})
+        self.assertEqual((main["azimuth"], main["elevation"], main["focal_mm"]), (-30, 20, 70))
+        self.assertEqual(main["fill"], pm.MAIN_JOB["fill"])
+        self.assertEqual(pm.job_for("M1", {}), pm.MAIN_JOB)
+
+    def test_close_shot_still_aims_at_the_focus_part(self):
+        job = pm.job_for("S3", dict(self.CARD, shot_size="close", focus="control_panel",
+                                    cam_az="40", cam_el="-8", cam_focal="85"))
+        self.assertEqual((job["focus"], job["focal_mm"]), ("control_panel", 85))
+
+    def test_numbers_are_checked(self):
+        self.assertEqual(pm.cam_errors({}), [])
+        self.assertEqual(pm.cam_errors({"cam_az": "none", "cam_el": "", "cam_focal": "none"}), [])
+        self.assertIn("三个一起写", pm.cam_errors({"cam_az": "30"})[0])
+        self.assertIn("要写数字", pm.cam_errors({"cam_az": "left", "cam_el": "8", "cam_focal": "50"})[0])
+        self.assertIn("要在 14 到 135 之间", pm.cam_errors({"cam_az": "30", "cam_el": "8", "cam_focal": "300"})[0])
+        self.assertIsNone(pm.cam_numbers({"cam_az": "30"}))
+        # a rear three-quarter sits halfway between the side (90) and the rear (180): both rows are nearest
+        rear34 = {"cam_az": "135", "cam_el": "8", "cam_focal": "35"}
+        self.assertEqual(pm.cam_errors(rear34, "side_right", "eye_level"), [])
+        self.assertEqual(pm.cam_errors(rear34, "rear", "eye_level"), [])
+        far = pm.cam_errors(rear34, "three_quarter_right", "eye_level")
+        self.assertEqual(len(far), 1)
+        self.assertIn("rear 或 side_right", far[0])
+        self.assertEqual(pm.cam_errors(dict(rear34, cam_az="-180"), "rear", "eye_level"), [])
+        low = pm.cam_errors(dict(rear34, cam_el="-12"), "side_right", "eye_level")
+        self.assertEqual(len(low), 1)
+        self.assertIn("camera 要写离它最近的一档 low_angle", low[0])
+
+    def test_check_set_keeps_the_numbers_out_of_task_v1(self):
+        self.assertEqual(check_set.CAM_FIELDS, pm.CAM_FIELDS)
+        self.assertTrue(set(pm.CAM_FIELDS) <= check_set.V2_ONLY_FIELDS)
+        self.assertEqual(set(pm.CAM_RANGE), set(pm.CAM_FIELDS))
+
+    def test_renderer_puts_left_where_the_prompt_says(self):
+        """A negative azimuth moves the camera to the left of a person facing the product, as VIEW_TEXT says."""
+        self.assertIn("to the left of centre", check_set.VIEW_TEXT["front_left"])
+        self.assertLess(pm.VIEW_AZIMUTH["front_left"], 0)
+        with open(os.path.join(ROOT, "tools", "blender_refs.py"), encoding="utf-8") as fh:
+            src = fh.read()
+        self.assertIn("mathutils.Vector((math.sin(a) * math.cos(e), -math.cos(a) * math.cos(e), math.sin(e)))", src)
+        self.assertIn('mathutils.Matrix.Rotation(a, 3, "Z")', src)
+        self.assertNotIn("-math.sin(a)", src)
+
+
 if __name__ == "__main__":
     unittest.main()
