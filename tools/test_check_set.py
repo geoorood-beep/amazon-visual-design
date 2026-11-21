@@ -697,5 +697,36 @@ class TechEffects(Base):
         self.assertIn("soft blue", check_set.DEFAULT_ACCENT)
 
 
+class CameraNumbers(Base):
+    """Optional camera numbers (UTA_STYLE.md 1.18, 2.4, v3.54). S2 in the fixture is three_quarter_left / down_45."""
+
+    def with_numbers(self, az, el, focal):
+        return self.mutate("lens: hero_low\n", "lens: hero_low\ncam_az: %s\ncam_el: %s\ncam_focal: %s\n" % (az, el, focal))
+
+    def test_numbers_pass_and_stay_out_of_task_v1(self):
+        code, out, emit = self.run_task(self.write("t.md", self.with_numbers(-50, 40, 28)))
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("cam_", out)
+        self.assertIsNone(re.search(r"^cam_", read(emit), re.M))
+
+    def test_partial_numbers_fail(self):
+        text = self.mutate("lens: hero_low\n", "lens: hero_low\ncam_az: -50\n")
+        code, out, _ = self.run_task(self.write("p.md", text))
+        self.assertIn("cam_az、cam_el、cam_focal 要三个一起写", out)
+
+    def test_numbers_far_from_the_rows_fail(self):
+        code, out, _ = self.run_task(self.write("f.md", self.with_numbers(90, 40, 28)))
+        self.assertIn("product_view 要写离它最近的一档 side_right，现在是 three_quarter_left", out)
+        code, out, _ = self.run_task(self.write("e.md", self.with_numbers(-50, 5, 28)))
+        self.assertIn("camera 要写离它最近的一档 eye_level，现在是 down_45", out)
+
+    def test_out_of_range_fails_on_main_too(self):
+        code, out, _ = self.run_task(self.write("r.md", self.with_numbers(-50, 40, 300)))
+        self.assertIn("cam_focal 要在 14 到 135 之间", out)
+        text = self.mutate("slot: M1\n", "slot: M1\ncam_az: 30\ncam_el: 8\ncam_focal: 500\n")
+        code, out, _ = self.run_task(self.write("m.md", text))
+        self.assertIn("cam_focal 要在 14 到 135 之间，现在是 500", out)
+
+
 if __name__ == "__main__":
     unittest.main()
