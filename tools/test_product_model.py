@@ -105,6 +105,97 @@ class ModelJsonTest(unittest.TestCase):
         self.assertEqual(pm.main(["check"], out=out), 0, out.getvalue())
 
 
+class ScaleLimitTest(unittest.TestCase):
+    """Scale item only: worst axis abs(CAD-measured)/measured*100, pass at <= 6%. Shape compare stays 15%."""
+
+    def setUp(self):
+        self.root = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.root)
+        os.makedirs(os.path.join(self.root, "products", "demo", "model"))
+
+    def write(self, data):
+        with open(os.path.join(self.root, "products", "demo", "model", "model.json"), "w", encoding="utf-8") as fh:
+            json.dump(data, fh)
+
+    def problems(self):
+        return pm.model_problems(self.root, "demo", pm.load_model(self.root, "demo"))
+
+    def test_boundaries(self):
+        self.assertEqual(pm.scale_problems({"dim": "X", "model_mm": 106, "measured_mm": 100, "part": "body", "range": "outer"}), [])
+        self.assertEqual(pm.scale_problems({"dim": "L", "model_mm": 328.6, "measured_mm": 310}), [])
+        # between the old 2% line and 6%: 320 vs 310 is 3.23%, and 10 mm > max(3 mm, 2%)
+        self.assertEqual(pm.scale_problems({"dim": "L", "model_mm": 320, "measured_mm": 310}), [])
+        over = pm.scale_problems({"dim": "X", "model_mm": 106.01, "measured_mm": 100, "part": "body", "range": "outer length"})
+        self.assertEqual(len(over), 1)
+        self.assertIn("106.01", over[0])
+        self.assertIn("100", over[0])
+        self.assertIn("6.01%", over[0])
+        self.assertIn("outer length", over[0])
+        self.assertIn("Do not stretch", over[0])
+        # a 2 mm gap on a 20 mm part is 10%: the old 3 mm floor would have passed it
+        small = pm.scale_problems({"dim": "L", "model_mm": 22, "measured_mm": 20})
+        self.assertIn("10.00%", small[0])
+
+    def test_worst_axis_of_three(self):
+        ok = {"part": "housing", "range": "installed outer, front view", "axes": [
+            {"axis": "X", "model_mm": 101.74, "measured_mm": 100},
+            {"axis": "Y", "model_mm": 104.04, "measured_mm": 100},
+            {"axis": "Z", "model_mm": 106, "measured_mm": 100}]}
+        self.assertEqual(pm.scale_problems(ok), [])
+        bad = {"part": "housing", "range": "installed outer, front view", "axes": [
+            {"axis": "X", "model_mm": 101.74, "measured_mm": 100},
+            {"axis": "Y", "model_mm": 104.04, "measured_mm": 100},
+            {"axis": "Z", "model_mm": 106.01, "measured_mm": 100}]}
+        text = " ".join(pm.scale_problems(bad))
+        self.assertIn("6.01%", text)
+        self.assertIn("104.04", text)
+        self.assertIn("installed outer", text)
+        # a top-level pair is another axis, so a bad one still fails a good list
+        mixed = dict(bad, model_mm=120, measured_mm=100, dim="extra")
+        self.assertIn("20.00%", " ".join(pm.scale_problems(mixed)))
+
+    def test_unknown_or_zero_cannot_pass(self):
+        for broken in (
+            {},
+            {"dim": "X", "model_mm": 100},
+            {"dim": "X", "model_mm": 100, "measured_mm": 0},
+            {"dim": "X", "model_mm": 0, "measured_mm": 0},
+            {"dim": "X", "model_mm": -100, "measured_mm": -100},
+            {"dim": "X", "model_mm": -100, "measured_mm": -106},
+            {"dim": "X", "model_mm": 100, "measured_mm": "unknown"},
+            {"dim": "X", "model_mm": True, "measured_mm": 1},
+            {"axes": []},
+            {"axes": [{"axis": "Y", "model_mm": 100, "measured_mm": 0},
+                      {"axis": "X", "model_mm": 100, "measured_mm": 100}]},
+        ):
+            self.assertTrue(pm.scale_problems(broken), broken)
+        zero_cad = pm.scale_problems({"dim": "X", "model_mm": 0, "measured_mm": 100})
+        self.assertIn("100.00%", zero_cad[0])
+
+    def test_unit_must_match_and_pass_does_not_mark_ready(self):
+        self.assertEqual(pm.scale_problems({"dim": "X", "model_mm": 100, "measured_mm": 100, "unit": "MM"}, unit="mm"), [])
+        mismatch = pm.scale_problems({"dim": "X", "model_mm": 100, "measured_mm": 100, "unit": "in"}, unit="mm")
+        self.assertIn("same unit", mismatch[0])
+        self.write(dict(READY, status="draft", scale_check={"dim": "X", "model_mm": 106, "measured_mm": 100}))
+        self.assertFalse(pm.is_ready(self.root, "demo"))
+        self.assertEqual(pm.load_model(self.root, "demo")["status"], "draft")
+        self.write(dict(READY, approved="", scale_check={"dim": "X", "model_mm": 100, "measured_mm": 100}))
+        text = " ".join(self.problems())
+        self.assertIn("approved", text)
+        self.assertNotIn("scale_check:", text)
+        self.assertFalse(pm.is_ready(self.root, "demo"))
+        self.write(dict(READY, scale_check={"dim": "X", "model_mm": 106, "measured_mm": 100, "part": "body", "range": "outer"}))
+        self.assertEqual(self.problems(), [])
+        self.assertTrue(pm.is_ready(self.root, "demo"))
+        self.write(dict(READY, scale_check={"dim": "X", "model_mm": 107, "measured_mm": 100, "range": "outer"}))
+        self.assertFalse(pm.is_ready(self.root, "demo"))
+        self.assertIn("range outer", " ".join(self.problems()))
+
+    def test_shape_compare_threshold_stays_about_15_percent(self):
+        text = Path(os.path.join(ROOT, "tools", "shape_check.py")).read_text(encoding="utf-8")
+        self.assertIn("clearly more than about 15% too big or too small", text)
+
+
 class CompileTest(unittest.TestCase):
     def cards(self):
         with open(V2, encoding="utf-8") as fh:
