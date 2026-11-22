@@ -339,6 +339,75 @@ class PoolRules(Base):
         code, out, _ = self.run_text(self.mutate("style: ST02", "style: ST04"))
         self.assertIn("风格 ST04（萌宠海报风）只配光型", out)
 
+    def test_st08_explicit_lifestyle_keeps_mixed_aplus_and_technical_cards(self):
+        task = read(V2).replace("style: ST02", "style: ST08", 1)
+        life = self.card_block(task, "P4_capacity.md")
+        selected = life.replace("slot: P4\n", "slot: P4\nstyle_scope: lifestyle\n")
+        selected = selected.replace("light_setup: low_sun", "light_setup: side")
+        selected = selected.replace("Low warm sun through the door glass on the left, long shadows of the dog and the fountain across the floor toward the right",
+                                    "Soft window light through the door glass from the left, graceful highlights across the floor")
+        task = task.replace(life, selected)
+        code, out, emit = self.run_text(task)
+        self.assertEqual(code, 0, out)
+        self.assertIn("SET FAIL 0", out)
+        _, _, source_cards = check_set.parse_task(task)
+        aplus = check_set.TaskSet(source_cards)
+        self.assertGreaterEqual(len(aplus.screens), 5)
+        self.assertGreaterEqual(len({aplus.main_image(x).f("light_setup") for x in aplus.screens}), 3)
+        compiled = read(emit)
+        needle = "Style: warm family album documentary:"
+        self.assertEqual(compiled.count(needle), 1)
+        self.assertIn(needle, self.card_block(compiled, "P4_capacity.md"))
+        self.assertNotIn("style_scope:", compiled)
+        for name in ("M1_white.md", "P1_together.md", "P2_quiet.md", "P2a_quiet_scene.md",
+                     "P3a_steel_macro.md", "P6a_rinse.md", "P7a_product.md"):
+            with self.subTest(name=name):
+                self.assertNotIn(needle, self.card_block(compiled, name))
+        self.assertIn("Light setup:", self.card_block(compiled, "P2a_quiet_scene.md"))
+        self.assertEqual(len(check_set.parse_task(compiled)[2]), len(source_cards))
+
+    def test_st08_preserves_three_light_minimum_for_aplus(self):
+        task = read(V2).replace("style: ST02", "style: ST08", 1)
+        for name in ("P4_capacity.md", "P2a_quiet_scene.md"):
+            block = self.card_block(task, name)
+            task = task.replace(block, re.sub(r"light_setup: (low_sun|night_lamp)", "light_setup: side", block))
+        code, out, _ = self.run_text(task)
+        self.assertEqual(code, 2, out)
+        self.assertIn("SET FAIL [A-9] 各屏主图只用了 2 种光型，至少三种", out)
+
+    def test_st08_never_applies_without_explicit_scope(self):
+        code, out, emit = self.run_text(read(V2).replace("style: ST02", "style: ST08", 1))
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("Style: warm family album documentary:", read(emit))
+        code, out, emit = self.run_text(read(V2))
+        self.assertEqual(code, 0, out)
+        self.assertIn("Style: Scandinavian home:", self.card_block(read(emit), "P3a_steel_macro.md"))
+
+    def test_st08_only_checks_allowed_lights_on_opted_in_lifestyle(self):
+        task = read(V2).replace("style: ST02", "style: ST08", 1)
+        code, out, _ = self.run_text(task.replace("slot: P4\n", "slot: P4\nstyle_scope: lifestyle\n", 1))
+        self.assertNotEqual(code, 0, out)
+        self.assertIn("风格 ST08（暖调家庭纪实胶片风）只配光型 side;side_back", out)
+        self.assertIn("这张卡是 low_sun", out)
+
+    def test_st08_rejects_explicit_lifestyle_on_wrong_card(self):
+        task = read(V2).replace("style: ST02", "style: ST08", 1)
+        for slot in ("M1", "S2", "P1", "P2", "P3a", "P6a"):
+            with self.subTest(slot=slot):
+                code, out, _ = self.run_text(task.replace("slot: %s\n" % slot,
+                                                          "slot: %s\nstyle_scope: lifestyle\n" % slot, 1))
+                self.assertNotEqual(code, 0, out)
+                self.assertIn("ST08 只用于有露脸人物和宠物的生活场景", out)
+
+    def test_st08_rejects_unknown_scope_and_other_header_opt_in(self):
+        for scope, msg in (("maybe", "style_scope 只能写 lifestyle 或 neutral"),
+                           ("lifestyle", "style_scope: lifestyle 只配任务头部 style: ST08")):
+            with self.subTest(scope=scope):
+                code, out, _ = self.run_text(read(V2).replace("slot: P4\n",
+                                                              "slot: P4\nstyle_scope: %s\n" % scope, 1))
+                self.assertNotEqual(code, 0, out)
+                self.assertIn(msg, out)
+
     def test_operation_hands_have_no_mood(self):
         code, out, _ = self.run_text(self.mutate("person_id: HP02\nperson_mood_id: none", "person_id: HP02\nperson_mood_id: MD01"))
         self.assertIn("只出手的人物看不到脸", out)

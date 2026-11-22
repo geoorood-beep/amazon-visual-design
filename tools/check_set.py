@@ -36,7 +36,7 @@ V2_IMAGE_FIELDS = ["shot_size", "product_view", "focus", "interaction",
 POOL_FIELDS = ["evidence_id", "scene_id", "pet_id", "person_id", "person_mood_id", "expression_id"]
 FACE_SHOWN = {"half_body", "full_body", "group"}
 CAM_FIELDS = ("cam_az", "cam_el", "cam_focal")  # the same as product_model.CAM_FIELDS (1.18)
-V2_ONLY_FIELDS = (set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect", "lens", "chapter", "techniques"}
+V2_ONLY_FIELDS = (set(V2_IMAGE_FIELDS) | {"beat", "story", "product_state", "effect", "lens", "chapter", "techniques", "style_scope"}
                   | set(POOL_FIELDS) | set(CAM_FIELDS))
 STORYLINE_FILE = os.path.join("references", "storylines.csv")
 STORY_CHAPTERS = ("none", "time", "space", "arc", "role")
@@ -721,10 +721,37 @@ def check_scene_words(card, errs):
             errs.append("%s 写了参考图看不到的结构或特效（%s）（1.4、2.7）" % (key, ", ".join(sorted(set(hits)))))
 
 
+def effective_style(card, pools):
+    """Share ST08's card scope between light validation and prompt emission."""
+    style = (pools or {}).get("style_row")
+    scope = card.f("style_scope", "neutral")
+    if scope not in ("neutral", "lifestyle"):
+        return None, "style_scope 只能写 lifestyle 或 neutral"
+    if scope == "lifestyle" and (not style or style["id"] != "ST08"):
+        return None, "style_scope: lifestyle 只配任务头部 style: ST08"
+    if not style or style["id"] != "ST08":
+        return style, None
+    if scope != "lifestyle":
+        return None, None
+    person = pools.get("people", {}).get(card.f("person_id"))
+    if (not card.is_image or card.kind == "panel"
+            or INTERACTIONS.get(card.f("interaction")) != "pet"
+            or card.is_none("pet") or card.is_none("human_action")
+            or not person or person["shown"].strip() not in FACE_SHOWN
+            or not card.is_none("effect")
+            or card.f("shot_size") == "extreme_close"
+            or card.f("product_view") == "cutaway"):
+        return None, "ST08 只用于有露脸人物和宠物的生活场景副图或 A+ scene；不用于主图、模块小格或功能证据图"
+    return style, None
+
+
 def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=None):
     errs = list(card.parse_errors)
     if card.f("card_version") != "2":
         errs.append("这是 UTA-TASK v2，卡要写 card_version: 2")
+    style, style_error = effective_style(card, pools)
+    if style_error:
+        errs.append(style_error)
     kind = card.kind
     if kind == "unknown":
         errs.append("slot 看不懂：%s" % card.slot)
@@ -832,7 +859,6 @@ def check_card_v2(card, views, pools=None, evidence=None, grants=None, claims=No
     if pools is not None:
         check_pool_fields(card, pools, evidence, errs)
         check_story(card, errs, grants, claims)
-        style = pools.get("style_row")
         if style and card.f("light_setup") not in split_list(style["lights"]):
             errs.append("风格 %s（%s）只配光型 %s，这张卡是 %s" % (style["id"], style["name"], style["lights"], card.f("light_setup")))
         if pools.get("persona", "natural") == "natural" and expression_level(card, pools, "拟人"):
@@ -1644,7 +1670,7 @@ def compile_card(card, pools=None):
             elif key == "scene":
                 if not card.is_none("foreground"):
                     val = join_sentence(val, "Foreground: %s, soft and out of focus, framing the subject." % card.f("foreground"))
-                style = (pools or {}).get("style_row")
+                style, _ = effective_style(card, pools)
                 if style:
                     val = join_sentence(val, "Style: %s." % style["look_en"].strip().rstrip("."))
             elif key == "human_action" and pools and not card.is_none("person_id"):

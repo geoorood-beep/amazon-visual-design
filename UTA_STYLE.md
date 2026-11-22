@@ -455,7 +455,7 @@ M1 和 S 位按生图工具的原生尺寸出图，如实记录实际像素，�
 | 人物 | `pools/people.csv` | `person_id` | 出镜范围（`hands` 只出手和小臂，`half_body` 半身，`full_body` 全身，`group` 两人以上，例如夫妻、一家三口）、英文样子 |
 | 人物情绪 | `pools/moods.csv` | `person_mood_id` | 英文情绪和神态，例如会心微笑、开怀大笑、安心放松。只出手的人物写 `none` |
 | 表情 | `pools/expressions.csv` | `expression_id`，两只宠物可写 `EX01+EX09` | 英文表情、能配的互动（`human` 表示人手在操作、宠物在旁边看）、可参考的表情图 |
-| 风格 | `pools/styles.csv` | 任务单头部 `style:`，整套一个 | 英文风格描述、能配的光型、不要的东西、出处 |
+| 风格 | `pools/styles.csv` | 任务单头部 `style:`，整套选一个；ST08 再按图标注 `style_scope` | 英文风格描述、能配的光型、不要的东西、出处 |
 
 **谁改池子。** 池子是数据，由用户增删。写卡方和出图方不改；用户想要的东西不在池里时，写卡方给出一行可以加进去的内容，由用户决定。新增一行时，编号接着往下排，英文描述只写看得见的东西。
 
@@ -465,6 +465,8 @@ M1 和 S 位按生图工具的原生尺寸出图，如实记录实际像素，�
 
 
 **ST08 暖调家庭纪实胶片风（可选）。** 来自用户 2026-11-22 选定的[「门边看猫喝水」样片](docs/uta_style_v3/assets/key/ST08_family_album_doorway.webp)。只用于人宠生活场景，不是默认，不套到主图或功能证据图。用柔和窗边侧光、侧逆光或院子里的树影，浅暖木色、米白和灰绿为主；保留细而可见的胶片颗粒、柔高光和自然虚实。拍家人没看镜头的真实互动，远景交代家，中景拍陪伴，近景看清宠物使用和产品。院子可拍陪伴；没有产品卡的户外使用依据，就不在院子拍产品使用。不要压黑、全图发黄、把不锈钢染成金色或强加拖影；产品结构和物理边界按原规则。
+
+选了 ST08，头部仍写 `style: ST08`。只有合适的人宠生活副图或 A+ `scene` 大图写 `style_scope: lifestyle`，这些图只配 `side`、`side_back`。主图、功能证据图和模块小格不写这一行；它们不继承 ST08 的提示词或两光型限制，原有场景、光型和证据校验都不变。整套 5 屏及以上仍按 A-9 查各屏主图至少三种光型；先安排生活镜头和中性功能屏，再在功能屏里选与场景、卖点都相符的第三种光。不为凑数牺牲证据，也不把生活镜头强加到功能图。
 
 ### 1.14 场景故事：先想故事，再从池里配
 
@@ -962,6 +964,7 @@ https://raw.githubusercontent.com/geoorood-beep/amazon-visual-design/main/<路�
 | `focus` | 焦点部位 | `whole`，或 `ref_views.csv` 那一行 `parts` 里的部位。`close`、`extreme_close` 不能填 `whole` |
 | `interaction` | 互动 | 宠物做的：`share_drink`、`drink`、`wait`、`inspect`、`paw_touch`、`rest`；人手做的（宠物可以在旁边看）：`human_fill`、`human_rinse`、`human_wipe`、`human_check`；没有人和宠物：`product_only` |
 | `light_setup` | 光型 | 1.3 的五个取值之一。`light` 里写的方向要和它一致 |
+| `style_scope` | ST08 的单图范围（选填） | 选了 ST08 时，只给有可见人物和宠物、由宠物自然动作主导、不靠特效或细节特写的人宠生活副图或 A+ `scene` 大图写 `lifestyle`；功能证据图不写，或保留中性 `neutral`。M1、模块卡、模块小格省略。不用于其他风格。 |
 | `foreground` | 前景 | 英文，画面最前面一层虚化的东西，例如 the cat's whiskers；没有写 `none` |
 | `product_state` | 产品状态 | 这张图里产品的样子（1.15）：产品卡「产品状态」的编号，没有那一节时用 `assembled`、`disassembled`、`loading`。不写时是 `assembled`。事实要求的状态和这里不一样，脚本退回 |
 | `lens` | 镜头 | `standard`、`wide_close`、`ground_level`、`action_freeze`、`peek_frame`、`pet_pov`、`hero_low`、`surface_wide`、`reach_in`、`hero_wide` 之一（1.17）。不写时是 `standard`。特殊镜头下产品仍不能变形 |
@@ -1176,7 +1179,7 @@ card_version: 2
 ```
 
 - `UTA-TASK v2` 这一行必须有，前面最多一句给 Codex 的话。旧任务单 `UTA-TASK v1` 仍能校验，但只给整套警告，不做 2.6 的硬检查。
-- `style:` 写风格池的编号，整套一个，`full` 和 `patch` 都要写。
+- `style:` 写风格池的编号，整套一个，`full` 和 `patch` 都要写。选 ST08 时，随需要在对应的生活图位保留 `style_scope: lifestyle`；没标的图保持中性，不继承 ST08。
 - `impact:` 写冲击力 `calm`、`balanced` 或 `bold`（1.17），不写时是 `balanced`。
 - `accent:` 写科技特效的点缀色（英文颜色名或色值，比如 `soft blue`、`#3A7BFF`），整套一个，不写时是 `soft blue`（1.16）。
 - `persona:` 写表情 `natural`（正常）或 `anthro`（可以拟人）（1.17），不写时是 `natural`。
