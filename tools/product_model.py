@@ -5,7 +5,8 @@ generates everything else, then the result is compared with the same-angle rende
     python tools/product_model.py check
 
 A product uses its 3D model only when products/<产品>/model/model.json says "status": "ready" (converted,
-axes set, parts and states mapped, scaled against one real measurement, approved by the user). Then every
+axes set, parts and states mapped, scale_check within 6% on every compared axis, approved by the user).
+A passing scale check does not set status to ready by itself. Then every
 image card, M1 included, takes the route render_ref:
 
     render_ref   render the product at this card's view, camera, shot, lens and state (shape only), attach it
@@ -32,6 +33,8 @@ BLENDER_PATHS = ("/Applications/Blender.app/Contents/MacOS/Blender",
                  os.path.expanduser("~/Applications/Blender.app/Contents/MacOS/Blender"))
 REQUIRED = ("product", "source", "status", "unit")
 AXES = ("+X", "-X", "+Y", "-Y", "+Z", "-Z")
+# scale item only (1.18): abs(CAD - measured) / measured * 100, worst axis. Not the shape-compare threshold.
+SCALE_LIMIT_PCT = 6.0
 
 # ---- the card -> camera table (1.18): the same for every product -------------------------------------------
 # azimuth: degrees around the product from its front; negative = the camera moves to the left of a person standing
@@ -75,6 +78,108 @@ def load_model(root, product, path=None):
     return model
 
 
+def _as_mm(value):
+    """Finite number of millimetres, or None when the value cannot be used (blank, text, bool, NaN)."""
+    if isinstance(value, bool) or value is None:
+        return None
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return None
+        value = text
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(number):
+        return None
+    return number
+
+
+def _mm_text(value):
+    number = _as_mm(value)
+    if number is None:
+        return repr(value)
+    if number.is_integer():
+        return str(int(number))
+    return ("%.4f" % number).rstrip("0").rstrip(".")
+
+
+def _scope_text(check):
+    if not isinstance(check, dict):
+        return "part/range not recorded"
+    part = str(check.get("part") or "").strip()
+    span = str(check.get("range") or "").strip()
+    bits = []
+    if part:
+        bits.append("part %s" % part)
+    if span:
+        bits.append("range %s" % span)
+    return ", ".join(bits) if bits else "part/range not recorded"
+
+
+def _over_scale(pct):
+    return pct > SCALE_LIMIT_PCT and not math.isclose(pct, SCALE_LIMIT_PCT, rel_tol=0.0, abs_tol=1e-6)
+
+
+def scale_axis_pairs(check):
+    """(pairs, structural_errors). Each pair is (label, model_mm, measured_mm)."""
+    if not isinstance(check, dict):
+        return [], ["scale_check must be an object; unknown size cannot pass"]
+    pairs, errors = [], []
+    if "axes" in check:
+        listed = check["axes"]
+        if not isinstance(listed, list) or not listed:
+            errors.append("scale_check.axes must be a non-empty list; this shape cannot pass")
+        else:
+            for index, row in enumerate(listed, 1):
+                if not isinstance(row, dict):
+                    errors.append("scale_check.axes[%d] must be an object; unknown size cannot pass" % (index - 1))
+                    continue
+                label = str(row.get("axis") or row.get("dim") or ("axis%d" % index)).strip() or ("axis%d" % index)
+                pairs.append((label, row.get("model_mm"), row.get("measured_mm")))
+    if "model_mm" in check or "measured_mm" in check:
+        label = str(check.get("axis") or check.get("dim") or "axis").strip() or "axis"
+        pairs.append((label, check.get("model_mm"), check.get("measured_mm")))
+    return pairs, errors
+
+
+def scale_problems(check, unit="mm"):
+    """Failures of the scale item (UTA_STYLE.md 1.18). [] means every recorded axis is within 6%.
+
+    Per axis: abs(CAD - measured) / measured * 100. The worst axis decides.
+    Unknown, blank, non-numeric, or non-positive measured size cannot pass. Does not change model status.
+    """
+    pairs, errors = scale_axis_pairs(check)
+    out = list(errors)
+    scope = _scope_text(check)
+    if isinstance(check, dict):
+        stated = str(check.get("unit") or "").strip()
+        expected = str(unit or "").strip()
+        if stated and expected and stated.lower() != expected.lower():
+            out.append("scale_check: unit %s is not %s; compare CAD and the measurement in the same unit (%s)"
+                       % (stated, expected, scope))
+    if not pairs and not errors:
+        out.append("scale_check: no axis to compare; unknown size cannot pass (%s)" % scope)
+    judged = []
+    for label, model_mm, measured_mm in pairs:
+        cad, measured = _as_mm(model_mm), _as_mm(measured_mm)
+        if cad is None or measured is None or measured <= 0:
+            out.append("scale_check: axis %s CAD %s vs measured %s is unknown or zero and cannot pass (%s)"
+                       % (label, _mm_text(model_mm), _mm_text(measured_mm), scope))
+            continue
+        pct = abs(cad - measured) / measured * 100.0
+        judged.append((label, model_mm, measured_mm, pct))
+    if any(_over_scale(pct) for *_, pct in judged):
+        worst = max(pct for *_, pct in judged)
+        detail = "; ".join(
+            "%s CAD %s vs measured %s = %.2f%%" % (label, _mm_text(model_mm), _mm_text(measured_mm), pct)
+            for label, model_mm, measured_mm, pct in judged)
+        out.append("scale_check: max axis %.2f%% is over 6%% (%s). %s. Stop and check these numbers. "
+                   "Do not stretch the model or rewrite the measurement." % (worst, scope, detail))
+    return out
+
+
 def model_problems(root, product, model):
     out = []
     for key in REQUIRED:
@@ -92,11 +197,7 @@ def model_problems(root, product, model):
         if not isinstance(spec, dict):
             out.append("states.%s must be an object (hide / move / rotate)" % state)
     if model.get("status") == "ready":
-        check = model.get("scale_check") or {}
-        if not (check.get("model_mm") and check.get("measured_mm")):
-            out.append("a ready model needs scale_check with model_mm and measured_mm (one real measurement)")
-        elif abs(float(check["model_mm"]) - float(check["measured_mm"])) > max(3.0, 0.02 * float(check["measured_mm"])):
-            out.append("scale_check: model %s mm vs measured %s mm differ by more than 2%%" % (check["model_mm"], check["measured_mm"]))
+        out.extend(scale_problems(model.get("scale_check") or {}, model.get("unit") or ""))
         if not str(model.get("approved", "")).strip():
             out.append("a ready model needs 'approved' (who looked at the renders against the photos, and when)")
         if not (axes.get("front") and axes.get("up")):
