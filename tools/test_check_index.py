@@ -170,8 +170,10 @@ class FlowV319Test(unittest.TestCase):
                       "R5 没人注意", "R6 尺度参照", "R7 情绪落点"):
             self.assertIn(route, guide)
         self.assertIn("| 一家人在地上 |", guide)
-        self.assertIn("4 个故事选项", guide)
+        self.assertIn("适用的展现路线一条不漏", guide)
         self.assertIn("**卖点梳理。**", guide)
+        self.assertNotIn("4 个故事选项", guide)
+        self.assertNotIn("4 个故事", skill)
         self.assertNotIn("2–3 个故事", guide)
         self.assertNotIn("2–3 个故事", skill)
 
